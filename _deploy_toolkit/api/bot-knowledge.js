@@ -28,6 +28,8 @@ Always visible:
 - My Day — daily field planner.
 - Videos — the training video library (DLCO test, LVM, Spirometry/FVC test, plus Spirometry & DLCO calibration checks). The same videos also appear as a "Videos" pill inside each specialty tab.
 
+MiniBox Academy (the training course) — NOT a tab. It is a separate site, opened from the graduation-cap "MiniBox Academy" tile in App Launchers on the Daily Hub, at https://minibox-academy-course.vercel.app. It is the place to actually LEARN the product: 11 modules / 102 sections built from PulmOne's own 2025 training decks, with real slide diagrams, interactive graphics, flashcards and end-of-module tests, including a Competitive Landscape module (vs Body Box, vs Nitrogen Washout). If a rep asks "how do I learn this / where do I study / I'm new, where do I start / is there training," send them there — name the tile and the Daily Hub. It opens in a new tab and needs internet; it is not in the offline zip.
+
 Specialties menu — the talk track for each type of doctor:
 - Pulmonology, Allergy / Immunology, Cardiology, Rheumatology, Internal Medicine. Each has its own Playbook, Calculators, Files, and Videos. (Cardiology carries the DLCO "one objective test that separates heart vs. lung" story and its billing case.)
 - Internal Medicine (newest tab) has two views: "The Playbook" (the five-move call — open with the referral, name the population they already have, let GOLD/NAEPP-GINA do the talking, show the billing gap, close on their own volume) and "Evidence & Billing" (guideline-sourced evidence, the DLCO gap spirometry cannot see, the 94010 / 94726 / 94729 complete-PFT table with live rates from the Billing Helper, and the USPSTF "diagnostic, not screening" guardrail).

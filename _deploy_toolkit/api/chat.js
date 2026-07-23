@@ -102,7 +102,10 @@ async function askClaude(recent, name, text) {
   }
 }
 
-async function runBoxy(name, text) {
+/* Boxy's answer WITHOUT putting anything in the shared thread. Returns the
+   reply text so the caller can hand it straight back to the one person who
+   asked. Still logged to Erik's review feed. */
+async function boxyReply(name, text) {
   let reply = null, ai = false;
   try {
     const raw = await redis(['LRANGE', KEY, '0', '14']);
@@ -114,13 +117,18 @@ async function runBoxy(name, text) {
     reply = 'Got it, ' + name.split(' ')[0] + " — this has been sent to administration and you'll have an answer shortly. Thanks for flagging it. \u{1F4E6}";
   }
 
-  try { await postMessage(BOT_NAME, reply); } catch (e) {}
-
   // Erik's review feed: every exchange, answered or not.
   try {
     await redis(['LPUSH', LOG_KEY, JSON.stringify({ ts: Date.now(), name: name, text: text, reply: reply, ai: ai })]);
     await redis(['LTRIM', LOG_KEY, '0', String(LOG_KEEP - 1)]);
   } catch (e) {}
+
+  return reply;
+}
+
+async function runBoxy(name, text) {
+  const reply = await boxyReply(name, text);
+  try { await postMessage(BOT_NAME, reply); } catch (e) {}
 }
 
 /* Problem reports. The rep taps "🐛 Report a problem" (in Team Chat or on the
@@ -173,12 +181,28 @@ module.exports = async (req, res) => {
         return res.status(400).json({ ok: false, error: 'Need a name and a message.' });
       }
 
-      const message = await postMessage(name, text);
-
-      // Problem report -> also filed in Erik's inbox so it can't scroll away.
+      /* A problem report is PRIVATE. It never touches the shared thread —
+         it goes straight to Erik's inbox, and Boxy's answer comes back in
+         this response so only the person who reported it ever sees it.
+         Team Chat is for the team talking to each other, nothing else. */
       if (body.issue === true) {
-        try { await fileIssue(message.id, name, text, body.screen); } catch (e) {}
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        const ts = Date.now();
+        try { await fileIssue(id, name, text, body.screen); } catch (e) {}
+        let reply = '';
+        try { reply = await boxyReply(name, text); } catch (e) {}
+        if (!reply) {
+          reply = 'Got it, ' + name.split(' ')[0] + " — this has been sent to administration and you'll have an answer shortly. Thanks for flagging it. \u{1F4E6}";
+        }
+        return res.status(200).json({
+          ok: true,
+          private: true,
+          message: { id: id, name: name, text: text, ts: ts },
+          reply: reply
+        });
       }
+
+      const message = await postMessage(name, text);
 
       // Summon the bot — answered inline so the sender's next refresh shows it.
       // Fires on an @Boxy tag OR when the app's "Ask Boxy" mode flags toBoxy,

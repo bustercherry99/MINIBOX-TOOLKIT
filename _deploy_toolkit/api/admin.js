@@ -273,7 +273,7 @@ async function usage(days) {
     let name = (s && s.name) || '';
     if (!name) {
       if (byEmail) name = who.slice(2);
-      else if (anon) name = 'Anonymous device';
+      else if (anon) name = 'Someone (no name yet)';
       else name = who.indexOf('n:') === 0 ? who.slice(2) : who;   // legacy: bare name
     }
     return Object.assign(people[who], {

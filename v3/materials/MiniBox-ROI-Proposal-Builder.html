@@ -252,6 +252,15 @@ select{padding-left:9px;cursor:pointer}
   .g3{grid-template-columns:1fr}
   .hbtns{flex-wrap:wrap}
   .page{padding:10px 12px}
+  /* .g3 drops to a single column here, so Practice Name / Doctor Name /
+     Prepared By ran together as one undivided strip with nothing marking
+     where one field ended and the next began. Give each stacked row its
+     own rule line, like the bordered rows everywhere else in this page. */
+  .acc-body .g3{gap:0}
+  .acc-body .g3>.field,
+  .acc-body .g3>.g2{padding:10px 0;margin-bottom:0;border-bottom:1px solid var(--g200)}
+  .acc-body .g3>.g2 .field{margin-bottom:0}
+  .acc-body .g3:last-of-type>*:last-child{border-bottom:0;padding-bottom:0}
 }
 
 /* ── PRINT ────────────────────────────────────────── */

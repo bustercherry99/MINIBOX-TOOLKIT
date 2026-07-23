@@ -91,8 +91,23 @@ re-copy them into `_deploy_pft_suite` and run `vercel deploy --prod --yes` from 
 
 ## MiniBox Academy (the rep training course, in this folder)
 
-`MiniBox_Academy_v3.0.html` is the current one. Not deployed anywhere yet; open it locally.
-v1 and v2 are flashcards-only and are superseded, leave them alone.
+`MiniBox_Academy_v3.0.html` is the current one. v1 and v2 are flashcards-only and are
+superseded, leave them alone.
+
+**LIVE at https://minibox-academy-course.vercel.app** — its own Vercel project
+(`minibox-academy-course`), no password, deletable anytime without touching the toolkit.
+The online copy lives in `_deploy_academy\` (course = `index.html`, plus the three
+`academy-*.js` files and the whole `academy-assets\` folder). **Deploy routine:** re-run
+`node _tools\academy\assemble.mjs` if content changed → copy `MiniBox_Academy_v3.0.html`
+to `_deploy_academy\index.html` and re-copy the three JS files (and `academy-assets\` if
+images changed) → `vercel deploy --prod --yes` from `_deploy_academy`. Edits to the master
+are INVISIBLE online until you do that.
+
+**Reps reach it from the toolkit** via the purple graduation-cap **MiniBox Academy** tile,
+first in App Launchers on the Daily Hub (`.lb-academy`, opens in a new tab). It's a normal
+`<a class="launcher-btn">`, so the arrange registry picks it up and the rep can move or hide
+it like any other tile. Boxy knows about it too (`api\bot-knowledge.js`). It needs internet
+and is deliberately NOT in the offline zip.
 
 v3 added the **Study layer**, the part that actually teaches: 102 sections across 11 modules,
 built from PulmOne's own 2025 training decks (the WeTransfer zip in this folder), with 66 real

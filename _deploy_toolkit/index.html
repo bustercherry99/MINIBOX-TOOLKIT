@@ -608,6 +608,8 @@
   .lb-calendar:hover { border-color: var(--teal); background: var(--teal-light); }
   .lb-maps { border-color: var(--red); }
   .lb-maps:hover { border-color: var(--red); background: var(--red-light); }
+  .lb-academy { border-color: #7c3aed; }
+  .lb-academy:hover { border-color: #7c3aed; background: #f5f3ff; }
 
   /* Quick Email Composer */
   .email-template-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
@@ -1410,7 +1412,14 @@
           <button id="mbx-chat-boxytoggle" onclick="mbxChatToggleBoxy()" style="background:#f3f0ff;color:#6b46c1;border:1px solid #ddd2f7;border-radius:999px;padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;">&#129302; Ask Boxy</button>
           <button id="mbx-chat-reporttoggle" onclick="mbxChatToggleReport()" style="background:#fff;color:#b91c1c;border:1px solid #fecaca;border-radius:999px;padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;">&#128027; Report a problem</button>
           <span id="mbx-chat-boxynote" style="display:none;font-size:12px;color:#6b46c1;font-weight:600;">Boxy&#39;s in the chat with you &mdash; just type or talk, no need to tag. Tap the button again to talk to the team.</span>
-          <span id="mbx-chat-reportnote" style="display:none;font-size:12px;color:#b91c1c;font-weight:600;">Reporting a problem &mdash; describe what&#39;s broken and hit Send. It goes straight onto Erik&#39;s fix list, and Boxy answers you here.</span>
+          <span id="mbx-chat-reportnote" style="display:none;font-size:12px;color:#b91c1c;font-weight:600;">Reporting a problem &mdash; describe what&#39;s broken and hit Send. It goes straight to administration and <b>never into the team chat</b> &mdash; Boxy answers you privately, just below.</span>
+        </div>
+        <div id="mbx-chat-private" style="display:none;margin:10px 12px 0;padding:11px 12px;background:#f6fbff;border:1px solid #cfe6f7;border-radius:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+            <span style="font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#1d6fa5;">&#128274; Private &mdash; only you see this</span>
+            <button onclick="mbxChatClosePrivate()" title="Dismiss" style="margin-left:auto;background:none;border:0;color:var(--gray-600);font-size:16px;cursor:pointer;line-height:1;padding:0 2px;">&#10005;</button>
+          </div>
+          <div id="mbx-chat-privatetext" style="font-size:13px;color:#12313f;line-height:1.5;white-space:pre-wrap;"></div>
         </div>
         <div id="mbx-chat-compose" style="display:flex;gap:8px;padding:12px;border-top:1px solid var(--gray-200);background:#fff;align-items:flex-end;">
           <textarea id="mbx-chat-input" rows="1" placeholder="Type a message&hellip;" style="flex:1;resize:none;border:1px solid var(--gray-300);border-radius:12px;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.45;max-height:120px;box-sizing:border-box;"></textarea>
@@ -6221,6 +6230,11 @@ init();
     <div class="hub-section" id="hub-launchers">
       <div class="hub-section-title">&#128640; App Launchers</div>
       <div class="launcher-grid">
+        <a href="https://minibox-academy-course.vercel.app" target="_blank" rel="noopener" class="launcher-btn lb-academy">
+          <div class="launcher-icon">&#127891;</div>
+          <div class="launcher-name">MiniBox Academy</div>
+          <div class="launcher-desc">Learn the product &mdash; 11 modules</div>
+        </a>
         <a href="https://outlook.office.com" target="_blank" class="launcher-btn lb-outlook">
           <div class="launcher-icon">&#128231;</div>
           <div class="launcher-name">Outlook</div>
@@ -13760,6 +13774,17 @@ document.addEventListener('keydown', function(e) {
 <style>
   .m3-cat-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-600); margin:14px 0 6px; }
   .m3-cat-label:first-child { margin-top:0; }
+  /* collapsible category headers (Email Assembly Station) */
+  .m3-cat-head { display:flex; align-items:center; gap:9px; width:100%; margin:12px 0 6px; padding:10px 12px; background:var(--gray-100,#f3f4f6); border:1px solid var(--gray-200,#e5e7eb); border-radius:10px; cursor:pointer; font-family:inherit; text-align:left; }
+  .m3-cat-head:first-child { margin-top:0; }
+  .m3-cat-head:hover { background:#eef2f6; }
+  .m3-cat-chev { font-size:11px; color:var(--gray-600,#4b5563); transition:transform .15s; flex-shrink:0; }
+  .m3-cat-head.open .m3-cat-chev { transform:rotate(90deg); }
+  .m3-cat-name { flex:1; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-600,#4b5563); }
+  .m3-cat-count { font-size:10px; font-weight:700; color:var(--gray-600,#4b5563); background:#fff; border:1px solid var(--gray-200,#e5e7eb); border-radius:999px; padding:2px 8px; }
+  .m3-cat-sel { font-size:10px; font-weight:800; color:#0f9d6b; background:#e8f8f1; border:1px solid #b9e8d3; border-radius:999px; padding:2px 8px; }
+  .m3-cat-body { display:none; }
+  .m3-cat-body.open { display:block; }
   .m3-mat-row { display:flex; align-items:flex-start; gap:9px; padding:7px 10px; border:1px solid var(--gray-200); border-radius:8px; margin-bottom:6px; cursor:pointer; background:#fff; transition:border-color .12s, background .12s; }
   .m3-mat-row:hover { border-color:var(--blue-brand); }
   .m3-mat-row.on { border-color:var(--blue-brand); background:var(--sel-wash); }
@@ -14319,7 +14344,16 @@ function m3RenderEasMaterials(){
   M3_CAT_ORDER.forEach(function(cat){
     var items = MATERIALS.filter(function(m){ return m.cat===cat && !m.noembed; });
     if (!items.length) return;
-    html += '<div class="m3-cat-label">' + M3_CATS[cat] + '</div>';
+    var nSel = items.filter(function(m){ return M3_STATE.easIds.indexOf(m.id) >= 0; }).length;
+    var catOpen = m3EasCatOpen(cat, nSel);
+    html += '<button type="button" class="m3-cat-head' + (catOpen?' open':'') + '" id="m3-eas-head-' + cat + '"'
+          + ' aria-expanded="' + (catOpen?'true':'false') + '" onclick="m3EasCatToggle(\'' + cat + '\')">'
+          + '<span class="m3-cat-chev">&#9656;</span>'
+          + '<span class="m3-cat-name">' + M3_CATS[cat] + '</span>'
+          + '<span class="m3-cat-count">' + items.length + '</span>'
+          + '<span class="m3-cat-sel" id="m3-eas-sel-' + cat + '"' + (nSel?'':' hidden') + '>' + nSel + ' selected</span>'
+          + '</button>'
+          + '<div class="m3-cat-body' + (catOpen?' open':'') + '" id="m3-eas-body-' + cat + '">';
     items.forEach(function(m){
       var on = M3_STATE.easIds.indexOf(m.id) >= 0;
       html += '<label class="m3-mat-row' + (on?' on':'') + '" id="m3-eas-row-' + m.id + '">'
@@ -14328,9 +14362,43 @@ function m3RenderEasMaterials(){
             + (m.care ? ' <span class="m3-care">send only when closing</span>' : '') + '</div>'
             + '<div class="m3-mat-sub">' + m.sub + '</div></div></label>';
     });
+    html += '</div>';
   });
   host.innerHTML = html;
   m3EasSizeUpdate();
+}
+
+/* --- collapsible categories in the Assembly Station -------------------
+   Open/closed is remembered per device. A category holding a ticked
+   material is always forced open so a selection can never hide. */
+var M3_EAS_CATS_KEY = 'mbx_eas_cats_v1';
+function m3EasCatState(){
+  try { return JSON.parse(localStorage.getItem(M3_EAS_CATS_KEY) || '{}') || {}; } catch(e){ return {}; }
+}
+function m3EasCatOpen(cat, nSel){
+  if (nSel) return true;
+  var st = m3EasCatState();
+  if (Object.prototype.hasOwnProperty.call(st, cat)) return !!st[cat];
+  return cat === 'send';        /* first visit: only the core send-pack is open */
+}
+function m3EasCatToggle(cat){
+  var head = document.getElementById('m3-eas-head-' + cat);
+  var body = document.getElementById('m3-eas-body-' + cat);
+  if (!head || !body) return;
+  var open = !head.classList.contains('open');
+  head.classList.toggle('open', open);
+  body.classList.toggle('open', open);
+  head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  var st = m3EasCatState(); st[cat] = open;
+  try { localStorage.setItem(M3_EAS_CATS_KEY, JSON.stringify(st)); } catch(e){}
+}
+function m3EasCatBadge(cat){
+  var items = MATERIALS.filter(function(m){ return m.cat===cat && !m.noembed; });
+  var n = items.filter(function(m){ return M3_STATE.easIds.indexOf(m.id) >= 0; }).length;
+  var el = document.getElementById('m3-eas-sel-' + cat);
+  if (!el) return;
+  el.textContent = n + ' selected';
+  if (n) el.removeAttribute('hidden'); else el.setAttribute('hidden','');
 }
 function m3EasToggle(id, on){
   var i = M3_STATE.easIds.indexOf(id);
@@ -14338,6 +14406,8 @@ function m3EasToggle(id, on){
   if (!on && i >= 0) M3_STATE.easIds.splice(i,1);
   var row = document.getElementById('m3-eas-row-' + id);
   if (row) row.classList.toggle('on', on);
+  var mat = MATERIALS.filter(function(m){ return m.id===id; })[0];
+  if (mat) m3EasCatBadge(mat.cat);
   m3EasSizeUpdate();
 }
 function m3EasSizeUpdate(){
@@ -16459,7 +16529,8 @@ function achfPrint() { window.print(); }
         if (data.message && data.message.ts) setLastRead(data.message.ts);
         if (isReport) {
           setReportMode(false);                 // one report, then back to normal chat
-          try { m3Toast('Reported ✓ It is in Erik’s Problem Reports inbox — Boxy is replying here too.', 6000); } catch (e) {}
+          window.mbxChatShowPrivate(data.reply || 'Reported ✓ It is on the fix list.');
+          try { m3Toast('Reported ✓ Sent straight to administration — it is not in the team chat.', 6000); } catch (e) {}
         }
         refresh(true);
       })
@@ -16467,6 +16538,19 @@ function achfPrint() { window.print(); }
         try { m3Toast('Message didn\'t send — check your connection and try again.', 5000); } catch (e) { alert('Message didn\'t send — try again.'); }
       })
       .then(function () { if (btn) { btn.disabled = false; btn.textContent = 'Send'; } });
+  };
+
+  /* Boxy's answer to a problem report is shown only to the reporter —
+     the report itself is never posted to the shared thread. */
+  window.mbxChatShowPrivate = function (txt) {
+    var box = $('mbx-chat-private'), el = $('mbx-chat-privatetext');
+    if (!box || !el) return;
+    el.textContent = txt;
+    box.style.display = 'block';
+  };
+  window.mbxChatClosePrivate = function () {
+    var box = $('mbx-chat-private');
+    if (box) box.style.display = 'none';
   };
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -16572,6 +16656,9 @@ mbxRenderEmailList();
       if (refreshing) return; refreshing = true; location.reload();
     });
     navigator.serviceWorker.register('./sw.js').then(function (reg) {
+      /* kept on window so the header diamond (its tap is the refresh button)
+         can ask for an update check on demand, not just on this timer */
+      window.mbxSwReg = reg;
       try { reg.update(); } catch (e) {}
       setInterval(function () { try { reg.update(); } catch (e) {} }, 30 * 60 * 1000);
       if (reg.waiting && navigator.serviceWorker.controller) showUpdateBar(reg);
@@ -17082,6 +17169,16 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (r) { var ct = r.headers.get('content-type') || ''; if (!r.ok || ct.indexOf('json') === -1) throw new Error('send-failed'); return r.json(); })
       .then(function (data) {
         if (!data || !data.ok) throw new Error('send-failed');
+        /* A problem report never enters the shared thread, so there is
+           nothing to poll for — the answer rides back in the response. */
+        if (data.private) {
+          setReport(false);
+          sending = false;
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Send'; }
+          convo.push({ who: 'boxy', text: data.reply || 'Got it — sent to administration.' });
+          renderConvo();
+          return;
+        }
         var afterTs = (data.message && data.message.ts) || Date.now();
         if (reportMode) setReport(false);   // one report, then back to normal ask mode
         awaitReply(afterTs, 9);
@@ -18678,12 +18775,35 @@ html[data-mbx-theme="night"] #mbx-boxy-fab img{ filter:none; }
     mark.innerHTML = markup();
     mark.setAttribute('role', 'button');
     mark.setAttribute('tabindex', '0');
-    mark.setAttribute('title', 'MiniBox Toolkit — replay the open-up');
-    mark.setAttribute('aria-label', 'MiniBox Toolkit — replay the open-up');
-    function replay(){ if(window.mbxIgnition) window.mbxIgnition(); }
-    mark.addEventListener('click', replay);
+    mark.setAttribute('title', 'Refresh — replay the open-up and pull the latest');
+    mark.setAttribute('aria-label', 'Refresh the toolkit');
+    /* Erik asked for this: the mark already spun when you tapped it, so make
+       the tap actually DO something. One tap now replays the open-up, re-draws
+       the HQ board (same as HQ's own Refresh), and asks the service worker
+       whether a newer build has shipped -- which is the real answer to "it
+       doesn't look like this is updating anymore" on the installed app. */
+    function refreshAll(){
+      if(window.mbxIgnition) window.mbxIgnition();
+      try { if(typeof window.mbxHqRefresh === 'function') window.mbxHqRefresh(); } catch(e){}
+      var reg = window.mbxSwReg;
+      if(reg && typeof reg.update === 'function'){
+        try {
+          reg.update().then(function(){
+            if(reg.installing || reg.waiting){
+              /* wait out the open-up so the two messages do not collide */
+              setTimeout(function(){
+                if(typeof elToast === 'function')
+                  elToast('A newer version is downloading. The blue Refresh bar will appear when it is ready.', 5200);
+              }, 2800);
+            }
+          }).catch(function(){});
+        } catch(e){}
+      }
+      try { if(typeof elToast === 'function') elToast('Refreshed — pulled the latest.', 2400); } catch(e){}
+    }
+    mark.addEventListener('click', refreshAll);
     mark.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); replay(); }
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); refreshAll(); }
     });
 
     var text = document.createElement('div');
@@ -20894,7 +21014,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     h += '<div class="hq-bar">';
     h += '<div><div class="hq-eyebrow">HQ</div>';
     h += '<div class="hq-title">' + esc(greeting()) + (name ? ', ' + esc(name) : '') + '</div>';
-    h += '<div class="hq-when">' + esc(longDate()) + ' &mdash; here&rsquo;s everything already waiting on you.</div></div>';
+    h += '<div class="hq-when">' + esc(longDate()) + ' &mdash; here&rsquo;s everything already waiting on you.</div><div class="hq-when" data-mbx-ver="1" style="margin-top:2px;opacity:.75"></div></div>';
     h += '<div class="hq-bar-r"><button type="button" class="hq-mini" data-hq-refresh="1">Refresh</button></div>';
     h += '</div>';
 
@@ -20937,6 +21057,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
       jump(t.getAttribute('data-hq-go'));
     });
 
+    window.mbxHqRefresh = render;   /* the header diamond calls this too */
     render();
     /* the board is a snapshot, so freshen it whenever the rep comes back to
        the hub or back to the tab — never on a timer they didn't ask for */
@@ -21842,8 +21963,11 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   /* Speed Run */
   #cl-ov .cl-opts { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:9px; margin-top:18px; }
   #cl-ov .cl-opt { border:1px solid #dde4e8; background:#fff; border-radius:11px; padding:14px 15px; cursor:pointer; text-align:left; font-family:inherit; font-size:13.5px; font-weight:600; color:#22404f; line-height:1.45; transition:all .1s; }
-  #cl-ov .cl-opt:hover { border-color:#3f7d63; background:#f7fbf9; }
-  #cl-ov .cl-opt.ok { border-color:#3f7d63; background:#f1f8f4; color:#1f4b39; }
+  @media (hover:hover) and (pointer:fine) {
+    #cl-ov .cl-opt:hover { border-color:#b6c6ce; background:#f7f9fa; }
+  }
+  #cl-ov .cl-opt.ok { border-color:#3f7d63; background:#3f7d63; color:#fff; font-weight:700; }
+  #cl-ov .cl-opt.ok::after { content:' \2713'; font-weight:700; }
   #cl-ov .cl-opt.no { border-color:#c0796a; background:#fdf4f2; color:#8a4230; }
   #cl-ov .cl-clock { font-family:'DM Mono','SF Mono',Consolas,monospace; font-size:26px; font-weight:600; color:#12252e; letter-spacing:.03em; }
   #cl-ov .cl-clock.low { color:#a8543f; animation:clBreathe 1s ease-in-out infinite; }
@@ -22564,13 +22688,13 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 <style id="mbx-claim-css">
   .mcs-open {
     display:inline-flex; align-items:center; gap:5px; vertical-align:middle;
-    margin-left:8px; padding:4px 11px; border:1px solid rgba(159,212,232,.55); background:#f7fafb;
-    color:#16323f; border-radius:999px; cursor:pointer;
+    margin-left:8px; padding:5px 12px; border:1px solid #9fd4e8; background:#16323f;
+    color:#fff; border-radius:999px; cursor:pointer; box-shadow:0 0 0 2px rgba(159,212,232,.28);
     font-family:'DM Mono','SF Mono',Consolas,monospace; font-size:9.5px; font-weight:600;
     letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; transition:all .15s;
   }
   .mcs-open::after { content:'\2192'; font-size:11px; font-weight:400; transition:transform .15s; }
-  .mcs-open:hover { background:#eef8fc; color:#0f2733; border-color:var(--k-blade,#9fd4e8); box-shadow:0 0 0 1px rgba(159,212,232,.35),0 0 10px -3px rgba(159,212,232,.65); }
+  .mcs-open:hover { background:#0f2733; color:#fff; border-color:var(--k-blade,#9fd4e8); box-shadow:0 0 0 3px rgba(159,212,232,.45),0 0 12px -3px rgba(159,212,232,.75); }
   .mcs-open:hover::after { transform:translateX(2px); }
 
   #mcs-ov { display:none; position:fixed; inset:0; z-index:99996; background:rgba(14,28,36,.76); align-items:flex-start; justify-content:center; padding:22px 16px; overflow-y:auto; }
@@ -24534,6 +24658,151 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
       /* while arranging, a tap moves things - it never opens them */
       if (on && t.closest('#tab-hub [data-arr]')) { e.preventDefault(); e.stopPropagation(); }
     }, true);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+<!-- ============================================================
+     TO THE TOP. These pages get very long on a phone and the only
+     way back up was a lot of thumb. One pill, pinned at the TOP of
+     the screen so it is nowhere near where a thumb rests and cannot
+     sit on top of the Boxy button at the bottom. Appears once you
+     are a screen or so down; tap it and you are back at the top.
+     Fully self-contained. Revert = delete this block.
+     ============================================================ -->
+<style id="mbx-totop-css">
+  #mbx-totop {
+    position:fixed; top:10px; left:50%; z-index:880;
+    transform:translate(-50%,-160%);
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 16px; border-radius:999px; cursor:pointer;
+    border:1px solid rgba(255,255,255,.22);
+    background:rgba(17,32,42,.93); color:#fff;
+    font-family:inherit; font-size:12.5px; font-weight:800; line-height:1;
+    box-shadow:0 8px 26px rgba(0,0,0,.34);
+    opacity:0; pointer-events:none;
+    transition:transform .2s ease, opacity .2s ease;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  }
+  #mbx-totop.on { transform:translate(-50%,0); opacity:1; pointer-events:auto; }
+  #mbx-totop:active { transform:translate(-50%,1px); }
+  /* Never cover the sticky header on a wide screen - it is a phone tool. */
+  @media (min-width:900px) { #mbx-totop { display:none; } }
+  @media print { #mbx-totop { display:none; } }
+</style>
+<script id="mbx-totop">
+(function () {
+  'use strict';
+  if (window.__totopBooted) return;
+  window.__totopBooted = true;
+
+  var SHOW_AFTER = 420;   /* about one phone screen down */
+  var pill = null;
+
+  function build() {
+    if (document.getElementById('mbx-totop')) return;
+    pill = document.createElement('button');
+    pill.type = 'button';
+    pill.id = 'mbx-totop';
+    pill.setAttribute('aria-label', 'Back to the top of this page');
+    pill.innerHTML = '\u2191 To the top';
+    pill.addEventListener('click', function () {
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      catch (e) { window.scrollTo(0, 0); }
+    });
+    document.body.appendChild(pill);
+  }
+
+  function sync() {
+    if (!pill) return;
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    pill.classList.toggle('on', y > SHOW_AFTER);
+  }
+
+  function boot() {
+    build();
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+
+<script id="mbx-appver">
+/* ============================================================================
+   "WHEN DID THIS LAST UPDATE?"  (v1)
+   Erik asked, from the Daily Hub, when the toolkit actually updates — it had
+   started to look frozen. There was no way to tell by looking, so this puts a
+   plain date on the HQ board: the version YOU are running right now.
+
+   The number does not come from anything hard-coded here — it is read back
+   from the service worker that is actually driving this copy, so an installed
+   app sitting on a stale cache honestly shows the OLD date. That is the whole
+   point: if the date is behind, the copy is behind, and the blue Refresh bar
+   (mbx-pwa) is the fix.
+
+   Offline / USB copies have no service worker, so the line stays empty rather
+   than lying about a date.
+   ========================================================================= */
+(function () {
+  'use strict';
+  if (window.__mbxAppVer) return; window.__mbxAppVer = 1;
+
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  /* 'mbx-2026-07-23l' -> 'Jul 23'. Anything unexpected just isn't shown. */
+  function pretty(v) {
+    var m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(v || ''));
+    if (!m) return '';
+    var mo = MONTHS[(+m[2]) - 1];
+    if (!mo) return '';
+    return mo + ' ' + (+m[3]);
+  }
+
+  function paint(text) {
+    var els = document.querySelectorAll('[data-mbx-ver]');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-mbx-filled') === text) continue;
+      els[i].textContent = text;
+      els[i].setAttribute('data-mbx-filled', text);
+    }
+  }
+
+  /* Ask the running service worker what version it is. */
+  function askSw() {
+    return new Promise(function (resolve) {
+      try {
+        var sw = navigator.serviceWorker && navigator.serviceWorker.controller;
+        if (!sw) return resolve('');
+        var ch = new MessageChannel();
+        var done = false;
+        var t = setTimeout(function () { if (!done) { done = true; resolve(''); } }, 3000);
+        ch.port1.onmessage = function (e) {
+          if (done) return; done = true; clearTimeout(t);
+          resolve((e.data && e.data.version) || '');
+        };
+        sw.postMessage({ type: 'VERSION' }, [ch.port2]);
+      } catch (e) { resolve(''); }
+    });
+  }
+
+  function boot() {
+    askSw().then(function (v) {
+      var when = pretty(v);
+      if (!when) return;                       // no SW (offline copy) — say nothing
+      var text = 'Toolkit updated ' + when + ' \u00b7 this is the copy you are running';
+      paint(text);
+      /* HQ repaints itself (Refresh button, panel reloads), which wipes the
+         slot. Cheap re-stamp instead of reaching into HQ's render. */
+      setInterval(function () { paint(text); }, 4000);
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

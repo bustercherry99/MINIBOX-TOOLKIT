@@ -2,7 +2,7 @@
    HOW UPDATES REACH THE TEAM: bump VERSION below on every deploy.
    The browser notices sw.js changed, installs the new version, and the
    in-page banner offers "Refresh" so everyone gets the latest. */
-var VERSION = 'mbx-2026-07-23h';
+var VERSION = 'mbx-2026-07-23m';
 var CORE = [
   './', './index.html', './manifest.webmanifest', './materials-data.js',
   './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './vendor/leaflet.js', './vendor/leaflet.css'
@@ -22,6 +22,12 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('message', function (e) {
   if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  /* The page asks 'what version am I actually running?' so the HQ board can
+     show a real date. Answered from THIS worker, so a stale cached copy
+     honestly reports its old date instead of the newest one. */
+  if (e.data && e.data.type === 'VERSION' && e.ports && e.ports[0]) {
+    e.ports[0].postMessage({ version: VERSION });
+  }
 });
 
 self.addEventListener('fetch', function (e) {

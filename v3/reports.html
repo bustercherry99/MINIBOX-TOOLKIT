@@ -38,6 +38,17 @@
   /* ── stats ── */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:6px;}
   .stat{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:14px 15px;}
+  /* tiles that jump you to the section they count */
+  button.stat{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer;position:relative;transition:border-color .12s,transform .12s;}
+  button.stat:hover{border-color:var(--ink-dim);transform:translateY(-1px);}
+  button.stat::after{content:'\2192';position:absolute;top:11px;right:12px;font:700 13px/1 var(--mono);color:var(--ink-dim);opacity:.55;}
+  /* "To the top" — top of the screen, out of thumb range at the bottom */
+  #topbtn{position:fixed;top:10px;left:50%;transform:translate(-50%,-140%);z-index:9999;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    border-radius:999px;padding:9px 17px;font:700 12px/1 var(--mono);letter-spacing:.09em;
+    text-transform:uppercase;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45);
+    opacity:0;pointer-events:none;transition:transform .18s,opacity .18s;}
+  #topbtn.on{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
   .stat b{display:block;font:800 26px/1.1 var(--mono);letter-spacing:-.02em;}
   .stat span{display:block;font:600 10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:7px;}
   .stat.alert b{color:var(--red)}
@@ -158,6 +169,8 @@
   <div class="hint">The team password gets you into the toolkit.<br>This one shows what the team is reporting and asking.</div>
 </div>
 
+<button type="button" id="topbtn" onclick="toTop()" title="Back to the top">&#8593; To the top</button>
+
 <div class="wrap" id="app" style="display:none">
   <div class="kicker">MiniBox+ Toolkit</div>
   <div class="bar">
@@ -168,7 +181,7 @@
   <p class="lede">Everything the team is telling you, in one place. Problem reports come in from
     <b>Report a problem</b> — in Team Chat or from the Boxy button on any screen.</p>
 
-  <h2 style="margin-top:22px;">Who's on right now</h2>
+  <h2 style="margin-top:22px;" id="sec-live">Who's on right now</h2>
   <div class="bar" style="padding-top:0;">
     <span id="livestamp">checking&hellip;</span>
     <span class="spacer"></span>
@@ -192,12 +205,12 @@
 
   <div class="stats" id="stats" style="margin-top:26px;"></div>
 
-  <h2>Overnight triage</h2>
+  <h2 id="sec-triage">Overnight triage</h2>
   <p class="lede" style="margin-bottom:14px;">Every morning the reports below get read, investigated
     and where it is safe, fixed and deployed. This is what happened on the last run.</p>
   <div id="digest"></div>
 
-  <h2>Problem Reports</h2>
+  <h2 id="sec-problems">Problem Reports</h2>
   <div class="bar">
     <button class="filt on" data-f="open">Open</button>
     <button class="filt" data-f="working">Working on it</button>
@@ -208,7 +221,7 @@
   </div>
   <div id="list"></div>
 
-  <h2>What the team is asking Boxy</h2>
+  <h2 id="sec-boxy">What the team is asking Boxy</h2>
   <div class="card" id="questions"></div>
 
   <h2>What's actually getting used</h2>
@@ -224,7 +237,7 @@
   </div>
   <div id="usage"><div class="empty">Loading&hellip;</div></div>
 
-  <h2>Team Chat activity</h2>
+  <h2 id="sec-chat">Team Chat activity</h2>
   <div class="card" id="whos"></div>
 </div>
 
@@ -293,6 +306,7 @@ function unlock(){
       err.textContent = '';
       document.getElementById('lock').style.display = 'none';
       document.getElementById('app').style.display = 'block';
+      initTopPill();
       apply(d);
       loadUsage();
       loadAccess();
@@ -417,11 +431,11 @@ function apply(d){
   var open = (d.issues||[]).filter(function(i){ return (i.status||'open')==='open'; }).length;
   var p = d.pulse || {};
   document.getElementById('stats').innerHTML =
-      stat(open, 'Open problems', open > 0)
-    + stat((d.issues||[]).length, 'Reports all time')
-    + stat(p.today || 0, 'Messages today')
-    + stat((p.people||[]).length, 'Reps active this week')
-    + stat(p.boxyWeek || 0, 'Boxy answers this week');
+      stat(open, 'Open problems', open > 0, 'sec-problems', 'open')
+    + stat((d.issues||[]).length, 'Reports all time', false, 'sec-problems', 'all')
+    + stat(p.today || 0, 'Messages today', false, 'sec-chat')
+    + stat((p.people||[]).length, 'Reps active this week', false, 'sec-live')
+    + stat(p.boxyWeek || 0, 'Boxy answers this week', false, 'sec-boxy');
   render();
   renderDigest();
   renderQuestions();
@@ -430,9 +444,37 @@ function apply(d){
   // problems are open so the tab can carry a red badge.
   try { if (window.parent && window.parent !== window) window.parent.postMessage({ mbxOpenProblems: open }, '*'); } catch (e) {}
 }
-function stat(n, label, alert){
-  return '<div class="stat' + (alert ? ' alert' : '') + '"><b>' + n + '</b><span>' + label + '</span></div>';
+/* Every tile is a shortcut: tap it and you land on the section it counts,
+   with the right filter already set. No scrolling to find what it meant. */
+function stat(n, label, alert, go, filt){
+  if (!go) return '<div class="stat' + (alert ? ' alert' : '') + '"><b>' + n + '</b><span>' + label + '</span></div>';
+  return '<button type="button" class="stat go' + (alert ? ' alert' : '') + '"'
+    + ' onclick="statGo(\'' + go + '\'' + (filt ? ',\'' + filt + '\'' : '') + ')"'
+    + ' title="Go to ' + esc(label) + '"><b>' + n + '</b><span>' + label + '</span></button>';
 }
+function statGo(id, filt){
+  if (filt){
+    filter = filt;
+    var btns = document.querySelectorAll('.filt[data-f]');
+    for (var i = 0; i < btns.length; i++){
+      btns[i].classList.toggle('on', btns[i].getAttribute('data-f') === filt);
+    }
+    render();
+  }
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* "To the top" — pinned at the TOP of the screen, deliberately away from
+   where a thumb rests, because this page gets long on a phone. */
+function initTopPill(){
+  var pill = document.getElementById('topbtn');
+  if (!pill) return;
+  function sync(){ pill.classList.toggle('on', (window.scrollY || document.documentElement.scrollTop || 0) > 350); }
+  window.addEventListener('scroll', sync, { passive:true });
+  sync();
+}
+function toTop(){ window.scrollTo({ top:0, behavior:'smooth' }); }
 
 function render(){
   var list = document.getElementById('list');
@@ -833,7 +875,7 @@ function renderUsage(){
   var rows = people.map(function(p){
     var cls = p.days7 === 0 ? ' class="quiet"' : (p.days7 <= 1 ? ' class="cold"' : '');
     var sub = p.id === 'email' ? esc(p.email)
-            : (p.id === 'name' ? 'no email on file yet' : 'skipped the welcome screen');
+            : (p.id === 'name' ? 'no email on file yet' : 'on the invite list, just never typed a name');
     var badge = p.isNew
       ? '<span style="font:600 9.5px/1 var(--mono);letter-spacing:.1em;color:var(--green);border:1px solid #26402f;border-radius:999px;padding:2px 6px;margin-left:7px;vertical-align:middle;">NEW</span>'
       : '';
@@ -856,7 +898,9 @@ function renderUsage(){
     ? '<p class="lede" style="margin-bottom:12px;color:var(--amber);">'
       + unknown.length + (unknown.length === 1 ? ' person has' : ' people have')
       + ' not put a work email in yet, so their activity can\'t be tied to a person '
-      + 'and may be split across their phone and laptop.</p>'
+      + 'and may be split across their phone and laptop.'
+      + ' This is not a stranger: nobody reaches this app without being on the invite list '
+      + 'or opening a share link you handed out. It only means we have no name to show yet.</p>'
     : '';
 
   var table = '<h2 style="margin-top:26px;">Rep by rep</h2>'
