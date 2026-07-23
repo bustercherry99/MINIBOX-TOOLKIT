@@ -72,12 +72,22 @@ function svg(o) {
 /* The favicon drops the letters altogether. Three strokes-wide characters
    inside a diamond inside 32 physical pixels is grey soup — the diamond alone
    is instantly the same mark, and it stays crisp in a browser tab. */
+/* PAD is deliberately tiny: the diamond's four points run out to the edges of
+   the tile so the black square reads as background, not as a box the mark is
+   sitting in. A home-screen icon is always cropped to the OS's own square —
+   filling it is the closest we get to the icon simply BEING the diamond.
+   The mid-edges are where every mask (iOS squircle included) is widest, so
+   the points survive; only the corners get cut, and those are empty. */
 const JOBS = [
-  { file: 'icon-512.png',          o: { size: 512, pad: .18,  radius: .22, wDia: 3,   wLtr: 3.4, edge: 1 } },
-  { file: 'icon-512-maskable.png', o: { size: 512, pad: .26,  radius: 0,   wDia: 3,   wLtr: 3.4, edge: 0 } },
-  { file: 'icon-192.png',          o: { size: 192, pad: .18,  radius: .22, wDia: 3.2, wLtr: 3.6, edge: 1 } },
-  { file: 'icon-180.png',          o: { size: 180, pad: .18,  radius: .22, wDia: 3.2, wLtr: 3.6, edge: 1 } },
-  { file: 'favicon-32.png',        o: { size: 128, pad: .10,  radius: .20, wDia: 5,   wLtr: 0,   edge: 0 }, resize: 32 },
+  { file: 'icon-512.png',          o: { size: 512, pad: .03,  radius: .22, wDia: 3,   wLtr: 3.4, edge: 1 } },
+  /* Maskable is the one exception — a launcher may crop to a circle of 80% the
+     tile, so the points stay inside that circle (point lands at 12.3% in, i.e.
+     37.7% from centre, under the 40% safe radius). Still far bigger than the
+     old .26 inset. */
+  { file: 'icon-512-maskable.png', o: { size: 512, pad: .09,  radius: 0,   wDia: 3,   wLtr: 3.4, edge: 0 } },
+  { file: 'icon-192.png',          o: { size: 192, pad: .03,  radius: .22, wDia: 3.2, wLtr: 3.6, edge: 1 } },
+  { file: 'icon-180.png',          o: { size: 180, pad: .03,  radius: .22, wDia: 3.2, wLtr: 3.6, edge: 1 } },
+  { file: 'favicon-32.png',        o: { size: 128, pad: .04,  radius: .20, wDia: 5,   wLtr: 0,   edge: 0 }, resize: 32 },
 ];
 
 for (const j of JOBS) {
@@ -93,7 +103,7 @@ for (const j of JOBS) {
 
 /* Keep a copy of the master vector next to the app — handy for slides/print. */
 fs.writeFileSync(path.join(OUT, 'mtk-mark.svg'),
-  svg({ size: 512, pad: .18, radius: .22, wDia: 3, wLtr: 3.4, edge: 1 }), 'utf8');
+  svg({ size: 512, pad: .03, radius: .22, wDia: 3, wLtr: 3.4, edge: 1 }), 'utf8');
 console.log('wrote mtk-mark.svg');
 
 fs.rmSync(TMP, { recursive: true, force: true });

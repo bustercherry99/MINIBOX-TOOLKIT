@@ -18,7 +18,7 @@
   <rect x=".5" y=".5" width="511" height="511" rx="112.14" ry="112.14"
         fill="none" stroke="#2a323b" stroke-width="1"/>
   
-    <g transform="translate(92.16 92.16) scale(3.2768)" fill="none"
+    <g transform="translate(15.36 15.36) scale(4.812799999999999)" fill="none"
        stroke-linejoin="miter" stroke-linecap="butt" vector-effect="none">
       <g stroke="url(#g)" stroke-width="3"><path d="M50 4 L96 50 L50 96 L4 50 Z"/></g>
       <g stroke="url(#g)" stroke-width="3.4"><path d="M25 63 L25 37 L33.75 53.5 L42.5 37 L42.5 63"/><path d="M47.5 37 L60.5 37"/><path d="M54 37 L54 63"/><path d="M65.5 37 L65.5 63"/><path d="M75 37 L65.5 50"/><path d="M65.5 50 L75 63"/></g>

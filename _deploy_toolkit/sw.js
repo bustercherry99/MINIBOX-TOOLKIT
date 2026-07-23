@@ -2,7 +2,7 @@
    HOW UPDATES REACH THE TEAM: bump VERSION below on every deploy.
    The browser notices sw.js changed, installs the new version, and the
    in-page banner offers "Refresh" so everyone gets the latest. */
-var VERSION = 'mbx-2026-07-23d';
+var VERSION = 'mbx-2026-07-23e';
 var CORE = [
   './', './index.html', './manifest.webmanifest', './materials-data.js',
   './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './vendor/leaflet.js', './vendor/leaflet.css'
