@@ -119,6 +119,17 @@ over unchanged underneath it.
   `Mail.Read` + `Calendars.Read`, token in sessionStorage) is already written and the panels
   light up on their own. The IT request in `EMAIL TO IT — Graph approval (copy-paste).txt`
   now asks for all three scopes, so one approval covers HQ and attachments together.
+- **The Hub layout is the rep's, not ours** (`<script id="mbx-arrange">`). An Arrange / Done
+  pill sits in the Daily Hub hero; in arrange mode the launcher tiles reorder inside their box
+  and the whole column (HQ board + every section) reorders top-to-bottom, by finger or mouse.
+  Order is per-device (`mbx_hub_order_v1`, `mbx_launch_order_v1`) and reported nowhere.
+  **Any new Hub block must have an id and be listed in `COL_IDS`** (and a new launcher tile in
+  `LAU_IDS`) or it can't be moved and Reset won't put it back. Ship order = the array order.
+- **Anchors for Node splices must be unique — check first.** Nearly every `mbx-*` block ends
+  with the same four lines (`if (document.readyState === 'loading') ... else boot(); })();
+  </script>`), so a replace on that tail lands in the FIRST block in the file, not yours.
+  A helper function once got spliced into the template-library block that way and the arrange
+  block died with a ReferenceError. Grep the anchor and confirm exactly one hit before writing.
 - **Daily Cut** (`<script id="mbx-daily">`) is the team's daily word game — one
   five-letter word a day, the same one for everybody, played from a card on HQ. The word
   is computed on the device from the Eastern date (`LIST` in that block, 240 words), so it
