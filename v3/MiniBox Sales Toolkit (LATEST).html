@@ -600,6 +600,8 @@
   .lb-docusign:hover { border-color: #ffb800; background: #fffbf0; }
   .lb-salesforce { border-color: #00a1e0; }
   .lb-salesforce:hover { border-color: #00a1e0; background: #f0faff; }
+  .lb-shipping { border-color: #8b5cf6; }
+  .lb-shipping:hover { border-color: #8b5cf6; background: #f5f3ff; }
   .lb-phone { border-color: var(--green); }
   .lb-phone:hover { border-color: var(--green); background: var(--green-light); }
   .lb-calendar { border-color: var(--teal); }
@@ -6216,7 +6218,7 @@ init();
     </div>
 
     <!-- QUICK LAUNCHERS -->
-    <div class="hub-section">
+    <div class="hub-section" id="hub-launchers">
       <div class="hub-section-title">&#128640; App Launchers</div>
       <div class="launcher-grid">
         <a href="https://outlook.office.com" target="_blank" class="launcher-btn lb-outlook">
@@ -6233,6 +6235,11 @@ init();
           <div class="launcher-icon">&#9729;</div>
           <div class="launcher-name">Salesforce</div>
           <div class="launcher-desc">CRM &amp; pipeline</div>
+        </a>
+        <a href="#hub-shipping" class="launcher-btn lb-shipping" onclick="if(window.mbxOpenHub)return mbxOpenHub('hub-shipping',event);">
+          <div class="launcher-icon">&#128230;</div>
+          <div class="launcher-name">Shipping</div>
+          <div class="launcher-desc">Units &amp; mouthpiece orders</div>
         </a>
         <a href="tel:18447856663" class="launcher-btn lb-phone">
           <div class="launcher-icon">&#128222;</div>
@@ -17382,6 +17389,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function boot() { injectButtons(); renderChips(); buildTagList(); }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
@@ -23787,6 +23795,295 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   }
 
   window.mbxDailyOpen = open;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+<style id="mbx-arrange-css">
+  /* ---- Arrange mode: the rep lays the Hub out their own way ---- */
+  #tab-hub .hub-hero { flex-wrap: wrap; }
+  #mbxa-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mbxa-btn {
+    font-family: 'DM Mono', ui-monospace, monospace; font-size: 10.5px;
+    letter-spacing: .12em; text-transform: uppercase;
+    background: #fff; border: 1px solid var(--gray-300, #d1d5db); color: var(--gray-600, #6b7280);
+    border-radius: 999px; padding: 8px 15px; cursor: pointer; white-space: nowrap;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .mbxa-btn:hover { border-color: var(--blue-brand, #1e40af); color: var(--blue-brand, #1e40af); }
+  .mbxa-btn.mbxa-live { background: var(--blue-brand, #1e40af); border-color: var(--blue-brand, #1e40af); color: #fff; }
+  #mbxa-note {
+    display: none; margin: 0 0 18px; padding: 11px 15px;
+    border: 1px dashed rgba(30,64,175,.42); border-radius: 12px;
+    background: rgba(30,64,175,.045); font-size: 12.5px; line-height: 1.55;
+    color: var(--blue-dark, #0a3d6b);
+  }
+  body.mbxa-on #mbxa-note { display: block; }
+
+  body.mbxa-on [data-arr] {
+    position: relative; cursor: grab; touch-action: none;
+    -webkit-user-select: none; user-select: none;
+    box-shadow: 0 0 0 1.5px rgba(30,64,175,.38) !important; border-radius: 12px;
+  }
+  body.mbxa-on [data-arr]:hover { box-shadow: 0 0 0 2px rgba(30,64,175,.75) !important; }
+  body.mbxa-on [data-arr] > * { pointer-events: none; }
+  body.mbxa-on [data-arr]::after {
+    content: "\2725"; position: absolute; top: 6px; right: 8px;
+    font-size: 13px; line-height: 1; color: var(--blue-brand, #1e40af);
+    opacity: .55; pointer-events: none;
+  }
+  body.mbxa-on [data-arr].mbxa-ghost::after { opacity: 1; }
+  body.mbxa-dragging, body.mbxa-dragging * { cursor: grabbing !important; }
+
+  .mbxa-ghost {
+    position: fixed !important; z-index: 9999 !important; margin: 0 !important;
+    pointer-events: none !important; opacity: .97;
+    background: #fff !important; transform: none !important;
+    box-shadow: 0 0 0 2px rgba(30,64,175,.85), 0 20px 44px rgba(10,61,107,.30) !important;
+  }
+  .mbxa-slot {
+    border: 1.5px dashed rgba(30,64,175,.55); border-radius: 12px;
+    background: rgba(30,64,175,.06); box-sizing: border-box;
+  }
+</style>
+
+<script id="mbx-arrange">
+/* =========================================================================
+   MBX ARRANGE (v1, 2026-07-22) - the Daily Hub becomes the rep's own layout.
+   Two sortable zones:
+     - the App Launchers box: tiles reorder inside the round box
+     - the Hub column: HQ board + every section reorder top to bottom
+   Pointer events, so a finger on the iPad behaves exactly like a mouse.
+   The order lives on the device (localStorage). Nothing is reported anywhere.
+   Self-contained + append-only, same pattern as mbx-pwa / mbx-hq.
+   ========================================================================= */
+(function () {
+  var KEY_COL = 'mbx_hub_order_v1', KEY_LAU = 'mbx_launch_order_v1';
+  var COL_IDS = ['mbx-hq', 'hub-launchers', 'hub-shipping', 'hub-email', 'hub-notes', 'hub-contacts', 'hub-refs'];
+  var LAU_IDS = ['outlook', 'docusign', 'salesforce', 'shipping', 'pulmone-support', 'calendar', 'maps'];
+  var on = false, drag = null, raf = 0, edge = 0;
+
+  function $(id) { return document.getElementById(id); }
+  function get(k) { try { var v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : null; } catch (e) { return null; } }
+  function put(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+
+  function col() { return $('tab-hub'); }
+  function grid() { var s = $('hub-launchers'); return s ? s.querySelector('.launcher-grid') : null; }
+
+  /* ---------- mark what can move ---------- */
+  function tag() {
+    var hub = col(); if (!hub) return;
+    COL_IDS.forEach(function (id) {
+      var el = $(id);
+      if (el && el.parentNode === hub) { el.setAttribute('data-arr', 'col'); el.setAttribute('data-arr-id', id); }
+    });
+    var g = grid(); if (!g) return;
+    Array.prototype.slice.call(g.children).forEach(function (el) {
+      if (el.classList && el.classList.contains('launcher-btn')) {
+        el.setAttribute('data-arr', 'lau');
+        if (!el.getAttribute('data-arr-id')) {
+          var n = el.querySelector('.launcher-name');
+          el.setAttribute('data-arr-id', slug(n ? n.textContent : 'tile'));
+        }
+      }
+    });
+  }
+
+  function items(zone, kind) {
+    if (!zone) return [];
+    return Array.prototype.slice.call(zone.children).filter(function (el) {
+      return el.getAttribute && el.getAttribute('data-arr') === kind;
+    });
+  }
+
+  /* ---------- saved order in, current order out ---------- */
+  function apply(zone, kind, want) {
+    if (!zone || !want || !want.length) return;
+    var list = items(zone, kind), by = {};
+    list.forEach(function (el) { by[el.getAttribute('data-arr-id')] = el; });
+    var seen = {}, out = [];
+    want.forEach(function (id) { if (by[id] && !seen[id]) { seen[id] = 1; out.push(by[id]); } });
+    list.forEach(function (el) { var id = el.getAttribute('data-arr-id'); if (!seen[id]) { seen[id] = 1; out.push(el); } });
+    out.forEach(function (el) { zone.appendChild(el); });
+  }
+
+  function remember() {
+    var g = grid(); if (g) put(KEY_LAU, items(g, 'lau').map(function (el) { return el.getAttribute('data-arr-id'); }));
+    var h = col(); if (h) put(KEY_COL, items(h, 'col').map(function (el) { return el.getAttribute('data-arr-id'); }));
+  }
+
+  function restore() {
+    tag();
+    apply(col(), 'col', get(KEY_COL));
+    apply(grid(), 'lau', get(KEY_LAU));
+  }
+
+  /* ---------- dragging ---------- */
+  function down(e) {
+    if (!on || drag || e.button > 0) return;
+    var item = e.target && e.target.closest ? e.target.closest('[data-arr]') : null;
+    if (!item || !item.parentNode) return;
+    var kind = item.getAttribute('data-arr'), zone = item.parentNode;
+    var r = item.getBoundingClientRect();
+    var slot = document.createElement('div');
+    slot.className = 'mbxa-slot';
+    slot.style.width = r.width + 'px';
+    slot.style.height = r.height + 'px';
+    if (kind === 'col') slot.style.margin = '0 0 12px';
+    zone.insertBefore(slot, item);
+    item.classList.add('mbxa-ghost');
+    item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
+    item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
+    drag = { item: item, zone: zone, kind: kind, slot: slot,
+             dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
+    document.body.classList.add('mbxa-dragging');
+    e.preventDefault();
+  }
+
+  function place() {
+    if (!drag) return;
+    var zone = drag.zone, kind = drag.kind, px = drag.x, py = drag.y;
+    var best = null, bestD = Infinity, before = false;
+    items(zone, kind).forEach(function (el) {
+      if (el === drag.item) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var d = (px - cx) * (px - cx) + (py - cy) * (py - cy);
+      if (d < bestD) {
+        bestD = d; best = el;
+        before = (kind === 'lau')
+          ? (py < r.top ? true : (py > r.bottom ? false : px < cx))
+          : (py < cy);
+      }
+    });
+    if (!best) return;
+    if (before) { if (drag.slot.nextSibling !== best) zone.insertBefore(drag.slot, best); }
+    else { var nx = best.nextSibling; if (nx !== drag.slot) zone.insertBefore(drag.slot, nx); }
+  }
+
+  function move(e) {
+    if (!drag) return;
+    e.preventDefault();
+    drag.x = e.clientX; drag.y = e.clientY;
+    drag.item.style.left = (e.clientX - drag.dx) + 'px';
+    drag.item.style.top = (e.clientY - drag.dy) + 'px';
+    place();
+    var h = window.innerHeight || 800, sp = 0;
+    if (e.clientY < 110) sp = -Math.min(24, (110 - e.clientY) / 4);
+    else if (e.clientY > h - 110) sp = Math.min(24, (e.clientY - (h - 110)) / 4);
+    edge = sp;
+    if (sp && !raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick() {
+    raf = 0;
+    if (!drag || !edge) return;
+    window.scrollBy(0, edge);
+    place();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function up() {
+    if (!drag) return;
+    var d = drag; drag = null; edge = 0;
+    if (d.slot.parentNode) d.slot.parentNode.insertBefore(d.item, d.slot);
+    if (d.slot.parentNode) d.slot.parentNode.removeChild(d.slot);
+    d.item.classList.remove('mbxa-ghost');
+    d.item.style.left = ''; d.item.style.top = ''; d.item.style.width = ''; d.item.style.height = '';
+    document.body.classList.remove('mbxa-dragging');
+    remember();
+  }
+
+  /* ---------- the Arrange / Done switch ---------- */
+  function setOn(v) {
+    on = !!v;
+    if (on) tag();
+    document.body.classList.toggle('mbxa-on', on);
+    var b = $('mbxa-toggle');
+    if (b) { b.classList.toggle('mbxa-live', on); b.textContent = on ? '\u2713 Done' : '\u21C5 Arrange'; }
+    var r = $('mbxa-reset');
+    if (r) r.style.display = on ? '' : 'none';
+    var note = $('mbxa-note'), hub = col();
+    if (on && note && hub) {
+      var hero = hub.querySelector('.hub-hero');
+      if (hero && note.previousSibling !== hero) hub.insertBefore(note, hero.nextSibling);
+      try { note.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+    }
+  }
+
+  function reset() {
+    try { localStorage.removeItem(KEY_COL); localStorage.removeItem(KEY_LAU); } catch (e) {}
+    apply(col(), 'col', COL_IDS);
+    apply(grid(), 'lau', LAU_IDS);
+  }
+
+  /* ---------- the Shipping tile (and anything else) opens its section ---------- */
+  window.mbxOpenHub = function (id, ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (on) return false;
+    var el = $(id); if (!el) return false;
+    if (el.classList.contains('hub-acc') && !el.classList.contains('open') &&
+        typeof window.toggleHubAcc === 'function') window.toggleHubAcc(id);
+    setTimeout(function () {
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { el.scrollIntoView(); }
+    }, 60);
+    return false;
+  };
+
+  /* ---------- wiring ---------- */
+  function bar() {
+    var hub = col(); if (!hub || $('mbxa-bar')) return;
+    var hero = hub.querySelector('.hub-hero'); if (!hero) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'mbxa-bar';
+    wrap.innerHTML =
+      '<button type="button" class="mbxa-btn" id="mbxa-toggle">\u21C5 Arrange</button>' +
+      '<button type="button" class="mbxa-btn" id="mbxa-reset" style="display:none">Reset</button>';
+    hero.appendChild(wrap);
+
+    var note = document.createElement('div');
+    note.id = 'mbxa-note';
+    note.innerHTML = '<strong>Arrange mode.</strong> Drag anything where you want it \u2014 the launcher tiles ' +
+      'move around inside their box, the sections move up and down the page. Your layout is saved on this ' +
+      'device only. Tap <strong>Done</strong> when it looks right, or <strong>Reset</strong> to put it back.';
+    if (hero.nextSibling) hub.insertBefore(note, hero.nextSibling); else hub.appendChild(note);
+
+    $('mbxa-toggle').addEventListener('click', function () { setOn(!on); });
+    $('mbxa-reset').addEventListener('click', reset);
+  }
+
+  /* walking away from the Hub drops out of arrange mode on its own */
+  function watchTabs() {
+    if (typeof window.showTab !== 'function' || window.showTab.__arr) return;
+    var orig = window.showTab;
+    window.showTab = function (id) {
+      var r = orig.apply(this, arguments);
+      if (id !== 'hub' && on) setOn(false);
+      return r;
+    };
+    window.showTab.__arr = true;
+  }
+
+  function boot() {
+    try { bar(); restore(); watchTabs(); } catch (e) {}
+    /* HQ mounts itself into the hub a beat later - pick it up when it lands */
+    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { try { if (!drag) restore(); } catch (e) {} }, ms); });
+
+    document.addEventListener('pointerdown', down, true);
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', up);
+    document.addEventListener('pointercancel', up);
+    /* in arrange mode a tap moves things - it never opens them */
+    document.addEventListener('click', function (e) {
+      if (!on) return;
+      var it = e.target && e.target.closest ? e.target.closest('[data-arr]') : null;
+      if (it) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
