@@ -215,6 +215,14 @@ over unchanged underneath it.
   (Boxy's owner view, `reports.html` → `api\admin.js` setStatus) makes Boxy post a note
   back to the reporter BY NAME in Team Chat, once only (`notified` flag). Copy never says
   "Erik will do it" — it's "sent to administration, answer shortly."
+- **`materials\ACH-Payment-Authorization.pdf` is GENERATED and must stay blank + fillable.**
+  It is a real AcroForm PDF (41 typable fields) built by `node _tools\pdf\build-ach-form-pdf.mjs`;
+  after rebuilding it, re-run `powershell -File v3\build-materials-data.ps1` (and mirror
+  `materials-data.js` into `_deploy_toolkit`) or the email attachment still ships the old bytes.
+  Until 2026-07-23 that file was a flat print of a real deal — a customer name and dollar
+  figures baked in, nothing typable — and every rep who attached it sent another practice's
+  numbers out. **Never replace it with a "Save as PDF" of a filled-in form.** Same rule for
+  any customer-facing form: the attachable copy ships blank, no names, no prices.
 - **Never invent prices, CPT codes, or clinical claims.** Internal discount math stays
   behind "rep eyes only" walls. Customer-specific docs (e.g. Dr. Nejat's) stay OUT of the
   shared toolkit.
