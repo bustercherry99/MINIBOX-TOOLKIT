@@ -638,6 +638,9 @@
   .qc-attach-hint { font-size: 11.5px; color: var(--gray-600); margin: 10px 0 12px; line-height: 1.55; }
   .qc-cat { font-size: 11px; font-weight: 700; letter-spacing: .02em; color: var(--blue-mid); margin: 14px 0 6px; text-transform: none; }
   .qc-cat:first-child { margin-top: 0; }
+  /* custom line-icons (replaces the emoji set) — Academy style */
+  .m3-ico { width:1.05em; height:1.05em; flex:none; vertical-align:-.18em; margin-right:.42em; }
+  .m3-lc-name .m3-ico { width:1em; height:1em; vertical-align:-.14em; margin-right:.4em; color:var(--lc,#0e6abf); }
   .qc-item { display: flex; align-items: center; gap: 10px; padding: 7px 9px; border-radius: 7px; cursor: pointer; }
   .qc-item:hover { background: #eef4ff; }
   .qc-item input { width: 16px; height: 16px; flex: 0 0 auto; cursor: pointer; accent-color: #0078d4; }
@@ -4181,6 +4184,11 @@
       <div><strong>If a device cannot be resolved remotely,</strong> it must be sent in for repair. Contact PulmOne at <strong>1-844-PulmOne (785-6663)</strong> or <strong><a href="mailto:service@pulm-one.com">service@pulm-one.com</a></strong> to initiate a service order.</div>
     </div>
 
+    <div class="alert-box alert-amber" style="background:#fff5f5; border-color:#c0392b;">
+      <div class="alert-icon" style="color:#c0392b;">&#9873;</div>
+      <div><strong>Before you tell a customer we can replace a part or a unit, call customer service first.</strong> Confirm we actually have the inventory, and be upfront about the wait time &mdash; never promise a part or a turnaround we can't back up. Anything that involves resetting the gas analyzer or resolving a communication issue also goes through customer service: <strong>1-844-PulmOne (785-6663)</strong> / <strong><a href="mailto:service@pulm-one.com">service@pulm-one.com</a></strong>.</div>
+    </div>
+
     <!-- EC102G -->
     <div class="coaching-card">
       <div class="coaching-header" style="background:#fff5f5;">
@@ -4215,7 +4223,7 @@
         <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC117</span>
         <div>
           <div class="coaching-name">Gas Analyzer Issue</div>
-          <div class="coaching-desc">Internal gas system error.</div>
+          <div class="coaching-desc">Internal gas system error. Check the device year first &mdash; it tells you which analyzer is inside.</div>
         </div>
       </div>
       <div class="coaching-body">
@@ -4223,12 +4231,14 @@
           <div class="coaching-col-title">Remote Steps</div>
           <ul class="coaching-list">
             <li><div class="cli-num">1</div> Have the customer restart the tablet.</li>
+            <li><div class="cli-num">2</div> Check the device year &mdash; this tells you the gas analyzer: <strong>2017&ndash;2023 = Ganshorn</strong>, <strong>2024 and newer = Cubic</strong>.</li>
           </ul>
         </div>
         <div>
           <div class="coaching-col-title">If Error Persists</div>
           <ul class="coaching-list">
-            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span> Replace Gas Analyzer.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>Ganshorn (2017&ndash;2023):</strong> the unit must <span class="highlight">come in for repair</span> &mdash; call customer service.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>Cubic (2024+):</strong> there may be a chance to revert (about 50/50); if that doesn't work, it comes in for repair. Either way, call customer service first.</li>
           </ul>
         </div>
       </div>
@@ -4275,16 +4285,44 @@
         <div>
           <div class="coaching-col-title">Remote Steps</div>
           <ul class="coaching-list">
-            <li><div class="cli-num">1</div> Turn off the device.</li>
-            <li><div class="cli-num">2</div> Disconnect all communication cables.</li>
-            <li><div class="cli-num">3</div> Ask customer to send a photo of the back of the device &mdash; check if CU port is damaged.</li>
-            <li><div class="cli-num">4</div> Wait 10 seconds, then power the device back on.</li>
+            <li><div class="cli-num">1</div> Confirm the device is actually powered on.</li>
+            <li><div class="cli-num">2</div> Power everything off and disconnect the communication cable.</li>
+            <li><div class="cli-num">3</div> Wait 10 seconds, then reconnect everything tightly.</li>
+            <li><div class="cli-num">4</div> Power the system back on and confirm the error is gone.</li>
           </ul>
         </div>
         <div>
           <div class="coaching-col-title">If Error Persists</div>
           <ul class="coaching-list">
-            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span></li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>2017&ndash;2023:</strong> have the customer send a photo of the back &mdash; check the CU ports for damage, then call customer service.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>2024+:</strong> call customer service.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failed to Zero -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">Failed to Zero</span>
+        <div>
+          <div class="coaching-name">Flow Sensor Won't Zero</div>
+          <div class="coaching-desc">The HHU can't establish a zero baseline &mdash; usually moisture in the line or a twisted flow tube.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Run the moisture-drying technique on the HHU (see the attached procedure).</li>
+            <li><div class="cli-num">2</div> On older-style HHUs, check whether the flow tube is twisted.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> If the flow tube is twisted, the <span class="highlight">HHU must come in for repair or be replaced.</span></li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> Confirm inventory and wait time with customer service before promising a replacement.</li>
           </ul>
         </div>
       </div>
@@ -4329,9 +4367,9 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Step 4 &mdash; Cubic App Recalibration (Pre-2023 Devices Only)</div>
-        <div class="card-body">If steps 1&ndash;3 don't resolve and device is <strong>older than 2023</strong>, use Cubic's app to recalibrate the gas analyzer. Watch the Cubic app training video first.<br><br>
-          If the app still shows low CO and CH&#8324;: <span class="highlight">device must come in for repair.</span>
+        <div class="card-title">Step 4 &mdash; Cubic App Recalibration (2024+ Devices with Cubic Analyzer)</div>
+        <div class="card-body">If steps 1&ndash;3 don't resolve and the device is a <strong>2024 or newer unit (Cubic gas analyzer)</strong>, use Cubic's app to recalibrate the analyzer. Watch the Cubic app training video first.<br><br>
+          Older <strong>2017&ndash;2023</strong> units use the Ganshorn analyzer and can't be recalibrated this way &mdash; those go to customer service for repair. If the Cubic app still shows low CO and CH&#8324;: <span class="highlight">device must come in for repair.</span>
         </div>
       </div>
     </div>
@@ -6708,6 +6746,71 @@ init();
       <div class="card" style="border-left:4px solid #d97706; background:#fffbeb; grid-column:1/-1;">
         <div class="card-title" style="color:#92400e;">&#128338; Device Expected Lifetime: 10 Years (per manufacturer)</div>
         <div class="card-body" style="color:#78350f;">Devices approaching or past this threshold should be proactively reviewed. Most component failures do not give advance warning. The goal is to get ahead of downtime before it affects patient care or billing.</div>
+      </div>
+
+      <!-- Old Style vs New Style (visual upgrade) -->
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-title">Old Style vs New Style &mdash; What Changed</div>
+        <div class="card-body">
+          <p style="margin-bottom:16px;">Use these side by side when you open the upgrade conversation &mdash; the physical difference sells the update. Photos coming soon.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px;">
+
+            <div>
+              <div style="font-size:12px; font-weight:700; letter-spacing:0.04em; color:#6b7280; text-transform:uppercase; margin-bottom:10px;">Handheld Unit (HHU)</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:10px; background:#f8fafc; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#94a3b8; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#64748b;">Old Style</div>
+                  <div style="font-size:10.5px; margin-top:2px;">Picture coming soon</div>
+                </div>
+                <div style="font-size:22px; color:#cbd5e1; flex-shrink:0;">&rarr;</div>
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #86efac; border-radius:10px; background:#f0fdf4; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#86efac; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#16a34a;">New Style</div>
+                  <div style="font-size:10.5px; margin-top:2px; color:#4ade80;">Picture coming soon</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12px; font-weight:700; letter-spacing:0.04em; color:#6b7280; text-transform:uppercase; margin-bottom:10px;">Communication / Control Unit</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:10px; background:#f8fafc; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#94a3b8; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#64748b;">Old Style</div>
+                  <div style="font-size:10.5px; margin-top:2px;">Picture coming soon</div>
+                </div>
+                <div style="font-size:22px; color:#cbd5e1; flex-shrink:0;">&rarr;</div>
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #86efac; border-radius:10px; background:#f0fdf4; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#86efac; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#16a34a;">New Style</div>
+                  <div style="font-size:10.5px; margin-top:2px; color:#4ade80;">Picture coming soon</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Transfer -->
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-title" style="display:flex; align-items:center; gap:8px;">
+          <span style="background:#dbeafe; color:#1e40af; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">WHEN UPGRADING</span>
+          Data Transfer
+        </div>
+        <div class="card-body">
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px;">
+            <li style="padding:10px 12px; background:#f0f9ff; border-radius:8px; border-left:3px solid #3b82f6;">
+              <strong style="font-size:13px;">Only if the old tablet still works</strong>
+              <p style="font-size:12.5px; color:#6b7280; margin-top:4px; line-height:1.5;">Data can be moved to the new unit only while the old tablet is functional. If it's already dead, there's nothing to pull from &mdash; set that expectation early.</p>
+            </li>
+            <li style="padding:10px 12px; background:#fefce8; border-radius:8px; border-left:3px solid #eab308;">
+              <strong style="font-size:13px;">Move 2 to 3 years, not everything</strong>
+              <p style="font-size:12.5px; color:#6b7280; margin-top:4px; line-height:1.5;">Highly recommended to transfer only the last 2 to 3 years. The more data you load onto a tablet, the slower it gets over time &mdash; a full history migration bogs the new unit down.</p>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- DLCO Gas System -->
@@ -11931,7 +12034,7 @@ function qcBuildAttachList() {
   M3_CAT_ORDER.forEach(function (cat) {
     var items = MATERIALS.filter(function (m) { return m.cat === cat && !m.noembed; });  /* only things that can actually be emailed */
     if (!items.length) return;
-    html += '<div class="qc-cat">' + (M3_CATS[cat] || cat) + '</div>';
+    html += '<div class="qc-cat">' + m3Icon(cat) + (M3_CATS[cat] || cat) + '</div>';
     items.forEach(function (m) {
       html += '<label class="qc-item">'
         + '<input type="checkbox" onchange="qcToggle(\'' + m.id + '\', this.checked)"' + (QC_SEL[m.id] ? ' checked' : '') + '>'
@@ -13875,7 +13978,6 @@ var MATERIALS = [
   {id:'samplereport',file:'Sample-PFT-Report.pdf',                title:'Sample PFT Report',                   sub:'What the doctor sees after each test',                    cat:'send',     kb:149,  blurb:'Sample PFT Report — the report your team and referring physicians will see after each test.'},
   {id:'comparison',  file:'MiniBox-Competitive-Comparison.pdf',   title:'Competitive Comparison',              sub:'MiniBox+ vs. body boxes & competitors',                   cat:'send',     kb:400,  blurb:'Competitive Comparison — how the MiniBox+ stacks up against conventional body boxes and competing systems.'},
   {id:'eolletter',   file:'MiniBox-End-of-Life-Letter.pdf',       title:'MiniBox End-of-Life Letter (Official)', sub:'Signed CEO notice — early MiniBox units EOL July 1, 2026; opens the upgrade conversation', cat:'send', kb:173, blurb:'Official End-of-Life Notification for early-generation MiniBox systems (signed by CEO Avi Lazar, Oct 8, 2025) — units sold through 2016 reach End-of-Life on July 1, 2026, after which parts and updates are subject to availability. The letter that opens the MiniBox+ upgrade / trade-in conversation.'},
-  {id:'aging-concerns',file:'MiniBox-Plus-Aging-Unit-Concerns.pdf', title:'Aging Unit Concerns (MiniBox+)',   sub:'The failure patterns to expect as a unit passes its 10-year lifetime', cat:'send', kb:5, blurb:'MiniBox+ Aging Unit Concerns — a short reference on the failure patterns that surface as an early MiniBox unit approaches and passes its rated 10-year lifetime (DLCO gas system, occluder valve, tablet / battery). The companion to the End-of-Life Letter for opening the upgrade / trade-in conversation.'},
   {id:'chestsum',    file:'CHEST-2021-Study-Summary.pdf',         title:'CHEST 2021 Study — Summary',     sub:'The validation study at a glance',                        cat:'clinical', kb:201,  blurb:'CHEST 2021 Study Summary — the validation study at a glance (700+ patients across 11 medical centers).'},
   {id:'chestfull',   file:'CHEST-2021-Full-Article.pdf',          title:'CHEST 2021 Study — Full Article',sub:'Complete peer-reviewed validation paper',                 cat:'clinical', kb:1434, blurb:'CHEST 2021 Full Article — the complete peer-reviewed validation paper.'},
   {id:'verona',      file:'Verona-Study.pdf',                     title:'Verona Study',                        sub:'Additional published clinical evidence',                  cat:'clinical', kb:85,   blurb:'Verona Study — additional published clinical evidence.'},
@@ -13915,7 +14017,27 @@ var MATERIALS = [
   {id:'vid-lvm',        file:'LVM-Lung-Volume-Measurement-Test.mp4', title:'LVM — Lung Volume Measurement Patient Test', sub:'How to run a Lung Volume Measurement test on the MiniBox+',                           cat:'video', kb:4540,  noembed:true, blurb:''},
   {id:'vid-dlco',       file:'DLCO-Diffusion-Test.mp4',           title:'DLCO (Diffusion) — Test Walkthrough', sub:'How to run a DLCO diffusion test on the MiniBox+',                                       cat:'video', kb:10296, noembed:true, blurb:''}
 ];
-var M3_CATS = { send:'📤 Core send-pack', calc:'🧮 Calculators & Tools', training:'🎓 Training & Coaching', video:'🎬 Training Videos', clinical:'🔬 Clinical evidence', tech:'🖥 IT & technical', closing:'🤝 Closing & payment', rheum:'🦴 Rheumatology Playbook', cardio:'❤️ Cardiology', allergy:'🌿 Allergy & Asthma' };
+var M3_CATS = { send:'Core send-pack', calc:'Calculators & Tools', training:'Training & Coaching', video:'Training Videos', clinical:'Clinical evidence', tech:'IT & technical', closing:'Closing & payment', rheum:'Rheumatology Playbook', cardio:'Cardiology', allergy:'Allergy & Asthma' };
+/* Custom line-icons — one clean stroke icon per category/pack, replacing the emoji set. */
+var M3_ICONS = {
+  send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+  calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>',
+  training:'<path d="M12 4 2.5 8.5 12 13l9.5-4.5z"/><path d="M6.5 10.6v4.4c0 1.6 2.7 2.9 5.5 2.9s5.5-1.3 5.5-2.9v-4.4"/><path d="M21.5 8.5v5.2"/>',
+  video:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>',
+  clinical:'<path d="M9 3h6M10 3.2v5.3l-4.6 8.1A2 2 0 0 0 7.2 20h9.6a2 2 0 0 0 1.8-3.4L14 8.5V3.2"/><path d="M7.7 15h8.6"/>',
+  tech:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  closing:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  rheum:'<path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5z"/>',
+  cardio:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>',
+  allergy:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/>',
+  intro:'<path d="M13 2 4.5 13.5H11l-1 8.5L18.5 10H12z"/>',
+  evidence:'<path d="M9 3h6M10 3.2v5.3l-4.6 8.1A2 2 0 0 0 7.2 20h9.6a2 2 0 0 0 1.8-3.4L14 8.5V3.2"/><path d="M7.7 15h8.6"/>',
+  it:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>'
+};
+function m3Icon(k){
+  var p = M3_ICONS[k]; if (!p) return '';
+  return '<svg class="m3-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+}
 var M3_CAT_ORDER = ['send','calc','training','video','clinical','tech','closing','rheum','cardio','allergy'];
 /* Materials Library only: an accent colour + one-line "what's in here" per category,
    so the rep can tell the blocks apart at a glance instead of reading tiny grey caps. */
@@ -13956,7 +14078,6 @@ var M3_MAT_ALIASES = {
   bank:       'bank banking wire routing account number payment setup remittance',
   achpdf:     'ach ach form payment authorization bank draft autopay direct debit',
   eolletter:  'eol end of life endoflife letter notice notification discontinued old minibox 2016 service ends july 2026 upgrade trade in trade-in avi lazar official',
-  'aging-concerns':'aging device unit concerns end of life eol failure patterns dlco gas valve occluder tablet battery old 10 year lifetime upgrade trade in worn out breaking down',
   'rh-slick':    'rheumatology rheum play segment slick field guide discovery objections cpt',
   'rh-fieldref': 'rheumatology rheum field reference dmards biologics financing clinical',
   'rh-deck':     'rheumatology rheum training deck slides clinic staff connective tissue',
@@ -14368,26 +14489,26 @@ function m3SendSteps(fileName, n, redownload){
 
 /* ============ MODE A — EMAIL ASSEMBLY STATION (v3 real materials) ============ */
 var M3_PACKS = {
-  intro:    { label:'⚡ Intro Pack',    ids:['brochure','why','samplereport'] },
-  evidence: { label:'🔬 Evidence Pack', ids:['chestsum','chestfull','verona'] },
-  it:       { label:'🖥 IT Pack',       ids:['hl7','mds2','dlco'] },
-  closing:  { label:'🤝 Closing Pack',  ids:['financing','newlane-app','achpdf','w9','bank'] },
-  rheum:    { label:'🦴 Rheum Pack',    ids:['rh-slick','rh-guideline','rh-factsheet'] },
-  cardio:   { label:'❤️ Cardiology Pack', ids:['cardio-onepager'] }
+  intro:    { label:'Intro Pack',    ids:['brochure','why','samplereport'] },
+  evidence: { label:'Evidence Pack', ids:['chestsum','chestfull','verona'] },
+  it:       { label:'IT Pack',       ids:['hl7','mds2','dlco'] },
+  closing:  { label:'Closing Pack',  ids:['financing','newlane-app','achpdf','w9','bank'] },
+  rheum:    { label:'Rheum Pack',    ids:['rh-slick','rh-guideline','rh-factsheet'] },
+  cardio:   { label:'Cardiology Pack', ids:['cardio-onepager'] }
 };
 function m3ApplyPack(key){
   if (key === 'clear') { M3_STATE.easIds = []; m3RenderEasMaterials(); m3Toast('Selection cleared'); return; }
   var p = M3_PACKS[key]; if (!p) return;
   M3_STATE.easIds = p.ids.slice();
   m3RenderEasMaterials();
-  m3Toast(p.label.replace(/^\S+\s/,'') + ' selected — ' + p.ids.length + ' files, ' + m3SizeLabel(m3TotalKB(p.ids)));
+  m3Toast(p.label + ' selected — ' + p.ids.length + ' files, ' + m3SizeLabel(m3TotalKB(p.ids)));
 }
 function m3RenderEasMaterials(){
   var host = document.getElementById('m3-eas-materials');
   if (!host) return;
   var html = '<div class="m3-packs"><span class="m3-chips-lbl">One-tap packs:</span>';
   Object.keys(M3_PACKS).forEach(function(k){
-    html += '<button type="button" class="m3-pack-btn" onclick="m3ApplyPack(\'' + k + '\')">' + M3_PACKS[k].label + '</button>';
+    html += '<button type="button" class="m3-pack-btn" onclick="m3ApplyPack(\'' + k + '\')">' + m3Icon(k) + M3_PACKS[k].label + '</button>';
   });
   html += '<button type="button" class="m3-pack-btn m3-pack-clear" onclick="m3ApplyPack(\'clear\')">Clear</button></div>';
   M3_CAT_ORDER.forEach(function(cat){
@@ -14398,7 +14519,7 @@ function m3RenderEasMaterials(){
     html += '<button type="button" class="m3-cat-head' + (catOpen?' open':'') + '" id="m3-eas-head-' + cat + '"'
           + ' aria-expanded="' + (catOpen?'true':'false') + '" onclick="m3EasCatToggle(\'' + cat + '\')">'
           + '<span class="m3-cat-chev">&#9656;</span>'
-          + '<span class="m3-cat-name">' + M3_CATS[cat] + '</span>'
+          + '<span class="m3-cat-name">' + m3Icon(cat) + M3_CATS[cat] + '</span>'
           + '<span class="m3-cat-count">' + items.length + '</span>'
           + '<span class="m3-cat-sel" id="m3-eas-sel-' + cat + '"' + (nSel?'':' hidden') + '>' + nSel + ' selected</span>'
           + '</button>'
@@ -14696,7 +14817,7 @@ function m3RenderLibrary(){
           + '<button type="button" class="m3-lc-head' + (open?' open':'') + '" id="m3-lib-head-' + cat + '"'
           + ' aria-expanded="' + (open?'true':'false') + '" onclick="m3LibCatToggle(\'' + cat + '\')">'
           + '<span class="m3-lc-chev">&#9656;</span>'
-          + '<span class="m3-lc-txt"><span class="m3-lc-name">' + M3_CATS[cat] + '</span>'
+          + '<span class="m3-lc-txt"><span class="m3-lc-name">' + m3Icon(cat) + M3_CATS[cat] + '</span>'
           + (M3_CAT_DESC[cat] ? '<span class="m3-lc-desc">' + M3_CAT_DESC[cat] + '</span>' : '') + '</span>'
           + '<span class="m3-lc-count">' + items.length + ' file' + (items.length>1?'s':'') + '</span>'
           + '</button>'
@@ -14722,8 +14843,8 @@ function m3RenderLibrary(){
 }
 
 /* --- Materials Library: collapsible sections -------------------------
-   Open/closed is remembered on the device only. First visit shows the
-   two sections a rep opens every day and folds the rest away. */
+   Open/closed is remembered on the device only. Every section starts
+   folded on first visit so the rep opens them one at a time. */
 var M3_LIB_CATS_KEY = 'mbx_lib_cats_v1';
 function m3LibCatState(){
   try { return JSON.parse(localStorage.getItem(M3_LIB_CATS_KEY) || '{}') || {}; } catch(e){ return {}; }
@@ -14731,7 +14852,7 @@ function m3LibCatState(){
 function m3LibCatOpen(cat){
   var st = m3LibCatState();
   if (Object.prototype.hasOwnProperty.call(st, cat)) return !!st[cat];
-  return cat === 'send' || cat === 'calc';
+  return false;
 }
 function m3LibSetCat(cat, open){
   var head = document.getElementById('m3-lib-head-' + cat);
@@ -19556,7 +19677,7 @@ html[data-mbx-theme="night"] #global-search-results img { filter: none; }
     M3_CAT_ORDER.forEach(function(cat){
       var items = MATERIALS.filter(function(m){ return m.cat === cat && (!m.noembed || isVid(m)); });
       if (!items.length) return;
-      html += '<div class="qc-cat">' + (M3_CATS[cat] || cat) + '</div>';
+      html += '<div class="qc-cat">' + m3Icon(cat) + (M3_CATS[cat] || cat) + '</div>';
       items.forEach(function(m){
         html += '<label class="qc-item">'
           + '<input type="checkbox" onchange="qcToggle(&#39;' + m.id + '&#39;, this.checked)"' + (QC_SEL[m.id] ? ' checked' : '') + '>'
@@ -24903,6 +25024,225 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     });
   }
 
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+<style id="mbx-hq-arrange-css">
+  /* ---- HQ's OWN cards: drag to reorder, no mode button to hit first.
+     This is separate from mbx-arrange, which only ever moves the whole HQ
+     board as one block - it never reaches the cards inside it. ---- */
+  .hqa-handle {
+    margin-left: auto; flex: 0 0 auto; width: 22px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 5px; cursor: grab; touch-action: none;
+    -webkit-user-select: none; user-select: none;
+  }
+  .hqa-handle::before {
+    content: ''; width: 2px; height: 2px; border-radius: 50%;
+    background: var(--gray-400, #9ca3af);
+    box-shadow:
+      0 -4px 0 var(--gray-400,#9ca3af), 0 4px 0 var(--gray-400,#9ca3af),
+      5px -4px 0 var(--gray-400,#9ca3af), 5px 0 0 var(--gray-400,#9ca3af), 5px 4px 0 var(--gray-400,#9ca3af);
+  }
+  .hqa-handle:hover { background: var(--blue-light, #e8f2fb); }
+  .hqa-handle:hover::before {
+    background: var(--blue-brand, #1e40af);
+    box-shadow:
+      0 -4px 0 var(--blue-brand,#1e40af), 0 4px 0 var(--blue-brand,#1e40af),
+      5px -4px 0 var(--blue-brand,#1e40af), 5px 0 0 var(--blue-brand,#1e40af), 5px 4px 0 var(--blue-brand,#1e40af);
+  }
+  body.hqa-dragging, body.hqa-dragging * { cursor: grabbing !important; }
+  .hqa-ghost {
+    position: fixed !important; z-index: 9999 !important; margin: 0 !important;
+    pointer-events: none !important; opacity: .97; overflow: hidden;
+    box-shadow: 0 0 0 2px rgba(30,64,175,.85), 0 20px 44px rgba(10,61,107,.30) !important;
+  }
+  .hqa-slot {
+    border: 1.5px dashed rgba(30,64,175,.5); border-radius: 8px;
+    background: rgba(30,64,175,.06); box-sizing: border-box;
+  }
+</style>
+
+<script id="mbx-hq-arrange">
+/* =========================================================================
+   HQ ARRANGE (2026-07-23) - the HQ board's own cards, independent of the
+   outer mbx-arrange (that one drags HQ around as a single block; this one
+   reorders what's INSIDE it). Erik's ask: hover a card and get the grab
+   hand right there, drag it - no "Arrange" button to hit first. A small
+   grip handle sits in each card's header for that; everything else on the
+   card (Open the day, Refresh, etc.) keeps working normally since only the
+   handle itself starts a drag.
+
+   HQ rewrites its whole grid from scratch on every render (tab switch,
+   refresh, coming back to the app - see render() in mbx-hq above), which
+   would wipe any reordering immediately. So this watches #mbx-hq for that
+   swap (MutationObserver, plus a cheap poll as a safety net - the same
+   "watch it and put it back" trick Daily Cut and the version stamp above
+   already use for the same reason) and reapplies the rep's order right
+   after. Order is per-device (localStorage), reported nowhere.
+   ========================================================================= */
+(function () {
+  'use strict';
+  var KEY = 'mbx_hq_card_order_v1';
+  var DEFAULT_ORDER = ['hq-today', 'hq-inbox', 'hq-cal', 'hq-acct', 'hq-notes', 'hq-team', 'mbxd-card'];
+  var order = null, drag = null, edge = 0, raf = 0, mo = null;
+
+  function grid() { return document.querySelector('#mbx-hq .hq-grid'); }
+  function cards() { var g = grid(); return g ? Array.prototype.slice.call(g.children) : []; }
+
+  function load() {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    order = (Array.isArray(s) && s.length) ? s : DEFAULT_ORDER.slice();
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(order)); } catch (e) {} }
+
+  /* a card `apply` has never heard of (new feature, or first run before Daily
+     Cut lands) slots in right after its nearest shipped neighbour that's
+     already placed - same idea as mbx-arrange's own reconcile() */
+  function reconcileMissing(have, want) {
+    var haveIds = {}; have.forEach(function (el) { haveIds[el.id] = true; });
+    DEFAULT_ORDER.forEach(function (id) {
+      if (!haveIds[id] || want.indexOf(id) >= 0) return;
+      var at = DEFAULT_ORDER.indexOf(id), pos = -1;
+      for (var k = at - 1; k >= 0; k--) {
+        var p = want.indexOf(DEFAULT_ORDER[k]);
+        if (p >= 0) { pos = p; break; }
+      }
+      want.splice(pos + 1, 0, id);
+    });
+  }
+
+  function apply() {
+    var g = grid(); if (!g || drag) return;
+    var have = cards();
+    handles(have);
+    if (have.length < 2) return;
+    var haveIds = {}, byId = {};
+    have.forEach(function (el) { haveIds[el.id] = true; byId[el.id] = el; });
+    var want = order.filter(function (id) { return haveIds[id]; });
+    reconcileMissing(have, want);
+    var changed = want.length !== have.length;
+    if (!changed) for (var i = 0; i < want.length; i++) if (want[i] !== have[i].id) { changed = true; break; }
+    if (changed) want.forEach(function (id) { g.appendChild(byId[id]); });
+    if (want.join('|') !== order.join('|')) { order = want; save(); }
+  }
+
+  function handles(els) {
+    els.forEach(function (card) {
+      if (!card || card.querySelector(':scope > .hq-k > .hqa-handle')) return;
+      var k = card.querySelector(':scope > .hq-k'); if (!k) return;
+      var h = document.createElement('span');
+      h.className = 'hqa-handle';
+      h.title = 'Drag to reorder';
+      h.setAttribute('aria-hidden', 'true');
+      k.appendChild(h);
+    });
+  }
+
+  /* ================= dragging (one list, HQ's own cards only) ================= */
+  function down(e) {
+    try {
+      if (drag || (e.button != null && e.button > 0)) return;
+      var handle = e.target && e.target.closest ? e.target.closest('.hqa-handle') : null;
+      if (!handle) return;
+      var item = handle.closest('.hq-card'); var g = grid();
+      if (!item || !g || item.parentNode !== g) return;
+      var r = item.getBoundingClientRect();
+      var slot = document.createElement('div');
+      slot.className = 'hqa-slot';
+      g.insertBefore(slot, item);
+      item.classList.add('hqa-ghost');
+      item.style.position = 'fixed';
+      item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
+      item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
+      drag = { item: item, slot: slot, dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
+      document.body.classList.add('hqa-dragging');
+      if (e.preventDefault) e.preventDefault();
+    } catch (err) {}
+  }
+
+  function place() {
+    if (!drag) return;
+    var g = grid(); if (!g) return;
+    var items = cards().filter(function (el) { return el !== drag.item && el !== drag.slot; });
+    var best = null, bestD = Infinity, before = false;
+    items.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var ax = drag.x - cx, ay = drag.y - cy;
+      var d = ax * ax + (ay * 2.5) * (ay * 2.5);   // weight row over column, same as mbx-arrange's pad zone
+      if (d < bestD) {
+        bestD = d; best = el;
+        before = (drag.y < r.top) ? true : (drag.y > r.bottom ? false : drag.x < cx);
+      }
+    });
+    if (!best) { g.appendChild(drag.slot); return; }
+    if (before) { if (drag.slot.nextSibling !== best) g.insertBefore(drag.slot, best); }
+    else { var nx = best.nextSibling; if (nx !== drag.slot) g.insertBefore(drag.slot, nx); }
+  }
+
+  function move(e) {
+    if (!drag) return;
+    if (e.preventDefault) e.preventDefault();
+    drag.x = e.clientX; drag.y = e.clientY;
+    drag.item.style.left = (e.clientX - drag.dx) + 'px';
+    drag.item.style.top = (e.clientY - drag.dy) + 'px';
+    place();
+    var h = window.innerHeight || 800, sp = 0;
+    if (e.clientY < 100) sp = -Math.min(20, (100 - e.clientY) / 4);
+    else if (e.clientY > h - 100) sp = Math.min(20, (e.clientY - (h - 100)) / 4);
+    edge = sp;
+    if (sp && !raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick() {
+    raf = 0;
+    if (!drag || !edge) return;
+    window.scrollBy(0, edge);
+    place();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function up() {
+    if (!drag) return;
+    try {
+      var d = drag; drag = null; edge = 0;
+      var g = grid();
+      if (g && d.slot.parentNode === g) g.insertBefore(d.item, d.slot);
+      if (d.slot.parentNode) d.slot.parentNode.removeChild(d.slot);
+      d.item.classList.remove('hqa-ghost');
+      d.item.style.position = ''; d.item.style.left = ''; d.item.style.top = '';
+      d.item.style.width = ''; d.item.style.height = '';
+      document.body.classList.remove('hqa-dragging');
+      order = cards().map(function (el) { return el.id; });
+      save();
+    } catch (err) { drag = null; document.body.classList.remove('hqa-dragging'); }
+  }
+
+  /* ================= watch HQ's own re-renders ================= */
+  function watch() {
+    if (mo) return;
+    /* the board div and the mbx-hq SCRIPT share the id 'mbx-hq' - ask for the
+       div specifically, same gotcha documented on mbx-hq itself */
+    var host = document.querySelector('div#mbx-hq'); if (!host) return;
+    mo = new MutationObserver(function () { apply(); });
+    mo.observe(host, { childList: true });
+    apply();
+  }
+
+  function boot() {
+    load();
+    [200, 500, 1000, 2000, 4000].forEach(function (ms) { setTimeout(function () { watch(); apply(); }, ms); });
+    setInterval(apply, 2500);   // safety net alongside the observer - HQ's grid is a plain innerHTML swap
+    document.addEventListener('pointerdown', down, true);
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', up);
+    document.addEventListener('pointercancel', up);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

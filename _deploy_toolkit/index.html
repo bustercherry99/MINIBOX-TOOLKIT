@@ -4181,6 +4181,11 @@
       <div><strong>If a device cannot be resolved remotely,</strong> it must be sent in for repair. Contact PulmOne at <strong>1-844-PulmOne (785-6663)</strong> or <strong><a href="mailto:service@pulm-one.com">service@pulm-one.com</a></strong> to initiate a service order.</div>
     </div>
 
+    <div class="alert-box alert-amber" style="background:#fff5f5; border-color:#c0392b;">
+      <div class="alert-icon" style="color:#c0392b;">&#9873;</div>
+      <div><strong>Before you tell a customer we can replace a part or a unit, call customer service first.</strong> Confirm we actually have the inventory, and be upfront about the wait time &mdash; never promise a part or a turnaround we can't back up. Anything that involves resetting the gas analyzer or resolving a communication issue also goes through customer service: <strong>1-844-PulmOne (785-6663)</strong> / <strong><a href="mailto:service@pulm-one.com">service@pulm-one.com</a></strong>.</div>
+    </div>
+
     <!-- EC102G -->
     <div class="coaching-card">
       <div class="coaching-header" style="background:#fff5f5;">
@@ -4215,7 +4220,7 @@
         <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC117</span>
         <div>
           <div class="coaching-name">Gas Analyzer Issue</div>
-          <div class="coaching-desc">Internal gas system error.</div>
+          <div class="coaching-desc">Internal gas system error. Check the device year first &mdash; it tells you which analyzer is inside.</div>
         </div>
       </div>
       <div class="coaching-body">
@@ -4223,12 +4228,14 @@
           <div class="coaching-col-title">Remote Steps</div>
           <ul class="coaching-list">
             <li><div class="cli-num">1</div> Have the customer restart the tablet.</li>
+            <li><div class="cli-num">2</div> Check the device year &mdash; this tells you the gas analyzer: <strong>2017&ndash;2023 = Ganshorn</strong>, <strong>2024 and newer = Cubic</strong>.</li>
           </ul>
         </div>
         <div>
           <div class="coaching-col-title">If Error Persists</div>
           <ul class="coaching-list">
-            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span> Replace Gas Analyzer.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>Ganshorn (2017&ndash;2023):</strong> the unit must <span class="highlight">come in for repair</span> &mdash; call customer service.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>Cubic (2024+):</strong> there may be a chance to revert (about 50/50); if that doesn't work, it comes in for repair. Either way, call customer service first.</li>
           </ul>
         </div>
       </div>
@@ -4275,16 +4282,44 @@
         <div>
           <div class="coaching-col-title">Remote Steps</div>
           <ul class="coaching-list">
-            <li><div class="cli-num">1</div> Turn off the device.</li>
-            <li><div class="cli-num">2</div> Disconnect all communication cables.</li>
-            <li><div class="cli-num">3</div> Ask customer to send a photo of the back of the device &mdash; check if CU port is damaged.</li>
-            <li><div class="cli-num">4</div> Wait 10 seconds, then power the device back on.</li>
+            <li><div class="cli-num">1</div> Confirm the device is actually powered on.</li>
+            <li><div class="cli-num">2</div> Power everything off and disconnect the communication cable.</li>
+            <li><div class="cli-num">3</div> Wait 10 seconds, then reconnect everything tightly.</li>
+            <li><div class="cli-num">4</div> Power the system back on and confirm the error is gone.</li>
           </ul>
         </div>
         <div>
           <div class="coaching-col-title">If Error Persists</div>
           <ul class="coaching-list">
-            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span></li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>2017&ndash;2023:</strong> have the customer send a photo of the back &mdash; check the CU ports for damage, then call customer service.</li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <strong>2024+:</strong> call customer service.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failed to Zero -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">Failed to Zero</span>
+        <div>
+          <div class="coaching-name">Flow Sensor Won't Zero</div>
+          <div class="coaching-desc">The HHU can't establish a zero baseline &mdash; usually moisture in the line or a twisted flow tube.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Run the moisture-drying technique on the HHU (see the attached procedure).</li>
+            <li><div class="cli-num">2</div> On older-style HHUs, check whether the flow tube is twisted.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> If the flow tube is twisted, the <span class="highlight">HHU must come in for repair or be replaced.</span></li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> Confirm inventory and wait time with customer service before promising a replacement.</li>
           </ul>
         </div>
       </div>
@@ -4329,9 +4364,9 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Step 4 &mdash; Cubic App Recalibration (Pre-2023 Devices Only)</div>
-        <div class="card-body">If steps 1&ndash;3 don't resolve and device is <strong>older than 2023</strong>, use Cubic's app to recalibrate the gas analyzer. Watch the Cubic app training video first.<br><br>
-          If the app still shows low CO and CH&#8324;: <span class="highlight">device must come in for repair.</span>
+        <div class="card-title">Step 4 &mdash; Cubic App Recalibration (2024+ Devices with Cubic Analyzer)</div>
+        <div class="card-body">If steps 1&ndash;3 don't resolve and the device is a <strong>2024 or newer unit (Cubic gas analyzer)</strong>, use Cubic's app to recalibrate the analyzer. Watch the Cubic app training video first.<br><br>
+          Older <strong>2017&ndash;2023</strong> units use the Ganshorn analyzer and can't be recalibrated this way &mdash; those go to customer service for repair. If the Cubic app still shows low CO and CH&#8324;: <span class="highlight">device must come in for repair.</span>
         </div>
       </div>
     </div>
@@ -6708,6 +6743,71 @@ init();
       <div class="card" style="border-left:4px solid #d97706; background:#fffbeb; grid-column:1/-1;">
         <div class="card-title" style="color:#92400e;">&#128338; Device Expected Lifetime: 10 Years (per manufacturer)</div>
         <div class="card-body" style="color:#78350f;">Devices approaching or past this threshold should be proactively reviewed. Most component failures do not give advance warning. The goal is to get ahead of downtime before it affects patient care or billing.</div>
+      </div>
+
+      <!-- Old Style vs New Style (visual upgrade) -->
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-title">Old Style vs New Style &mdash; What Changed</div>
+        <div class="card-body">
+          <p style="margin-bottom:16px;">Use these side by side when you open the upgrade conversation &mdash; the physical difference sells the update. Photos coming soon.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px;">
+
+            <div>
+              <div style="font-size:12px; font-weight:700; letter-spacing:0.04em; color:#6b7280; text-transform:uppercase; margin-bottom:10px;">Handheld Unit (HHU)</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:10px; background:#f8fafc; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#94a3b8; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#64748b;">Old Style</div>
+                  <div style="font-size:10.5px; margin-top:2px;">Picture coming soon</div>
+                </div>
+                <div style="font-size:22px; color:#cbd5e1; flex-shrink:0;">&rarr;</div>
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #86efac; border-radius:10px; background:#f0fdf4; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#86efac; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#16a34a;">New Style</div>
+                  <div style="font-size:10.5px; margin-top:2px; color:#4ade80;">Picture coming soon</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12px; font-weight:700; letter-spacing:0.04em; color:#6b7280; text-transform:uppercase; margin-bottom:10px;">Communication / Control Unit</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:10px; background:#f8fafc; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#94a3b8; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#64748b;">Old Style</div>
+                  <div style="font-size:10.5px; margin-top:2px;">Picture coming soon</div>
+                </div>
+                <div style="font-size:22px; color:#cbd5e1; flex-shrink:0;">&rarr;</div>
+                <div style="flex:1; aspect-ratio:4/3; border:2px dashed #86efac; border-radius:10px; background:#f0fdf4; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#86efac; padding:10px;">
+                  <div style="font-size:26px; line-height:1;">&#128247;</div>
+                  <div style="font-size:12px; font-weight:700; margin-top:6px; color:#16a34a;">New Style</div>
+                  <div style="font-size:10.5px; margin-top:2px; color:#4ade80;">Picture coming soon</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Transfer -->
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-title" style="display:flex; align-items:center; gap:8px;">
+          <span style="background:#dbeafe; color:#1e40af; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">WHEN UPGRADING</span>
+          Data Transfer
+        </div>
+        <div class="card-body">
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px;">
+            <li style="padding:10px 12px; background:#f0f9ff; border-radius:8px; border-left:3px solid #3b82f6;">
+              <strong style="font-size:13px;">Only if the old tablet still works</strong>
+              <p style="font-size:12.5px; color:#6b7280; margin-top:4px; line-height:1.5;">Data can be moved to the new unit only while the old tablet is functional. If it's already dead, there's nothing to pull from &mdash; set that expectation early.</p>
+            </li>
+            <li style="padding:10px 12px; background:#fefce8; border-radius:8px; border-left:3px solid #eab308;">
+              <strong style="font-size:13px;">Move 2 to 3 years, not everything</strong>
+              <p style="font-size:12.5px; color:#6b7280; margin-top:4px; line-height:1.5;">Highly recommended to transfer only the last 2 to 3 years. The more data you load onto a tablet, the slower it gets over time &mdash; a full history migration bogs the new unit down.</p>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- DLCO Gas System -->
@@ -13875,7 +13975,6 @@ var MATERIALS = [
   {id:'samplereport',file:'Sample-PFT-Report.pdf',                title:'Sample PFT Report',                   sub:'What the doctor sees after each test',                    cat:'send',     kb:149,  blurb:'Sample PFT Report — the report your team and referring physicians will see after each test.'},
   {id:'comparison',  file:'MiniBox-Competitive-Comparison.pdf',   title:'Competitive Comparison',              sub:'MiniBox+ vs. body boxes & competitors',                   cat:'send',     kb:400,  blurb:'Competitive Comparison — how the MiniBox+ stacks up against conventional body boxes and competing systems.'},
   {id:'eolletter',   file:'MiniBox-End-of-Life-Letter.pdf',       title:'MiniBox End-of-Life Letter (Official)', sub:'Signed CEO notice — early MiniBox units EOL July 1, 2026; opens the upgrade conversation', cat:'send', kb:173, blurb:'Official End-of-Life Notification for early-generation MiniBox systems (signed by CEO Avi Lazar, Oct 8, 2025) — units sold through 2016 reach End-of-Life on July 1, 2026, after which parts and updates are subject to availability. The letter that opens the MiniBox+ upgrade / trade-in conversation.'},
-  {id:'aging-concerns',file:'MiniBox-Plus-Aging-Unit-Concerns.pdf', title:'Aging Unit Concerns (MiniBox+)',   sub:'The failure patterns to expect as a unit passes its 10-year lifetime', cat:'send', kb:5, blurb:'MiniBox+ Aging Unit Concerns — a short reference on the failure patterns that surface as an early MiniBox unit approaches and passes its rated 10-year lifetime (DLCO gas system, occluder valve, tablet / battery). The companion to the End-of-Life Letter for opening the upgrade / trade-in conversation.'},
   {id:'chestsum',    file:'CHEST-2021-Study-Summary.pdf',         title:'CHEST 2021 Study — Summary',     sub:'The validation study at a glance',                        cat:'clinical', kb:201,  blurb:'CHEST 2021 Study Summary — the validation study at a glance (700+ patients across 11 medical centers).'},
   {id:'chestfull',   file:'CHEST-2021-Full-Article.pdf',          title:'CHEST 2021 Study — Full Article',sub:'Complete peer-reviewed validation paper',                 cat:'clinical', kb:1434, blurb:'CHEST 2021 Full Article — the complete peer-reviewed validation paper.'},
   {id:'verona',      file:'Verona-Study.pdf',                     title:'Verona Study',                        sub:'Additional published clinical evidence',                  cat:'clinical', kb:85,   blurb:'Verona Study — additional published clinical evidence.'},
@@ -13956,7 +14055,6 @@ var M3_MAT_ALIASES = {
   bank:       'bank banking wire routing account number payment setup remittance',
   achpdf:     'ach ach form payment authorization bank draft autopay direct debit',
   eolletter:  'eol end of life endoflife letter notice notification discontinued old minibox 2016 service ends july 2026 upgrade trade in trade-in avi lazar official',
-  'aging-concerns':'aging device unit concerns end of life eol failure patterns dlco gas valve occluder tablet battery old 10 year lifetime upgrade trade in worn out breaking down',
   'rh-slick':    'rheumatology rheum play segment slick field guide discovery objections cpt',
   'rh-fieldref': 'rheumatology rheum field reference dmards biologics financing clinical',
   'rh-deck':     'rheumatology rheum training deck slides clinic staff connective tissue',
@@ -14722,8 +14820,8 @@ function m3RenderLibrary(){
 }
 
 /* --- Materials Library: collapsible sections -------------------------
-   Open/closed is remembered on the device only. First visit shows the
-   two sections a rep opens every day and folds the rest away. */
+   Open/closed is remembered on the device only. Every section starts
+   folded on first visit so the rep opens them one at a time. */
 var M3_LIB_CATS_KEY = 'mbx_lib_cats_v1';
 function m3LibCatState(){
   try { return JSON.parse(localStorage.getItem(M3_LIB_CATS_KEY) || '{}') || {}; } catch(e){ return {}; }
@@ -14731,7 +14829,7 @@ function m3LibCatState(){
 function m3LibCatOpen(cat){
   var st = m3LibCatState();
   if (Object.prototype.hasOwnProperty.call(st, cat)) return !!st[cat];
-  return cat === 'send' || cat === 'calc';
+  return false;
 }
 function m3LibSetCat(cat, open){
   var head = document.getElementById('m3-lib-head-' + cat);

@@ -24,7 +24,6 @@ $map = [ordered]@{
   'dlco'        = 'DLCO-Gas-Requirements.pdf'
   'achpdf'      = 'ACH-Payment-Authorization.pdf'
   'eolletter'   = 'MiniBox-End-of-Life-Letter.pdf'
-  'aging-concerns' = 'MiniBox-Plus-Aging-Unit-Concerns.pdf'
   # Rheumatology Playbook files (from Rheum Playbook.zip)
   'rh-slick'     = '01_Rheumatology_Play_Segment_Slick.pdf'
   'rh-fieldref'  = '02_MiniBox_Rheumatology_Field_Reference.docx'
