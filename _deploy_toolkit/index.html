@@ -6236,11 +6236,6 @@ init();
           <div class="launcher-name">Salesforce</div>
           <div class="launcher-desc">CRM &amp; pipeline</div>
         </a>
-        <a href="#hub-shipping" class="launcher-btn lb-shipping" onclick="if(window.mbxOpenHub)return mbxOpenHub('hub-shipping',event);">
-          <div class="launcher-icon">&#128230;</div>
-          <div class="launcher-name">Shipping</div>
-          <div class="launcher-desc">Units &amp; mouthpiece orders</div>
-        </a>
         <a href="tel:18447856663" class="launcher-btn lb-phone">
           <div class="launcher-icon">&#128222;</div>
           <div class="launcher-name">PulmOne Support</div>
@@ -20893,7 +20888,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 
   /* ======================= RENDER ======================= */
   function render() {
-    var host = $('mbx-hq'); if (!host) return;
+    var host = document.querySelector('div#mbx-hq'); if (!host) return;
     var name = firstName();
     var h = '';
     h += '<div class="hq-bar">';
@@ -20921,7 +20916,11 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 
   /* ======================= WIRING ======================= */
   function mount() {
-    var hub = $('tab-hub'); if (!hub || $('mbx-hq')) return;
+    var hub = $('tab-hub');
+    /* the board div and THIS script share the id 'mbx-hq', so getElementById
+       would always hand back the script and this guard would always bail —
+       ask for the DIV, or HQ silently never mounts (that bug, 2026-07-23) */
+    if (!hub || document.querySelector('div#mbx-hq')) return;
     var board = document.createElement('div');
     board.id = 'mbx-hq';
     var hero = hub.querySelector('.hub-hero');
@@ -22996,6 +22995,29 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   letter-spacing:.18em; text-transform:uppercase; border:1px solid var(--gray-300);
   border-radius:3px; padding:2px 6px; color:var(--gray-600); margin-left:8px; vertical-align:2px; }
 
+/* ---- standalone strip: where the card goes if the HQ board isn't there ---- */
+#mbxd-strip{ margin:0 0 22px; }
+#mbxd-strip .hq-card{ position:relative; border:1px solid var(--gray-300); border-radius:8px;
+  background:var(--gray-100); padding:15px 16px 14px 18px; max-width:430px;
+  display:flex; flex-direction:column; }
+#mbxd-strip .hq-card::before{ content:""; position:absolute; left:0; top:10px; bottom:10px; width:3px;
+  border-radius:0 3px 3px 0; background:var(--gray-300); }
+#mbxd-strip .hq-card[data-spine="live"]::before{ background:var(--green); }
+#mbxd-strip .hq-card[data-spine="warn"]::before{ background:var(--amber); }
+#mbxd-strip .hq-card[data-spine="calm"]::before{ background:var(--blue-brand); }
+#mbxd-strip .hq-k{ font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--gray-600); display:flex; align-items:center; gap:7px; }
+#mbxd-strip .hq-num{ font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gray-600);
+  border:1px solid var(--gray-300); border-radius:3px; padding:1px 5px; letter-spacing:.06em; }
+#mbxd-strip .hq-lead{ font-size:19px; font-weight:600; color:var(--text); line-height:1.25;
+  margin:9px 0 2px; font-family:'Oswald',sans-serif; letter-spacing:.01em; }
+#mbxd-strip .hq-sub{ font-size:12.5px; color:var(--gray-600); line-height:1.5; }
+#mbxd-strip .hq-go{ margin-top:auto; padding-top:11px; }
+#mbxd-strip .hq-go button{ font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; background:transparent; border:0; border-bottom:1px solid var(--gray-300);
+  color:var(--gray-800); padding:3px 0; cursor:pointer; }
+#mbxd-strip .hq-go button:hover{ color:var(--blue-brand); border-bottom-color:var(--blue-brand); }
+
 /* ---- the board ---- */
 #mbxd-board{ display:grid; grid-template-rows:repeat(6,1fr); gap:6px;
   width:100%; max-width:330px; margin:0 auto; }
@@ -23754,15 +23776,45 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     tmp.innerHTML = cardHTML();
     card.parentNode.replaceChild(tmp.firstChild, card);
   }
-  function inject() {
-    if ($('mbxd-card')) return true;
+  /* WHERE THE CARD LIVES. First choice is the HQ board, so the game sits with
+     everything else waiting on the rep. But HQ is another block, and on
+     2026-07-23 it stopped mounting entirely — the card had nowhere to go and
+     the game may as well not have shipped. So: if the HQ grid isn't there, we
+     put up our own strip at the top of the Daily Hub. The game is never
+     hostage to another block again. */
+  function stripHost(create) {
+    var s = $('mbxd-strip');
+    if (s || !create) return s;
+    var hub = $('tab-hub'); if (!hub) return null;
+    s = document.createElement('div');
+    s.id = 'mbxd-strip';
+    var hero = hub.querySelector('.hub-hero');
+    if (hero && hero.nextSibling) hub.insertBefore(s, hero.nextSibling);
+    else hub.insertBefore(s, hub.firstChild);
+    return s;
+  }
+  function place() {
     var grid = document.querySelector('#mbx-hq .hq-grid');
-    if (!grid) return false;
-    var tmp = document.createElement('div');
-    tmp.innerHTML = cardHTML();
-    grid.appendChild(tmp.firstChild);
+    var card = $('mbxd-card');
+    if (grid) {
+      if (card && card.parentNode === grid) return true;      // already home
+      var strip = $('mbxd-strip');
+      if (card) grid.appendChild(card);                        // HQ came back — move in
+      else {
+        var t = document.createElement('div');
+        t.innerHTML = cardHTML();
+        grid.appendChild(t.firstChild);
+      }
+      if (strip) strip.style.display = 'none';
+      return true;
+    }
+    var host = stripHost(true); if (!host) return false;
+    if (card && card.parentNode === host) { host.style.display = ''; return true; }
+    host.style.display = '';
+    host.innerHTML = cardHTML();
     return true;
   }
+  function inject() { return place(); }
 
   /* ---------- wiring ---------- */
   function boot() {
@@ -23775,23 +23827,21 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 
     /* HQ rewrites its whole grid on every render (tab switch, refresh, coming
        back to the app), so watch it and put the card back each time. */
-    var tries = 0;
-    var iv = setInterval(function () {
-      if (inject()) {
-        clearInterval(iv);
-        try {
-          var host = $('mbx-hq');
-          var mo = new MutationObserver(function () {
-            if (!$('mbxd-card')) inject();
-          });
-          mo.observe(host, { childList: true, subtree: true });
-        } catch (e) {}
-        /* quietly warm the team board so the card can show today's count */
-        if (S.done) fetchTeam(function () { paintCard(); });
-      } else if (++tries > 60) {
-        clearInterval(iv);
-      }
-    }, 400);
+    var warmed = false;
+    function tick() {
+      try {
+        if (!place()) return;
+        if (!warmed) {
+          warmed = true;
+          /* quietly warm the team board so the card can show today's count */
+          if (S.done) fetchTeam(function () { paintCard(); });
+        }
+      } catch (e) {}
+    }
+    tick();
+    /* HQ rewrites its whole grid on every render, other blocks rebuild the hub,
+       and any of it can drop the card. One cheap check keeps it on screen. */
+    setInterval(tick, 1500);
   }
 
   window.mbxDailyOpen = open;
@@ -23801,7 +23851,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 </script>
 
 <style id="mbx-arrange-css">
-  /* ---- Arrange mode: the rep lays the Hub out their own way ---- */
+  /* ---- Arrange: the Hub is the rep's own layout ---- */
   #tab-hub .hub-hero { flex-wrap: wrap; }
   #mbxa-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .mbxa-btn {
@@ -23816,29 +23866,41 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   #mbxa-note {
     display: none; margin: 0 0 18px; padding: 11px 15px;
     border: 1px dashed rgba(30,64,175,.42); border-radius: 12px;
-    background: rgba(30,64,175,.045); font-size: 12.5px; line-height: 1.55;
+    background: rgba(30,64,175,.045); font-size: 12.5px; line-height: 1.6;
     color: var(--blue-dark, #0a3d6b);
   }
   body.mbxa-on #mbxa-note { display: block; }
 
+  /* everything that can be picked up */
   body.mbxa-on [data-arr] {
     position: relative; cursor: grab; touch-action: none;
     -webkit-user-select: none; user-select: none;
     box-shadow: 0 0 0 1.5px rgba(30,64,175,.38) !important; border-radius: 12px;
   }
   body.mbxa-on [data-arr]:hover { box-shadow: 0 0 0 2px rgba(30,64,175,.75) !important; }
+  /* deaden the insides so a tap grabs the block... */
   body.mbxa-on [data-arr] > * { pointer-events: none; }
-  body.mbxa-on [data-arr]::after {
-    content: "\2725"; position: absolute; top: 6px; right: 8px;
-    font-size: 13px; line-height: 1; color: var(--blue-brand, #1e40af);
-    opacity: .55; pointer-events: none;
+  /* ...but a tile inside the launcher box is its own block, not part of the box */
+  body.mbxa-on [data-arr] [data-arr],
+  body.mbxa-on .mbxa-x { pointer-events: auto; }
+  body.mbxa-on [data-arr]::before {
+    content: "\2725"; position: absolute; top: 6px; left: 8px; z-index: 2;
+    font-size: 12px; line-height: 1; color: var(--blue-brand, #1e40af);
+    opacity: .5; pointer-events: none;
   }
-  body.mbxa-on [data-arr].mbxa-ghost::after { opacity: 1; }
+  .mbxa-x {
+    display: none; position: absolute; top: -9px; right: -9px; z-index: 3;
+    width: 24px; height: 24px; border-radius: 50%; padding: 0;
+    border: 1.5px solid #fff; background: #b91c1c; color: #fff;
+    font-size: 15px; line-height: 1; font-weight: 700; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.28);
+  }
+  body.mbxa-on .mbxa-x { display: block; }
   body.mbxa-dragging, body.mbxa-dragging * { cursor: grabbing !important; }
 
   .mbxa-ghost {
     position: fixed !important; z-index: 9999 !important; margin: 0 !important;
-    pointer-events: none !important; opacity: .97;
+    pointer-events: none !important; opacity: .97; overflow: hidden;
     background: #fff !important; transform: none !important;
     box-shadow: 0 0 0 2px rgba(30,64,175,.85), 0 20px 44px rgba(10,61,107,.30) !important;
   }
@@ -23846,127 +23908,492 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     border: 1.5px dashed rgba(30,64,175,.55); border-radius: 12px;
     background: rgba(30,64,175,.06); box-sizing: border-box;
   }
+
+  /* a panel living in the launcher box: same round tile, violet edge */
+  .launcher-btn.lb-panel { border-color: #8b5cf6; font: inherit; }
+  .launcher-btn.lb-panel:hover { border-color: #8b5cf6; background: #f5f3ff; }
+
+  /* an app link living in the column: the fat version of a tile */
+  .hub-big {
+    display: flex; align-items: center; gap: 14px; padding: 15px 18px;
+    background: #fff; border: 1.5px solid var(--gray-200, #e5e7eb); border-radius: 14px;
+    margin-bottom: 12px; text-decoration: none;
+    box-shadow: 0 1px 3px rgba(10,61,107,.04); transition: box-shadow .15s, border-color .15s;
+  }
+  .hub-big:hover { box-shadow: 0 6px 22px rgba(10,61,107,.08); }
+  .hub-big-chip {
+    width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; line-height: 1; background: var(--blue-light, #e8f2fb);
+  }
+  .hub-big-name { font-size: 15px; font-weight: 700; color: var(--blue-dark, #0a3d6b); line-height: 1.2; }
+  .hub-big-desc { font-size: 12px; color: var(--gray-600, #6b7280); margin-top: 3px; }
+  .hub-big-go {
+    margin-left: auto; flex-shrink: 0;
+    font-family: 'DM Mono', ui-monospace, monospace; font-size: 10.5px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--blue-brand, #1e40af);
+  }
+
+  /* the hidden tray */
+  #mbxa-tray { display: none; margin: 18px 0 0; padding: 14px 16px;
+    border: 1px dashed var(--gray-300, #d1d5db); border-radius: 14px; background: #fafbfc; }
+  body.mbxa-on #mbxa-tray { display: block; }
+  .mbxa-tray-h { font-family: 'DM Mono', ui-monospace, monospace; font-size: 10px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--gray-600, #6b7280); margin-bottom: 4px; }
+  .mbxa-tray-s { font-size: 12px; color: var(--gray-600, #6b7280); }
+  .mbxa-tray-r { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .mbxa-chip {
+    background: #fff; border: 1px solid var(--gray-300, #d1d5db); border-radius: 999px;
+    padding: 7px 13px; font-size: 12.5px; font-weight: 600; color: var(--blue-dark, #0a3d6b);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .mbxa-chip:hover { border-color: var(--blue-brand, #1e40af); background: var(--blue-light, #e8f2fb); }
+  .mbxa-chip span { font-size: 15px; font-weight: 800; color: var(--blue-brand, #1e40af); line-height: 1; }
+
+  /* tapping a tile opens the full thing right here */
+  #mbxa-park { display: none !important; }
+  #mbxa-sheet {
+    position: fixed; inset: 0; z-index: 9998; display: none;
+    align-items: flex-start; justify-content: center; overflow: auto;
+    background: rgba(8,24,48,.48); padding: 22px 14px;
+  }
+  #mbxa-sheet.mbxa-open { display: flex; }
+  .mbxa-sheet-card {
+    background: #fff; border-radius: 18px; width: 100%; max-width: 920px;
+    max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 30px 90px rgba(6,24,50,.42);
+  }
+  .mbxa-sheet-head { display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    padding: 14px 18px; border-bottom: 1px solid var(--gray-200, #e5e7eb); }
+  .mbxa-sheet-chip { width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    background: var(--blue-light, #e8f2fb); }
+  #mbxa-sheet-title { font-size: 16px; font-weight: 800; color: var(--blue-dark, #0a3d6b); }
+  .mbxa-sheet-x { margin-left: auto; background: #fff; border: 1px solid var(--gray-300, #d1d5db);
+    border-radius: 999px; padding: 7px 14px; font-family: 'DM Mono', ui-monospace, monospace;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gray-600, #6b7280); cursor: pointer; }
+  .mbxa-sheet-x:hover { border-color: var(--blue-brand, #1e40af); color: var(--blue-brand, #1e40af); }
+  .mbxa-sheet-body { overflow: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 16px; }
+  .mbxa-insheet { border: none !important; box-shadow: none !important; margin: 0 !important; }
+  .mbxa-insheet > .hub-acc-head { display: none !important; }
+  .mbxa-insheet > .hub-acc-body { grid-template-rows: 1fr !important; }
 </style>
 
 <script id="mbx-arrange">
 /* =========================================================================
-   MBX ARRANGE (v1, 2026-07-22) - the Daily Hub becomes the rep's own layout.
-   Two sortable zones:
-     - the App Launchers box: tiles reorder inside the round box
-     - the Hub column: HQ board + every section reorder top to bottom
+   MBX ARRANGE v2 (2026-07-23) - the Daily Hub belongs to the rep.
+   Every thing on the Hub is one item with two shapes:
+     - a round TILE in the launcher box at the top
+     - a FAT panel down the page
+   Drag it between the two and it changes shape. Tap the x and it goes to the
+   hidden tray. Tap a tile whose big form is a real panel (Shipping, Quick
+   Email, Notes, Contacts, References, the HQ board) and it opens full size in
+   a sheet - so nothing is ever shown in two places at once.
    Pointer events, so a finger on the iPad behaves exactly like a mouse.
-   The order lives on the device (localStorage). Nothing is reported anywhere.
+   Layout is per-device (localStorage), reported nowhere.
    Self-contained + append-only, same pattern as mbx-pwa / mbx-hq.
    ========================================================================= */
 (function () {
-  var KEY_COL = 'mbx_hub_order_v1', KEY_LAU = 'mbx_launch_order_v1';
-  var COL_IDS = ['mbx-hq', 'hub-launchers', 'hub-shipping', 'hub-email', 'hub-notes', 'hub-contacts', 'hub-refs'];
-  var LAU_IDS = ['outlook', 'docusign', 'salesforce', 'shipping', 'pulmone-support', 'calendar', 'maps'];
-  var on = false, drag = null, raf = 0, edge = 0;
+  var KEY = 'mbx_hub_layout_v2', PAD_ID = 'hub-launchers';
+  /* the blocks that have a real full-size panel already in the page */
+  var PANELS = [
+    { id: 'mbx-hq',       icon: '\uD83C\uDFE0', name: 'HQ Board',        desc: 'Your day at a glance' },
+    { id: 'hub-shipping', icon: '\uD83D\uDCE6', name: 'Shipping',        desc: 'Units & mouthpiece orders' },
+    { id: 'hub-email',    icon: '\u2709',       name: 'Quick Email',     desc: 'Compose, attach, send' },
+    { id: 'hub-notes',    icon: '\uD83D\uDCDD', name: "Today's Notes",   desc: 'Jot follow-ups' },
+    { id: 'hub-contacts', icon: '\uD83D\uDCDE', name: 'Key Contacts',    desc: 'Call or email in one tap' },
+    { id: 'hub-refs',     icon: '\uD83D\uDCD1', name: 'My References',   desc: 'Your own doctors & customers' }
+  ];
+  var REG = {}, DEF = { pad: [], col: [] }, ST = null;
+  var ready = false, on = false, drag = null, sheetId = null, raf = 0, edge = 0;
 
   function $(id) { return document.getElementById(id); }
-  function get(k) { try { var v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : null; } catch (e) { return null; } }
-  function put(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-  function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
-
   function col() { return $('tab-hub'); }
-  function grid() { var s = $('hub-launchers'); return s ? s.querySelector('.launcher-grid') : null; }
+  function pad() { return $(PAD_ID); }
+  function padGrid() { var p = pad(); return p ? p.querySelector('.launcher-grid') : null; }
+  function txt(el, sel) { var n = el.querySelector(sel); return n ? n.textContent.trim() : ''; }
+  function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function uniq(a) { var s = {}, o = []; a.forEach(function (x) { if (x && !s[x]) { s[x] = 1; o.push(x); } }); return o; }
 
-  /* ---------- mark what can move ---------- */
-  function tag() {
-    var hub = col(); if (!hub) return;
-    COL_IDS.forEach(function (id) {
-      var el = $(id);
-      if (el && el.parentNode === hub) { el.setAttribute('data-arr', 'col'); el.setAttribute('data-arr-id', id); }
+  /* ================= the item registry ================= */
+  function register() {
+    var grid = padGrid(); if (!grid) return false;
+    /* the shipped app links become items, then step out of the markup -
+       from here on every tile in the box is painted from the registry */
+    Array.prototype.slice.call(grid.querySelectorAll('a.launcher-btn')).forEach(function (a) {
+      var name = txt(a, '.launcher-name'), id = 'app-' + slug(name);
+      if (!name || REG[id]) { return; }
+      REG[id] = { id: id, type: 'link', name: name,
+        icon: txt(a, '.launcher-icon'), desc: txt(a, '.launcher-desc'),
+        href: a.getAttribute('href') || '#', target: a.getAttribute('target') || '',
+        cls: (a.className.replace('launcher-btn', '').trim() || '') };
+      DEF.pad.push(id);
+      if (a.parentNode) a.parentNode.removeChild(a);
     });
-    var g = grid(); if (!g) return;
-    Array.prototype.slice.call(g.children).forEach(function (el) {
-      if (el.classList && el.classList.contains('launcher-btn')) {
-        el.setAttribute('data-arr', 'lau');
-        if (!el.getAttribute('data-arr-id')) {
-          var n = el.querySelector('.launcher-name');
-          el.setAttribute('data-arr-id', slug(n ? n.textContent : 'tile'));
+    var p = pad();
+    if (p && !REG[PAD_ID]) { REG[PAD_ID] = { id: PAD_ID, type: 'box', name: 'App Launchers', el: p }; DEF.col.push(PAD_ID); }
+    return true;
+  }
+
+  /* panels are picked up as they appear (the HQ board mounts a beat later) */
+  function adopt() {
+    var found = false;
+    PANELS.forEach(function (p) {
+      if (REG[p.id]) return;
+      var el = $(p.id); if (!el) return;
+      REG[p.id] = { id: p.id, type: 'panel', icon: p.icon, name: p.name, desc: p.desc, el: el };
+      found = true;
+      /* shipped home: Shipping rides in the launcher box, the rest stay fat */
+      if (p.id === 'hub-shipping') {
+        var i = DEF.pad.indexOf('app-salesforce');
+        if (i < 0) DEF.pad.push(p.id); else DEF.pad.splice(i + 1, 0, p.id);
+      } else if (p.id === 'mbx-hq') {
+        DEF.col.unshift(p.id);
+      } else {
+        DEF.col.push(p.id);
+      }
+    });
+    return found;
+  }
+
+  /* ================= state ================= */
+  function known(id) { return !!REG[id]; }
+
+  function load() {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    if (!s || !s.pad || !s.col) s = { pad: DEF.pad.slice(), col: DEF.col.slice(), off: [] };
+    ST = { pad: uniq((s.pad || []).filter(known)),
+           col: uniq((s.col || []).filter(known)),
+           off: uniq((s.off || []).filter(known)) };
+    reconcile();
+  }
+
+  /* anything new (or anything a stale saved layout never heard of) goes to its
+     shipped home, so a block we add later can never go missing */
+  function reconcile() {
+    if (!ST) return;
+    var seen = {};
+    ['pad', 'col', 'off'].forEach(function (k) {
+      ST[k] = ST[k].filter(function (id) { if (seen[id]) return false; seen[id] = 1; return true; });
+    });
+    Object.keys(REG).forEach(function (id) {
+      if (seen[id]) return;
+      /* drop it in at its shipped position, not just on the end - the HQ board
+         registers late and belongs at the top, not under My References */
+      var where = DEF.pad.indexOf(id) >= 0 ? 'pad' : 'col';
+      var def = DEF[where], list = ST[where], at = -1;
+      for (var k = def.indexOf(id) - 1; k >= 0; k--) {
+        var p = list.indexOf(def[k]);
+        if (p >= 0) { at = p; break; }
+      }
+      list.splice(at + 1, 0, id);
+    });
+    if (ST.col.indexOf(PAD_ID) < 0 && REG[PAD_ID] && ST.off.indexOf(PAD_ID) < 0) ST.col.unshift(PAD_ID);
+  }
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) {} }
+
+  function put(id, where, index) {
+    ['pad', 'col', 'off'].forEach(function (k) {
+      var i = ST[k].indexOf(id); if (i >= 0) ST[k].splice(i, 1);
+    });
+    var list = ST[where];
+    if (index == null || index < 0 || index > list.length) list.push(id);
+    else list.splice(index, 0, id);
+  }
+
+  /* ================= painting ================= */
+  function park() {
+    var p = $('mbxa-park');
+    if (!p) { p = document.createElement('div'); p.id = 'mbxa-park'; document.body.appendChild(p); }
+    return p;
+  }
+
+  function tileEl(id) {
+    var it = REG[id]; if (!it || it.type === 'box') return null;
+    var t = $('mbxa-tile-' + id);
+    if (!t) {
+      t = document.createElement(it.type === 'link' ? 'a' : 'button');
+      t.id = 'mbxa-tile-' + id;
+      t.className = 'launcher-btn ' + (it.type === 'link' ? (it.cls || '') : 'lb-panel');
+      t.setAttribute('draggable', 'false');
+      if (it.type === 'link') {
+        t.setAttribute('href', it.href);
+        if (it.target) { t.setAttribute('target', it.target); t.setAttribute('rel', 'noopener'); }
+      } else {
+        t.setAttribute('type', 'button');
+        t.addEventListener('click', function (ev) {
+          if (on) return;
+          ev.preventDefault();
+          openSheet(id);
+        });
+      }
+      t.innerHTML = '<div class="launcher-icon">' + esc(it.icon) + '</div>' +
+        '<div class="launcher-name">' + esc(it.name) + '</div>' +
+        '<div class="launcher-desc">' + esc(it.desc || '') + '</div>';
+    }
+    return t;
+  }
+
+  function bigEl(id) {
+    var it = REG[id]; if (!it) return null;
+    if (it.el) return it.el;
+    var b = $('mbxa-big-' + id);
+    if (!b) {
+      b = document.createElement('a');
+      b.id = 'mbxa-big-' + id;
+      b.className = 'hub-big';
+      b.setAttribute('draggable', 'false');
+      b.setAttribute('href', it.href || '#');
+      if (it.target) { b.setAttribute('target', it.target); b.setAttribute('rel', 'noopener'); }
+      b.innerHTML = '<div class="hub-big-chip">' + esc(it.icon) + '</div>' +
+        '<div><div class="hub-big-name">' + esc(it.name) + '</div>' +
+        '<div class="hub-big-desc">' + esc(it.desc || '') + '</div></div>' +
+        '<div class="hub-big-go">Open \u2197</div>';
+    }
+    return b;
+  }
+
+  function paint() {
+    if (!ready) return;
+    var hub = col(), grid = padGrid(); if (!hub || !grid) return;
+    ST.pad.forEach(function (id) {
+      var t = tileEl(id); if (t) { t.setAttribute('data-arr', 'pad'); grid.appendChild(t); }
+    });
+    ST.col.forEach(function (id) {
+      var b = bigEl(id); if (b) { b.setAttribute('data-arr', 'col'); hub.appendChild(b); }
+    });
+    Object.keys(REG).forEach(function (id) {
+      var it = REG[id];
+      if (ST.pad.indexOf(id) < 0) {
+        var t = $('mbxa-tile-' + id);
+        if (t && t.parentNode) t.parentNode.removeChild(t);
+      }
+      if (ST.col.indexOf(id) < 0) {
+        var b = $('mbxa-big-' + id);
+        if (b && b.parentNode && !it.el) b.parentNode.removeChild(b);
+        if (it.el && id !== sheetId) {
+          it.el.removeAttribute('data-arr');
+          it.el.classList.remove('open');
+          if (it.el.parentNode !== park()) park().appendChild(it.el);
         }
       }
     });
+    tray();
+    if (on) chrome(true);
   }
 
-  function items(zone, kind) {
-    if (!zone) return [];
-    return Array.prototype.slice.call(zone.children).filter(function (el) {
-      return el.getAttribute && el.getAttribute('data-arr') === kind;
+  /* ================= the hidden tray ================= */
+  function tray() {
+    var hub = col(); if (!hub) return;
+    var t = $('mbxa-tray');
+    if (!t) { t = document.createElement('div'); t.id = 'mbxa-tray'; }
+    hub.appendChild(t);
+    if (!ST.off.length) {
+      t.innerHTML = '<div class="mbxa-tray-h">Nothing hidden</div>' +
+        '<div class="mbxa-tray-s">Tap the red \u00D7 on any tile or panel to tuck it away here. ' +
+        'Nothing is ever deleted \u2014 it waits here until you want it back.</div>';
+      return;
+    }
+    var h = '<div class="mbxa-tray-h">Hidden \u2014 tap to bring it back</div><div class="mbxa-tray-r">';
+    ST.off.forEach(function (id) {
+      var it = REG[id]; if (!it) return;
+      h += '<button type="button" class="mbxa-chip" data-mbxa-back="' + esc(id) + '">' +
+        esc(it.icon || '') + ' ' + esc(it.name) + ' <span>+</span></button>';
+    });
+    t.innerHTML = h + '</div>';
+  }
+
+  /* ================= remove buttons ================= */
+  function chrome(add) {
+    var nodes = document.querySelectorAll('#tab-hub [data-arr]');
+    Array.prototype.slice.call(nodes).forEach(function (el) {
+      var id = idOf(el);
+      /* direct child only - the launcher box must not claim a tile's button */
+      var x = el.querySelector(':scope > .mbxa-x');
+      if (add) {
+        if (!x && id && id !== PAD_ID) {
+          x = document.createElement('button');
+          x.type = 'button'; x.className = 'mbxa-x'; x.title = 'Hide this';
+          x.setAttribute('data-mbxa-hide', id);
+          x.innerHTML = '\u00D7';
+          el.appendChild(x);
+        }
+      } else if (x && x.parentNode) { x.parentNode.removeChild(x); }
     });
   }
 
-  /* ---------- saved order in, current order out ---------- */
-  function apply(zone, kind, want) {
-    if (!zone || !want || !want.length) return;
-    var list = items(zone, kind), by = {};
-    list.forEach(function (el) { by[el.getAttribute('data-arr-id')] = el; });
-    var seen = {}, out = [];
-    want.forEach(function (id) { if (by[id] && !seen[id]) { seen[id] = 1; out.push(by[id]); } });
-    list.forEach(function (el) { var id = el.getAttribute('data-arr-id'); if (!seen[id]) { seen[id] = 1; out.push(el); } });
-    out.forEach(function (el) { zone.appendChild(el); });
+  function idOf(el) {
+    if (!el || !el.id) return null;
+    if (el.id.indexOf('mbxa-tile-') === 0) return el.id.slice(10);
+    if (el.id.indexOf('mbxa-big-') === 0) return el.id.slice(9);
+    return REG[el.id] ? el.id : null;
   }
 
-  function remember() {
-    var g = grid(); if (g) put(KEY_LAU, items(g, 'lau').map(function (el) { return el.getAttribute('data-arr-id'); }));
-    var h = col(); if (h) put(KEY_COL, items(h, 'col').map(function (el) { return el.getAttribute('data-arr-id'); }));
+  /* ================= the sheet ================= */
+  function sheetEl() {
+    var s = $('mbxa-sheet');
+    if (!s) {
+      s = document.createElement('div');
+      s.id = 'mbxa-sheet';
+      s.innerHTML = '<div class="mbxa-sheet-card">' +
+        '<div class="mbxa-sheet-head"><div class="mbxa-sheet-chip" id="mbxa-sheet-chip"></div>' +
+        '<div id="mbxa-sheet-title"></div>' +
+        '<button type="button" class="mbxa-sheet-x" id="mbxa-sheet-x">Close</button></div>' +
+        '<div class="mbxa-sheet-body" id="mbxa-sheet-body"></div></div>';
+      document.body.appendChild(s);
+      s.addEventListener('click', function (ev) { if (ev.target === s) closeSheet(); });
+      $('mbxa-sheet-x').addEventListener('click', closeSheet);
+    }
+    return s;
   }
 
-  function restore() {
-    tag();
-    apply(col(), 'col', get(KEY_COL));
-    apply(grid(), 'lau', get(KEY_LAU));
+  function openSheet(id) {
+    var it = REG[id]; if (!it || !it.el) return;
+    if (sheetId) closeSheet();
+    sheetEl();
+    $('mbxa-sheet-chip').textContent = it.icon || '';
+    $('mbxa-sheet-title').textContent = it.name;
+    it.el.classList.add('mbxa-insheet');
+    if (it.el.classList.contains('hub-acc')) it.el.classList.add('open');
+    $('mbxa-sheet-body').appendChild(it.el);
+    sheetId = id;
+    $('mbxa-sheet').classList.add('mbxa-open');
+    document.documentElement.style.overflow = 'hidden';
   }
 
-  /* ---------- dragging ---------- */
+  function closeSheet() {
+    if (!sheetId) return;
+    var it = REG[sheetId];
+    if (it && it.el) it.el.classList.remove('mbxa-insheet');
+    sheetId = null;
+    var s = $('mbxa-sheet'); if (s) s.classList.remove('mbxa-open');
+    document.documentElement.style.overflow = '';
+    paint();
+  }
+
+  /* HQ cards and deep links still say "open the Shipping section" - if that
+     block is riding in the launcher box right now, open it in the sheet */
+  function hookOpeners() {
+    if (typeof window.toggleHubAcc !== 'function' || window.toggleHubAcc.__arr) return;
+    var orig = window.toggleHubAcc;
+    window.toggleHubAcc = function (id) {
+      if (ready && REG[id] && REG[id].el && ST.col.indexOf(id) < 0 && id !== sheetId) { openSheet(id); return; }
+      return orig.apply(this, arguments);
+    };
+    window.toggleHubAcc.__arr = true;
+  }
+
+  window.mbxOpenHub = function (id, ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (on) return false;
+    var el = $(id); if (!el) return false;
+    if (ready && REG[id] && REG[id].el && ST.col.indexOf(id) < 0) { openSheet(id); return false; }
+    if (el.classList.contains('hub-acc') && !el.classList.contains('open') &&
+        typeof window.toggleHubAcc === 'function') window.toggleHubAcc(id);
+    setTimeout(function () {
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    }, 60);
+    return false;
+  };
+
+  /* ================= dragging ================= */
+  function zoneAt(x, y, id) {
+    if (id === PAD_ID) return 'col';
+    var p = pad(); if (!p) return 'col';
+    var r = p.getBoundingClientRect();
+    if (!r.width && !r.height) return 'col';
+    if (x >= r.left - 24 && x <= r.right + 24 && y >= r.top - 12 && y <= r.bottom + 12) return 'pad';
+    return 'col';
+  }
+
+  function zoneHost(z) { return z === 'pad' ? padGrid() : col(); }
+
+  function zoneItems(z) {
+    var host = zoneHost(z); if (!host) return [];
+    return Array.prototype.slice.call(host.children).filter(function (el) {
+      return el.getAttribute && el.getAttribute('data-arr') === z;
+    });
+  }
+
+  function sizeSlot(z) {
+    if (!drag) return;
+    var s = drag.slot;
+    if (z === 'pad') {
+      var t = zoneItems('pad').filter(function (e) { return e !== drag.item; })[0];
+      var r = t ? t.getBoundingClientRect() : null;
+      s.style.width = ''; s.style.height = (r && r.height ? r.height : 118) + 'px';
+      s.style.margin = '';
+    } else {
+      s.style.width = '';
+      s.style.height = (drag.kind === 'col' ? drag.h : 92) + 'px';
+      s.style.margin = '0 0 12px';
+    }
+  }
+
   function down(e) {
-    if (!on || drag || e.button > 0) return;
-    var item = e.target && e.target.closest ? e.target.closest('[data-arr]') : null;
+    if (!on || drag || (e.button != null && e.button > 0)) return;
+    var t = e.target;
+    if (t && t.closest && t.closest('.mbxa-x, #mbxa-tray, #mbxa-bar')) return;
+    var item = t && t.closest ? t.closest('#tab-hub [data-arr]') : null;
     if (!item || !item.parentNode) return;
-    var kind = item.getAttribute('data-arr'), zone = item.parentNode;
+    var id = idOf(item); if (!id) return;
+    var kind = item.getAttribute('data-arr');
     var r = item.getBoundingClientRect();
     var slot = document.createElement('div');
     slot.className = 'mbxa-slot';
-    slot.style.width = r.width + 'px';
-    slot.style.height = r.height + 'px';
-    if (kind === 'col') slot.style.margin = '0 0 12px';
-    zone.insertBefore(slot, item);
+    item.parentNode.insertBefore(slot, item);
     item.classList.add('mbxa-ghost');
     item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
     item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
-    drag = { item: item, zone: zone, kind: kind, slot: slot,
+    drag = { item: item, id: id, kind: kind, zone: kind, slot: slot, h: r.height,
              dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
+    sizeSlot(kind);
     document.body.classList.add('mbxa-dragging');
-    e.preventDefault();
+    if (e.preventDefault) e.preventDefault();
   }
 
   function place() {
     if (!drag) return;
-    var zone = drag.zone, kind = drag.kind, px = drag.x, py = drag.y;
+    var z = zoneAt(drag.x, drag.y, drag.id);
+    var host = zoneHost(z); if (!host) return;
+    if (z !== drag.zone) { drag.zone = z; sizeSlot(z); }
+    /* still hovering the gap we already opened: leave it alone. without this the
+       empty slot pulls the "nearest tile" search into the next row and the drop
+       point jumps around under the finger */
+    if (drag.slot.parentNode === host) {
+      var sr = drag.slot.getBoundingClientRect();
+      if (sr.width && drag.x >= sr.left && drag.x <= sr.right &&
+          drag.y >= sr.top && drag.y <= sr.bottom) return;
+    }
     var best = null, bestD = Infinity, before = false;
-    items(zone, kind).forEach(function (el) {
+    zoneItems(z).forEach(function (el) {
       if (el === drag.item) return;
       var r = el.getBoundingClientRect();
       if (!r.width && !r.height) return;
       var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      var d = (px - cx) * (px - cx) + (py - cy) * (py - cy);
+      var ax = drag.x - cx, ay = drag.y - cy;
+      /* in the tile grid the row matters more than the column, so weight y;
+         down the page it is a plain vertical list */
+      var d = (z === 'pad') ? (ax * ax + (ay * 2.5) * (ay * 2.5)) : Math.abs(ay);
       if (d < bestD) {
         bestD = d; best = el;
-        before = (kind === 'lau')
-          ? (py < r.top ? true : (py > r.bottom ? false : px < cx))
-          : (py < cy);
+        before = (z === 'pad')
+          ? (drag.y < r.top ? true : (drag.y > r.bottom ? false : drag.x < cx))
+          : (drag.y < cy);
       }
     });
-    if (!best) return;
-    if (before) { if (drag.slot.nextSibling !== best) zone.insertBefore(drag.slot, best); }
-    else { var nx = best.nextSibling; if (nx !== drag.slot) zone.insertBefore(drag.slot, nx); }
+    if (!best) { if (drag.slot.parentNode !== host) host.appendChild(drag.slot); return; }
+    if (before) { if (drag.slot.nextSibling !== best) host.insertBefore(drag.slot, best); }
+    else { var nx = best.nextSibling; if (nx !== drag.slot) host.insertBefore(drag.slot, nx); }
   }
 
   function move(e) {
     if (!drag) return;
-    e.preventDefault();
+    if (e.preventDefault) e.preventDefault();
     drag.x = e.clientX; drag.y = e.clientY;
     drag.item.style.left = (e.clientX - drag.dx) + 'px';
     drag.item.style.top = (e.clientY - drag.dy) + 'px';
@@ -23989,51 +24416,46 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   function up() {
     if (!drag) return;
     var d = drag; drag = null; edge = 0;
-    if (d.slot.parentNode) d.slot.parentNode.insertBefore(d.item, d.slot);
+    var z = d.zone, host = zoneHost(z), idx = 0;
+    if (host) {
+      var kids = Array.prototype.slice.call(host.children);
+      for (var i = 0; i < kids.length; i++) {
+        var el = kids[i];
+        if (el === d.slot) break;
+        if (el !== d.item && el.getAttribute && el.getAttribute('data-arr') === z) idx++;
+      }
+    }
     if (d.slot.parentNode) d.slot.parentNode.removeChild(d.slot);
     d.item.classList.remove('mbxa-ghost');
     d.item.style.left = ''; d.item.style.top = ''; d.item.style.width = ''; d.item.style.height = '';
     document.body.classList.remove('mbxa-dragging');
-    remember();
+    put(d.id, z, idx);
+    save();
+    paint();
   }
 
-  /* ---------- the Arrange / Done switch ---------- */
+  /* ================= arrange on / off ================= */
   function setOn(v) {
     on = !!v;
-    if (on) tag();
     document.body.classList.toggle('mbxa-on', on);
     var b = $('mbxa-toggle');
     if (b) { b.classList.toggle('mbxa-live', on); b.textContent = on ? '\u2713 Done' : '\u21C5 Arrange'; }
-    var r = $('mbxa-reset');
-    if (r) r.style.display = on ? '' : 'none';
+    var r = $('mbxa-reset'); if (r) r.style.display = on ? '' : 'none';
+    chrome(on);
     var note = $('mbxa-note'), hub = col();
     if (on && note && hub) {
       var hero = hub.querySelector('.hub-hero');
       if (hero && note.previousSibling !== hero) hub.insertBefore(note, hero.nextSibling);
-      try { note.scrollIntoView({ block: 'nearest' }); } catch (e) {}
     }
   }
 
   function reset() {
-    try { localStorage.removeItem(KEY_COL); localStorage.removeItem(KEY_LAU); } catch (e) {}
-    apply(col(), 'col', COL_IDS);
-    apply(grid(), 'lau', LAU_IDS);
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    ST = { pad: DEF.pad.slice(), col: DEF.col.slice(), off: [] };
+    reconcile(); save(); paint();
   }
 
-  /* ---------- the Shipping tile (and anything else) opens its section ---------- */
-  window.mbxOpenHub = function (id, ev) {
-    if (ev && ev.preventDefault) ev.preventDefault();
-    if (on) return false;
-    var el = $(id); if (!el) return false;
-    if (el.classList.contains('hub-acc') && !el.classList.contains('open') &&
-        typeof window.toggleHubAcc === 'function') window.toggleHubAcc(id);
-    setTimeout(function () {
-      try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { el.scrollIntoView(); }
-    }, 60);
-    return false;
-  };
-
-  /* ---------- wiring ---------- */
+  /* ================= wiring ================= */
   function bar() {
     var hub = col(); if (!hub || $('mbxa-bar')) return;
     var hero = hub.querySelector('.hub-hero'); if (!hero) return;
@@ -24046,16 +24468,17 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 
     var note = document.createElement('div');
     note.id = 'mbxa-note';
-    note.innerHTML = '<strong>Arrange mode.</strong> Drag anything where you want it \u2014 the launcher tiles ' +
-      'move around inside their box, the sections move up and down the page. Your layout is saved on this ' +
-      'device only. Tap <strong>Done</strong> when it looks right, or <strong>Reset</strong> to put it back.';
+    note.innerHTML = '<strong>Arrange mode.</strong> Drag anything anywhere. Pull a tile out of the ' +
+      'launcher box and it turns into a full-size panel; drag a panel up into the box and it shrinks ' +
+      'to a tile you can tap open. The red <strong>\u00D7</strong> tucks something into the hidden tray ' +
+      'at the bottom, and one tap there brings it back. Saved on this device only \u2014 tap ' +
+      '<strong>Done</strong> when it looks right, or <strong>Reset</strong> for the original layout.';
     if (hero.nextSibling) hub.insertBefore(note, hero.nextSibling); else hub.appendChild(note);
 
     $('mbxa-toggle').addEventListener('click', function () { setOn(!on); });
     $('mbxa-reset').addEventListener('click', reset);
   }
 
-  /* walking away from the Hub drops out of arrange mode on its own */
   function watchTabs() {
     if (typeof window.showTab !== 'function' || window.showTab.__arr) return;
     var orig = window.showTab;
@@ -24067,20 +24490,49 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     window.showTab.__arr = true;
   }
 
+  function sync() {
+    if (!ready) {
+      if (!register()) return;
+      adopt();
+      load();
+      ready = true;
+      paint();
+      return;
+    }
+    if (adopt()) { reconcile(); paint(); }
+  }
+
   function boot() {
-    try { bar(); restore(); watchTabs(); } catch (e) {}
-    /* HQ mounts itself into the hub a beat later - pick it up when it lands */
-    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { try { if (!drag) restore(); } catch (e) {} }, ms); });
+    try { bar(); sync(); watchTabs(); hookOpeners(); } catch (e) {}
+    /* the HQ board mounts itself a beat later - pick it up when it lands */
+    [250, 700, 1600, 3200].forEach(function (ms) {
+      setTimeout(function () { try { if (!drag) { sync(); hookOpeners(); } } catch (e) {} }, ms);
+    });
 
     document.addEventListener('pointerdown', down, true);
     document.addEventListener('pointermove', move, { passive: false });
     document.addEventListener('pointerup', up);
     document.addEventListener('pointercancel', up);
-    /* in arrange mode a tap moves things - it never opens them */
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheetId) closeSheet(); });
+
     document.addEventListener('click', function (e) {
-      if (!on) return;
-      var it = e.target && e.target.closest ? e.target.closest('[data-arr]') : null;
-      if (it) { e.preventDefault(); e.stopPropagation(); }
+      var t = e.target; if (!t || !t.closest) return;
+      var hide = t.closest('[data-mbxa-hide]');
+      if (hide) {
+        e.preventDefault(); e.stopPropagation();
+        put(hide.getAttribute('data-mbxa-hide'), 'off'); save(); paint();
+        return;
+      }
+      var back = t.closest('[data-mbxa-back]');
+      if (back) {
+        e.preventDefault(); e.stopPropagation();
+        var id = back.getAttribute('data-mbxa-back');
+        put(id, REG[id] && REG[id].type === 'link' ? 'pad' : 'col');
+        save(); paint();
+        return;
+      }
+      /* while arranging, a tap moves things - it never opens them */
+      if (on && t.closest('#tab-hub [data-arr]')) { e.preventDefault(); e.stopPropagation(); }
     }, true);
   }
 

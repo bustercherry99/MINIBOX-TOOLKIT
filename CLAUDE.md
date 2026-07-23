@@ -119,12 +119,22 @@ over unchanged underneath it.
   `Mail.Read` + `Calendars.Read`, token in sessionStorage) is already written and the panels
   light up on their own. The IT request in `EMAIL TO IT — Graph approval (copy-paste).txt`
   now asks for all three scopes, so one approval covers HQ and attachments together.
-- **The Hub layout is the rep's, not ours** (`<script id="mbx-arrange">`). An Arrange / Done
-  pill sits in the Daily Hub hero; in arrange mode the launcher tiles reorder inside their box
-  and the whole column (HQ board + every section) reorders top-to-bottom, by finger or mouse.
-  Order is per-device (`mbx_hub_order_v1`, `mbx_launch_order_v1`) and reported nowhere.
-  **Any new Hub block must have an id and be listed in `COL_IDS`** (and a new launcher tile in
-  `LAU_IDS`) or it can't be moved and Reset won't put it back. Ship order = the array order.
+- **The Hub layout is the rep's, not ours** (`<script id="mbx-arrange">`, v2). Every thing on the
+  Daily Hub is ONE item with two shapes: a round **tile** in the launcher box, or a **fat panel**
+  down the page. Arrange mode (pill in the hero) lets the rep drag any item between the two — it
+  changes shape on drop — reorder inside either zone, and hide anything with the red × into a tray
+  at the bottom. A panel riding in the launcher box opens **full size in a sheet** when tapped, so
+  nothing is ever in two places at once (that was Erik's complaint about Shipping). Layout is
+  per-device (`mbx_hub_layout_v2` = `{pad,col,off}`) and reported nowhere.
+  - **The launcher tiles are painted from a registry, not from markup.** The shipped `<a
+    class="launcher-btn">` tags are read once at boot and then removed from the DOM. Editing those
+    tags still works (they seed the registry); adding a tile by hand anywhere else does nothing.
+  - **A new Hub section must have an id and an entry in `PANELS`** (icon, name, short desc) or it
+    can't be moved, hidden, or brought back. `DEF.pad` / `DEF.col` decide its shipped home, and a
+    new item is spliced in next to its default neighbour — never just appended.
+  - **Don't blanket `pointer-events:none` on children of a draggable.** It is inherited, so the
+    tiles inside the launcher box went dead and the whole box moved as one lump. The fix that has
+    to stay is the paired rule `body.mbxa-on [data-arr] [data-arr] { pointer-events:auto }`.
 - **Anchors for Node splices must be unique — check first.** Nearly every `mbx-*` block ends
   with the same four lines (`if (document.readyState === 'loading') ... else boot(); })();
   </script>`), so a replace on that tail lands in the FIRST block in the file, not yours.
