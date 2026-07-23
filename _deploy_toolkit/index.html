@@ -22554,13 +22554,15 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
      ============================================================ -->
 <style id="mbx-claim-css">
   .mcs-open {
-    display:inline-flex; align-items:center; gap:6px; vertical-align:middle;
-    margin-left:8px; padding:4px 10px; border:1px solid #cbd5db; background:#f7fafb;
+    display:inline-flex; align-items:center; gap:5px; vertical-align:middle;
+    margin-left:8px; padding:4px 11px; border:1px solid rgba(159,212,232,.55); background:#f7fafb;
     color:#16323f; border-radius:999px; cursor:pointer;
     font-family:'DM Mono','SF Mono',Consolas,monospace; font-size:9.5px; font-weight:600;
-    letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; transition:all .12s;
+    letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; transition:all .15s;
   }
-  .mcs-open:hover { background:#16323f; color:#fff; border-color:#16323f; }
+  .mcs-open::after { content:'\2192'; font-size:11px; font-weight:400; transition:transform .15s; }
+  .mcs-open:hover { background:#eef8fc; color:#0f2733; border-color:var(--k-blade,#9fd4e8); box-shadow:0 0 0 1px rgba(159,212,232,.35),0 0 10px -3px rgba(159,212,232,.65); }
+  .mcs-open:hover::after { transform:translateX(2px); }
 
   #mcs-ov { display:none; position:fixed; inset:0; z-index:99996; background:rgba(14,28,36,.76); align-items:flex-start; justify-content:center; padding:22px 16px; overflow-y:auto; }
   #mcs-ov.on { display:flex; }
@@ -22912,7 +22914,11 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
       var txt = parts.join(' | ');
       if (!cpts(txt).length) continue;
       var il = icds(txt);
-      if (!il.length) continue;
+      /* "Asthma Dx" etc. is the toolkit's own shorthand for "the patient's own
+         code goes here" (build()'s !lead.length branch already renders that
+         placeholder correctly) - a row using it still gets the button even
+         with zero ICD-10-shaped codes on the page. */
+      if (!il.length && !/\bDx\b/.test(txt)) continue;
 
       /* Hand build() the raw CPT cell, not a flat list - the "or" in it is
          the difference between one claim and an instant denial. */
