@@ -140,6 +140,13 @@ over unchanged underneath it.
   </script>`), so a replace on that tail lands in the FIRST block in the file, not yours.
   A helper function once got spliced into the template-library block that way and the arrange
   block died with a ReferenceError. Grep the anchor and confirm exactly one hit before writing.
+- **`getElementById` on a block's own id returns the SCRIPT TAG, not the thing it built.**
+  This silently killed the entire HQ board (2026-07-23): `<script id="mbx-hq">` creates a
+  board `<div id="mbx-hq">`, and `mount()`'s already-mounted guard `if ($('mbx-hq')) return;`
+  therefore matched the script and bailed on every load — no HQ on the Daily Hub at all, and
+  no console error to show for it. Anything that looks up an element a block CREATED must
+  ask for the tag too: `document.querySelector('div#mbx-hq')`. Never reuse the script's id
+  for the element it injects without that.
 - **Daily Cut** (`<script id="mbx-daily">`) is the team's daily word game — one
   five-letter word a day, the same one for everybody, played from a card on HQ. The word
   is computed on the device from the Eastern date (`LIST` in that block, 240 words), so it
