@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spirometry / PFT Billing Helper</title>
+<style>
+  :root{color-scheme:light;--navy:#1f3a5f;--navy2:#27496d;--red:#b3261e;--green:#1d7a46;
+    --amber:#fff3cd;--grey:#5b6470;--line:#d8dee6;--bg:#f4f6f9;--card:#fff;--soft:#eef3f8;--warn:#fdeceb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#1c2733;background:var(--bg);line-height:1.5}
+  .wrap{max-width:940px;margin:0 auto;padding:0 18px 60px}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:26px 0 22px;margin-bottom:22px}
+  header .wrap{padding-top:0;padding-bottom:0}
+  h1{margin:0 0 4px;font-size:26px}
+  .sub{opacity:.88;font-size:14px;max-width:700px}
+  .badge{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-size:11px;padding:2px 8px;border-radius:20px;margin-top:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 1px 2px rgba(20,40,70,.04)}
+  .step{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--navy);font-size:15px;margin:0 0 14px}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;flex:0 0 auto}
+  label.fld{display:block;font-size:12px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  select,.combo{width:100%;padding:11px 12px;font-size:15px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#1c2733;font-family:inherit}
+  select:disabled,.combo:disabled{background:#f1f3f6;color:#9aa3ad}
+  select:focus,.combo:focus{outline:2px solid var(--navy);outline-offset:1px}
+  .combo::placeholder{color:#9aa3ad}
+  .hide{display:none}
+  .row{display:flex;gap:16px;flex-wrap:wrap}.row>div{flex:1;min-width:200px}
+  .codes{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:4px}
+  @media(max-width:620px){.codes{grid-template-columns:1fr}}
+  .chk{display:flex;gap:9px;align-items:flex-start;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:#fff}
+  .chk:hover{background:var(--soft)}.chk input{margin-top:3px}.chk b{font-variant-numeric:tabular-nums}
+  .chk small{display:block;color:var(--grey);font-size:12px}
+  .chk.off{opacity:.5;cursor:not-allowed;background:#f7f8fa}
+  .chk .note{display:none;color:var(--red);font-size:11.5px;font-weight:700;margin-top:3px}
+  .chk .note.on{display:block}
+  .codestatus{margin-top:10px;font-size:13px;font-weight:800;color:var(--green)}
+  .toggle{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:8px;margin-top:12px;background:var(--soft)}
+  .toggle input{width:18px;height:18px}.opts{margin-top:12px}.opts .chk{margin-bottom:6px;cursor:default}
+  button.go{margin-top:16px;background:var(--red);color:#fff;border:0;padding:13px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer}
+  button.go:hover{filter:brightness(1.07)}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  button.ghost{margin-top:16px;background:#fff;color:var(--navy);border:1px solid var(--navy);padding:13px 18px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+  #out{display:none}
+  .mac{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+  .mac .big{font-size:19px;font-weight:800;color:var(--navy)}
+  .mac .jur{font-size:12px;color:var(--grey);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .res-h{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.6px;margin:22px 0 8px;border-bottom:2px solid var(--navy);padding-bottom:4px}
+  ol.steps{padding-left:20px;margin:6px 0}ol.steps li{margin-bottom:9px}
+  ul.chklist{list-style:none;padding:0;margin:6px 0}
+  ul.chklist li{padding:5px 0 5px 26px;position:relative;font-size:14px}
+  ul.chklist li:before{content:"\2713";position:absolute;left:0;top:4px;color:var(--green);font-weight:800}
+  .pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle}
+  .pill.code{background:var(--navy);color:#fff;font-variant-numeric:tabular-nums}
+  .pill.mod{background:#fde8e6;color:var(--red);border:1px solid #f3c2bd}
+  .pill.dx{background:#e7eef6;color:var(--navy);border:1px solid #c4d4e6}
+  .verify{background:var(--amber);border-left:5px solid var(--red);border-radius:6px;padding:12px 14px;margin:12px 0;font-size:13.5px}
+  .verify b{color:var(--red)}
+  .warnbox{background:var(--warn);border-left:5px solid var(--red);border-radius:6px;padding:12px 14px;margin:10px 0;font-size:14px}
+  .warnbox b{color:var(--red)}
+  .claim{background:#0f1b2b;color:#e8eef6;border-radius:10px;padding:14px 16px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:14px;margin:8px 0}
+  .claim .ln{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid #24364c}
+  .claim .ln:last-child{border-bottom:0}
+  .claim .c{color:#7fd1a0;font-weight:700;min-width:96px}
+  .claim .m{color:#ff9a90;font-weight:700}
+  .claim .d{color:#9fc2e8;margin-left:auto;font-size:12.5px;text-align:right}
+  a{color:var(--navy);font-weight:600}
+  .muted{color:var(--grey);font-size:12.5px}
+  .foot{font-size:12px;color:var(--grey);border-top:1px solid var(--line);margin-top:24px;padding-top:14px}
+  .err{color:var(--red);font-weight:700;font-size:13px;margin-top:8px;display:none}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+  .tag.med{background:#e7eef6;color:var(--navy)}.tag.com{background:#efe7f6;color:#5a2a82}
+  @media print{header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .input-card,.aboutcard{display:none}button{display:none}body{background:#fff}
+    .claim{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<meta name="theme-color" content="#1f3a5f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PFT Billing">
+<meta name="application-name" content="PFT Billing">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Spirometry / PFT Billing Helper</h1>
+  <div class="sub">For billers. Pick the state and payer type, check what was performed, and get the exact claim. Codes that can't be billed together grey out as you go.</div>
+  <span class="badge">v6 - Live conflict checks - Verify against the payer</span>
+</div></header>
+<div class="wrap">
+  <div class="card input-card">
+    <div class="step"><span class="num">1</span> Where, and who's the payer?</div>
+    <div class="row">
+      <div>
+        <label class="fld" for="state">State / territory</label>
+        <select id="state"><option value="">— Select state —</option></select>
+      </div>
+      <div>
+        <label class="fld" for="ptype">Payer type</label>
+        <select id="ptype" disabled>
+          <option value="">— pick a state first —</option>
+        </select>
+      </div>
+      <div>
+        <label class="fld" for="proc">Procedure family</label>
+        <select id="proc"></select>
+      </div>
+    </div>
+    <div id="insurerWrap" class="hide" style="margin-top:14px">
+      <label class="fld" for="insurer">Commercial insurer <span style="text-transform:none;font-weight:600;color:#9aa3ad">(type to search — optional)</span></label>
+      <input id="insurer" class="combo" list="insurerlist" autocomplete="off" placeholder="e.g. Aetna, Florida Blue — or leave blank">
+      <datalist id="insurerlist"></datalist>
+    </div>
+    <div class="err" id="err">Please choose a state and payer type.</div>
+  </div>
+  <div class="card input-card">
+    <div class="step"><span class="num">2</span> What was performed today?</div>
+    <label class="fld">Test / codes performed</label>
+    <div class="codes" id="codes"></div>
+    <div class="codestatus" id="codestatus"></div>
+    <div class="toggle">
+      <input type="checkbox" id="em">
+      <label for="em" style="margin:0;cursor:pointer"><b>An office visit (E/M) was also done today</b><br>
+      <small class="muted">Check this only if the provider evaluated the patient beyond running the test.</small></label>
+    </div>
+    <div class="opts">
+      <label class="fld" style="margin-top:14px">Who owns the equipment &amp; reads the result?</label>
+      <label class="chk"><input type="radio" name="own" value="global" checked>
+        <span><b>Practice owns the machine AND the provider interprets</b><small>In-office testing — bill the global service (most common)</small></span></label>
+      <label class="chk"><input type="radio" name="own" value="pro">
+        <span><b>Provider only interprets</b> (equipment owned elsewhere)<small>Bill professional component only</small></span></label>
+      <label class="chk"><input type="radio" name="own" value="tech">
+        <span><b>Practice only provides equipment/technician</b><small>Bill technical component only</small></span></label>
+    </div>
+    <div class="btns">
+      <button class="go" id="run">Build my claim &rarr;</button>
+      <button class="ghost" id="print" style="display:none">Print / Save PDF</button>
+    </div>
+  </div>
+  <div class="card" id="out">
+    <div class="mac" id="macCard">
+      <div><div class="jur" id="jurLabel">Payer</div><div class="big" id="macName">—</div></div>
+      <div style="text-align:right;flex:1"><div class="jur" id="jurTitle">Processed by</div><div class="big" id="jurName">—</div></div>
+    </div>
+    <div id="result"></div>
+    <div class="foot" id="disclaimer"></div>
+  </div>
+  <div class="card aboutcard" style="background:var(--soft)">
+    <div class="step" style="margin-bottom:8px"><span class="num" style="background:var(--grey)">i</span> About this tool</div>
+    <p class="muted" style="margin:0">A <b>living helper</b>. Codes that can't be billed together (bundled or mutually exclusive under NCCI) grey out the moment you select the one that controls them, so you only ever build a valid combination. <b>Each payer's covered-diagnosis list and frequency rules vary and are not hard-coded</b> — the tool routes you to that payer's own policy to confirm before you submit.</p>
+  </div>
+</div>
+<script>
+/* ===================== DATA ENGINE ===================== */
+var MACS={palmetto:"Palmetto GBA",novitas:"Novitas Solutions",firstcoast:"First Coast Service Options",
+  ngs:"National Government Services (NGS)",wps:"WPS (Wisconsin Physicians Service)",cgs:"CGS Administrators",
+  noridian:"Noridian Healthcare Solutions"};
+var STATES={
+  "Alabama":["palmetto","JJ"],"Alaska":["noridian","JF"],"Arizona":["noridian","JF"],"Arkansas":["novitas","JH"],
+  "California":["noridian","JE"],"Colorado":["novitas","JH"],"Connecticut":["ngs","JK"],"Delaware":["novitas","JL"],
+  "District of Columbia":["novitas","JL"],"Florida":["firstcoast","JN"],"Georgia":["palmetto","JJ"],"Hawaii":["noridian","JE"],
+  "Idaho":["noridian","JF"],"Illinois":["ngs","J6"],"Indiana":["wps","J8"],"Iowa":["wps","J5"],"Kansas":["wps","J5"],
+  "Kentucky":["cgs","J15"],"Louisiana":["novitas","JH"],"Maine":["ngs","JK"],"Maryland":["novitas","JL"],
+  "Massachusetts":["ngs","JK"],"Michigan":["wps","J8"],"Minnesota":["ngs","J6"],"Mississippi":["novitas","JH"],
+  "Missouri":["wps","J5"],"Montana":["noridian","JF"],"Nebraska":["wps","J5"],"Nevada":["noridian","JE"],
+  "New Hampshire":["ngs","JK"],"New Jersey":["novitas","JL"],"New Mexico":["novitas","JH"],"New York":["ngs","JK"],
+  "North Carolina":["palmetto","JM"],"North Dakota":["noridian","JF"],"Ohio":["cgs","J15"],"Oklahoma":["novitas","JH"],
+  "Oregon":["noridian","JF"],"Pennsylvania":["novitas","JL"],"Rhode Island":["ngs","JK"],"South Carolina":["palmetto","JM"],
+  "South Dakota":["noridian","JF"],"Tennessee":["palmetto","JJ"],"Texas":["novitas","JH"],"Utah":["noridian","JF"],
+  "Vermont":["ngs","JK"],"Virginia":["palmetto","JM"],"Washington":["noridian","JF"],"West Virginia":["palmetto","JM"],
+  "Wisconsin":["ngs","J6"],"Wyoming":["noridian","JF"],"Puerto Rico":["firstcoast","JN"],"U.S. Virgin Islands":["firstcoast","JN"],
+  "Guam / American Samoa / N. Mariana Is.":["noridian","JE"]
+};
+var MEDICAID={
+  "Alabama":"Alabama Medicaid","Alaska":"Alaska Medicaid (DenaliCare)","Arizona":"AHCCCS","Arkansas":"Arkansas Medicaid",
+  "California":"Medi-Cal","Colorado":"Health First Colorado","Connecticut":"HUSKY Health","Delaware":"Delaware Medicaid",
+  "District of Columbia":"DC Medicaid","Florida":"Florida Medicaid","Georgia":"Georgia Medicaid","Hawaii":"Med-QUEST",
+  "Idaho":"Idaho Medicaid","Illinois":"Illinois Medicaid","Indiana":"Indiana Health Coverage Programs (IHCP)","Iowa":"IA Health Link",
+  "Kansas":"KanCare","Kentucky":"Kentucky Medicaid","Louisiana":"Healthy Louisiana","Maine":"MaineCare",
+  "Maryland":"Maryland Medical Assistance","Massachusetts":"MassHealth","Michigan":"Michigan Medicaid","Minnesota":"Medical Assistance (MN)",
+  "Mississippi":"Mississippi Medicaid","Missouri":"MO HealthNet","Montana":"Montana Medicaid","Nebraska":"Nebraska Medicaid",
+  "Nevada":"Nevada Medicaid","New Hampshire":"New Hampshire Medicaid","New Jersey":"NJ FamilyCare","New Mexico":"Centennial Care",
+  "New York":"New York Medicaid","North Carolina":"NC Medicaid","North Dakota":"North Dakota Medicaid","Ohio":"Ohio Medicaid",
+  "Oklahoma":"SoonerCare","Oregon":"Oregon Health Plan (OHP)","Pennsylvania":"Medical Assistance (PA)","Rhode Island":"Rhode Island Medicaid",
+  "South Carolina":"Healthy Connections","South Dakota":"South Dakota Medicaid","Tennessee":"TennCare","Texas":"Texas Medicaid",
+  "Utah":"Utah Medicaid","Vermont":"Vermont Medicaid","Virginia":"Cardinal Care","Washington":"Apple Health",
+  "West Virginia":"West Virginia Medicaid","Wisconsin":"BadgerCare Plus","Wyoming":"Wyoming Medicaid",
+  "Puerto Rico":"Puerto Rico Medicaid","U.S. Virgin Islands":"USVI Medicaid","Guam / American Samoa / N. Mariana Is.":"Territory Medicaid"
+};
+var CLASS_DX={
+  medicare:"Medicare does NOT require a different diagnosis for the E/M than the test - Modifier 25 just needs a documented, separate evaluation.",
+  ma:"MA plans cover at least what Medicare covers and follow the same NCCI/Modifier 25 rules - but each plan adds its own edits and prior-auth. Use the Medicare LCD as the floor, then check the plan policy.",
+  commercial:"Many commercial payers deny the E/M as bundled when it shares the SAME primary diagnosis as the test. Where clinically supported, point the E/M to the evaluation diagnosis and the test to the respiratory diagnosis - and confirm this payer's Modifier 25 / reimbursement policy.",
+  medicaid:"Medicaid coverage, covered diagnoses, and modifier rules are set by the state and can be stricter than Medicare. Verify against the state program's provider manual / fee schedule."
+};
+function gsearch(q){return "https://www.google.com/search?q="+encodeURIComponent(q);}
+var MCD="https://www.cms.gov/medicare-coverage-database/search.aspx";
+
+var PROCEDURES={
+  pft:{
+    label:"Spirometry / Pulmonary Function Test",
+    emExample:"99214",
+    codes:[
+      {cpt:"94010",desc:"Spirometry (FVC, FEV1) - single set"},
+      {cpt:"94060",desc:"Spirometry pre & post bronchodilator",includesCodes:["94010"]},
+      {cpt:"94070",desc:"Multiple/repeat spirometry (provocation)",includesCodes:["94010"]},
+      {cpt:"94375",desc:"Flow-volume loop"},
+      {cpt:"94726",desc:"Lung volumes - plethysmography"},
+      {cpt:"94727",desc:"Lung volumes - gas dilution/washout"},
+      {cpt:"94729",desc:"Diffusing capacity (DLCO) - ADD-ON",addon:true,primaries:["94010","94060","94070","94375","94726","94727"]}
+    ],
+    mutex:[{codes:["94726","94727"],keep:"94726",msg:"Bill only ONE lung-volume method. 94726 (plethysmography) and 94727 (gas dilution/washout) measure the same thing (lung volumes) two different ways - NCCI treats them as one and bundles them. Report the method actually performed (keeping 94726 here); billing both denies unless you have documentation of two genuinely distinct techniques."}],
+    dxExamples:"J44.9 (COPD), J45.909 (asthma), R06.02 (shortness of breath), R05.9 (cough), J98.4 (other lung disorder), Z01.811 (pre-op respiratory exam)",
+    docChecklist:[
+      "Order/referral + medical reason for the test (symptoms, monitoring, pre-op, etc.)",
+      "Signed interpretation & report - numeric values, the graphic record, and the provider's reading",
+      "Diagnosis code(s) that genuinely support medical necessity (a vague code alone often denies)",
+      "Repeat test: document why again (change in symptoms, status, or treatment decision)",
+      "If a visit is billed too: the note shows a separate, significant evaluation beyond the test"
+    ]
+  }
+};
+var CARRIERS_DB=[
+  {name:"UnitedHealthcare"},{name:"Aetna"},{name:"Cigna"},{name:"Humana"},{name:"Elevance Health"},
+  {name:"Anthem Blue Cross Blue Shield"},{name:"Wellpoint"},{name:"Oscar Health"},{name:"Ambetter"},{name:"TRICARE"},
+  {name:"Centene",cls:"medicaid"},{name:"WellCare",cls:"medicaid"},{name:"Molina Healthcare",cls:"medicaid"},
+  {name:"AmeriHealth Caritas",cls:"medicaid"},{name:"Aetna Better Health",cls:"medicaid"},{name:"UnitedHealthcare Community Plan",cls:"medicaid"},
+  {name:"Kaiser Permanente",st:["California","Colorado","Georgia","Hawaii","Maryland","Virginia","Oregon","Washington","District of Columbia"]},
+  {name:"Health Net",st:["California"]},{name:"L.A. Care Health Plan",cls:"medicaid",st:["California"]},
+  {name:"Inland Empire Health Plan",cls:"medicaid",st:["California"]},{name:"Blue Shield of California",st:["California"]},
+  {name:"Florida Blue",st:["Florida"]},{name:"AvMed",st:["Florida"]},
+  {name:"Horizon Blue Cross Blue Shield",st:["New Jersey"]},
+  {name:"Highmark Blue Cross Blue Shield",st:["Pennsylvania","West Virginia","Delaware"]},
+  {name:"Independence Blue Cross",st:["Pennsylvania"]},{name:"Capital Blue Cross",st:["Pennsylvania"]},
+  {name:"Geisinger Health Plan",st:["Pennsylvania"]},{name:"UPMC Health Plan",st:["Pennsylvania"]},
+  {name:"CareFirst BlueCross BlueShield",st:["Maryland","District of Columbia","Virginia"]},
+  {name:"Sentara Health Plans",st:["Virginia"]},
+  {name:"Excellus BlueCross BlueShield",st:["New York"]},{name:"EmblemHealth",st:["New York"]},
+  {name:"Healthfirst",st:["New York"]},{name:"Fidelis Care",cls:"medicaid",st:["New York"]},
+  {name:"MVP Health Care",st:["New York","Vermont"]},{name:"CDPHP",st:["New York"]},
+  {name:"Point32Health",st:["Massachusetts","New Hampshire","Maine","Rhode Island","Connecticut"]},
+  {name:"Harvard Pilgrim Health Care",st:["Massachusetts","New Hampshire","Maine","Connecticut"]},
+  {name:"Tufts Health Plan",st:["Massachusetts"]},
+  {name:"Premera Blue Cross",st:["Washington","Alaska"]},{name:"Regence BlueShield",st:["Washington","Oregon","Idaho","Utah"]},
+  {name:"Providence Health Plan",st:["Oregon","Washington"]},{name:"Moda Health",st:["Oregon","Alaska"]},
+  {name:"CareOregon",cls:"medicaid",st:["Oregon"]},{name:"PacificSource Health Plans",st:["Oregon","Idaho","Montana","Washington"]},
+  {name:"Wellmark Blue Cross Blue Shield",st:["Iowa","South Dakota"]},
+  {name:"Sanford Health Plan",st:["South Dakota","North Dakota","Iowa","Minnesota"]},
+  {name:"HealthPartners",st:["Minnesota","Wisconsin"]},{name:"Security Health Plan",st:["Wisconsin"]},
+  {name:"Blue Cross Blue Shield of Illinois",st:["Illinois"]},{name:"Blue Cross Blue Shield of Texas",st:["Texas"]},
+  {name:"Blue Cross Blue Shield of Michigan",st:["Michigan"]},{name:"Priority Health",st:["Michigan"]},
+  {name:"Blue Cross Blue Shield of North Carolina",st:["North Carolina"]},
+  {name:"BlueCross BlueShield of Tennessee",st:["Tennessee"]},{name:"Arkansas Blue Cross Blue Shield",st:["Arkansas"]},
+  {name:"Medical Mutual",st:["Ohio"]},{name:"Paramount Health Care",st:["Ohio"]},{name:"CareSource",cls:"medicaid",st:["Ohio","Indiana","Georgia","Kentucky","West Virginia"]},
+  {name:"SelectHealth",st:["Utah","Idaho","Nevada","Colorado"]},{name:"Presbyterian Health Plan",st:["New Mexico"]},
+  {name:"SCAN Health Plan",st:["California","Arizona","Nevada","Texas"]}
+];
+function payerSearchLook(nm){return [nm+" coverage policy",gsearch(nm+" spirometry 94010 reimbursement coverage policy")];}
+
+function resolvePayer(pt,state,ins){
+  var g=STATES[state];
+  if(pt==="medicare") return {name:"Original Medicare (Part B)",cls:"medicare",by:MACS[g[0]],byLabel:"Processed by",jur:g[1],lookName:"Medicare Coverage Database",lookUrl:MCD};
+  if(pt==="ma") return {name:"Medicare Advantage (Part C)",cls:"ma",by:MACS[g[0]]+" (floor)",byLabel:"Floor = MAC",jur:g[1],lookName:"Medicare Coverage Database (floor) + plan policy",lookUrl:MCD};
+  if(pt==="medicaid"){var med=MEDICAID[state]||(state+" Medicaid");return {name:med,cls:"medicaid",by:state+" Medicaid program",byLabel:"State program",jur:"",lookName:med+" provider coverage",lookUrl:gsearch(med+" provider spirometry 94010 coverage policy fee schedule")};}
+  var v=(ins||"").trim(), lv=v.toLowerCase();
+  if(!v) return {name:"Commercial payer",cls:"commercial",by:"Commercial insurer",byLabel:"Payer type",jur:"",lookName:"the payer's coverage policy",lookUrl:gsearch("spirometry 94010 reimbursement coverage policy")};
+  if(/^blue cross blue shield \(/i.test(v)){var nm0="Blue Cross Blue Shield ("+state+")";var lk0=payerSearchLook(nm0);
+    return {name:nm0,cls:"commercial",by:"Commercial insurer",byLabel:"Payer type",jur:"",lookName:lk0[0],lookUrl:lk0[1]};}
+  var hit=null;
+  for(var i=0;i<CARRIERS_DB.length;i++){var dn=CARRIERS_DB[i].name.toLowerCase();
+    if(dn===lv){hit=CARRIERS_DB[i];break;} if(!hit && lv.length>=3 && dn.indexOf(lv)>-1) hit=CARRIERS_DB[i];}
+  if(hit){var lk=payerSearchLook(hit.name);
+    return {name:hit.name,cls:(hit.cls||"commercial"),by:(hit.cls==="medicaid"?"Medicaid managed-care plan":"Commercial insurer"),byLabel:"Payer type",jur:"",lookName:lk[0],lookUrl:lk[1]};}
+  var lk2=payerSearchLook(v);
+  return {name:v,cls:"commercial",by:"Commercial insurer (not in list)",byLabel:"Payer type",jur:"",lookName:lk2[0],lookUrl:lk2[1]};
+}
+/* ===================== UI WIRING ===================== */
+var $=function(id){return document.getElementById(id);};
+var stateSel=$("state"),ptypeSel=$("ptype"),procSel=$("proc"),codesBox=$("codes"),
+    insurerWrap=$("insurerWrap"),insurerInput=$("insurer"),insurerList=$("insurerlist");
+Object.keys(STATES).forEach(function(s){var o=document.createElement("option");o.value=s;o.textContent=s;stateSel.appendChild(o);});
+Object.keys(PROCEDURES).forEach(function(k){var o=document.createElement("option");o.value=k;o.textContent=PROCEDURES[k].label;procSel.appendChild(o);});
+
+function opt(v,t){var o=document.createElement("option");o.value=v;o.textContent=t;return o;}
+function optD(t){var o=document.createElement("option");o.value=t;return o;}
+
+function buildPtype(){
+  var st=stateSel.value; ptypeSel.innerHTML="";
+  if(!st){ptypeSel.disabled=true;ptypeSel.appendChild(opt("","— pick a state first —"));return;}
+  ptypeSel.disabled=false;
+  ptypeSel.appendChild(opt("","— Select payer type —"));
+  ptypeSel.appendChild(opt("medicare","Original Medicare (Part B) — "+MACS[STATES[st][0]]));
+  ptypeSel.appendChild(opt("ma","Medicare Advantage (Part C)"));
+  ptypeSel.appendChild(opt("medicaid","Medicaid — "+(MEDICAID[st]||st+" Medicaid")));
+  ptypeSel.appendChild(opt("commercial","Commercial / private insurer"));
+}
+function buildInsurerList(){
+  var st=stateSel.value; insurerList.innerHTML="";
+  if(!st) return;
+  insurerList.appendChild(optD("Blue Cross Blue Shield ("+st+")"));
+  CARRIERS_DB.forEach(function(c){ if(!c.st || c.st.indexOf(st)>-1) insurerList.appendChild(optD(c.name)); });
+}
+function syncInsurer(){
+  if(ptypeSel.value==="commercial"){insurerWrap.classList.remove("hide");}
+  else{insurerWrap.classList.add("hide"); insurerInput.value="";}
+}
+stateSel.addEventListener("change",function(){
+  buildPtype(); buildInsurerList(); syncInsurer();
+  try{localStorage.setItem("pft_state",stateSel.value);}catch(e){}
+});
+ptypeSel.addEventListener("change",syncInsurer);
+
+/* ---- codes with LIVE conflict checking ---- */
+function renderCodes(){
+  var p=PROCEDURES[procSel.value]; codesBox.innerHTML="";
+  p.codes.forEach(function(c){
+    var l=document.createElement("label"); l.className="chk"; l.setAttribute("data-cpt",c.cpt);
+    l.innerHTML='<input type="checkbox" value="'+c.cpt+'"><span><b>'+c.cpt+'</b><small>'+c.desc+'</small><small class="note"></small></span>';
+    codesBox.appendChild(l);
+  });
+  [].forEach.call(codesBox.querySelectorAll("input"),function(i){i.addEventListener("change",syncCodes);});
+  syncCodes();
+}
+function syncCodes(){
+  var P=PROCEDURES[procSel.value], boxes={}, labels={};
+  [].forEach.call(codesBox.querySelectorAll(".chk"),function(l){var cpt=l.getAttribute("data-cpt");labels[cpt]=l;boxes[cpt]=l.querySelector("input");});
+  Object.keys(boxes).forEach(function(cpt){boxes[cpt].disabled=false;labels[cpt].classList.remove("off");var n=labels[cpt].querySelector(".note");n.textContent="";n.classList.remove("on");});
+  function block(cpt,msg){var n=labels[cpt].querySelector(".note");n.textContent=msg;n.classList.add("on");boxes[cpt].checked=false;boxes[cpt].disabled=true;labels[cpt].classList.add("off");}
+  function flag(cpt,msg){var n=labels[cpt].querySelector(".note");n.textContent=msg;n.classList.add("on");}
+
+  /* comprehensive code includes a component -> block the component */
+  P.codes.forEach(function(c){
+    if(c.includesCodes && boxes[c.cpt] && boxes[c.cpt].checked){
+      c.includesCodes.forEach(function(inc){ if(boxes[inc]) block(inc,"Included in "+c.cpt+" — don’t bill separately"); });
+    }
+  });
+  /* mutually exclusive group -> first picked wins, block the rest */
+  (P.mutex||[]).forEach(function(mx){
+    var on=mx.codes.filter(function(c){return boxes[c] && boxes[c].checked;});
+    if(on.length>=1){ var keep=on[0];
+      mx.codes.forEach(function(c){ if(c!==keep && boxes[c]) block(c,"Bill only one method — "+keep+" selected"); });
+    }
+  });
+  /* add-on needs a primary still selected */
+  P.codes.forEach(function(c){
+    if(c.addon && boxes[c.cpt] && boxes[c.cpt].checked && !boxes[c.cpt].disabled){
+      var has=c.primaries.some(function(p){return boxes[p] && boxes[p].checked && !boxes[p].disabled;});
+      if(!has) flag(c.cpt,"Add-on — also pick a primary test (94010, 94060, 94726…)");
+    }
+  });
+  var bill=Object.keys(boxes).filter(function(c){return boxes[c].checked && !boxes[c].disabled;});
+  $("codestatus").textContent = bill.length ? ("✓ Will bill: "+bill.join(" + ")) : "";
+}
+procSel.addEventListener("change",renderCodes);renderCodes();
+try{var last=localStorage.getItem("pft_state");if(last&&STATES[last]){stateSel.value=last;}}catch(e){}
+buildPtype(); buildInsurerList(); syncInsurer();
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function CODE(c){return '<span class="pill code">'+c+'</span>';}
+function MOD(m){return '<span class="pill mod">'+m+'</span>';}
+
+/* ===================== BUILD ===================== */
+$("run").addEventListener("click",function(){
+  var st=stateSel.value, pt=ptypeSel.value, P=PROCEDURES[procSel.value];
+  if(!st || !pt){var e=$("err");e.textContent=(!st?"Please choose a state first.":"Please choose a payer type — Medicare, Medicare Advantage, Medicaid, or Commercial.");e.style.display="block";if(e.scrollIntoView)e.scrollIntoView({behavior:"smooth",block:"center"});return;}
+  $("err").style.display="none";
+  var PY=resolvePayer(pt,st,insurerInput.value);
+
+  var picked=[].slice.call(codesBox.querySelectorAll("input:checked")).filter(function(i){return !i.disabled;}).map(function(i){return i.value;});
+  var em=$("em").checked;
+  var own=document.querySelector('input[name=own]:checked').value;
+  var meta=function(c){return P.codes.find(function(x){return x.cpt===c;});};
+
+  $("jurLabel").textContent=st+" — "+(PY.cls==="commercial"?"Commercial":PY.cls==="medicaid"?"Medicaid":"Medicare");
+  $("macName").textContent=PY.name;
+  $("jurTitle").textContent=PY.byLabel;
+  $("jurName").textContent=PY.jur?(PY.by+" — "+PY.jur):PY.by;
+
+  var h="",warnings=[];
+  P.codes.forEach(function(c){
+    if(c.includesCodes && picked.indexOf(c.cpt)>-1){
+      c.includesCodes.forEach(function(inc){ if(picked.indexOf(inc)>-1){ warnings.push("<b>Don't bill "+inc+" with "+c.cpt+".</b> "+c.cpt+" already includes the spirometry in "+inc+". Bill "+c.cpt+" only."); picked=picked.filter(function(x){return x!==inc;}); } });
+    }
+  });
+  (P.mutex||[]).forEach(function(mx){
+    var present=mx.codes.filter(function(c){return picked.indexOf(c)>-1;});
+    if(present.length>1){ warnings.push(mx.msg); picked=picked.filter(function(x){return mx.codes.indexOf(x)===-1 || x===mx.keep;}); }
+  });
+  P.codes.forEach(function(c){
+    if(c.addon && picked.indexOf(c.cpt)>-1){
+      var ok=c.primaries.some(function(p){return picked.indexOf(p)>-1;});
+      if(!ok) warnings.push("<b>"+c.cpt+" can't stand alone.</b> It's an add-on (DLCO) and must be billed with a primary PFT code ("+c.primaries.join(", ")+"). Add the primary test performed, or remove "+c.cpt+".");
+    }
+  });
+  if(warnings.length){
+    h+='<div class="res-h" style="border-color:var(--red);color:var(--red)">Fix these before you submit</div>';
+    warnings.forEach(function(w){h+='<div class="warnbox">'+w+'</div>';});
+  }
+
+  h+='<div class="res-h">Your claim should look like this</div>';
+  var primaries=picked.filter(function(c){return !meta(c).addon;});
+  var addons=picked.filter(function(c){return meta(c).addon;});
+  var comp= own==="pro"?" 26":own==="tech"?" TC":"";
+  if(!picked.length){
+    h+='<p class="muted">Select at least one test code above to see the claim layout.</p>';
+  }else{
+    h+='<div class="claim">';
+    if(em) h+='<div class="ln"><span class="c">'+P.emExample+'</span><span class="m">-25</span><span class="d">point to the EVALUATION diagnosis</span></div>';
+    primaries.forEach(function(c,i){
+      h+='<div class="ln"><span class="c">'+c+comp+'</span><span class="m">'+(i>0?'-59 / -91*':'&nbsp;')+'</span><span class="d">point to the RESPIRATORY diagnosis</span></div>';});
+    addons.forEach(function(c){
+      h+='<div class="ln"><span class="c">'+c+comp+'</span><span class="m">add-on</span><span class="d">same dx as its primary</span></div>';});
+    h+='</div>';
+    h+='<p class="muted">'+P.emExample+' shown as an example E/M level - bill the level your documentation supports. '+(comp?'<b>'+comp.trim()+'</b> appended from the equipment/interpretation answer. ':'')+(primaries.length>1?'<b>*</b> A second distinct test the same day may need 59/XU (separate) or 91 (repeat) - only if truly separate and documented; verify the pair.':'')+'</p>';
+  }
+
+  h+='<div class="res-h">Step by step</div><ol class="steps">';
+  h+='<li>Report the test code(s) actually performed: '+(picked.length?picked.map(CODE).join(" "):'<span class="muted">(none selected)</span>')+'.</li>';
+  if(own==="global") h+='<li>Bill the <b>global service</b> (no 26/TC) - practice owns the equipment and the provider interprets.</li>';
+  else if(own==="pro") h+='<li>Append '+MOD('26')+' (professional component) - provider only interprets; equipment owned elsewhere.</li>';
+  else h+='<li>Append '+MOD('TC')+' (technical component) - practice supplied equipment/technician but did not interpret.</li>';
+  if(em){
+    h+='<li>Report the office visit and append '+MOD('25')+' <b>to the E/M code</b> - never to the test. This unbundles the visit so both pay.</li>';
+    h+='<li>Bill the E/M <b>only</b> if it was a significant, separately identifiable evaluation. If the patient came in solely for the test, do not bill a separate visit.</li>';
+  }else{
+    h+='<li>No visit today - bill the test alone. (If the provider did evaluate the patient, check the "office visit also done" box for the Modifier 25 step.)</li>';
+  }
+  h+='<li>Link diagnosis pointers as shown above, then confirm coverage in the lookup below before submitting.</li>';
+  h+='</ol>';
+
+  h+='<div class="res-h">Diagnosis &amp; this payer <span class="tag '+(PY.cls==="commercial"||PY.cls==="medicaid"?"com":"med")+'">'+esc(PY.name)+'</span></div>';
+  h+='<p>'+esc(CLASS_DX[PY.cls])+'</p>';
+  h+='<p class="muted">Diagnoses that commonly support spirometry/PFT (examples - always match the chart and the payer covered list): '+esc(P.dxExamples)+'.</p>';
+
+  h+='<div class="res-h">Documentation that must be in the chart</div><ul class="chklist">';
+  P.docChecklist.forEach(function(d){h+='<li>'+esc(d)+'</li>';});
+  h+='</ul>';
+
+  h+='<div class="res-h">If it denies - read the code, then fix it</div>';
+  h+='<div class="claim" style="background:#1c1410">'+
+    '<div class="ln" style="border-color:#3a2c22"><span class="c" style="color:#ffb37a;min-width:120px">CO-97 + N19/M15</span><span class="d" style="color:#f0d6c4">Bundled / incidental - the E/M or a test code folded into another. Fix: confirm Modifier 25 is on the E/M, or that you did not bill a component code (e.g. 94010 with 94060). Appeal with the note + interpretation.</span></div>'+
+    '<div class="ln" style="border-color:#3a2c22"><span class="c" style="color:#ffb37a;min-width:120px">CO-50 / CO-56</span><span class="d" style="color:#f0d6c4">Not medically necessary - the diagnosis is not on the covered list, or frequency exceeded. Fix: check the policy covered dx &amp; limits, correct the pointer, resubmit.</span></div>'+
+    '<div class="ln"><span class="c" style="color:#ffb37a;min-width:120px">CO-4 / CO-16</span><span class="d" style="color:#f0d6c4">Modifier missing/inconsistent - a required modifier (25, 26, TC, 59) is absent or wrong. Fix: add/correct the modifier and resubmit.</span></div>'+
+    '</div>';
+
+  h+='<div class="res-h">Confirm coverage before you submit</div>';
+  h+='<div class="verify"><b>VERIFY for '+esc(PY.name)+':</b> The coding above is standard; the covered-diagnosis list &amp; frequency are set by this payer and can change. Check the current policy and match your diagnosis before submitting. &nbsp;<a href="'+PY.lookUrl+'" target="_blank" rel="noopener">Open '+esc(PY.lookName)+' &rarr;</a></div>';
+
+  $("result").innerHTML=h;
+  $("disclaimer").innerHTML='General coding guidance, not a coverage determination or billing/legal advice. Reimbursement varies by payer, plan, region, and fee schedule. Confirm against current NCCI policy and the payer policy before submitting. &nbsp;Generated for: <b>'+esc(PY.name)+' — '+esc(st)+'</b>.';
+  $("out").style.display="block";$("print").style.display="inline-block";
+  $("out").scrollIntoView({behavior:"smooth",block:"start"});
+});
+$("print").addEventListener("click",function(){window.print();});
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(e){/* offline file:// - ignore */});
+  });
+}
+</script>
+</body>
+</html>

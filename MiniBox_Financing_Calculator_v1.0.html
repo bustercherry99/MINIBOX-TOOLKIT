@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!-- MiniBox Financing Calculator v1.0 — NewLane Finance program. CUSTOMER-FACING: shows monthly payment options only. No PulmOne discount / net-invoice figures are displayed anywhere in this file by design (per program terms). -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox PFT — Financing Options</title>
+<style>
+  :root{
+    --blue:#1a7fe0; --blue-d:#0f52a0; --blue-dd:#062960;
+    --ink:#0f1b2d; --muted:#5a6b7e; --line:#e2e8f0; --bg:#f4f7fb;
+    --card:#ffffff; --good:#0f9d58; --accent:#1a7fe0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; padding:18px; -webkit-text-size-adjust:100%}
+  .wrap{max-width:760px;margin:0 auto}
+  .head{background:linear-gradient(135deg,var(--blue-d),var(--blue-dd)); color:#fff; border-radius:16px;
+    padding:24px 22px; text-align:center; box-shadow:0 6px 20px rgba(10,41,128,.18)}
+  .head .brand{font-size:13px; letter-spacing:2px; text-transform:uppercase; opacity:.85; font-weight:600}
+  .head h1{font-size:26px; margin:6px 0 4px; font-weight:800}
+  .head p{font-size:14px; opacity:.9}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px;
+    margin-top:16px; box-shadow:0 2px 8px rgba(15,27,45,.04)}
+  .label{font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+  .price-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .input-shell{display:flex; align-items:center; background:#fff; border:2px solid var(--blue);
+    border-radius:12px; padding:6px 14px; flex:1; min-width:200px}
+  .input-shell span{font-size:24px; font-weight:800; color:var(--blue-d); margin-right:4px}
+  .input-shell input{border:0; outline:0; font-size:24px; font-weight:800; color:var(--ink); width:100%;
+    background:transparent; font-family:inherit}
+  .hint{font-size:12px; color:var(--muted); margin-top:8px}
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:6px}
+  @media(max-width:620px){.cards{grid-template-columns:1fr}}
+  .card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 16px;
+    text-align:center; position:relative; transition:.15s; overflow:hidden}
+  .card.feature{border:2px solid var(--blue); box-shadow:0 6px 18px rgba(26,127,224,.16)}
+  .card .ribbon{position:absolute; top:0; left:0; right:0; background:var(--blue); color:#fff;
+    font-size:10px; font-weight:800; letter-spacing:1px; padding:4px; text-transform:uppercase}
+  .card .term{font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:14px}
+  .card .pay{font-size:34px; font-weight:800; color:var(--blue-d); margin:8px 0 0; line-height:1}
+  .card .per{font-size:12px; color:var(--muted); margin-bottom:12px}
+  .card .meta{border-top:1px dashed var(--line); padding-top:10px; font-size:13px; color:var(--ink)}
+  .card .meta b{color:var(--blue-d)}
+  .card .apr{display:inline-block; background:#eaf3fd; color:var(--blue-d); font-weight:700;
+    font-size:12px; padding:3px 10px; border-radius:20px; margin-top:10px}
+  .foot{margin-top:16px; font-size:12px; color:var(--muted); text-align:center; line-height:1.6}
+  .foot b{color:var(--ink)}
+  .powered{margin-top:6px; font-size:11px; color:var(--muted); text-align:center; letter-spacing:.5px}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+  .chip{background:#eef4fb; border:1px solid #d6e4f5; color:var(--blue-d); border-radius:20px;
+    padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; user-select:none}
+  .chip:active{transform:scale(.97)}
+  .print-btn{display:inline-block; margin-top:14px; background:var(--blue); color:#fff; border:0;
+    border-radius:10px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit}
+  @media print{.input-shell{border-color:#999} .print-btn,.chips{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="brand">MiniBox PFT &bull; PulmOne</div>
+    <h1>Flexible Monthly Financing</h1>
+    <p>Put a complete pulmonary function lab in your practice &mdash; and spread the cost over time.</p>
+  </div>
+
+  <div class="panel">
+    <div class="label">Equipment price</div>
+    <div class="price-row">
+      <div class="input-shell">
+        <span>$</span>
+        <input id="price" type="text" inputmode="numeric" value="39,000" autocomplete="off">
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip" onclick="setPrice(35000)">$35,000</div>
+      <div class="chip" onclick="setPrice(39000)">$39,000</div>
+      <div class="chip" onclick="setPrice(45000)">$45,000</div>
+      <div class="chip" onclick="setPrice(49000)">$49,000</div>
+    </div>
+    <div class="hint">Enter the equipment price (before applicable sales tax). Payments update automatically.</div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel" style="text-align:center">
+    <button class="print-btn" onclick="window.print()">&#128424; Print / Save these options</button>
+    <div class="foot" style="margin-top:14px">
+      Financing provided by <b>NewLane Finance</b>. Monthly payments shown are estimates based on the
+      equipment price entered and the annual percentage rate (APR) for each term. Final terms are subject to
+      credit approval and the executed finance agreement. Sales tax, if applicable, is additional.
+    </div>
+    <div class="powered">MiniBox PFT Financing Calculator &bull; v1.0</div>
+  </div>
+
+</div>
+
+<script>
+/* ===== NewLane Finance program terms (customer-facing) ===== */
+/* APR is the customer's annual percentage rate for each term.   */
+/* Monthly payment = standard amortization of the price at APR.  */
+var TERMS = [
+  { months:12, apr:0.0199, tag:'Lowest rate' },
+  { months:24, apr:0.0299, tag:'Most popular', feature:true },
+  { months:36, apr:0.0399, tag:'Lowest payment' }
+];
+
+function money(n){ return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function money0(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+/* monthly payment via standard amortization */
+function payment(price, apr, n){
+  var r = apr/12;
+  if(r === 0) return price/n;
+  return price * r / (1 - Math.pow(1+r, -n));
+}
+
+function getPrice(){
+  var raw = (document.getElementById('price').value || '').replace(/[^0-9.]/g,'');
+  var v = parseFloat(raw);
+  return isNaN(v) ? 0 : v;
+}
+
+function setPrice(v){
+  document.getElementById('price').value = v.toLocaleString('en-US');
+  render();
+}
+
+function render(){
+  var price = getPrice();
+  var html = '';
+  TERMS.forEach(function(t){
+    var pmt = payment(price, t.apr, t.months);
+    var total = pmt * t.months;
+    html += '<div class="card' + (t.feature ? ' feature' : '') + '">';
+    if(t.feature) html += '<div class="ribbon">' + t.tag + '</div>';
+    html += '<div class="term">' + t.months + ' Months</div>';
+    html += '<div class="pay">' + (price>0 ? money(pmt) : '$0.00') + '</div>';
+    html += '<div class="per">per month</div>';
+    html += '<div class="meta">' + t.months + ' payments &bull; total <b>' + (price>0 ? money0(total) : '$0') + '</b></div>';
+    html += '<div class="apr">' + (t.apr*100).toFixed(2) + '% APR</div>';
+    html += '</div>';
+  });
+  document.getElementById('cards').innerHTML = html;
+}
+
+/* live formatting + recompute */
+var inp = document.getElementById('price');
+inp.addEventListener('input', render);
+inp.addEventListener('blur', function(){
+  var v = getPrice();
+  if(v>0) inp.value = v.toLocaleString('en-US');
+});
+
+render();
+</script>
+</body>
+</html>

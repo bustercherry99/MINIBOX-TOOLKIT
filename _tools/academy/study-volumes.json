@@ -1,0 +1,260 @@
+{
+  "lung_volumes_pleth": {
+    "minutes": 12,
+    "intro": "Spirometry only sees the air a patient can actually blow out. It never sees the air that stays behind, and in obstruction that leftover air is the whole story. Body plethysmography is how you get the real total. This is the module that lets you stand in front of a pulmonologist and talk about the box like you have run the test yourself, because half the objections you will hear are not about the science, they are about technique and repeatability.",
+    "sections": [
+      {
+        "h": "Spirometry stops short",
+        "p": "Body plethysmography (say it \"pleh-thiz-mah-graf-ee\") is a noninvasive lung function test. It answers two questions spirometry cannot: how much air is in the lungs after the biggest breath in, and how much is still sitting there after the biggest breath out. Learn these three letters cold, because every conversation about lung volumes runs through them.",
+        "visual": {
+          "t": "table",
+          "head": ["Value", "What it actually is"],
+          "rows": [
+            ["TLC, total lung capacity", "The volume of air in the lungs after taking the biggest breath you can"],
+            ["FRC, functional residual capacity", "The volume of air that remains in the lungs after breathing out normally"],
+            ["RV, residual volume", "The volume of air that stays in the lungs after breathing out as much as possible"]
+          ]
+        },
+        "key": "Spirometry measures what moves. Plethysmography measures what stays."
+      },
+      {
+        "h": "Boyle's law, plain English",
+        "p": "The whole test rests on one gas law. Boyle's law says the pressure of a trapped gas is inversely proportional to the volume it occupies, as long as the temperature and the amount of gas do not change inside a closed system. Squeeze it into half the space and the pressure doubles. Let it expand and the pressure drops. Play with the piston below and watch the two numbers trade places, then picture the same thing happening to a chest inside a sealed box.",
+        "visual": { "t": "svg", "id": "boyle" },
+        "key": "Pressure times volume stays constant. P1V1 = P2V2. That is the entire test in five characters."
+      },
+      {
+        "h": "The box and its sensors",
+        "p": "The patient sits in an enclosed, airtight, see through cabin and breathes through a mouthpiece. One sensor inside the box watches the box pressure change as the chest expands and contracts. A second sensor at the mouthpiece watches airflow and the pressure in the mouth. Two separate signals, one for what the chest is doing and one for what the airway is doing. A shutter valve sits in the mouthpiece and can close the airway on command.",
+        "visual": {
+          "t": "img",
+          "src": "pleth-schematic",
+          "cap": "Follow the two wires. Box pressure comes from the chest pushing on the air around it, mouth pressure comes from inside the airway. The red shutter is the switch between the two measurements."
+        }
+      },
+      {
+        "h": "Why the shutter closes",
+        "p": "When the shutter closes there is no airflow, so the glottis is effectively a dead end and the pressure at the mouth becomes equal to the pressure down in the alveoli. Now when the patient pushes, alveolar air compresses and the box air expands. When the patient pulls, alveolar air decompresses and the box air is squeezed. That swap is called the <b>volume shift</b>, the amount of alveolar air in millilitres compressed on the push and decompressed on the pull. Feed the volume shift and the mouth pressure into Boyle's law and out comes thoracic gas volume, the amount of gas in the lungs at that moment.",
+        "visual": {
+          "t": "img",
+          "src": "boyles-law",
+          "cap": "Pull the piston up and volume rises while pressure falls. Push it down and volume falls while pressure rises. The closed shutter turns the chest into exactly this cylinder."
+        },
+        "key": "Closed shutter, no flow, so mouth pressure equals alveolar pressure. That is what makes the math legal."
+      },
+      {
+        "h": "Coaching the maneuver",
+        "p": "This is where tests are won and lost, and it is the part office staff get wrong. The patient sits in the cabin, seals on the mouthpiece and supports both cheeks with their hands. They breathe quietly, the shutter closes, and they keep breathing steadily against it at a breathing frequency of 25 to 30. The shutter opens by itself once the occlusion time is up, or the operator can reopen it after enough loops have been collected. Then the linked vital capacity follows without the patient breaking the seal.",
+        "visual": {
+          "t": "img",
+          "src": "pleth-technique",
+          "cap": "Notice the hands pressed against the cheeks. Loose cheeks act like a balloon and blur the mouth pressure signal, which is the one number the calculation cannot afford to lose."
+        },
+        "list": [
+          "Hands on the cheeks the whole time the shutter is closed",
+          "Steady panting at a breathing frequency of 25 to 30, not fast and frantic",
+          "Do not let the patient come off the mouthpiece before the linked vital capacity",
+          "Let the shutter open on its own unless you have a reason to reopen it early"
+        ]
+      },
+      {
+        "h": "Reading the slope",
+        "p": "With the shutter closed the system plots mouth pressure in kilopascals against volume shift in millilitres. Each pant traces a near straight line, and the <b>slope</b> of that line is what computes FRCpleth. Steeper or flatter is not good or bad on its own. What matters is that the tracings are clean and that they land on top of each other. If a physician asks what the box is actually calculating, this graph is your answer.",
+        "visual": {
+          "t": "img",
+          "src": "frcpleth-slope",
+          "cap": "Four colour coded closed shutter tracings, each with its regression line drawn through it. The angle of that line, not its length, is what becomes FRCpleth."
+        },
+        "key": "The box does not measure volume directly. It measures a slope and converts it."
+      },
+      {
+        "h": "Linked means linked",
+        "p": "FRC on its own does not give you TLC or RV. The FRC measurement has to be joined to a vital capacity maneuver in the same run. The ATS and ERS first preferred method is expiratory reserve volume plus a slow inspiratory vital capacity taken right after FRC is acquired, and <b>linked</b> means the FRCpl must be followed by the vital capacity without the patient coming off the mouthpiece. The second recommended method is inspiratory capacity followed by an expiratory vital capacity, still linked to the FRC maneuver, though there the patient may come off the mouthpiece between trials. The 2005 task force found it difficult to reach consensus on only one of these, so labs use both.",
+        "visual": {
+          "t": "img",
+          "src": "linked-maneuver",
+          "cap": "One continuous trace: quiet tidal breathing, then a full push down to residual volume, then a full pull all the way up to total lung capacity. Break that seal partway and the trial is scrap."
+        },
+        "key": "If the patient comes off the mouthpiece mid run on the preferred method, the trial is gone."
+      },
+      {
+        "h": "TLC and RV are arithmetic",
+        "p": "Only FRC is measured. Everything else is subtraction and addition off the linked maneuver, which is why one sloppy vital capacity poisons three reported numbers at once. Learn the per trial math and the best column math, because the best column is not simply the best trial.",
+        "visual": {
+          "t": "table",
+          "head": ["Value", "How the system gets it"],
+          "rows": [
+            ["FRCpl", "Measured directly by the box with the shutter closed"],
+            ["RV for a trial", "RV = FRCpl minus ERV"],
+            ["TLC for a trial", "TLC = RV plus IVC"],
+            ["Reported FRCpl", "The mean of the accepted FRCpl trials"],
+            ["RV best", "RV best = mean FRCpl minus mean ERV"],
+            ["TLC best", "TLC best = RV best plus the largest IVC"]
+          ],
+          "note": "ERV is expiratory reserve volume. IVC is slow inspiratory vital capacity. ATS and ERS Task Force, Wanger et al., Standardisation of the measurement of lung volumes, Eur Respir J 2005;26:511 to 522, page 513."
+        },
+        "key": "One measured value, four calculated ones. That is why technique matters more here than in spirometry."
+      },
+      {
+        "h": "Proving the number is real",
+        "p": "A single FRCpleth value proves nothing. The ATS and ERS Task Force is specific: \"With regards to repeatability, at least three FRCpleth values that agree within 5% should be obtained and the mean value reported.\" That is the standard a lab director will hold any device to, so know it by heart. Repeatability is only half of it. The box itself has a calibration routine the lab is expected to keep up with.",
+        "visual": {
+          "t": "img",
+          "src": "frcpleth-repeat",
+          "cap": "This is what you want to see: every closed shutter loop stacked on the same line. A tight bundle like this is a patient who understood the coaching."
+        },
+        "list": [
+          "Box calibration performed daily",
+          "A validation of accuracy using a known volume performed periodically",
+          "Biological controls performed monthly"
+        ],
+        "key": "At least three FRCpleth values agreeing within 5 percent, and the mean gets reported. ATS and ERS 2005."
+      },
+      {
+        "h": "When the loops drift",
+        "p": "When trials will not agree, it is almost never the patient's lungs. It is one of three things, and you should be able to name all three in front of a tech without looking. Drift shows up as loop bundles sitting on separate parallel lines instead of one line, which is the software telling you the box conditions changed between trials rather than the lung volume changing.",
+        "visual": {
+          "t": "img",
+          "src": "frcpleth-drift",
+          "cap": "Two bundles, two parallel lines. Each bundle is internally tidy, so the patient panted fine. The gap between them is thermal drift in the cabin, not a change in the patient."
+        },
+        "list": [
+          "Box leak is too large",
+          "Thermal instability, which shows up as drift",
+          "Improper panting technique"
+        ],
+        "key": "Loops tight but offset means the box drifted. Loops wide and scattered means the panting was wrong."
+      },
+      {
+        "h": "Resistance comes free",
+        "p": "With the shutter open, the same box gives you airway resistance and its mirror image, conductance. Raw is the pressure difference needed to move a given amount of air through the airways, or pressure divided by flow. Gaw is how easily air flows through them, flow divided by pressure, so it is just the reciprocal. Here is the intuition that sells it: with the shutter open, a healthy chest barely disturbs the box air, because air moves in and out easily. When the airways fight back, the chest has to compress and decompress far more alveolar air to push the same flow, and the volume shift grows.",
+        "visual": {
+          "t": "img",
+          "src": "raw-loop-high",
+          "cap": "A wide, shallow loop spanning the full range. Flat and wide means a lot of volume shift for very little flow, which is the signature of high airway resistance."
+        },
+        "list": [
+          "Airway diameter: narrower airways create more resistance",
+          "Lung volume: as lung volume increases, airways expand and resistance falls",
+          "Mucus secretions: thick mucus obstructs airways and raises resistance",
+          "Bronchospasm: airway smooth muscle contracts, airways narrow, resistance rises"
+        ],
+        "key": "At 2 L/s a healthy chest shifts about 8 ml of box air. High resistance and a big lung push it past 40 ml."
+      }
+    ],
+    "angle": "This is the module that earns you the room. You can tell a pulmonologist that the MiniBox+ is not estimating the leftover air, it is measuring thoracic gas volume from Boyle's law with the shutter closed, and that it holds itself to the ATS and ERS 2005 bar of at least three FRCpleth trials agreeing within 5 percent before it reports a mean. Then you can say the part that closes deals: because the box takes the resistance loop with the shutter open in the same sitting, the practice gets Raw and Gaw out of a test they were already running. And when their tech says the numbers will not repeat, you already know the three suspects, so you become the person they call instead of the person they avoid."
+  },
+  "lung_volume": {
+    "minutes": 8,
+    "intro": "Plethysmography is not the only way to find FRC, and the practices you walk into may already own a gas based system or may have been trained on one. Nitrogen washout and helium dilution are clever, cheap and perfectly good in a normal lung. They also have one blind spot, and it happens to be the exact patient a pulmonology practice sees all day. Know how both work and you can explain the difference without ever trashing a competitor.",
+    "sections": [
+      {
+        "h": "Three roads to FRC",
+        "p": "Every lung volume method is really a hunt for one number, FRC, the air still in the lungs after a normal relaxed breath out. Once you have FRC, TLC and RV fall out of the linked vital capacity maneuver by arithmetic. What separates the methods is the physics they use to find that first number, and that choice decides which air they can and cannot see.",
+        "visual": {
+          "t": "table",
+          "head": ["Method", "The physics it uses", "What it can see"],
+          "rows": [
+            ["Plethysmography", "Boyle's law, pressure and volume of a trapped gas", "All compressible gas in the chest"],
+            ["Nitrogen washout", "Counting the nitrogen breathed out until almost none is left", "Only gas that communicates with the airway"],
+            ["Helium dilution", "A known gas concentration diluted by an unknown volume", "Only gas that communicates with the airway"]
+          ]
+        },
+        "key": "All three chase FRC. They differ in whether trapped air counts."
+      },
+      {
+        "h": "Washing the nitrogen out",
+        "p": "Room air is mostly nitrogen, so a resting lung is full of it. Give the patient a nitrogen free gas to breathe and every single breath out carries a little of the lung's nitrogen away with it. The system measures the nitrogen concentration at the end of each breath and keeps a running total of everything expired. Since all the nitrogen that comes out had to have been in the lung to start with, the total tells you how big the lung was. Watch the staircase on the curve: each breath holds a plateau, then steps down.",
+        "visual": {
+          "t": "img",
+          "src": "n2-washout-curve",
+          "cap": "End tidal nitrogen falls breath by breath as expired volume accumulates. The early steps are big, the late ones are tiny, which is why the test cannot simply be cut short."
+        },
+        "key": "End tidal nitrogen falls from about 61 percent down toward under 2 percent. The test ends when the well runs dry."
+      },
+      {
+        "h": "The whole washout run",
+        "p": "On the volume time trace the run has a clear shape, and knowing that shape lets you tell a tech what to expect before they ever press start. It opens with quiet tidal breathing to establish the baseline, then a deep expiration, then the long washout itself, roughly forty breaths. It closes with another deep expiration and one tall inspiratory capacity spike, which is the linked maneuver that turns FRC into TLC and RV.",
+        "visual": {
+          "t": "img",
+          "src": "n2-washout-trace",
+          "cap": "The forty or so small breaths in the middle are the actual measurement. The tall spike at the end is the inspiratory capacity, and without it you have FRC and nothing else."
+        },
+        "list": [
+          "Quiet tidal breathing to set the baseline",
+          "A deep expiration",
+          "About forty washout breaths, the measurement itself",
+          "A deep expiration and a full inspiratory capacity spike"
+        ]
+      },
+      {
+        "h": "Steady breathing comes first",
+        "p": "The whole calculation assumes the lung was sitting at a stable resting volume when the washout began. If the patient is sighing, breath stacking or still settling into the mouthpiece, the starting point is wrong and so is every number that follows. The software draws an FRC stability line across the tidal breaths so the operator can see it rather than guess it. Coach the patient into boredom before you start.",
+        "visual": {
+          "t": "img",
+          "src": "frc-stability",
+          "cap": "The dashed FRC stability line is the target. The bottom of each tidal breath should land on it. Drifting bottoms mean the patient has not settled yet."
+        },
+        "key": "A wandering baseline is a wrong FRC. Settle the patient first, start second."
+      },
+      {
+        "h": "Do not rush trials",
+        "p": "This is the difference between gas methods and the box that surprises people in the field. You cannot fire off three trials back to back. The lung has to return to its starting condition before another washout means anything, so the software counts down a waiting time before the next trial and will tell you when it is ready. It also grades each measurement on a quality scale from worst to good. Teach the office to read that bar and stop, rather than accepting whatever comes out.",
+        "visual": {
+          "t": "img",
+          "src": "n2-wait-quality",
+          "cap": "Two things to point at on this screen: the waiting time before the next trial can start, and the quality of measurement bar. Never let a practice ignore either one."
+        }
+      },
+      {
+        "h": "Helium dilution in one line",
+        "p": "Different trick, same goal. Start with a bag or spirometer bell of known volume holding helium at a known concentration. Connect the patient and let them breathe on the closed system. The helium has nowhere to go except to spread out into the lungs as well, so its concentration falls. Nothing has been lost, it is just spread over more space, and that is the equation in one line: <b>C1 x V1 = C2 x (V1 + V2)</b>. You know C1, V1 and C2, so V2, the lung volume, is the only unknown left.",
+        "visual": {
+          "t": "img",
+          "src": "he-dilution",
+          "cap": "Left, all the helium is packed into a bag of known volume at concentration C1. Right, the same helium now fills the bag plus the lungs at the lower concentration C2. The drop in concentration is the lung volume."
+        },
+        "key": "C1 x V1 = C2 x (V1 + V2). The same helium, spread thinner, tells you how much extra room it found."
+      },
+      {
+        "h": "Mixing takes time",
+        "p": "Helium dilution only works once the gas is genuinely evenly distributed through the bag and the lungs, and that takes several minutes of quiet breathing. Stop early and the helium has not finished spreading, the concentration reads too high, and the lung looks smaller than it is. There is a fast version worth knowing about: the single breath approach, used during a breath hold, mixes a small amount of helium into the inhaled gas and reads its dilution on the way out to get alveolar volume. It is quicker, easier on the patient and cheaper, but it may not be accurate when there is significant airway obstruction, because one breath may not reach the whole lung.",
+        "visual": {
+          "t": "img",
+          "src": "he-equilibration",
+          "cap": "At the start the helium molecules are all in the bag. After several minutes they are spread evenly through the bag and the lungs. Everything the test claims depends on the right hand panel actually being true."
+        },
+        "key": "Cut the equilibration short and the lung reads too small. Time is part of the measurement."
+      },
+      {
+        "h": "Why pleth reads higher",
+        "p": "Here is the point that matters most in the field, and it is not a marketing line, it is physics. Gas dilution and washout can only account for air that communicates with the airway, because a gas has to be able to travel in and out to be counted. Plethysmography does not care whether the air moves. Any gas in the chest that can be compressed and decompressed shows up in the volume shift, including air sitting behind a plugged or collapsed airway. In a healthy lung the two agree closely. In emphysema and other obstruction, where air trapping is the whole problem, the gas methods can undercount and read a smaller lung than the patient really has.",
+        "visual": {
+          "t": "vs",
+          "a": {
+            "h": "Nitrogen washout and helium dilution",
+            "items": [
+              "Only measures gas that communicates with the airway",
+              "Trapped air behind a blocked airway is never counted",
+              "Can underestimate lung volume in obstruction with air trapping",
+              "Needs full washout or full equilibration to be valid",
+              "Needs a waiting period between trials"
+            ]
+          },
+          "b": {
+            "h": "Plethysmography",
+            "items": [
+              "Measures all compressible gas in the chest",
+              "Trapped air still compresses, so it still counts",
+              "Holds up in obstruction, where air trapping is the disease",
+              "Needs a closed shutter and correct panting technique",
+              "Three FRCpleth trials agreeing within 5 percent per ATS and ERS 2005"
+            ]
+          }
+        },
+        "key": "Gas methods count air that can travel. The box counts air that can be squeezed. In obstruction that is a real gap."
+      }
+    ],
+    "angle": "You will meet practices running gas based lung volumes, and the wrong move is to call their method bad. It is not bad, it is blind in one specific place. Say it this way: washout and dilution can only measure air that can get out to be counted, so in an emphysema patient with real air trapping they can report a lung that is smaller than it truly is, while plethysmography counts any gas in the chest that compresses. Then land the practical half, that gas methods need a full washout or a full equilibration and a waiting period between trials, while the box gives repeatable FRCpleth trials plus airway resistance in the same sitting."
+  }
+}

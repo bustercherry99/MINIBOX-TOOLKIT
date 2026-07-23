@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulmSuite — Every PFT. One Platform. Reviewed From Anywhere.</title>
+<style>
+:root{
+  --navy:#0B2239; --navy2:#10304F; --cyan:#29ABE2; --cyan-dk:#1B8FC2;
+  --ink:#12283C; --mut:#5B7288; --bg:#F4F8FB; --card:#ffffff;
+  --green:#27AE60; --line:#E1EAF2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+
+/* ===== HERO ===== */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 55%,#123B63 100%);color:#fff;position:relative;overflow:hidden;padding:28px 24px 90px}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(41,171,226,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(41,171,226,.06) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+.hero-inner{max-width:1060px;margin:0 auto;position:relative}
+.logo-chip{display:inline-block;background:#fff;border-radius:10px;padding:8px 14px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.logo-chip img{height:44px;display:block}
+.hero h1{font-size:clamp(34px,6vw,62px);font-weight:800;line-height:1.06;margin:46px 0 0;letter-spacing:-.02em}
+.hero h1 .cy{color:var(--cyan)}
+.hero p.sub{font-size:clamp(16px,2.4vw,21px);color:#BFD6E8;max-width:640px;margin:20px 0 0;line-height:1.55}
+.hero-ctas{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;padding:15px 30px;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;cursor:pointer;border:none;transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn-cy{background:var(--cyan);color:#fff;box-shadow:0 6px 22px rgba(41,171,226,.45)}
+.btn-gh{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4)}
+.pillrow{margin-top:44px;display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:rgba(41,171,226,.14);border:1px solid rgba(41,171,226,.4);color:#9FD8F3;font-size:13px;font-weight:600;padding:7px 14px;border-radius:100px}
+/* animated sync line */
+.syncline{position:absolute;right:-40px;top:60px;width:420px;opacity:.9}
+@media(max-width:900px){.syncline{display:none}}
+.dashflow{stroke:var(--cyan);stroke-width:2.5;fill:none;stroke-dasharray:6 8;animation:dashmove 1.2s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-14}}
+
+/* ===== SECTIONS ===== */
+section{padding:72px 24px}
+.wrap{max-width:1060px;margin:0 auto}
+.kick{color:var(--cyan-dk);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+h2{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.01em;margin:10px 0 14px}
+.lead{color:var(--mut);font-size:17px;max-width:680px;line-height:1.6}
+
+/* ===== DEMO ===== */
+#demo{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.demo-shell{margin-top:38px;background:var(--navy);border-radius:18px;padding:18px;box-shadow:0 24px 60px rgba(11,34,57,.28)}
+.browser{background:#fff;border-radius:12px;overflow:hidden}
+.browser-bar{background:#EDF3F8;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot:nth-child(1){background:#FF5F57}.dot:nth-child(2){background:#FEBC2E}.dot:nth-child(3){background:#28C840}
+.urlbar{flex:1;background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 12px;font-size:12.5px;color:var(--mut);display:flex;align-items:center;gap:7px}
+.lock{color:var(--green);font-size:12px}
+.stage{min-height:430px;position:relative;padding:26px;background:#FBFDFF}
+.scene{position:absolute;inset:0;padding:26px;opacity:0;transition:opacity .5s;pointer-events:none;display:flex;flex-direction:column}
+.scene.on{opacity:1;pointer-events:auto}
+
+/* scene 1: test */
+.center-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+.mb-icon{width:120px;height:120px;border-radius:24px;background:linear-gradient(145deg,#EAF6FD,#D2ECFA);display:flex;align-items:center;justify-content:center;position:relative}
+.mb-icon svg{width:64px;height:64px}
+.pulse-ring{position:absolute;inset:-8px;border-radius:30px;border:3px solid var(--cyan);opacity:0;animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.92);opacity:.75}100%{transform:scale(1.18);opacity:0}}
+.scene-title{font-size:22px;font-weight:800}
+.scene-sub{color:var(--mut);font-size:15px;max-width:420px;line-height:1.55}
+.badge-line{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.tbadge{background:#EAF6FD;color:var(--cyan-dk);font-weight:700;font-size:13px;padding:6px 13px;border-radius:100px}
+
+/* scene 2: sync */
+.sync-viz{display:flex;align-items:center;gap:0;justify-content:center;margin:8px 0 4px}
+.node{width:92px;height:92px;border-radius:20px;background:#fff;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(11,34,57,.08)}
+.node svg{width:48px;height:48px}
+.wire{width:130px;height:4px;position:relative;overflow:visible}
+.wire::before{content:"";position:absolute;inset:0;background:var(--line);border-radius:2px}
+.packet{position:absolute;top:50%;left:0;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:travel 1.4s ease-in-out infinite}
+@keyframes travel{0%{left:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 14px);opacity:0}}
+
+/* scene 3: dashboard */
+.dash{flex:1;display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+@media(max-width:760px){.dash{grid-template-columns:1fr}}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+.panel h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.fvl{width:100%;height:auto}
+.fvl .loop{stroke:var(--cyan);stroke-width:3;fill:none;stroke-linecap:round}
+.fvl .axis{stroke:#C9D8E4;stroke-width:1.5}
+.scene.on .fvl .loop{stroke-dasharray:900;stroke-dashoffset:900;animation:draw 2.2s ease forwards .3s}
+@keyframes draw{to{stroke-dashoffset:0}}
+table.vals{width:100%;border-collapse:collapse;font-size:13.5px}
+table.vals th{text-align:left;color:var(--mut);font-weight:600;padding:7px 6px;border-bottom:1.5px solid var(--line);font-size:12px}
+table.vals td{padding:7px 6px;border-bottom:1px solid #EFF5F9;font-variant-numeric:tabular-nums}
+table.vals td.g{color:var(--green);font-weight:700}
+.rowlabel{font-weight:700}
+
+/* scene 4: sign */
+.review{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
+@media(max-width:760px){.review{grid-template-columns:1fr}}
+.comment-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column}
+.libsel{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14px;color:var(--ink);background:#fff;font-family:inherit;margin-bottom:10px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.libsel.flash{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(41,171,226,.25)}
+.conc-ta{flex:1;min-height:96px;border:1.5px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14.5px;line-height:1.55;font-family:inherit;color:var(--ink);resize:vertical;background:#fff}
+.conc-ta:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(41,171,226,.15)}
+.lib-actions{display:flex;align-items:center;gap:10px;margin-top:9px}
+.savelib{background:none;border:none;color:var(--cyan-dk);font-weight:700;font-size:13px;cursor:pointer;padding:0;font-family:inherit}
+.savelib:hover{text-decoration:underline}
+.savedmsg{color:var(--green);font-weight:700;font-size:13px;opacity:0;transition:opacity .3s}
+.savedmsg.show{opacity:1}
+.sign-btn{margin-top:14px;background:var(--cyan);color:#fff;font-weight:800;font-size:15px;padding:13px;border-radius:9px;border:none;cursor:pointer;width:100%}
+.sign-btn:disabled{opacity:.45;cursor:default}
+.signed-stamp{border:3px solid var(--green);color:var(--green);font-weight:800;font-size:20px;padding:14px 22px;border-radius:10px;transform:rotate(-6deg) scale(0);display:inline-flex;align-items:center;gap:10px;transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.signed-stamp.show{transform:rotate(-6deg) scale(1)}
+.doc-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.avatar{width:74px;height:74px;border-radius:50%;background:linear-gradient(145deg,#EAF6FD,#D2ECFA);display:flex;align-items:center;justify-content:center;font-size:34px}
+.doc-name{font-weight:800;font-size:17px}
+.doc-loc{color:var(--mut);font-size:14px}
+
+/* stepper */
+.stepper{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.step{flex:1;min-width:140px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;text-align:left;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.step .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--line);color:var(--mut);font-size:12px;font-weight:800;align-items:center;justify-content:center;margin-bottom:6px}
+.step .t{display:block;font-weight:700;font-size:13.5px;color:var(--ink)}
+.step.active{border-color:var(--cyan);box-shadow:0 6px 18px rgba(41,171,226,.2)}
+.step.active .n{background:var(--cyan);color:#fff}
+.step.done .n{background:var(--green);color:#fff}
+.demo-controls{display:flex;justify-content:center;margin-top:18px;gap:12px}
+.playbtn{background:var(--navy);color:#fff;font-weight:700;font-size:15px;padding:13px 30px;border-radius:10px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px}
+.playbtn:hover{background:var(--navy2)}
+
+/* ===== FEATURES ===== */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+@media(max-width:860px){.grid3{grid-template-columns:1fr}}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 22px;transition:transform .2s,box-shadow .2s}
+.feat:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(11,34,57,.1)}
+.feat .ic{width:48px;height:48px;border-radius:12px;background:#EAF6FD;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feat .ic svg{width:26px;height:26px}
+.feat h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.feat p{color:var(--mut);font-size:14.5px;line-height:1.6}
+
+/* ===== HOW ===== */
+#how{background:var(--navy);color:#fff}
+#how .kick{color:var(--cyan)}
+#how .lead{color:#BFD6E8}
+.timeline{margin-top:40px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:900px){.timeline{grid-template-columns:1fr}}
+.tstep{background:rgba(255,255,255,.05);border:1px solid rgba(41,171,226,.25);border-radius:13px;padding:20px 16px;position:relative}
+.tstep .num{font-size:30px;font-weight:800;color:var(--cyan);margin-bottom:10px}
+.tstep h4{font-size:15px;font-weight:800;margin-bottom:7px}
+.tstep p{font-size:13.5px;color:#A9C4DA;line-height:1.55}
+
+/* ===== SECURITY ===== */
+.secrow{display:flex;gap:16px;flex-wrap:wrap;margin-top:36px}
+.secbadge{flex:1;min-width:200px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px;display:flex;align-items:center;gap:15px}
+.secbadge .shield{width:44px;height:44px;border-radius:11px;background:#EAF6FD;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.secbadge .shield svg{width:24px;height:24px}
+.secbadge b{display:block;font-size:15px}
+.secbadge span{color:var(--mut);font-size:13px}
+
+/* ===== CTA ===== */
+#cta{background:linear-gradient(150deg,var(--navy2),#123B63);color:#fff;text-align:center}
+#cta h2{color:#fff}
+#cta p{color:#BFD6E8;max-width:560px;margin:0 auto 30px;font-size:17px;line-height:1.6}
+.contact-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.contact-row a{color:#9FD8F3;text-decoration:none;font-weight:700;font-size:15px}
+footer{background:var(--navy);color:#7E98AE;font-size:12.5px;text-align:center;padding:22px}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <span class="logo-chip"><img src="data:image/jpeg;base64,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" alt="PulmOne — PFT Outside The Box"></span>
+    <svg class="syncline" viewBox="0 0 420 220" aria-hidden="true">
+      <path class="dashflow" d="M20 190 C 120 190 140 60 260 60 S 400 30 400 30"/>
+      <circle cx="20" cy="190" r="7" fill="#29ABE2"/>
+      <path d="M370 12 h44 v36 h-44 z" fill="none" stroke="#29ABE2" stroke-width="2.5" rx="6" opacity="0" />
+      <g transform="translate(360,6)">
+        <path d="M18 34 a12 12 0 1 1 4-23 a15 15 0 0 1 29 4 a10 10 0 0 1-2 19 z" fill="none" stroke="#29ABE2" stroke-width="2.5"/>
+      </g>
+    </svg>
+    <h1>Every PFT.<br>One platform.<br><span class="cy">Reviewed from anywhere.</span></h1>
+    <p class="sub">PulmSuite is the cloud platform built for the MiniBox+. Every test your practice runs syncs in real time to one secure dashboard — reviewed and signed off from any browser, the moment it's complete.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-cy" href="#demo">▶&nbsp; See it in action</a>
+      <a class="btn btn-gh" href="mailto:usinfo@pulm-one.com?subject=PulmSuite%20Demonstration%20Request">Request a demo</a>
+    </div>
+    <div class="pillrow">
+      <span class="pill">HIPAA-Compliant</span>
+      <span class="pill">HITRUST-Certified</span>
+      <span class="pill">Built on AWS</span>
+      <span class="pill">No New Hardware</span>
+    </div>
+  </div>
+</header>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="wrap">
+    <span class="kick">Live Walkthrough</span>
+    <h2>From patient to sign-off, in one flow</h2>
+    <p class="lead">This is the PulmSuite workflow, exactly as your practice would experience it. Press play — or tap any step.</p>
+
+    <div class="demo-shell">
+      <div class="browser">
+        <div class="browser-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="urlbar"><span class="lock">🔒</span> pulmsuite.pulm-one.com/dashboard</span>
+        </div>
+        <div class="stage">
+
+          <!-- Scene 1 -->
+          <div class="scene on" id="s1">
+            <div class="center-col">
+              <div class="mb-icon"><span class="pulse-ring"></span>
+                <svg viewBox="0 0 64 64" fill="none"><rect x="10" y="8" width="44" height="48" rx="6" stroke="#1B8FC2" stroke-width="3"/><rect x="17" y="15" width="30" height="18" rx="3" fill="#29ABE2" opacity=".25"/><path d="M20 24 l5 0 2-5 3 9 2-4 8 0" stroke="#1B8FC2" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="44" r="3" fill="#1B8FC2"/><circle cx="34" cy="44" r="3" fill="#1B8FC2"/><circle cx="44" cy="44" r="3" fill="#1B8FC2"/></svg>
+              </div>
+              <div class="scene-title">The MiniBox+ runs the test</div>
+              <p class="scene-sub">The patient stays seated. No booth, no coaching for panting maneuvers. One session captures the full picture:</p>
+              <div class="badge-line"><span class="tbadge">Spirometry</span><span class="tbadge">Lung Volumes</span><span class="tbadge">DLCO</span></div>
+            </div>
+          </div>
+
+          <!-- Scene 2 -->
+          <div class="scene" id="s2">
+            <div class="center-col">
+              <div class="sync-viz">
+                <div class="node"><svg viewBox="0 0 64 64" fill="none"><rect x="12" y="10" width="40" height="44" rx="5" stroke="#1B8FC2" stroke-width="3"/><path d="M20 26 h24 M20 34 h24 M20 42 h14" stroke="#29ABE2" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+                <div class="wire"><span class="packet"></span></div>
+                <div class="node"><svg viewBox="0 0 64 64" fill="none"><path d="M22 44 a11 11 0 1 1 3.5-21.4 A14 14 0 0 1 52 26.5 a9.5 9.5 0 0 1-2 17.5 z" stroke="#1B8FC2" stroke-width="3" fill="#EAF6FD"/></svg></div>
+                <div class="wire"><span class="packet" style="animation-delay:.5s"></span></div>
+                <div class="node"><svg viewBox="0 0 64 64" fill="none"><rect x="8" y="14" width="48" height="30" rx="4" stroke="#1B8FC2" stroke-width="3"/><path d="M24 50 h16 M32 44 v6" stroke="#1B8FC2" stroke-width="3" stroke-linecap="round"/><path d="M16 30 l6 0 3-7 4 12 3-5 10 0" stroke="#29ABE2" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+              <div class="scene-title">Result syncs to the cloud — in real time</div>
+              <p class="scene-sub">The moment the test completes, it lands in one secure, centralized database. Every device, every site, one dashboard. Nothing to export, upload, or fax.</p>
+            </div>
+          </div>
+
+          <!-- Scene 3 -->
+          <div class="scene" id="s3">
+            <div class="dash">
+              <div class="panel">
+                <h4>Flow / Volume</h4>
+                <svg class="fvl" viewBox="0 0 320 200">
+                  <line class="axis" x1="20" y1="100" x2="310" y2="100"/>
+                  <line class="axis" x1="20" y1="10" x2="20" y2="190"/>
+                  <path class="loop" d="M25 100 C 40 30 70 18 95 22 C 150 32 220 70 290 96 C 250 132 150 158 90 150 C 55 145 32 122 25 100 Z"/>
+                </svg>
+              </div>
+              <div class="panel">
+                <h4>Summary — Visit Session</h4>
+                <table class="vals">
+                  <tr><th>Parameter</th><th>Pre Best</th><th>%Pred</th><th>Grade</th></tr>
+                  <tr><td class="rowlabel">FVC</td><td data-count="4.05">0.00</td><td data-count="106" data-suffix="%">0%</td><td class="g">A</td></tr>
+                  <tr><td class="rowlabel">FEV1</td><td data-count="2.98">0.00</td><td data-count="102" data-suffix="%">0%</td><td class="g">A</td></tr>
+                  <tr><td class="rowlabel">FEV1/FVC</td><td data-count="75.5">0.0</td><td>—</td><td class="g">✓</td></tr>
+                  <tr><td class="rowlabel">TLC</td><td data-count="6.12">0.00</td><td data-count="98" data-suffix="%">0%</td><td class="g">✓</td></tr>
+                  <tr><td class="rowlabel">DLCO</td><td data-count="24.8">0.0</td><td data-count="94" data-suffix="%">0%</td><td class="g">✓</td></tr>
+                </table>
+              </div>
+            </div>
+            <p class="scene-sub" style="margin:14px auto 0;text-align:center">One patient record: spirometry, lung volumes and DLCO on a single timeline.</p>
+          </div>
+
+          <!-- Scene 4 -->
+          <div class="scene" id="s4">
+            <div class="review">
+              <div class="doc-card">
+                <div class="avatar">👩‍⚕️</div>
+                <div>
+                  <div class="doc-name">Dr. Reyes is reviewing</div>
+                  <div class="doc-loc">…from her laptop, 40 miles from the test site</div>
+                </div>
+                <div class="signed-stamp" id="stamp">✓ SIGNED</div>
+              </div>
+              <div class="comment-box">
+                <h4 style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px">Conclusion</h4>
+                <select class="libsel" id="libSel">
+                  <option value="">📚 Choose from your conclusion library…</option>
+                </select>
+                <textarea class="conc-ta" id="concTa" placeholder="…or write your own conclusion here"></textarea>
+                <div class="lib-actions">
+                  <button class="savelib" id="saveLib">＋ Save to my library</button>
+                  <span class="savedmsg" id="savedMsg">Saved to your library ✓</span>
+                </div>
+                <button class="sign-btn" id="signBtn" disabled>Sign Report</button>
+              </div>
+            </div>
+            <p class="scene-sub" style="margin:14px auto 0;text-align:center">Pick from your own conclusion library, edit it, or write your own — save it for next time, then sign.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="stepper" id="stepper">
+        <button class="step active" data-s="1"><span class="n">1</span><span class="t">Test runs</span></button>
+        <button class="step" data-s="2"><span class="n">2</span><span class="t">Syncs to cloud</span></button>
+        <button class="step" data-s="3"><span class="n">3</span><span class="t">Dashboard populates</span></button>
+        <button class="step" data-s="4"><span class="n">4</span><span class="t">Reviewed &amp; signed</span></button>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button class="playbtn" id="playBtn">▶ &nbsp;Play the full workflow</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <span class="kick">What PulmSuite Delivers</span>
+    <h2>The cloud brain for the MiniBox+ you already own</h2>
+    <div class="grid3">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Secure by design</h3>
+        <p>HIPAA-compliant and HITRUST-certified, built on Amazon Web Services. Patient data protected at every step.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6" stroke-linecap="round"/></svg></div>
+        <h3>One patient record</h3>
+        <p>Spirometry, lung volumes, and DLCO from every MiniBox+ — one timeline, one place to review and sign.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14 0 18M12 3c-3 3.5-3 14 0 18"/></svg></div>
+        <h3>Remote review &amp; sign</h3>
+        <p>The PFT happens at the site. The physician reads, concludes from a personal conclusion library — or writes their own — and signs from anywhere.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M7 17a4.5 4.5 0 1 1 1.3-8.8 5.5 5.5 0 0 1 10.6 1.6A4 4 0 0 1 18 17z"/></svg></div>
+        <h3>Seamless connection</h3>
+        <p>PulmSuite pairs with your MiniBox+ automatically. No installs, no updates, no technician visits.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M8 7h12M8 12h12M8 17h12" stroke-linecap="round"/><path d="M4 7h.01M4 12h.01M4 17h.01" stroke-linecap="round"/></svg></div>
+        <h3>Optional EMR integration</h3>
+        <p>Pair PulmSuite with EMR integration and PFT results sync directly to your EMR's patient record via HL7.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M12 8v4l3 3" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Real time, every time</h3>
+        <p>Results appear on the dashboard the moment the test is complete — not at end of day, not after an upload.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <span class="kick">How It Works</span>
+    <h2>Five steps. Zero new hardware.</h2>
+    <p class="lead">PulmSuite works with the MiniBox+ already in your practice.</p>
+    <div class="timeline">
+      <div class="tstep"><div class="num">1</div><h4>Patient is seated</h4><p>No booth. No coaching for panting maneuvers.</p></div>
+      <div class="tstep"><div class="num">2</div><h4>MiniBox+ runs the test</h4><p>Spirometry, lung volumes, DLCO — one session.</p></div>
+      <div class="tstep"><div class="num">3</div><h4>Result syncs</h4><p>One dashboard, one centralized database, in real time.</p></div>
+      <div class="tstep"><div class="num">4</div><h4>Physician signs off</h4><p>Reviews graphs, comments, and signs — from any browser.</p></div>
+      <div class="tstep"><div class="num">5</div><h4>Done</h4><p>No new hardware. It's the MiniBox+ you already have, upgraded.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section>
+  <div class="wrap">
+    <span class="kick">Security &amp; Compliance</span>
+    <h2>Built for healthcare from day one</h2>
+    <div class="secrow">
+      <div class="secbadge"><div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><div><b>HIPAA-Compliant</b><span>Patient privacy protected end to end</span></div></div>
+      <div class="secbadge"><div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>HITRUST-Certified</b><span>Independently audited security framework</span></div></div>
+      <div class="secbadge"><div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="#1B8FC2" stroke-width="2"><path d="M7 17a4.5 4.5 0 1 1 1.3-8.8 5.5 5.5 0 0 1 10.6 1.6A4 4 0 0 1 18 17z"/></svg></div><div><b>Built on AWS</b><span>Enterprise-grade cloud infrastructure</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="wrap">
+    <h2>See PulmSuite on your practice's data</h2>
+    <p>Request a live demonstration and we'll walk your team through the full workflow — from the first breath to the signed report.</p>
+    <a class="btn btn-cy" href="mailto:usinfo@pulm-one.com?subject=PulmSuite%20Demonstration%20Request">Request a demonstration</a>
+    <div class="contact-row">
+      <a href="https://pulm-one.com">pulm-one.com</a>
+      <a href="mailto:usinfo@pulm-one.com">usinfo@pulm-one.com</a>
+      <a href="tel:18447856663">1-844-PulmOne</a>
+    </div>
+  </div>
+</section>
+
+<footer>PulmOne USA &nbsp;|&nbsp; 444 Madison Ave. 6th Floor, New York, NY 10022 &nbsp;|&nbsp; 1-844-PulmOne &nbsp;|&nbsp; usinfo@pulm-one.com</footer>
+
+<script>
+(function(){
+  var current = 1, timer = null, typeTimer = null;
+  var scenes = {1:document.getElementById('s1'),2:document.getElementById('s2'),3:document.getElementById('s3'),4:document.getElementById('s4')};
+  var steps = document.querySelectorAll('.step');
+  var playBtn = document.getElementById('playBtn');
+  var signBtn = document.getElementById('signBtn'), stamp = document.getElementById('stamp');
+
+  /* ===== Conclusion library ===== */
+  var libSel = document.getElementById('libSel');
+  var concTa = document.getElementById('concTa');
+  var saveLib = document.getElementById('saveLib');
+  var savedMsg = document.getElementById('savedMsg');
+  var LIB_KEY = 'pulmsuite_demo_library';
+  var defaultLib = [
+    "Normal spirometry and lung volumes. DLCO within normal limits. Patient gave good effort.",
+    "Moderate obstructive ventilatory defect with significant bronchodilator response. Consistent with asthma.",
+    "Obstructive defect without bronchodilator response. Reduced DLCO. Consistent with COPD/emphysema.",
+    "Restrictive ventilatory pattern with reduced TLC. Reduced DLCO. Suggest correlation with imaging for interstitial lung disease.",
+    "Isolated reduction in DLCO with normal spirometry and lung volumes. Consider pulmonary vascular disease; clinical correlation advised."
+  ];
+  function getCustomLib(){ try{ return JSON.parse(localStorage.getItem(LIB_KEY)) || []; }catch(e){ return []; } }
+  function fullLib(){ return defaultLib.concat(getCustomLib()); }
+  function populateLib(){
+    libSel.innerHTML = '';
+    var o0 = document.createElement('option'); o0.value=''; o0.textContent='📚 Choose from your conclusion library…'; libSel.appendChild(o0);
+    fullLib().forEach(function(txt, i){
+      var o = document.createElement('option');
+      o.value = txt;
+      o.textContent = (i >= defaultLib.length ? '★ ' : '') + (txt.length > 72 ? txt.slice(0,72)+'…' : txt);
+      libSel.appendChild(o);
+    });
+  }
+  populateLib();
+  libSel.addEventListener('change', function(){
+    if(libSel.value){ concTa.value = libSel.value; }
+    signBtn.disabled = !concTa.value.trim();
+  });
+  concTa.addEventListener('input', function(){ signBtn.disabled = !concTa.value.trim(); });
+  saveLib.addEventListener('click', function(){
+    var txt = concTa.value.trim();
+    if(!txt) { concTa.focus(); return; }
+    var custom = getCustomLib();
+    if(custom.indexOf(txt) === -1 && defaultLib.indexOf(txt) === -1){
+      custom.push(txt);
+      try{ localStorage.setItem(LIB_KEY, JSON.stringify(custom)); }catch(e){}
+      populateLib();
+    }
+    savedMsg.classList.add('show');
+    setTimeout(function(){ savedMsg.classList.remove('show'); }, 1800);
+  });
+
+  function countUp(td){
+    var target = parseFloat(td.getAttribute('data-count'));
+    var suffix = td.getAttribute('data-suffix') || '';
+    var dec = (td.getAttribute('data-count').split('.')[1]||'').length;
+    var start = null, dur = 1200;
+    function frame(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      td.textContent = (target*eased).toFixed(dec) + suffix;
+      if(p < 1) td._raf = requestAnimationFrame(frame);
+    }
+    if(td._raf) cancelAnimationFrame(td._raf);
+    td._raf = requestAnimationFrame(frame);
+  }
+
+  function resetScene3(){
+    var loop = scenes[3].querySelector('.loop');
+    loop.style.animation='none'; void loop.offsetWidth; loop.style.animation='';
+    scenes[3].querySelectorAll('td[data-count]').forEach(function(td){
+      var dec = (td.getAttribute('data-count').split('.')[1]||'').length;
+      td.textContent = (0).toFixed(dec) + (td.getAttribute('data-suffix')||'');
+    });
+  }
+  function resetScene4(){
+    if(typeTimer) clearInterval(typeTimer);
+    concTa.value=''; libSel.value=''; libSel.classList.remove('flash');
+    signBtn.disabled = true; signBtn.textContent = 'Sign Report';
+    stamp.classList.remove('show');
+  }
+  function runScene4(auto){
+    resetScene4();
+    if(!auto) return; // user browsing manually — leave it fully interactive
+    // simulate: doctor opens the library, picks a conclusion, it types in
+    setTimeout(function(){ libSel.classList.add('flash'); }, 500);
+    setTimeout(function(){
+      libSel.value = defaultLib[0];
+      libSel.classList.remove('flash');
+      var i = 0, txt = defaultLib[0];
+      typeTimer = setInterval(function(){
+        concTa.value = txt.slice(0, ++i);
+        if(i >= txt.length){
+          clearInterval(typeTimer);
+          signBtn.disabled = false;
+        }
+      }, 22);
+    }, 1400);
+  }
+  signBtn.addEventListener('click', function(){
+    signBtn.disabled = true; signBtn.textContent = 'Report signed ✓';
+    stamp.classList.add('show');
+  });
+
+  function show(n, fromUser){
+    current = n;
+    Object.keys(scenes).forEach(function(k){ scenes[k].classList.toggle('on', +k===n); });
+    steps.forEach(function(b){
+      var s = +b.getAttribute('data-s');
+      b.classList.toggle('active', s===n);
+      b.classList.toggle('done', s<n);
+    });
+    if(n===3){ resetScene3(); setTimeout(function(){ scenes[3].querySelectorAll('td[data-count]').forEach(countUp); }, 350); }
+    if(n===4){ runScene4(!fromUser); } else { resetScene4(); }
+    if(fromUser && timer){ clearTimeout(timer); timer=null; playBtn.innerHTML='▶ &nbsp;Play the full workflow'; }
+  }
+
+  steps.forEach(function(b){ b.addEventListener('click', function(){ show(+b.getAttribute('data-s'), true); }); });
+
+  function autoplay(){
+    if(timer) clearTimeout(timer);
+    playBtn.innerHTML = '↺ &nbsp;Replay';
+    var seq = [1,2,3,4], idx = 0;
+    var delays = {1:2600, 2:3000, 3:3600, 4:0};
+    function next(){
+      show(seq[idx]);
+      var d = delays[seq[idx]];
+      idx++;
+      if(idx < seq.length){ timer = setTimeout(next, d); }
+      else { timer = null; }
+    }
+    next();
+  }
+  playBtn.addEventListener('click', autoplay);
+})();
+</script>
+</body>
+</html>

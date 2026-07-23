@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulmOne USA &mdash; ACH Payment Authorization Form</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark: #0a3d6b;
+    --blue-mid: #0c5299;
+    --blue-brand: #0e6abf;
+    --blue-light: #d6eaf8;
+    --green: #27ae60;
+    --amber: #e67e22;
+    --red: #c0392b;
+    --gray-100: #f4f6f9;
+    --gray-200: #e8ecf0;
+    --gray-300: #c8d0d8;
+    --gray-600: #5a6a7a;
+    --gray-800: #1e2d3d;
+    --text: #1a2733;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #eef2f7;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 0;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--blue-dark);
+    border-radius: 10px 10px 0 0;
+    padding: 22px 28px;
+    color: #fff;
+  }
+  .header-brand { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 4px; }
+  .header-title { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .header-sub { font-size: 13px; color: #a8d0ee; margin-top: 4px; }
+
+  /* FORM CARD */
+  .form-card {
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 12px rgba(10,61,107,0.08);
+    border: 1px solid var(--gray-200);
+    border-top: none;
+  }
+  .form-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100);
+  }
+  .form-card-title { font-size: 18px; font-weight: 700; color: var(--blue-dark); }
+  .form-card-sub { font-size: 12px; color: var(--gray-600); margin-top: 3px; }
+
+  .clear-btn, .print-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.15s;
+  }
+  .clear-btn { background: #fff; color: var(--gray-600); border-color: var(--gray-300); }
+  .clear-btn:hover { background: var(--gray-100); }
+  .print-btn { background: var(--blue-brand); color: #fff; border-color: var(--blue-brand); }
+  .print-btn:hover { background: var(--blue-mid); }
+
+  .form-body { padding: 22px 28px 28px; }
+
+  .form-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-mid);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--blue-light);
+  }
+  .form-section-label:first-child { margin-top: 0; }
+
+  .form-row { display: grid; gap: 14px; margin-bottom: 12px; }
+  .form-row-2 { grid-template-columns: 1fr 1fr; }
+  .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 640px) {
+    .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+  }
+  .form-field { display: flex; flex-direction: column; gap: 4px; }
+  .form-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .form-input {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+  }
+  .form-input:focus { outline: none; border-color: var(--blue-brand); box-shadow: 0 0 0 3px rgba(14,106,191,0.12); }
+
+  .form-divider { height: 1px; background: var(--gray-200); margin: 18px 0; }
+
+  .auth-block {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    border-left: 4px solid var(--blue-brand);
+  }
+
+  /* ACH Payment Table */
+  .ach-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 13px; }
+  .ach-table th {
+    background: var(--blue-dark);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .ach-table td { padding: 6px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+  .ach-table td input {
+    border: 1px solid var(--gray-300);
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .ach-table td input:focus { outline: none; border-color: var(--blue-brand); box-shadow: 0 0 0 2px rgba(14,106,191,0.12); }
+  .td-num { font-weight: 600; color: var(--gray-600); text-align: center; }
+  .td-del { width: 40px; text-align: center; }
+  .ach-del-btn {
+    background: transparent;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .ach-del-btn:hover { background: #fde8e6; }
+  .ach-add-btn {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ach-add-btn:hover { filter: brightness(1.1); }
+
+  .ach-total-row { display: flex; align-items: center; gap: 14px; }
+  .ach-total-label { font-size: 13px; font-weight: 700; color: var(--blue-dark); }
+  .ach-total-val { font-size: 16px; font-weight: 700; color: var(--blue-dark); min-width: 110px; text-align: right; }
+
+  .footer-note { font-size: 11px; color: var(--gray-600); text-align: center; margin-top: 20px; }
+
+  /* PRINT STYLES — v1.5 */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { max-width: none; padding: 0; }
+    .site-header { border-radius: 0; padding: 12px 20px; }
+    .form-card { box-shadow: none; border-radius: 0; border: none; }
+    .form-card-header { background: #fff; border-bottom: 2px solid var(--blue-dark); padding: 10px 20px; }
+    .form-body { padding: 12px 20px 16px; }
+    .clear-btn, .print-btn, .ach-add-btn, .ach-del-btn { display: none !important; }
+    .td-del { display: none; }
+    .form-input:focus { box-shadow: none; }
+    .footer-note { margin-top: 8px; }
+
+    /* Tighter spacing to reduce page count */
+    .form-section-label { margin: 10px 0 6px; padding-bottom: 4px; }
+    .form-row { margin-bottom: 8px; }
+    .form-divider { margin: 8px 0; }
+    .form-input { padding: 5px 10px; font-size: 13px; }
+    .auth-block { padding: 10px 14px; margin-bottom: 12px; }
+    #ach-install-banner { padding: 8px 12px; margin-top: 10px; margin-bottom: 8px; }
+
+    /* v1.5: page-break control */
+    .form-section-label { break-after: avoid; page-break-after: avoid; }
+    .form-row { break-inside: avoid; page-break-inside: avoid; }
+    .auth-block { break-inside: avoid; page-break-inside: avoid; }
+    #ach-install-banner { break-inside: avoid; page-break-inside: avoid; }
+    .bank-section-wrapper { break-inside: avoid; page-break-inside: avoid; }
+    .sig-section-wrapper { break-inside: avoid; page-break-inside: avoid; }
+    .grand-total-box { break-inside: avoid; page-break-inside: avoid; }
+    .ach-table thead { break-after: avoid; page-break-after: avoid; }
+    .ach-table tr { break-inside: avoid; page-break-inside: avoid; }
+
+    /* v1.5: hide placeholders in print for clean DocuSign overlay */
+    input::placeholder,
+    input::-webkit-input-placeholder,
+    input::-moz-placeholder,
+    input:-ms-input-placeholder,
+    textarea::placeholder { color: transparent !important; opacity: 0 !important; }
+    input[type="date"]:invalid::-webkit-datetime-edit,
+    input[type="date"]:not([value])::-webkit-datetime-edit { color: transparent !important; }
+    input[type="date"]::-webkit-calendar-picker-indicator { display: none !important; }
+  }
+
+  /* PulmOne logo (added) */
+  .site-header{display:flex;align-items:center;gap:18px;}
+  .sh-logo{height:46px;width:auto;display:block;background:#fff;padding:7px 11px;border-radius:8px;flex:0 0 auto;}
+  .sh-text{min-width:0;}
+  @media print{.sh-logo{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff !important;}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="site-header">
+    <img class="sh-logo" src="data:image/jpeg;base64,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" alt="PulmOne">
+    <div class="sh-text"><div class="header-brand">PulmOne USA &mdash; Field Document</div>
+    <div class="header-title">ACH Payment Authorization Form</div>
+    <div class="header-sub">Standalone version 1.7 &mdash; DocuSign anchor-tagged (auto-place fields)</div></div>
+  </div>
+
+  <div class="form-card" id="ach-form-card">
+    <div class="form-card-header">
+      <div>
+        <div class="form-card-title">Complete &amp; Print / Email</div>
+        <div class="form-card-sub">PulmOne USA Inc. &mdash; 444 Madison Avenue, Floor 6, New York, NY 10022</div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="clear-btn" onclick="achClear()">&#8635; Clear Form</button>
+        <button class="print-btn" onclick="achPrint()">&#128438; Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <!-- Customer & Date -->
+      <div class="form-section-label">Customer &amp; Date</div>
+      <div class="form-row form-row-2">
+        <div class="form-field">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="ach-date">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Customer Name</label>
+          <input type="text" class="form-input" id="ach-customer" placeholder="e.g. Dr. Jane Smith / Springfield Medical">
+        </div>
+      </div>
+
+      <!-- Purchase Summary -->
+      <div class="form-section-label">Purchase Summary</div>
+      <div class="form-row form-row-2">
+        <div class="form-field">
+          <label class="form-label">Total Purchase Price (USD)</label>
+          <input type="number" min="0" step="0.01" class="form-input" id="ach-purchase-price" placeholder="e.g. 30000.00" oninput="achRecalc()">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Down Payment Date</label>
+          <input type="date" class="form-input" id="ach-dp-date">
+        </div>
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-field">
+          <label class="form-label">Down Payment Amount (USD)</label>
+          <input type="number" min="0" step="0.01" class="form-input" id="ach-down-payment" placeholder="e.g. 5000.00" oninput="achRecalc()">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Balance to Finance (auto-calc)</label>
+          <input type="text" class="form-input" id="ach-balance-financed" readonly style="background:var(--gray-100); font-weight:600; color:var(--blue-dark);" value="$0.00">
+        </div>
+      </div>
+
+      <!-- Payment Terms -->
+      <div class="form-row form-row-3" style="margin-top:6px;">
+        <div class="form-field">
+          <label class="form-label"># of Payments</label>
+          <input type="number" min="1" max="60" step="1" class="form-input" id="ach-num-payments" value="6" oninput="achRecalc()">
+        </div>
+        <div class="form-field">
+          <label class="form-label">First Payment Date</label>
+          <input type="date" class="form-input" id="ach-first-pmt-date">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Frequency</label>
+          <select class="form-input" id="ach-frequency">
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="biweekly">Bi-Weekly</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Start Trigger + Anchor Language -->
+      <div class="form-row form-row-2" style="margin-top:6px;">
+        <div class="form-field">
+          <label class="form-label">Start Trigger</label>
+          <div style="display:flex; gap:14px; align-items:center; padding-top:6px;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+              <input type="radio" name="ach-start-mode" value="dates" checked onchange="achRecalc()"> Specific Dates
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+              <input type="radio" name="ach-start-mode" value="postinstall" onchange="achRecalc()"> Post-Install / Relative
+            </label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Anchor Language (optional override)</label>
+          <input type="text" class="form-input" id="ach-anchor-lang" placeholder="e.g. day of install and training (leave blank for default)">
+        </div>
+      </div>
+
+      <div style="margin-top:8px; margin-bottom:6px;">
+        <button type="button" class="ach-add-btn" style="background:var(--blue-brand);" onclick="achFillSchedule()">&#9889; Auto-Fill Equal Payments from Balance</button>
+        <span style="font-size:11px; color:var(--gray-600); margin-left:10px;">Clears the schedule below and spreads the financed balance evenly across the selected number of payments.</span>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Bank Info — v1.5: no placeholders (DocuSign fills these) -->
+      <div class="bank-section-wrapper">
+        <div class="form-section-label">Customer Bank Information</div>
+        <div class="form-row form-row-2">
+          <div class="form-field">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-input" id="ach-bank-name">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Bank Address</label>
+            <input type="text" class="form-input" id="ach-bank-addr">
+          </div>
+        </div>
+        <div class="form-row form-row-2">
+          <div class="form-field">
+            <label class="form-label">ABA Routing Number</label>
+            <input type="text" class="form-input" id="ach-routing" maxlength="9">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Account Number</label>
+            <input type="text" class="form-input" id="ach-account">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Authorization Text -->
+      <div class="auth-block">
+        <strong>RE:</strong> ACH by Vendor &mdash; PulmOne USA Inc. (address: 444 Madison Avenue, Floor 6, NY, 10022)<br><br>
+        Please accept this letter as an irrevocable authorization to allow PulmOne USA Inc. as an approved vendor to collect funds from our bank account as the detailed payment schedule shows below:
+      </div>
+
+      <!-- Payment trigger disclaimer -->
+      <div id="ach-install-banner" style="background:#fef3e2; border:2px solid #e67e22; border-radius:8px; padding:12px 16px; margin-top:18px; margin-bottom:10px; font-size:13px; color:#8a4b10; line-height:1.5;">
+        <strong style="color:#8a4b10;">&#9888; Payment will begin day of install and training.</strong><br>
+        Do not initiate ACH debit prior to device installation. Payment schedule commences on the day the device is delivered, installed, and training is completed at the customer location.
+      </div>
+
+      <!-- Payment Schedule -->
+      <div class="form-section-label">Scheduled Payments</div>
+      <table class="ach-table" id="ach-payments-table">
+        <thead>
+          <tr>
+            <th style="width:42px;">#</th>
+            <th>Month / Date</th>
+            <th>Amount (USD)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="ach-payment-rows"></tbody>
+      </table>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px;">
+        <button class="ach-add-btn" onclick="achAddRow()">+ Add Payment</button>
+        <div class="ach-total-row">
+          <div class="ach-total-label">Scheduled Payments Subtotal:</div>
+          <div class="ach-total-val" id="ach-total">$0.00</div>
+        </div>
+      </div>
+
+      <!-- Grand Total Summary -->
+      <div class="grand-total-box" style="background:var(--gray-100); border:2px solid var(--blue-brand); border-radius:10px; padding:16px 20px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:13px; color:var(--gray-600);">
+          <span>Down Payment:</span>
+          <span id="ach-dp-display" style="font-weight:600; color:var(--text);">$0.00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:13px; color:var(--gray-600);">
+          <span>Scheduled Payments:</span>
+          <span id="ach-sched-display" style="font-weight:600; color:var(--text);">$0.00</span>
+        </div>
+        <div style="height:1px; background:var(--gray-300); margin:8px 0;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+          <span style="font-size:15px; font-weight:700; color:var(--blue-dark);">Total Authorized (Grand Total):</span>
+          <span id="ach-grand-total" style="font-size:22px; font-weight:800; color:var(--green);">$0.00</span>
+        </div>
+        <div id="ach-balance-check" style="margin-top:10px; padding:8px 12px; border-radius:6px; font-size:12px; display:none;"></div>
+      </div>
+
+      <div style="font-size:12px; color:var(--gray-600); margin-bottom:20px;">We request that this irrevocable authorization will be implemented as soon as possible and without any delay. If you have any questions, please contact the undersigned.</div>
+
+      <div class="form-divider"></div>
+
+      <!-- Signature Block — DocuSign AutoPlace anchor tokens (white, invisible to eye, read by DocuSign text layer) -->
+      <div class="sig-section-wrapper">
+        <div class="form-section-label">Authorized Signature</div>
+        <div style="display:grid; grid-template-columns:2fr 2fr 1fr 1.2fr; gap:14px; margin-bottom:12px;">
+          <div class="form-field">
+            <label class="form-label">Signature</label>
+            <div style="height:38px; border-bottom:2px solid var(--gray-300);"><span style="font-size:7px; line-height:1; color:#ffffff;">\s1\</span></div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Printed Name</label>
+            <div style="height:38px; border-bottom:2px solid var(--gray-300);"><span style="font-size:7px; line-height:1; color:#ffffff;">\n1\</span></div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Title</label>
+            <div style="height:38px; border-bottom:2px solid var(--gray-300);"><span style="font-size:7px; line-height:1; color:#ffffff;">\t1\</span></div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Date Signed</label>
+            <div style="height:38px; border-bottom:2px solid var(--gray-300);"><span style="font-size:7px; line-height:1; color:#ffffff;">\d1\</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">PulmOne USA Inc. &middot; 1-844-PulmOne (785-6663) &middot; USinfo@pulm-one.com &middot; www.pulm-one.com</div>
+</div>
+
+<script>
+var achRowCount = 0;
+
+function achAddRow() {
+  achRowCount++;
+  var tbody = document.getElementById('ach-payment-rows');
+  var tr = document.createElement('tr');
+  tr.id = 'ach-row-' + achRowCount;
+  tr.innerHTML =
+    '<td class="td-num">' + (tbody.rows.length + 1) + '</td>' +
+    '<td><input type="text" placeholder="e.g. April 15, 2026" oninput="achUpdateNums()" style="width:100%;"></td>' +
+    '<td><input type="number" min="0" step="0.01" placeholder="0.00" oninput="achRecalc()" style="width:100%;"></td>' +
+    '<td class="td-del"><button class="ach-del-btn" onclick="achDeleteRow(' + achRowCount + ')">&#215;</button></td>';
+  tbody.appendChild(tr);
+  achRecalc();
+}
+
+function achDeleteRow(id) {
+  var row = document.getElementById('ach-row-' + id);
+  if (row) row.remove();
+  achUpdateNums();
+  achRecalc();
+}
+
+function achUpdateNums() {
+  var rows = document.querySelectorAll('#ach-payment-rows tr');
+  rows.forEach(function(r, i) { r.cells[0].textContent = i + 1; });
+}
+
+function achFmt(n) {
+  return '$' + (n || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function achRecalc() {
+  var price = parseFloat((document.getElementById('ach-purchase-price') || {}).value) || 0;
+  var dp    = parseFloat((document.getElementById('ach-down-payment')   || {}).value) || 0;
+  var balance = Math.max(0, price - dp);
+  var balEl = document.getElementById('ach-balance-financed');
+  if (balEl) balEl.value = achFmt(balance);
+
+  var inputs = document.querySelectorAll('#ach-payment-rows td:nth-child(3) input');
+  var scheduled = 0;
+  inputs.forEach(function(inp) { scheduled += parseFloat(inp.value) || 0; });
+
+  document.getElementById('ach-total').textContent         = achFmt(scheduled);
+  document.getElementById('ach-dp-display').textContent    = achFmt(dp);
+  document.getElementById('ach-sched-display').textContent = achFmt(scheduled);
+
+  var grand = dp + scheduled;
+  document.getElementById('ach-grand-total').textContent = achFmt(grand);
+
+  var check = document.getElementById('ach-balance-check');
+  if (!check) return;
+  if (price <= 0) { check.style.display = 'none'; return; }
+  check.style.display = 'block';
+  var diff = Math.round((grand - price) * 100) / 100;
+  if (Math.abs(diff) < 0.01) {
+    check.style.background = '#e8f8f0'; check.style.color = '#1e6b42'; check.style.border = '1px solid #27ae60';
+    check.innerHTML = '&#10003; Grand Total matches Purchase Price exactly.';
+  } else if (diff < 0) {
+    check.style.background = '#fef3e2'; check.style.color = '#8a4b10'; check.style.border = '1px solid #e67e22';
+    check.innerHTML = '&#9888; Short by ' + achFmt(-diff) + ' &mdash; add more scheduled payments or increase the down payment.';
+  } else {
+    check.style.background = '#fde8e6'; check.style.color = '#8a1f14'; check.style.border = '1px solid #c0392b';
+    check.innerHTML = '&#9888; Over by ' + achFmt(diff) + ' &mdash; reduce scheduled payments or decrease the down payment.';
+  }
+}
+
+function achAddMonthsSafe(dt, months) {
+  var d = new Date(dt.getTime());
+  var day = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + months);
+  var lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(Math.min(day, lastDay));
+  return d;
+}
+
+function achFmtDate(d) {
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+function achFillSchedule() {
+  var price    = parseFloat((document.getElementById('ach-purchase-price') || {}).value) || 0;
+  var dp       = parseFloat((document.getElementById('ach-down-payment')   || {}).value) || 0;
+  var n        = parseInt((document.getElementById('ach-num-payments')     || {}).value, 10) || 0;
+  var firstVal = (document.getElementById('ach-first-pmt-date') || {}).value;
+  var freq     = ((document.getElementById('ach-frequency') || {}).value) || 'monthly';
+
+  var mode = 'dates';
+  var radios = document.getElementsByName('ach-start-mode');
+  for (var r = 0; r < radios.length; r++) { if (radios[r].checked) { mode = radios[r].value; break; } }
+  var anchorRaw = ((document.getElementById('ach-anchor-lang') || {}).value || '').trim();
+
+  if (price <= 0) { alert('Enter a Total Purchase Price first.'); return; }
+  if (n <= 0)     { alert('Enter a valid number of payments (1 or more).'); return; }
+  var balance = Math.max(0, price - dp);
+  if (balance <= 0) {
+    if (!confirm('Financed balance is $0. Clear the schedule anyway?')) return;
+  }
+
+  var perPayment     = Math.round((balance / n) * 100) / 100;
+  var totalMinusLast = Math.round(perPayment * (n - 1) * 100) / 100;
+  var lastPayment    = Math.round((balance - totalMinusLast) * 100) / 100;
+  var startDate      = firstVal ? new Date(firstVal + 'T00:00:00') : new Date();
+
+  function periodLabel(i) {
+    if (freq === 'quarterly') return 'Quarter ' + (i + 1);
+    return 'Month ' + (i + 1);
+  }
+
+  document.getElementById('ach-payment-rows').innerHTML = '';
+  achRowCount = 0;
+
+  for (var i = 0; i < n; i++) {
+    var dateStr;
+    if (mode === 'postinstall') {
+      dateStr = (i === 0) ? (anchorRaw || 'Payment will begin day of install and training') : periodLabel(i);
+    } else {
+      var d;
+      if (freq === 'monthly')        d = achAddMonthsSafe(startDate, i);
+      else if (freq === 'quarterly') d = achAddMonthsSafe(startDate, i * 3);
+      else if (freq === 'biweekly')  { d = new Date(startDate.getTime()); d.setDate(d.getDate() + i * 14); }
+      else if (freq === 'weekly')    { d = new Date(startDate.getTime()); d.setDate(d.getDate() + i * 7); }
+      else                           d = achAddMonthsSafe(startDate, i);
+      dateStr = achFmtDate(d);
+      if (anchorRaw) dateStr = dateStr + ' (' + anchorRaw + ')';
+    }
+
+    achRowCount++;
+    var tbody = document.getElementById('ach-payment-rows');
+    var tr = document.createElement('tr');
+    tr.id = 'ach-row-' + achRowCount;
+    var amount = (i === n - 1) ? lastPayment : perPayment;
+    tr.innerHTML =
+      '<td class="td-num">' + (i + 1) + '</td>' +
+      '<td><input type="text" value="' + dateStr.replace(/"/g, '&quot;') + '" oninput="achUpdateNums()" style="width:100%;"></td>' +
+      '<td><input type="number" min="0" step="0.01" value="' + amount.toFixed(2) + '" oninput="achRecalc()" style="width:100%;"></td>' +
+      '<td class="td-del"><button class="ach-del-btn" onclick="achDeleteRow(' + achRowCount + ')">&#215;</button></td>';
+    tbody.appendChild(tr);
+  }
+  achRecalc();
+}
+
+function achClear() {
+  if (!confirm('Clear all form fields?')) return;
+  ['ach-date','ach-customer','ach-bank-name','ach-bank-addr','ach-routing','ach-account',
+   'ach-purchase-price','ach-down-payment','ach-dp-date','ach-first-pmt-date','ach-anchor-lang'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  var balEl = document.getElementById('ach-balance-financed');
+  if (balEl) balEl.value = '$0.00';
+  document.getElementById('ach-payment-rows').innerHTML = '';
+  achRowCount = 0;
+  achRecalc();
+  achAddRow(); achAddRow(); achAddRow();
+}
+
+function achPrint() { window.print(); }
+
+// Init: 3 blank rows + today's date
+(function() {
+  achAddRow(); achAddRow(); achAddRow();
+  achRecalc();
+  var d = document.getElementById('ach-date');
+  if (d) { var t = new Date(); d.value = t.toISOString().split('T')[0]; }
+})();
+</script>
+
+</body>
+</html>

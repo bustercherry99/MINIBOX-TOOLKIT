@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MiniBox Academy — PulmOne Rep Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rht:#0d8aa6; --rht-deep:#0a6075; --rht-wash:#eaf5f8; --rht-line:#cfe6ec;
+  --rhink:#0e2a3a; --rhsoft:#3a5567; --rhg:#c98a2b;
+  --paper:#eef3f5; --card:#ffffff; --line:#dbe6ea; --mute:#6c8494;
+  --pulm:#1668b0; --pulm-w:#e8f2fb; --allergy:#7d4fbf; --allergy-w:#f2ecfb;
+  --univ:#2f9e6b; --univ-w:#e6f6ee; --cap:#c98a2b; --cap-w:#fbf3e0;
+  --green:#1d7a46; --red:#c0392b;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--rhink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{max-width:940px;margin:0 auto;padding-bottom:70px}
+h1,h2,h3,.disp{font-family:var(--display)}
+button{font-family:inherit}
+
+/* ---------------------------------------------------------------- header */
+.hdr{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#0e2a3a,#0a6075);color:#fff;padding:16px 20px 14px;
+  box-shadow:0 6px 24px rgba(14,42,58,.28)}
+.hdr-top{display:flex;align-items:center;gap:12px}
+.hdr-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--rht),#12b3c4);
+  display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.hdr-t{font-size:19px;font-weight:700;letter-spacing:-.3px;font-family:var(--display)}
+.hdr-s{font-size:10px;color:#a9d6e2;font-weight:600;letter-spacing:.22em;text-transform:uppercase;margin-top:2px;font-family:var(--mono)}
+.hdr-badge{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.1em;color:#0e2a3a;
+  background:linear-gradient(135deg,#f4d78a,#e8b84e);border-radius:999px;padding:5px 12px;font-family:var(--mono)}
+
+/* overall progress rail in the header */
+.hdr-rail{margin-top:13px}
+.hdr-rail-top{display:flex;justify-content:space-between;font-size:11px;color:#a9d6e2;font-family:var(--mono);letter-spacing:.06em;margin-bottom:5px}
+.hdr-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.hdr-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#12b3c4,#7fe0c8);transition:width .5s}
+
+/* ---------------------------------------------------------------- home */
+.wrap{padding:20px 16px 0}
+.lede{font-size:14.5px;line-height:1.62;color:var(--rhsoft);margin:2px 0 20px}
+.lede b{color:var(--rhink)}
+.sec-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);
+  margin:26px 0 11px;display:flex;align-items:center;gap:10px}
+.sec-h::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px 16px;text-align:left;
+  cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:.16s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--rht);box-shadow:0 6px 20px rgba(13,138,166,.12);transform:translateY(-1px)}
+.card-top{display:flex;align-items:flex-start;gap:11px}
+.card-ico{width:38px;height:38px;border-radius:10px;background:var(--rht-wash);display:flex;align-items:center;
+  justify-content:center;font-size:19px;flex:none}
+.card-t{font-family:var(--display);font-weight:700;font-size:15.5px;line-height:1.28;letter-spacing:-.2px}
+.card-m{font-size:11.5px;color:var(--mute);margin-top:3px;font-family:var(--mono)}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:5px;font-family:var(--mono)}
+
+/* the three-part progress strip on each card */
+.trio{display:flex;gap:6px}
+.trio-i{flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 7px;background:#fafcfd}
+.trio-l{font-size:9px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.trio-v{font-size:12.5px;font-weight:700;margin-top:2px;color:var(--rhsoft)}
+.trio-i.done{background:var(--univ-w);border-color:#bfe6d3}
+.trio-i.done .trio-v{color:var(--green)}
+.trio-i.locked{opacity:.5}
+
+/* ---------------------------------------------------------------- overlay */
+.ov{position:fixed;inset:0;z-index:50;background:var(--paper);display:none;flex-direction:column}
+.ov.on{display:flex}
+.ov-hd{background:linear-gradient(180deg,#0e2a3a,#0a6075);color:#fff;padding:13px 16px 0;flex:none;
+  box-shadow:0 4px 18px rgba(14,42,58,.22)}
+.ov-hd-top{display:flex;align-items:center;gap:12px}
+.ov-x{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);color:#fff;width:34px;height:34px;
+  border-radius:9px;font-size:17px;cursor:pointer;flex:none;line-height:1}
+.ov-title{font-family:var(--display);font-weight:700;font-size:16.5px;letter-spacing:-.2px}
+.ov-sub{font-size:10.5px;color:#a9d6e2;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.ov-tabs{display:flex;gap:4px;margin-top:12px}
+.ov-tabs button{flex:1;background:transparent;border:0;border-bottom:3px solid transparent;color:#a9d6e2;
+  font-size:13px;font-weight:700;padding:9px 4px 8px;cursor:pointer;font-family:var(--display);letter-spacing:.02em}
+.ov-tabs button.on{color:#fff;border-bottom-color:#12b3c4}
+.ov-tabs button:disabled{opacity:.35;cursor:not-allowed}
+.ov-body{flex:1;overflow-y:auto;padding:18px 16px 40px;-webkit-overflow-scrolling:touch}
+
+/* ---------------------------------------------------------------- study */
+.st-intro{background:var(--rht-wash);border:1px solid var(--rht-line);border-radius:14px;padding:15px 16px;
+  font-size:14.5px;line-height:1.62;color:var(--rht-deep);margin-bottom:22px}
+.st-sec{margin-bottom:30px}
+.st-h{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.3px;margin:0 0 9px;
+  display:flex;align-items:baseline;gap:9px}
+.st-h .n{font-family:var(--mono);font-size:11px;color:var(--rht);font-weight:600;flex:none}
+.st-p{font-size:15px;line-height:1.68;color:var(--rhsoft);margin:0}
+.st-p b{color:var(--rhink);font-weight:600}
+.st-list{margin:11px 0 0;padding-left:19px;font-size:14.5px;line-height:1.62;color:var(--rhsoft)}
+.st-list li{margin-bottom:6px}
+.st-list b{color:var(--rhink)}
+.st-key{margin-top:13px;background:var(--cap-w);border-left:3px solid var(--cap);border-radius:0 9px 9px 0;
+  padding:10px 13px;font-size:13.5px;line-height:1.55;color:#6b4a12;font-weight:500}
+.st-key::before{content:"Remember";display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--cap);margin-bottom:3px;font-weight:700}
+.st-angle{margin-top:26px;background:linear-gradient(135deg,#0e2a3a,#0a6075);color:#fff;border-radius:15px;padding:17px 18px}
+.st-angle::before{content:"The MiniBox angle";display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:#7fe0c8;margin-bottom:7px;font-weight:700}
+.st-angle p{margin:0;font-size:14.5px;line-height:1.66;color:#dbeef4}
+
+/* figures */
+.fig{margin:14px 0 0}
+.fig-img{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;display:block;cursor:zoom-in}
+.fig-cap{font-size:12.5px;line-height:1.5;color:var(--mute);margin-top:7px;padding-left:2px}
+.fig-cap b{color:var(--rhsoft)}
+.fig-zoom{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rht);
+  margin-top:4px;display:block}
+
+/* native tables, used instead of blurry slide screenshots */
+.st-tbl{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.st-tbl-scroll{overflow-x:auto}
+.st-tbl table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:420px}
+.st-tbl th{background:var(--rht-wash);color:var(--rht-deep);font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;text-align:left;padding:9px 12px;font-weight:700;border-bottom:1px solid var(--rht-line);white-space:nowrap}
+.st-tbl td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--rhsoft);line-height:1.5;vertical-align:top}
+.st-tbl tr:last-child td{border-bottom:0}
+.st-tbl td:first-child{color:var(--rhink);font-weight:600}
+.st-tbl-note{font-size:11.5px;color:var(--mute);padding:8px 12px;background:#fafcfd;border-top:1px solid var(--line);line-height:1.5}
+
+/* numbered steps */
+.st-steps{margin:14px 0 0;display:flex;flex-direction:column;gap:9px}
+.st-step{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.st-step-n{width:26px;height:26px;border-radius:8px;background:var(--rht);color:#fff;font-family:var(--mono);
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.st-step-h{font-weight:700;font-size:14px;font-family:var(--display)}
+.st-step-p{font-size:13.5px;line-height:1.55;color:var(--rhsoft);margin-top:3px}
+
+/* this versus that */
+.st-vs{margin:14px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.st-vs-col{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.st-vs-col:first-child{border-top:3px solid var(--pulm)}
+.st-vs-col:last-child{border-top:3px solid var(--allergy)}
+.st-vs-h{font-family:var(--display);font-weight:700;font-size:14.5px;margin-bottom:8px}
+.st-vs-col:first-child .st-vs-h{color:var(--pulm)}
+.st-vs-col:last-child .st-vs-h{color:var(--allergy)}
+.st-vs ul{margin:0;padding-left:17px;font-size:13.5px;line-height:1.55;color:var(--rhsoft)}
+.st-vs li{margin-bottom:5px}
+@media(max-width:560px){.st-vs{grid-template-columns:1fr}}
+
+.st-done{margin-top:24px;width:100%;padding:14px;border-radius:13px;border:0;background:var(--rht);color:#fff;
+  font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--display)}
+.st-done.is-done{background:var(--univ-w);color:var(--green);border:1px solid #bfe6d3}
+
+/* ---------------------------------------------------------------- visuals */
+.vis{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.vis-svg{width:100%;height:auto;display:block}
+.sp-gl{stroke:#e6eef1;stroke-width:1}
+.fl-gl{stroke:#eef3f5;stroke-width:1}
+.fl-gl.zero{stroke:#c3d4da;stroke-width:1.5}
+.sp-ax{fill:var(--mute);font-size:11px;font-family:var(--mono);text-anchor:end}
+.sp-ax.mid{text-anchor:middle}
+.sp-axt{fill:var(--mute);font-size:10.5px;font-family:var(--mono);letter-spacing:.1em;text-anchor:middle;text-transform:uppercase}
+.sp-trace{fill:none;stroke:var(--rht-deep);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.sp-band{fill:rgba(13,138,166,.15)}
+.sp-band.cap{fill:rgba(201,138,43,.17)}
+.sp-tick{stroke:#b9ccd4;stroke-width:1;stroke-dasharray:3 3}
+.sp-arrow{stroke:var(--rht);stroke-width:2.4}
+.sp-arrow.cap{stroke:var(--cap)}
+.sp-lab{fill:var(--rht);font-size:13px;font-weight:700;font-family:var(--display)}
+.sp-lab.cap{fill:var(--cap)}
+.sp-val{fill:var(--mute);font-size:11px;font-family:var(--mono)}
+.fl-path{fill:rgba(13,138,166,.1);stroke:var(--rht-deep);stroke-width:2.4;stroke-linejoin:round}
+.fl-ghost{fill:none;stroke:#c3d4da;stroke-width:1.6;stroke-dasharray:5 4}
+.fl-side{fill:var(--mute);font-size:10px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase}
+
+.vis-pills{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px}
+.vis-pills-lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-right:2px}
+.vis-pills button{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  font-weight:600;color:var(--rhsoft);cursor:pointer;transition:.14s}
+.vis-pills button:hover{border-color:var(--rht)}
+.vis-pills button.on{background:var(--rht);border-color:var(--rht);color:#fff}
+.vis-pills button.cap.on{background:var(--cap);border-color:var(--cap)}
+.vis-pills button:disabled{opacity:.5;cursor:default}
+.vis-read{margin-top:12px;background:var(--rht-wash);border-radius:10px;padding:11px 13px;font-size:13.5px;
+  line-height:1.58;color:var(--rht-deep)}
+.vis-read b{color:var(--rhink)}
+.vis-read-v{font-family:var(--mono);font-size:12px;color:var(--rht);margin-left:6px}
+.vis-check{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:12.5px;color:var(--mute);cursor:pointer}
+
+/* gates */
+.vis-gates{padding:8px}
+.gate{width:100%;display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:13px 14px;cursor:pointer;text-align:left;margin-top:8px}
+.gate.on{border-color:var(--rht);background:var(--rht-wash)}
+.gate-n{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--rht);flex:none}
+.gate-b{flex:1}
+.gate-t{display:block;font-family:var(--display);font-weight:700;font-size:15px}
+.gate-q{display:block;font-size:12.5px;color:var(--mute);margin-top:1px}
+.gate-chev{font-size:19px;color:var(--rht);font-family:var(--mono);flex:none}
+.gate-body{display:none;padding:4px 6px 10px}
+.gate-body.on{display:block}
+.gate-m{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--mute);text-transform:uppercase;margin:8px 0 9px}
+.gate-row{display:flex;gap:10px;padding:9px 11px;border-radius:9px;margin-bottom:6px;font-size:13.5px;line-height:1.5}
+.gate-row b{flex:none;min-width:106px;font-family:var(--mono);font-size:11.5px}
+.gate-row.ok{background:var(--univ-w);color:#1a5c39}
+.gate-row.ok b{color:var(--green)}
+.gate-row.no{background:#fdeceb;color:#7d2b22}
+.gate-row.no b{color:var(--red)}
+.gate-why{font-size:13px;line-height:1.58;color:var(--rhsoft);padding:4px 2px 0}
+
+/* compartment bars */
+.comp-wrap{display:flex;gap:14px;justify-content:center;align-items:flex-end;padding:10px 0 4px}
+.comp-col{flex:1;max-width:150px;cursor:pointer}
+.comp-stack{display:flex;flex-direction:column;justify-content:flex-end;border-radius:9px 9px 0 0;overflow:hidden}
+.comp-seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;
+  font-family:var(--mono);overflow:hidden;transition:.2s}
+.c-irv{background:#4aa8c4}.c-vt{background:#0d8aa6}.c-erv{background:#0a6075}.c-rv{background:#c98a2b}
+.comp-col.on .comp-stack{outline:2px solid var(--rht);outline-offset:2px;border-radius:9px}
+.comp-name{text-align:center;font-family:var(--display);font-weight:700;font-size:13px;margin-top:8px}
+.comp-tlc{text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--mute);margin-top:2px}
+
+/* dlco timeline */
+.dl-trace{fill:none;stroke:#dbe6ea;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.dl-done{fill:none;stroke:var(--rht-deep);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.dl-dot{fill:var(--rht);stroke:#fff;stroke-width:2.5;transition:opacity .2s}
+.dl-zone.discard{fill:rgba(201,138,43,.16)}
+.dl-zone.sample{fill:rgba(29,122,70,.16)}
+.dl-zt{fill:var(--mute);font-size:9.5px;font-family:var(--mono);text-anchor:middle;letter-spacing:.1em;text-transform:uppercase}
+.dl-hold{stroke:var(--cap);stroke-width:2;stroke-dasharray:4 3}
+.dl-timer{fill:var(--rht-deep);font-family:var(--mono);font-size:14px;font-weight:600;text-anchor:middle}
+.dl-count{font-family:var(--mono);font-size:11.5px;color:var(--rht);letter-spacing:.05em}
+.dl-steps{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.dl-step{background:#fafcfd;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.16s}
+.dl-step.on{background:var(--rht-wash);border-color:var(--rht)}
+.dl-step b{display:block;font-family:var(--display);font-size:13.5px;margin-bottom:2px}
+.dl-step span{font-size:13px;line-height:1.52;color:var(--rhsoft)}
+
+/* boyle */
+.by-stage{display:flex;gap:20px;align-items:center;justify-content:center;padding:8px 0}
+.by-cyl{position:relative;width:110px;height:190px;border:3px solid var(--rht-deep);border-top:0;
+  border-radius:0 0 12px 12px;background:#f6fafb;overflow:hidden;flex:none}
+.by-gas{position:absolute;left:0;right:0;bottom:0;background:rgba(13,138,166,.14);transition:height .12s}
+.by-gas i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--rht)}
+.by-piston{position:absolute;left:-3px;right:-3px;height:14px;background:var(--rhg);border-radius:4px;transition:bottom .12s;z-index:2}
+.by-piston span{position:absolute;left:50%;top:-26px;width:12px;height:26px;background:var(--rhg);transform:translateX(-50%);border-radius:3px}
+.by-meters{display:flex;flex-direction:column;gap:9px}
+.by-m{background:#fafcfd;border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-width:126px}
+.by-m.const{background:var(--univ-w);border-color:#bfe6d3}
+.by-lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:block}
+.by-m b{font-family:var(--mono);font-size:19px;color:var(--rht-deep)}
+.by-m.const b{color:var(--green)}
+.by-range{width:100%;margin-top:10px;accent-color:var(--rht)}
+.by-hint{text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:5px}
+
+/* ---------------------------------------------------------------- cards + test */
+.q-prog{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.q-prog i{display:block;height:100%;background:var(--rht);border-radius:99px;transition:width .3s}
+.q-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--mute);
+  letter-spacing:.08em;margin-bottom:12px;text-transform:uppercase}
+.q-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px 18px;margin-bottom:14px}
+.q-q{font-size:17px;line-height:1.5;font-weight:600;font-family:var(--display);letter-spacing:-.2px}
+.q-a{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:14.5px;line-height:1.64;color:var(--rhsoft)}
+.q-btns{display:flex;gap:9px;margin-top:4px}
+.q-btns button{flex:1;padding:13px;border-radius:12px;border:0;font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--display)}
+.b-main{background:var(--rht);color:#fff}
+.b-ok{background:var(--univ-w);color:var(--green);border:1px solid #bfe6d3!important}
+.b-no{background:#fdeceb;color:var(--red);border:1px solid #f5c9c4!important}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:13px 15px;margin-bottom:8px;font-size:14.5px;line-height:1.5;cursor:pointer;color:var(--rhink);transition:.14s}
+.ch:hover{border-color:var(--rht)}
+.ch.right{background:var(--univ-w);border-color:var(--green);color:#155e38;font-weight:600}
+.ch.wrong{background:#fdeceb;border-color:var(--red);color:#8c2f24}
+.q-note{font-size:13.5px;line-height:1.6;color:var(--rhsoft);background:var(--rht-wash);border-radius:10px;padding:11px 13px;margin-top:10px}
+.done-wrap{text-align:center;padding:26px 10px}
+.done-pct{font-family:var(--mono);font-size:52px;font-weight:600;color:var(--rht-deep);line-height:1}
+.done-t{font-family:var(--display);font-size:20px;font-weight:700;margin-top:8px}
+.done-s{font-size:14px;color:var(--rhsoft);margin-top:7px;line-height:1.6}
+.done-btns{display:flex;gap:9px;margin-top:20px}
+
+/* ---------------------------------------------------------------- lightbox */
+.lb{position:fixed;inset:0;z-index:90;background:rgba(8,24,33,.94);display:none;align-items:center;justify-content:center;padding:16px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:82vh;border-radius:10px;background:#fff}
+.lb-cap{position:absolute;left:0;right:0;bottom:14px;text-align:center;color:#cfe6ec;font-size:13px;padding:0 24px;line-height:1.5}
+.lb-x{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+  color:#fff;width:38px;height:38px;border-radius:10px;font-size:19px;cursor:pointer}
+.empty{padding:30px 16px;text-align:center;color:var(--mute);font-size:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-logo">🎓</div>
+    <div>
+      <div class="hdr-t">MiniBox Academy</div>
+      <div class="hdr-s">PulmOne Rep Certification</div>
+    </div>
+    <div class="hdr-badge" id="cert-badge">v3.0</div>
+  </div>
+  <div class="hdr-rail">
+    <div class="hdr-rail-top"><span id="rail-l">Your progress</span><span id="rail-r"></span></div>
+    <div class="hdr-bar"><i id="rail-bar"></i></div>
+  </div>
+</div>
+
+<div class="wrap" id="home"></div>
+
+<div class="ov" id="ov">
+  <div class="ov-hd">
+    <div class="ov-hd-top">
+      <button class="ov-x" onclick="acClose()" aria-label="Close">&times;</button>
+      <div>
+        <div class="ov-title" id="ov-title"></div>
+        <div class="ov-sub" id="ov-sub"></div>
+      </div>
+    </div>
+    <div class="ov-tabs">
+      <button id="tab-study" onclick="acTab('study')">Study</button>
+      <button id="tab-learn" onclick="acTab('learn')">Flashcards</button>
+      <button id="tab-test"  onclick="acTab('test')">Test</button>
+    </div>
+  </div>
+  <div class="ov-body" id="ov-body"></div>
+</div>
+
+<div class="lb" id="lb" onclick="acLbClose(event)">
+  <button class="lb-x" onclick="acLbClose(event,1)" aria-label="Close">&times;</button>
+  <img id="lb-img" alt="">
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<script src="academy-quiz.js"></script>
+<script src="academy-study.js"></script>
+<script src="academy-visuals.js"></script>
+<script>
+/* =====================================================================
+   MiniBox Academy v3.0
+
+   v2 was flashcards and a multiple choice test with no teaching in front
+   of them, which is a quiz, not a course. v3 puts a visual Study layer
+   first: real diagrams pulled out of PulmOne's own training decks, plus
+   six hand-built interactive graphics for the ideas that only make sense
+   when they move.
+
+   Three data files feed this shell:
+     academy-quiz.js    window.ACADEMY       titles, flashcards, test questions
+     academy-study.js   window.ACADEMY_STUDY the lesson content
+     academy-visuals.js window.ACADEMY_VIS   the interactive graphics
+   ===================================================================== */
+
+var A     = window.ACADEMY || {};
+var CFG   = window.ACADEMY_CFG || { certPct: 80, icons: {}, tags: {}, pending: {} };
+var STUDY = window.ACADEMY_STUDY || {};
+var VIS   = window.ACADEMY_VIS || {};
+
+/* ------------------------------------------------------------ storage */
+function acRead(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
+function acWrite(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+function acScores()        { return acRead('academy-scores3', {}); }
+function acSaveScore(k, p) { var s = acScores(); var o = s[k] || {}; s[k] = { last: p, best: Math.max(p, o.best || 0) }; acWrite('academy-scores3', s); }
+function acBest(k)         { var s = acScores()[k]; return (s && s.best) || 0; }
+
+function acStudied(k)      { return acRead('academy-studied3', {})[k] === 1; }
+function acMarkStudied(k)  { var s = acRead('academy-studied3', {}); s[k] = 1; acWrite('academy-studied3', s); }
+
+function acCardsDone(k)    { return acRead('academy-cards3', {})[k] === 1; }
+function acMarkCards(k)    { var s = acRead('academy-cards3', {}); s[k] = 1; acWrite('academy-cards3', s); }
+
+/* ------------------------------------------------------------ helpers */
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+var KEYS = Object.keys(A);
+function isPending(k) { return !!(CFG.pending && CFG.pending[k]); }
+function hasStudy(k)  { return !!(STUDY[k] && STUDY[k].sections && STUDY[k].sections.length); }
+function hasCards(k)  { return !!(A[k] && A[k].learn && A[k].learn.length); }
+function hasTest(k)   { return !!(A[k] && A[k].test && A[k].test.length) && !isPending(k); }
+
+/* ------------------------------------------------------------ home */
+function acHome() {
+  var groups = [
+    { t: 'Start here',            keys: ['intro_mbp', 'clinical_overview', 'system_orientation'] },
+    { t: 'The three measurements', keys: ['spirometry', 'lung_volumes_pleth', 'lung_volume', 'dlco'] },
+    { t: 'In the field',          keys: ['minibox_setup', 'additional_testing', 'respiratory_disease', 'competitive', 'pft_overview'] },
+    { t: 'Certification',         keys: ['final_exam'] }
+  ];
+
+  var seen = {}, html = '';
+  html += '<p class="lede">Every module opens with <b>Study</b>, the part that actually teaches: real diagrams from ' +
+          'PulmOne\'s training decks plus interactive graphics you can pull apart. Then <b>Flashcards</b> to make it stick, ' +
+          'then the <b>Test</b>. Your progress saves on this device.</p>';
+
+  groups.forEach(function (g) {
+    var keys = g.keys.filter(function (k) { return A[k] || STUDY[k]; });
+    if (!keys.length) return;
+    html += '<div class="sec-h">' + esc(g.t) + '</div><div class="cards">';
+    keys.forEach(function (k) { seen[k] = 1; html += cardHtml(k); });
+    html += '</div>';
+  });
+
+  // Anything not placed in a group above still gets shown.
+  var rest = KEYS.filter(function (k) { return !seen[k]; });
+  if (rest.length) {
+    html += '<div class="sec-h">More</div><div class="cards">';
+    rest.forEach(function (k) { html += cardHtml(k); });
+    html += '</div>';
+  }
+
+  document.getElementById('home').innerHTML = html;
+  acRail();
+}
+
+function cardHtml(k) {
+  var m = A[k] || {}, s = STUDY[k] || {};
+  var title = m.title || (s.title) || k;
+  var ico = (CFG.icons && CFG.icons[k]) || '📘';
+  var mins = s.minutes ? s.minutes + ' min read' : '';
+  var nCards = (m.learn || []).length, nTest = (m.test || []).length;
+
+  var bits = [];
+  if (mins) bits.push(mins);
+  if (nCards) bits.push(nCards + ' cards');
+  if (nTest) bits.push(nTest + ' questions');
+
+  var tags = '';
+  ((CFG.tags && CFG.tags[k]) || []).forEach(function (t) {
+    tags += '<span class="tag" style="background:' + t.bg + ';color:' + t.c + '">' + esc(t.label) + '</span>';
+  });
+
+  var best = acBest(k);
+  var trio = '' +
+    '<div class="trio">' +
+      trioCell('Study', hasStudy(k) ? (acStudied(k) ? 'Read' : (s.sections.length + ' parts')) : '—', hasStudy(k) && acStudied(k), !hasStudy(k)) +
+      trioCell('Cards', hasCards(k) ? (acCardsDone(k) ? 'Done' : nCards) : '—', hasCards(k) && acCardsDone(k), !hasCards(k)) +
+      trioCell('Test', hasTest(k) ? (best ? best + '%' : nTest) : (isPending(k) ? 'Locked' : '—'), best >= (CFG.certPct || 80), !hasTest(k)) +
+    '</div>';
+
+  return '<div class="card" onclick="acOpen(\'' + k + '\')">' +
+           '<div class="card-top"><div class="card-ico">' + ico + '</div>' +
+           '<div><div class="card-t">' + esc(title) + '</div>' +
+           '<div class="card-m">' + esc(bits.join(' · ')) + '</div>' +
+           (tags ? '<div class="card-tags">' + tags + '</div>' : '') + '</div></div>' + trio + '</div>';
+}
+
+function trioCell(label, value, done, locked) {
+  return '<div class="trio-i' + (done ? ' done' : '') + (locked ? ' locked' : '') + '">' +
+         '<div class="trio-l">' + label + '</div><div class="trio-v">' + esc(value) + '</div></div>';
+}
+
+function acRail() {
+  // One point per available piece of work across every module.
+  var total = 0, got = 0;
+  KEYS.concat(Object.keys(STUDY)).filter(function (v, i, a) { return a.indexOf(v) === i; }).forEach(function (k) {
+    if (hasStudy(k)) { total++; if (acStudied(k)) got++; }
+    if (hasCards(k)) { total++; if (acCardsDone(k)) got++; }
+    if (hasTest(k))  { total++; if (acBest(k) >= (CFG.certPct || 80)) got++; }
+  });
+  var pct = total ? Math.round((got / total) * 100) : 0;
+  document.getElementById('rail-bar').style.width = pct + '%';
+  document.getElementById('rail-r').textContent = got + ' of ' + total + ' complete';
+  document.getElementById('cert-badge').textContent = pct === 100 ? 'CERTIFIED' : pct + '%';
+}
+
+/* ------------------------------------------------------------ overlay */
+var curKey = '', curTab = 'study';
+
+function acOpen(k) {
+  curKey = k;
+  var m = A[k] || {}, s = STUDY[k] || {};
+  document.getElementById('ov-title').textContent = m.title || s.title || k;
+  document.getElementById('ov-sub').textContent =
+    (hasStudy(k) ? (s.minutes || 0) + ' min read' : 'Module');
+  document.getElementById('tab-study').disabled = !hasStudy(k);
+  document.getElementById('tab-learn').disabled = !hasCards(k);
+  document.getElementById('tab-test').disabled  = !hasTest(k);
+  document.getElementById('ov').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  acTab(hasStudy(k) ? 'study' : (hasCards(k) ? 'learn' : 'test'));
+}
+
+function acClose() {
+  document.getElementById('ov').classList.remove('on');
+  document.body.style.overflow = '';
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  acHome();
+}
+
+function acTab(t) {
+  curTab = t;
+  ['study', 'learn', 'test'].forEach(function (x) {
+    document.getElementById('tab-' + x).classList.toggle('on', x === t);
+  });
+  var body = document.getElementById('ov-body');
+  body.scrollTop = 0;
+  if (t === 'study') renderStudy(body);
+  else startQuiz(t);
+}
+
+/* ------------------------------------------------------------ study renderer */
+function renderStudy(body) {
+  var s = STUDY[curKey];
+  if (!s) { body.innerHTML = '<div class="empty">No study material for this module yet.</div>'; return; }
+
+  var h = '';
+  if (s.intro) h += '<div class="st-intro">' + s.intro + '</div>';
+
+  (s.sections || []).forEach(function (sec, i) {
+    h += '<div class="st-sec">';
+    h += '<h3 class="st-h"><span class="n">' + String(i + 1).padStart(2, '0') + '</span><span>' + sec.h + '</span></h3>';
+    if (sec.p) h += '<p class="st-p">' + sec.p + '</p>';
+    if (sec.list && sec.list.length) {
+      h += '<ul class="st-list">';
+      sec.list.forEach(function (li) { h += '<li>' + li + '</li>'; });
+      h += '</ul>';
+    }
+    if (sec.visual) h += visualHtml(sec.visual, i);
+    if (sec.key) h += '<div class="st-key">' + sec.key + '</div>';
+    h += '</div>';
+  });
+
+  if (s.angle) h += '<div class="st-angle"><p>' + s.angle + '</p></div>';
+
+  var done = acStudied(curKey);
+  h += '<button class="st-done' + (done ? ' is-done' : '') + '" id="st-done">' +
+       (done ? '✓ Marked as read' : 'Mark this module as read') + '</button>';
+
+  body.innerHTML = h;
+
+  // Wire up the interactive visuals now that they are in the document.
+  (s.sections || []).forEach(function (sec, i) {
+    if (sec.visual && sec.visual.t === 'svg' && VIS[sec.visual.id]) {
+      var host = document.getElementById('vis-' + i);
+      if (host) { try { VIS[sec.visual.id].init(host); } catch (e) { console.warn('visual', sec.visual.id, e); } }
+    }
+  });
+
+  document.getElementById('st-done').onclick = function () {
+    acMarkStudied(curKey);
+    this.classList.add('is-done');
+    this.textContent = '✓ Marked as read';
+    acRail();
+  };
+}
+
+function visualHtml(v, i) {
+  if (!v) return '';
+
+  if (v.t === 'img') {
+    var src = 'academy-assets/' + v.src + '.jpg';
+    return '<div class="fig">' +
+             '<img class="fig-img" src="' + src + '" alt="' + esc(v.cap || '') + '" loading="lazy" ' +
+             'onclick="acLb(this.src, this.alt)">' +
+             (v.cap ? '<div class="fig-cap">' + v.cap + '</div>' : '') +
+             '<span class="fig-zoom">Tap to enlarge</span>' +
+           '</div>';
+  }
+
+  if (v.t === 'table') {
+    var t = '<div class="st-tbl"><div class="st-tbl-scroll"><table>';
+    if (v.head && v.head.length) {
+      t += '<thead><tr>';
+      v.head.forEach(function (c) { t += '<th>' + c + '</th>'; });
+      t += '</tr></thead>';
+    }
+    t += '<tbody>';
+    (v.rows || []).forEach(function (r) {
+      t += '<tr>';
+      r.forEach(function (c) { t += '<td>' + c + '</td>'; });
+      t += '</tr>';
+    });
+    t += '</tbody></table></div>';
+    if (v.note) t += '<div class="st-tbl-note">' + v.note + '</div>';
+    return t + '</div>';
+  }
+
+  if (v.t === 'steps') {
+    var st = '<div class="st-steps">';
+    (v.items || []).forEach(function (it, n) {
+      st += '<div class="st-step"><div class="st-step-n">' + (n + 1) + '</div><div>' +
+            '<div class="st-step-h">' + it.h + '</div>' +
+            (it.p ? '<div class="st-step-p">' + it.p + '</div>' : '') + '</div></div>';
+    });
+    return st + '</div>';
+  }
+
+  if (v.t === 'vs') {
+    function col(c) {
+      var o = '<div class="st-vs-col"><div class="st-vs-h">' + (c.h || '') + '</div><ul>';
+      (c.items || []).forEach(function (x) { o += '<li>' + x + '</li>'; });
+      return o + '</ul></div>';
+    }
+    return '<div class="st-vs">' + col(v.a || {}) + col(v.b || {}) + '</div>';
+  }
+
+  if (v.t === 'svg') {
+    var comp = VIS[v.id];
+    if (!comp) return '';
+    return '<div id="vis-' + i + '">' + comp.html() + '</div>';
+  }
+
+  return '';
+}
+
+/* ------------------------------------------------------------ lightbox */
+function acLb(src, cap) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-cap').innerHTML = cap || '';
+  document.getElementById('lb').classList.add('on');
+}
+function acLbClose(e, force) {
+  if (!force && e && e.target.tagName === 'IMG') return;
+  document.getElementById('lb').classList.remove('on');
+}
+
+/* ------------------------------------------------------------ quiz engine */
+var qList = [], qi = 0, qFlipped = false, qPicked = null, qRight = 0, qSeen = 0, qMissed = [];
+
+function startQuiz(mode) {
+  var m = A[curKey] || {};
+  if (mode === 'learn') qList = shuffle((m.learn || []).map(function (c) { return { q: c.q, a: c.a }; }));
+  else qList = shuffle((m.test || []).map(function (c) { return { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note }; }));
+  qi = 0; qFlipped = false; qPicked = null; qRight = 0; qSeen = 0; qMissed = [];
+  renderQuiz();
+}
+
+function renderQuiz() {
+  var body = document.getElementById('ov-body');
+  if (qi >= qList.length) return finishQuiz();
+
+  var c = qList[qi];
+  var h = '<div class="q-prog"><i style="width:' + Math.round((qi / qList.length) * 100) + '%"></i></div>' +
+          '<div class="q-meta"><span>' + (curTab === 'learn' ? 'Card' : 'Question') + ' ' + (qi + 1) + ' of ' + qList.length + '</span>' +
+          '<span>' + qRight + ' right</span></div>';
+
+  h += '<div class="q-card"><div class="q-q">' + c.q + '</div>';
+
+  if (curTab === 'learn') {
+    if (qFlipped) h += '<div class="q-a">' + c.a + '</div>';
+    h += '</div>';
+    if (!qFlipped) h += '<div class="q-btns"><button class="b-main" onclick="qFlip()">Show the answer</button></div>';
+    else h += '<div class="q-btns"><button class="b-no" onclick="qNextLearn(0)">Missed it</button>' +
+              '<button class="b-ok" onclick="qNextLearn(1)">Got it</button></div>';
+  } else {
+    h += '</div>';
+    c.choices.forEach(function (ch, i) {
+      var cls = '';
+      if (qPicked !== null) {
+        if (i === c.correct) cls = ' right';
+        else if (i === qPicked) cls = ' wrong';
+      }
+      h += '<button class="ch' + cls + '" onclick="qAnswer(' + i + ')">' + ch + '</button>';
+    });
+    if (qPicked !== null) {
+      if (c.note) h += '<div class="q-note">' + c.note + '</div>';
+      h += '<div class="q-btns"><button class="b-main" onclick="qNextTest()">Next</button></div>';
+    }
+  }
+
+  document.getElementById('ov-body').innerHTML = h;
+}
+
+function qFlip() { qFlipped = true; renderQuiz(); }
+
+function qNextLearn(got) {
+  var c = qList[qi];
+  if (!c._scored) { c._scored = true; qSeen++; if (got) qRight++; else qMissed.push(c); }
+  qi++; qFlipped = false; renderQuiz();
+}
+
+function qAnswer(i) {
+  if (qPicked !== null) return;
+  var c = qList[qi];
+  qPicked = i; qSeen++;
+  if (i === c.correct) qRight++; else qMissed.push(c);
+  renderQuiz();
+}
+
+function qNextTest() {
+  var c = qList[qi];
+  // A missed question goes back in the deck so it comes round again.
+  if (qPicked !== c.correct) qList.push(qList.splice(qi, 1)[0]);
+  else qi++;
+  qPicked = null;
+  renderQuiz();
+}
+
+function finishQuiz() {
+  var pct = qSeen ? Math.round((qRight / qSeen) * 100) : 0;
+  var pass = pct >= (CFG.certPct || 80);
+
+  if (curTab === 'test') acSaveScore(curKey, pct);
+  else acMarkCards(curKey);
+  acRail();
+
+  var h = '<div class="done-wrap">' +
+          '<div class="done-pct">' + pct + '%</div>' +
+          '<div class="done-t">' + (curTab === 'learn' ? 'Deck complete' : (pass ? 'Passed' : 'Not there yet')) + '</div>' +
+          '<div class="done-s">' + qRight + ' of ' + qSeen + ' right' +
+          (curTab === 'test' && !pass ? '<br>You need ' + (CFG.certPct || 80) + '% to clear this module.' : '') +
+          '</div><div class="done-btns">';
+
+  if (qMissed.length) h += '<button class="b-no" style="flex:1;padding:13px;border-radius:12px;font-weight:700;cursor:pointer" onclick="qRetry()">Redo the ' + qMissed.length + ' missed</button>';
+  h += '<button class="b-main" style="flex:1;padding:13px;border-radius:12px;border:0;font-weight:700;cursor:pointer" onclick="acClose()">Back to modules</button>';
+  h += '</div></div>';
+
+  document.getElementById('ov-body').innerHTML = h;
+}
+
+function qRetry() {
+  qList = qMissed.map(function (c) {
+    return curTab === 'learn' ? { q: c.q, a: c.a } : { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note };
+  });
+  qi = 0; qFlipped = false; qPicked = null; qRight = 0; qSeen = 0; qMissed = [];
+  renderQuiz();
+}
+
+/* ------------------------------------------------------------ boot */
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('lb').classList.contains('on')) acLbClose(null, 1);
+  else if (document.getElementById('ov').classList.contains('on')) acClose();
+});
+
+acHome();
+</script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ ROI Calculator — Email Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark: #0a3d6b;
+    --blue-mid: #0c5299;
+    --blue-brand: #0e6abf;
+    --blue-light: #d6eaf8;
+    --green: #27ae60;
+    --green-light: #e8f8f0;
+    --gray-100: #f4f6f9;
+    --gray-200: #e8ecf0;
+    --gray-300: #c8d0d8;
+    --gray-600: #5a6a7a;
+    --text: #1a2733;
+    --amber: #e67e22;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #eef2f7;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 0 0 60px; }
+
+  /* HEADER */
+  .site-header { background: var(--blue-dark); padding: 28px 32px 20px; color: #fff; }
+  .header-brand { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 4px; }
+  .header-title { font-size: 24px; font-weight: 700; }
+  .header-sub { font-size: 13px; color: #a8d0ee; margin-top: 4px; }
+  .hbadge { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 5px; padding: 4px 12px; font-size: 11px; font-weight: 500; color: #cce4f7; margin-top: 10px; }
+
+  .content-wrap { padding: 28px 32px; }
+
+  /* FORM CARD */
+  .form-card { background: #fff; border-radius: 12px; border: 1px solid var(--gray-200); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(10,61,107,0.05); }
+  .form-card-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .form-card-title .icon { font-size: 18px; }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 680px) { .field-grid, .field-grid.three { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-600); }
+  .field input, .field select {
+    border: 1.5px solid var(--gray-300); border-radius: 7px;
+    padding: 10px 12px; font-size: 14px; font-family: 'Inter', sans-serif;
+    color: var(--text); background: #fff; outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--blue-brand); }
+  .field input::placeholder { color: #9ca3af; }
+
+  /* TYPE SELECTOR */
+  .type-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .type-btn {
+    padding: 8px 16px; border-radius: 7px; border: 1.5px solid var(--gray-300);
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; background: #fff; color: var(--gray-600);
+    transition: all 0.15s;
+  }
+  .type-btn.active { background: var(--blue-dark); color: #fff; border-color: var(--blue-dark); }
+  .type-btn:hover:not(.active) { background: var(--gray-100); border-color: var(--blue-brand); }
+
+  /* GENERATE BUTTON */
+  .generate-btn {
+    width: 100%; padding: 15px; background: var(--blue-brand); color: #fff;
+    border: none; border-radius: 10px; font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 3px 12px rgba(14,106,191,0.3);
+    margin-bottom: 20px;
+  }
+  .generate-btn:hover { background: var(--blue-mid); }
+  .generate-btn:active { transform: scale(0.99); }
+
+  /* OUTPUT AREA */
+  .output-card { background: #fff; border-radius: 12px; border: 1px solid var(--gray-200); overflow: hidden; box-shadow: 0 1px 4px rgba(10,61,107,0.05); display: none; }
+  .output-card.show { display: block; }
+
+  .output-header { background: var(--blue-dark); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .output-header-title { font-size: 14px; font-weight: 700; }
+  .output-header-sub { font-size: 11.5px; color: #a8d0ee; margin-top: 2px; }
+
+  .output-body { padding: 24px; }
+
+  .out-section { margin-bottom: 20px; }
+  .out-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-600); margin-bottom: 8px; }
+  .out-subject { font-size: 15px; font-weight: 700; color: var(--blue-dark); background: var(--gray-100); border-radius: 8px; padding: 12px 16px; }
+  .out-body {
+    font-size: 14px; color: var(--text); background: var(--gray-100);
+    border-radius: 8px; padding: 18px 20px; line-height: 1.75;
+    white-space: pre-wrap; font-family: 'Inter', sans-serif;
+    border: 1px solid var(--gray-200);
+  }
+
+  /* CHECKLIST */
+  .checklist-card { background: #fef9e7; border: 1px solid #f59e0b; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .checklist-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #92400e; margin-bottom: 10px; }
+  .checklist-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .checklist-card li { font-size: 13px; color: #78350f; display: flex; align-items: flex-start; gap: 8px; }
+  .checklist-card li::before { content: '☐'; font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+
+  /* ACTION BUTTONS */
+  .action-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .act-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 11px 20px; border-radius: 8px;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    border: none;
+  }
+  .act-btn.green  { background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(39,174,96,0.25); }
+  .act-btn.green:hover { background: #219150; }
+  .act-btn.blue   { background: var(--blue-brand); color: #fff; box-shadow: 0 2px 8px rgba(14,106,191,0.25); }
+  .act-btn.blue:hover { background: var(--blue-mid); }
+  .act-btn.ghost  { background: #fff; color: var(--blue-dark); border: 1.5px solid var(--gray-300); }
+  .act-btn.ghost:hover { background: var(--gray-100); border-color: var(--blue-brand); }
+
+  /* TIPS CARD */
+  .tips-card { background: var(--green-light); border: 1px solid var(--green); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .tips-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #165229; margin-bottom: 8px; }
+  .tips-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .tips-list li { font-size: 13px; color: #1e5233; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+  .tips-list li::before { content: '✓'; font-weight: 700; color: var(--green); flex-shrink: 0; }
+
+  /* TOAST */
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #27ae60; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 9999; }
+  #toast.show { opacity: 1; }
+
+  .footer-note { font-size: 11px; color: var(--gray-600); text-align: center; margin-top: 24px; }
+
+  @media (max-width: 600px) {
+    .content-wrap { padding: 16px 14px; }
+    .site-header { padding: 20px 16px; }
+    .form-card { padding: 16px; }
+    .output-body { padding: 16px; }
+  }
+
+  /* PulmOne logo (added) */
+  .site-header{display:flex;align-items:center;gap:18px;}
+  .sh-logo{height:46px;width:auto;display:block;background:#fff;padding:7px 11px;border-radius:8px;flex:0 0 auto;}
+  .sh-text{min-width:0;}
+  @media print{.sh-logo{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff !important;}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="site-header">
+    <img class="sh-logo" src="data:image/jpeg;base64,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" alt="PulmOne">
+    <div class="sh-text"><div class="header-brand">PulmOne Advanced Medical Devices</div>
+    <div class="header-title">ROI Calculator — Email Generator</div>
+    <div class="header-sub">Generate a ready-to-send email that delivers the ROI Calculator directly to your prospect</div>
+    <div class="hbadge">v1.1 &nbsp;|&nbsp; For Sales Rep Use</div></div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- TIPS -->
+    <div class="tips-card">
+      <div class="tips-title">&#128161; How This Works</div>
+      <ul class="tips-list">
+        <li>Fill in your rep info and the doctor's info below, then click <strong>Generate Email</strong>.</li>
+        <li>Copy the email body and paste it into Outlook — or use <strong>Open in Outlook Web</strong> to auto-fill.</li>
+        <li>Attach the <strong>MiniBox_ROI_Calculator_v2.0.html</strong> file to the email so the recipient can open and interact with it on their own.</li>
+        <li>The calculator works in any browser — no login, no install required. The doctor just opens it and adjusts their volume.</li>
+      </ul>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+      <div class="form-card-title"><span class="icon">&#128203;</span> Recipient &amp; Rep Info</div>
+      <div class="field-grid three" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Doctor Name</label>
+          <input type="text" id="f-doctor" placeholder="Dr. Last Name">
+        </div>
+        <div class="field">
+          <label>Practice Name</label>
+          <input type="text" id="f-practice" placeholder="Practice or Hospital">
+        </div>
+        <div class="field">
+          <label>Doctor's First Name (for greeting)</label>
+          <input type="text" id="f-doctor-first" placeholder="First name or Dr. Smith">
+        </div>
+      </div>
+      <div class="field-grid" style="margin-bottom:20px;">
+        <div class="field">
+          <label>Your Name (Rep)</label>
+          <input type="text" id="f-rep" placeholder="Your full name">
+        </div>
+        <div class="field">
+          <label>Your Direct Number</label>
+          <input type="text" id="f-phone" placeholder="(555) 000-0000">
+        </div>
+        <div class="field">
+          <label>Your Email</label>
+          <input type="email" id="f-email" placeholder="you@pulm-one.com">
+        </div>
+        <div class="field">
+          <label>Your Title</label>
+          <input type="text" id="f-title" placeholder="Territory Sales Manager">
+        </div>
+      </div>
+
+      <div class="form-card-title" style="margin-top:4px;"><span class="icon">&#9993;</span> Email Type</div>
+      <div class="type-row">
+        <button class="type-btn active" onclick="setType(this,'intro')">Initial Outreach</button>
+        <button class="type-btn" onclick="setType(this,'postdemo')">Post Demo Follow-Up</button>
+        <button class="type-btn" onclick="setType(this,'pricing')">Pricing Conversation</button>
+        <button class="type-btn" onclick="setType(this,'checkin')">Check-In</button>
+      </div>
+    </div>
+
+    <button class="generate-btn" onclick="generateEmail()">&#9889; Generate Email</button>
+
+    <!-- OUTPUT -->
+    <div class="output-card" id="output-card">
+
+      <div class="output-header">
+        <div>
+          <div class="output-header-title">&#128228; Your Email is Ready</div>
+          <div class="output-header-sub">Copy the body and paste into Outlook, or use the Outlook Web button to auto-fill</div>
+        </div>
+      </div>
+
+      <div class="output-body">
+
+        <!-- Checklist -->
+        <div class="checklist-card" id="checklist-card">
+          <div class="checklist-title">&#128204; Before You Send — Prepare These</div>
+          <ul id="checklist-list"></ul>
+        </div>
+
+        <!-- Subject -->
+        <div class="out-section">
+          <div class="out-label">Subject Line</div>
+          <div class="out-subject" id="out-subject"></div>
+        </div>
+
+        <!-- Body -->
+        <div class="out-section">
+          <div class="out-label">Email Body</div>
+          <div class="out-body" id="out-body"></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-row">
+          <button class="act-btn green" onclick="copyBody()">&#128203; Copy Email Body</button>
+          <button class="act-btn blue" onclick="openOutlookWeb()">&#127758; Open in Outlook Web</button>
+          <button class="act-btn ghost" onclick="copySubject()">&#128196; Copy Subject Only</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-note">PulmOne USA Inc. &middot; 1-844-PulmOne (785-6663) &middot; USinfo@pulm-one.com</div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var currentType = 'intro';
+
+function setType(btn, type) {
+  document.querySelectorAll('.type-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  currentType = type;
+}
+
+function v(id) { return document.getElementById(id).value.trim(); }
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+function generateEmail() {
+  var doctor      = v('f-doctor')       || 'Doctor';
+  var doctorFirst = v('f-doctor-first') || v('f-doctor') || 'Doctor';
+  var practice    = v('f-practice')     || 'your practice';
+  var rep         = v('f-rep')          || '[Your Name]';
+  var phone       = v('f-phone')        || '1-844-PulmOne';
+  var email       = v('f-email')        || 'USinfo@pulm-one.com';
+  var title       = v('f-title')        || 'PulmOne Sales Representative';
+
+  var subjects = {
+    intro:    'MiniBox+ ROI Calculator — See the Revenue Potential for ' + practice,
+    postdemo: 'Following Up — MiniBox+ Revenue Numbers for ' + practice,
+    pricing:  'MiniBox+ Pricing & Revenue Projection for ' + practice,
+    checkin:  'Checking In — Your MiniBox+ ROI Calculator'
+  };
+
+  var openers = {
+    intro:
+      'I wanted to share something that I think will be immediately useful for ' + practice + ' — a fully interactive ROI calculator specifically designed for practices adding in-office pulmonary function testing with the MiniBox+.',
+    postdemo:
+      'Thank you for the time today. It was great walking through the MiniBox+ with you and your team. As promised, I\'m sending over the ROI calculator so you can run the numbers at your own pace.',
+    pricing:
+      'Following up on our conversation about pricing — I want to make sure you have the ROI calculator in hand so you can see exactly how the device pays for itself based on your practice\'s volume.',
+    checkin:
+      'I\'m checking in to make sure you have everything you need. I wanted to resend the ROI calculator in case it got buried — it\'s worth a few minutes of your time.'
+  };
+
+  var midSection = {
+    intro:
+      'The calculator is an interactive file — just open it in any browser (no login or app required). You can adjust:\n\n' +
+      '  • Weekly PFT volume — slide it to match your current spirometry volume or your target\n' +
+      '  • Device cost — enter the purchase price or financing amount\n\n' +
+      'The tool instantly shows you:\n\n' +
+      '  • Revenue per week, per month, and projected out to Year 5\n' +
+      '  • Your exact breakeven date (in business days from today)\n' +
+      '  • Pure profit in Year 1 after the device pays for itself\n' +
+      '  • A breakdown by CPT code (94010, 94726, 94729) so you can see where each dollar comes from\n\n' +
+      'Most practices billing for complete PFTs (FVC + DLCO + LVM Pleth) at $151.45 per test break even in under 12 months at 20 tests per week or fewer.',
+    postdemo:
+      'The calculator is attached — open it in any browser. Adjust the weekly volume slider to your current spirometry numbers and enter the device cost we discussed. It will show your breakeven date, Year 1 revenue, and a full 5-year projection.\n\n' +
+      'Based on our conversation about your volume, I\'d encourage you to dial in your actual weekly numbers — the breakeven is typically faster than people expect.',
+    pricing:
+      'The attached calculator lets you enter the exact device cost we discussed and model it against your weekly volume. You\'ll see the breakeven date, Year 1 revenue, and a full 5-year projection by CPT code.\n\n' +
+      'I\'d also be happy to put together a custom proposal with financing options that can keep your monthly payment below the revenue the device generates each month.',
+    checkin:
+      'The ROI calculator is attached — it works in any browser, no login needed. Dial in your weekly PFT volume and the device cost, and you\'ll immediately see your breakeven date and revenue projections out to Year 5.'
+  };
+
+  var closers = {
+    intro:
+      'I\'d love to set up a quick 20-minute call to walk through the numbers together and answer any questions. I\'m available this week — just let me know what time works best.',
+    postdemo:
+      'Please don\'t hesitate to reach out with any questions. I\'ll follow up in a few days, but feel free to call or email me directly anytime.',
+    pricing:
+      'If you\'d like to explore financing options or talk through the numbers, I\'m happy to connect at your convenience. We can also schedule a quick follow-up demo for any additional team members.',
+    checkin:
+      'I\'m happy to answer any questions or jump on a quick call at your convenience. Just reply here or give me a call directly.'
+  };
+
+  var body = [
+    'Dear ' + doctorFirst + ',',
+    '',
+    openers[currentType],
+    '',
+    midSection[currentType],
+    '',
+    closers[currentType],
+    '',
+    'Best regards,',
+    rep,
+    title,
+    'PulmOne Advanced Medical Devices',
+    phone,
+    email
+  ].join('\n');
+
+  var checklist = [
+    'Attach the MiniBox_ROI_Calculator_v2.0.html file to this email',
+    'Confirm the doctor\'s email address before sending',
+    'Double-check your name, phone, and email in the signature above'
+  ];
+
+  if (currentType === 'postdemo') {
+    checklist.push('Optionally attach the CPT Reimbursement Reference Sheet');
+  }
+  if (currentType === 'pricing') {
+    checklist.push('Optionally attach the current financing options sheet');
+  }
+
+  document.getElementById('out-subject').textContent = subjects[currentType];
+  document.getElementById('out-body').textContent = body;
+
+  var ul = document.getElementById('checklist-list');
+  ul.innerHTML = checklist.map(function(item) {
+    return '<li>' + item + '</li>';
+  }).join('');
+
+  var card = document.getElementById('output-card');
+  card.classList.add('show');
+  setTimeout(function() { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+}
+
+function copyBody() {
+  var text = document.getElementById('out-body').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('✓ Email body copied!');
+  }).catch(function() {
+    alert('Could not auto-copy. Please select all text in the body box and copy manually.');
+  });
+}
+
+function copySubject() {
+  var text = document.getElementById('out-subject').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('✓ Subject line copied!');
+  }).catch(function() {
+    alert('Could not auto-copy. Please copy the subject manually.');
+  });
+}
+
+function openOutlookWeb() {
+  var s = encodeURIComponent(document.getElementById('out-subject').textContent);
+  var b = encodeURIComponent(document.getElementById('out-body').textContent);
+  window.open('https://outlook.office.com/mail/deeplink/compose?subject=' + s + '&body=' + b, '_blank');
+}
+</script>
+
+</body>
+</html>

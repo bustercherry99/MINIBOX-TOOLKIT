@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulmOne USA &mdash; MiniBox+ Service / Issue Report v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue-dark:#0a3d6b; --blue-mid:#0c5299; --blue-brand:#0e6abf; --blue-light:#d6eaf8;
+    --green:#27ae60; --amber:#e67e22; --red:#c0392b;
+    --gray-100:#f4f6f9; --gray-200:#e8ecf0; --gray-300:#c8d0d8; --gray-600:#5a6a7a; --gray-800:#1e2d3d; --text:#1a2733;
+  }
+  body { font-family:'Inter',sans-serif; background:#eef2f7; color:var(--text); min-height:100vh; padding:22px 0; line-height:1.5; }
+  .page { max-width:920px; margin:0 auto; padding:0 22px; }
+
+  .site-header { background:var(--blue-dark); border-radius:10px 10px 0 0; padding:22px 28px; color:#fff; }
+  .header-brand { font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#7ab6e0; margin-bottom:4px; }
+  .header-title { font-size:23px; font-weight:700; line-height:1.2; }
+  .header-sub { font-size:13px; color:#a8d0ee; margin-top:5px; }
+
+  .form-card { background:#fff; border-radius:0 0 10px 10px; box-shadow:0 2px 12px rgba(10,61,107,0.08); border:1px solid var(--gray-200); border-top:none; padding:0 0 8px; }
+
+  .section { padding:22px 28px 4px; }
+  .section + .section { border-top:1px solid var(--gray-200); }
+  .sec-title { font-size:15px; font-weight:700; color:var(--blue-dark); margin-bottom:4px; }
+  .sec-hint { font-size:12.5px; color:var(--gray-600); margin-bottom:14px; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; }
+  @media(max-width:620px){ .grid2{ grid-template-columns:1fr; } }
+  .field { display:flex; flex-direction:column; }
+  .field.full { grid-column:1 / -1; }
+  label.fld { font-size:11px; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; }
+  input[type=text], input[type=email], input[type=tel], input[type=date], textarea {
+    width:100%; padding:11px 12px; font-size:14.5px; border:1px solid var(--gray-300); border-radius:8px; background:#fff; color:var(--text); font-family:inherit;
+  }
+  input:focus, textarea:focus { outline:2px solid var(--blue-brand); outline-offset:1px; border-color:var(--blue-brand); }
+  textarea { min-height:96px; resize:vertical; }
+
+  .alert { background:#fff7e6; border:1px solid #f3d39a; border-radius:8px; padding:13px 15px; font-size:12.5px; color:#7a4d00; line-height:1.6; margin-bottom:8px; }
+  .alert strong { color:#8a3b00; }
+  .alert.red { background:#fdecea; border-color:#f3b9b2; color:#8a1c12; }
+
+  /* DEVICE TABLE */
+  .items { margin-top:4px; }
+  .item-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--gray-200); border-radius:9px; margin-bottom:10px; background:var(--gray-100); }
+  .item-row.checked { background:#eaf5ff; border-color:#bcdcf7; }
+  .item-row .chk { width:22px; height:22px; flex:0 0 auto; cursor:pointer; accent-color:var(--blue-brand); }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:14px; font-weight:600; color:var(--gray-800); }
+  .item-sn { margin-top:7px; display:flex; gap:8px; align-items:center; }
+  .item-sn input { padding:8px 10px; font-size:13px; }
+  .item-sn label { font-size:10.5px; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:0.4px; white-space:nowrap; }
+  .sn-help { font-size:12px; color:var(--gray-600); background:var(--gray-100); border-left:3px solid var(--blue-brand); padding:10px 13px; border-radius:0 6px 6px 0; line-height:1.6; margin-top:4px; }
+
+  /* URGENCY RADIO CARDS */
+  .urgency { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media(max-width:620px){ .urgency{ grid-template-columns:1fr; } }
+  .urg { position:relative; border:1.5px solid var(--gray-300); border-radius:9px; padding:13px 14px; cursor:pointer; background:#fff; transition:all .12s; }
+  .urg input { position:absolute; opacity:0; pointer-events:none; }
+  .urg .u-title { font-size:13.5px; font-weight:700; color:var(--gray-800); }
+  .urg .u-sub { font-size:11.5px; color:var(--gray-600); margin-top:3px; line-height:1.45; }
+  .urg .u-dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle; }
+  .urg.red-opt   .u-dot{ background:var(--red); }
+  .urg.amber-opt .u-dot{ background:var(--amber); }
+  .urg.green-opt .u-dot{ background:var(--green); }
+  .urg.sel { border-color:var(--blue-brand); box-shadow:0 0 0 2px rgba(14,106,191,0.18); background:#f3f9ff; }
+
+  /* ACTION BAR */
+  .actions { position:sticky; bottom:0; background:#fff; border-top:1px solid var(--gray-200); padding:16px 28px; display:flex; gap:10px; flex-wrap:wrap; border-radius:0 0 10px 10px; }
+  .btn { border:none; border-radius:9px; padding:13px 20px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:7px; }
+  .btn-primary { background:var(--blue-brand); color:#fff; flex:1; min-width:200px; justify-content:center; }
+  .btn-primary:hover { background:var(--blue-mid); }
+  .btn-ghost { background:#fff; color:var(--blue-mid); border:1.5px solid var(--gray-300); }
+  .btn-ghost:hover { border-color:var(--blue-brand); }
+  .footnote { font-size:11.5px; color:var(--gray-600); padding:4px 28px 14px; }
+
+  /* PRINT */
+  @media print {
+    body { background:#fff; padding:0; }
+    .page { max-width:100%; padding:0; }
+    .actions, .footnote, .no-print { display:none !important; }
+    .form-card, .site-header { box-shadow:none; border:none; border-radius:0; }
+    .site-header { background:var(--blue-dark) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .item-row.checked { background:#eaf5ff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .urg.sel { box-shadow:none; background:#f3f9ff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    input, textarea { border:none !important; border-bottom:1px solid #888 !important; border-radius:0 !important; }
+    .section { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="site-header">
+    <div class="header-brand">PulmOne USA Inc. &middot; Service &amp; Support</div>
+    <div class="header-title">MiniBox+&trade; Service / Issue Report</div>
+    <div class="header-sub">Something not working right? Fill in, describe the issue, and send. No printing required.</div>
+  </div>
+
+  <div class="form-card">
+
+    <!-- WHO IS REPORTING -->
+    <div class="section">
+      <div class="sec-title">Your Details</div>
+      <div class="sec-hint">So we can reach you quickly and match the report to the right account.</div>
+      <div class="grid2">
+        <div class="field"><label class="fld">Date</label><input type="date" id="f-date"></div>
+        <div class="field"><label class="fld">Full Name</label><input type="text" id="f-name" placeholder="Type here"></div>
+        <div class="field"><label class="fld">Job Role</label><input type="text" id="f-role" placeholder="Type here"></div>
+        <div class="field"><label class="fld">Institution / Clinic Name</label><input type="text" id="f-clinic" placeholder="Type here"></div>
+        <div class="field"><label class="fld">Email</label><input type="email" id="f-email" placeholder="Type here"></div>
+        <div class="field"><label class="fld">Cellphone / Phone</label><input type="tel" id="f-phone" placeholder="Type here"></div>
+        <div class="field full"><label class="fld">Full Address</label><input type="text" id="f-address" placeholder="Type here"></div>
+      </div>
+    </div>
+
+    <!-- AFFECTED DEVICE -->
+    <div class="section">
+      <div class="sec-title">Affected Device</div>
+      <div class="sec-hint">Check the item(s) involved and enter the serial number if you have it.</div>
+      <div class="items">
+        <div class="item-row" id="row-0">
+          <input type="checkbox" class="chk" id="it-0" onchange="toggleItem(0)">
+          <div class="item-main">
+            <div class="item-name">MiniBox+&trade;</div>
+            <div class="item-sn"><label for="sn-0">S/N</label><input type="text" id="sn-0" placeholder="Serial number"></div>
+          </div>
+        </div>
+        <div class="item-row" id="row-1">
+          <input type="checkbox" class="chk" id="it-1" onchange="toggleItem(1)">
+          <div class="item-main">
+            <div class="item-name">Hand-held Unit (HHU)</div>
+            <div class="item-sn"><label for="sn-1">S/N</label><input type="text" id="sn-1" placeholder="Serial number"></div>
+          </div>
+        </div>
+        <div class="item-row" id="row-2">
+          <input type="checkbox" class="chk" id="it-2" onchange="toggleItem(2)">
+          <div class="item-main">
+            <div class="item-name">Control Unit &mdash; Dell (Black Protective Case)</div>
+            <div class="item-sn"><label for="sn-2">S/N</label><input type="text" id="sn-2" placeholder="Serial number"></div>
+          </div>
+        </div>
+        <div class="item-row" id="row-3">
+          <input type="checkbox" class="chk" id="it-3" onchange="toggleItem(3)">
+          <div class="item-main">
+            <div class="item-name">Other</div>
+            <div class="item-sn"><label for="sn-3">Describe</label><input type="text" id="sn-3" placeholder="Type here"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sn-help">
+        <strong>Finding serial numbers:</strong> For the MiniBox+&trade; or the HHU, tap <strong>Device Data</strong> &mdash; both appear on the upper right of the screen.
+        The Control Unit S/N is on the back of the tablet, after removing its rubber cover.
+      </div>
+    </div>
+
+    <!-- WHAT'S WRONG -->
+    <div class="section">
+      <div class="sec-title">What&rsquo;s the Problem?</div>
+      <div class="sec-hint">Describe the issue in your own words &mdash; what happened, and what you were doing when it happened.</div>
+      <div class="field full"><textarea id="f-issue" placeholder="Type here"></textarea></div>
+      <div class="grid2" style="margin-top:14px;">
+        <div class="field"><label class="fld">When did it start?</label><input type="date" id="f-started"></div>
+        <div class="field"><label class="fld">Error message or code shown (if any)</label><input type="text" id="f-errcode" placeholder="Type here"></div>
+      </div>
+    </div>
+
+    <!-- URGENCY -->
+    <div class="section">
+      <div class="sec-title">How Urgent?</div>
+      <div class="sec-hint">This helps us prioritize the response.</div>
+      <div class="urgency">
+        <label class="urg red-opt" id="urg-down">
+          <input type="radio" name="urgency" value="Down — cannot test patients" onchange="pickUrg('urg-down')">
+          <div class="u-title"><span class="u-dot"></span>Down</div>
+          <div class="u-sub">Can&rsquo;t test patients right now</div>
+        </label>
+        <label class="urg amber-opt" id="urg-inter">
+          <input type="radio" name="urgency" value="Intermittent — still testing but unreliable" onchange="pickUrg('urg-inter')">
+          <div class="u-title"><span class="u-dot"></span>Intermittent</div>
+          <div class="u-sub">Works sometimes / unreliable</div>
+        </label>
+        <label class="urg green-opt" id="urg-minor">
+          <input type="radio" name="urgency" value="Minor — still usable" onchange="pickUrg('urg-minor')">
+          <div class="u-title"><span class="u-dot"></span>Minor</div>
+          <div class="u-sub">Still usable, not urgent</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- SUPPORTING EVIDENCE -->
+    <div class="section">
+      <div class="sec-title">Supporting Evidence</div>
+      <div class="sec-hint">Attach anything that best shows the issue: screenshots, photos, short videos, log files, etc.</div>
+      <div class="alert red"><strong>Do not send ANY patient or patient health information whatsoever.</strong></div>
+      <div class="alert">Files can be emailed to <strong>service@pulm-one.com</strong> or faxed to <strong>844-785-6664</strong>. When you tap <em>Send to PulmOne</em> below, evidence files can be attached to the same email.</div>
+    </div>
+
+  </div>
+
+  <div class="form-card" style="margin-top:0; border-top:none;">
+    <!-- ACTIONS -->
+    <div class="actions no-print">
+      <button class="btn btn-primary" onclick="sendToPulmOne()">&#9993;&nbsp; Send to PulmOne</button>
+      <button class="btn btn-ghost" onclick="window.print()">&#128424;&nbsp; Save / Print PDF</button>
+      <button class="btn btn-ghost" onclick="resetAll()">&#10227;&nbsp; Reset</button>
+    </div>
+    <div class="footnote no-print">
+      Goes to <strong>service@pulm-one.com</strong> &middot; fax 844-785-6664. On iPad/iPhone, <em>Send to PulmOne</em> opens your share sheet with the completed form attached as a PDF. On a computer it saves the PDF and opens a pre-addressed email.
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SERVICE_EMAIL = 'service@pulm-one.com';
+
+  function $(id){ return document.getElementById(id); }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+  /* ---------- Device rows ---------- */
+  window.toggleItem=function(i){
+    var row=$('row-'+i); var on=$('it-'+i).checked;
+    row.classList.toggle('checked', on);
+  };
+
+  /* ---------- Urgency ---------- */
+  window.pickUrg=function(id){
+    ['urg-down','urg-inter','urg-minor'].forEach(function(u){ $(u).classList.toggle('sel', u===id); });
+  };
+  function urgencyValue(){
+    var r=document.querySelector('input[name="urgency"]:checked');
+    return r?r.value:'';
+  }
+
+  /* ---------- Gather form data ---------- */
+  function gather(){
+    var items=[];
+    [['MiniBox+ (TM)','sn-0','it-0'],['Hand-held Unit (HHU)','sn-1','it-1'],
+     ['Control Unit - Dell (Black Protective Case)','sn-2','it-2'],['Other','sn-3','it-3']]
+      .forEach(function(t){ if($(t[2]).checked){ items.push({ name:t[0], sn:$(t[1]).value.trim() }); } });
+    return {
+      date:$('f-date').value, name:$('f-name').value.trim(), role:$('f-role').value.trim(),
+      clinic:$('f-clinic').value.trim(), email:$('f-email').value.trim(), phone:$('f-phone').value.trim(),
+      address:$('f-address').value.trim(), issue:$('f-issue').value.trim(),
+      started:$('f-started').value, errcode:$('f-errcode').value.trim(),
+      urgency:urgencyValue(), items:items
+    };
+  }
+  function emailBody(d){
+    var L=[];
+    L.push('MiniBox+ Service / Issue Report');
+    L.push('');
+    L.push('YOUR DETAILS');
+    L.push('Date: '+(d.date||''));
+    L.push('Full name: '+d.name);
+    L.push('Job role: '+d.role);
+    L.push('Institution / Clinic: '+d.clinic);
+    L.push('Email: '+d.email);
+    L.push('Phone: '+d.phone);
+    L.push('Address: '+d.address);
+    L.push('');
+    L.push('AFFECTED DEVICE(S)');
+    if(d.items.length){ d.items.forEach(function(it){ L.push('- '+it.name+(it.sn?('  S/N: '+it.sn):'  S/N: (not provided)')); }); }
+    else { L.push('(none checked)'); }
+    L.push('');
+    L.push('PROBLEM DESCRIPTION');
+    L.push(d.issue||'(see attached)');
+    L.push('When it started: '+(d.started||'(not provided)'));
+    L.push('Error message / code: '+(d.errcode||'(none)'));
+    L.push('Urgency: '+(d.urgency||'(not selected)'));
+    L.push('');
+    L.push('Reminder: do not send any patient or patient health information.');
+    return L.join('\n');
+  }
+  function subject(d){
+    var who=d.clinic||d.name||'MiniBox+ Customer';
+    var urg=d.urgency?(' ['+d.urgency.split(' ')[0]+']'):'';
+    return 'MiniBox+ Service / Issue Report - '+who+urg;
+  }
+
+  /* ---------- PDF (lazy-load jsPDF from CDN) ---------- */
+  function loadJsPDF(cb){
+    if(window.jspdf&&window.jspdf.jsPDF){ cb(window.jspdf.jsPDF); return; }
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=function(){ cb(window.jspdf&&window.jspdf.jsPDF); };
+    s.onerror=function(){ cb(null); };
+    document.head.appendChild(s);
+  }
+  function buildPDF(JsPDF,d){
+    var doc=new JsPDF({unit:'pt',format:'letter'});
+    var W=612, x=48, y=56, line=16;
+    doc.setFillColor(10,61,107); doc.rect(0,0,W,70,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+    doc.text('MiniBox+ Service / Issue Report',x,40);
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text('PulmOne USA Inc.  -  Service & Support',x,56);
+    doc.setTextColor(26,39,51); y=98;
+    function h(t){ doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(10,61,107); doc.text(t,x,y); y+=line+2; doc.setTextColor(26,39,51); }
+    function p(lbl,val){ doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.text(lbl,x,y);
+      doc.setFont('helvetica','normal'); var lines=doc.splitTextToSize(String(val||'-'),W-x-x-90);
+      doc.text(lines,x+96,y); y+=Math.max(line,lines.length*13); }
+    h('Your Details');
+    p('Date',d.date); p('Full name',d.name); p('Job role',d.role); p('Clinic',d.clinic);
+    p('Email',d.email); p('Phone',d.phone); p('Address',d.address); y+=6;
+    h('Affected Device(s)');
+    doc.setFontSize(10);
+    if(d.items.length){ d.items.forEach(function(it){ doc.setFont('helvetica','normal');
+      doc.text('[X] '+it.name+'   S/N: '+(it.sn||'(not provided)'),x,y); y+=line; }); }
+    else { doc.text('(none checked)',x,y); y+=line; }
+    y+=6;
+    h('Problem Description');
+    doc.setFont('helvetica','normal'); doc.setFontSize(10);
+    var il=doc.splitTextToSize(d.issue||'(see attached evidence)',W-x-x); doc.text(il,x,y); y+=il.length*13+6;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+    doc.text('When it started: ',x,y); doc.setFont('helvetica','normal'); doc.text(String(d.started||'(not provided)'),x+96,y); y+=line;
+    doc.setFont('helvetica','bold'); doc.text('Error / code: ',x,y); doc.setFont('helvetica','normal'); doc.text(String(d.errcode||'(none)'),x+96,y); y+=line;
+    doc.setFont('helvetica','bold'); doc.text('Urgency: ',x,y); doc.setFont('helvetica','normal'); doc.text(String(d.urgency||'(not selected)'),x+96,y); y+=line+8;
+    doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(150,40,30);
+    doc.text('Do not send any patient or patient health information.',x,y);
+    return doc;
+  }
+  function fileName(d){
+    var who=(d.clinic||d.name||'Customer').replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'');
+    return 'MiniBox_Service_Report_'+who+'_'+(d.date||todayISO())+'.pdf';
+  }
+
+  /* ---------- Send ---------- */
+  window.sendToPulmOne=function(){
+    var d=gather();
+    if(!d.name && !d.clinic){ alert('Add at least your name or clinic before sending.'); return; }
+    if(!d.issue){ if(!confirm('No problem description yet. Send anyway?')) return; }
+    var subj=subject(d), body=emailBody(d), fn=fileName(d);
+    loadJsPDF(function(JsPDF){
+      if(JsPDF){
+        try{
+          var doc=buildPDF(JsPDF,d);
+          var blob=doc.output('blob');
+          var file=new File([blob],fn,{type:'application/pdf'});
+          if(navigator.canShare && navigator.canShare({files:[file]})){
+            navigator.share({ files:[file], title:subj, text:body })
+              .catch(function(){ fallbackEmail(doc,fn,subj,body,d); });
+            return;
+          }
+          fallbackEmail(doc,fn,subj,body,d); return;
+        }catch(e){ /* fall through */ }
+      }
+      mailtoOnly(subj,body,d);
+      setTimeout(function(){ window.print(); },400);
+    });
+  };
+  function fallbackEmail(doc,fn,subj,body,d){
+    try{ doc.save(fn); }catch(e){}
+    mailtoOnly(subj,body+'\n\n[The completed report PDF was just saved to your device — please attach it: '+fn+']',d);
+  }
+  function mailtoOnly(subj,body,d){
+    var cc=d.email?('&cc='+encodeURIComponent(d.email)):'';
+    var href='mailto:'+SERVICE_EMAIL+'?subject='+encodeURIComponent(subj)+cc+'&body='+encodeURIComponent(body);
+    window.location.href=href;
+  }
+
+  window.resetAll=function(){
+    if(!confirm('Clear the whole form?')) return;
+    document.querySelectorAll('input[type=text],input[type=email],input[type=tel]').forEach(function(i){ i.value=''; });
+    $('f-issue').value=''; $('f-errcode').value='';
+    for(var k=0;k<4;k++){ $('it-'+k).checked=false; toggleItem(k); }
+    var r=document.querySelector('input[name="urgency"]:checked'); if(r){ r.checked=false; }
+    ['urg-down','urg-inter','urg-minor'].forEach(function(u){ $(u).classList.remove('sel'); });
+    $('f-date').value=todayISO(); $('f-started').value='';
+  };
+
+  /* ---------- Init ---------- */
+  function init(){
+    $('f-date').value=todayISO();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+</body>
+</html>

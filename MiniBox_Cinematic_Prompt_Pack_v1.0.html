@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Cinematic Film — Script & Ultimate Prompt Pack v1.0</title>
+<style>
+  :root{
+    --blue:#1B5FAA; --blue-lt:#3D8BDF; --ink:#eef4fb; --dim:#93a6c2;
+    --bg0:#070d18; --bg1:#0d1626; --card:#111d33; --line:rgba(90,150,220,.22);
+    --accent:#ffd45e; --ok:#42c98a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);
+    background:radial-gradient(120% 80% at 50% -10%, #14243c 0%, var(--bg1) 45%, var(--bg0) 100%);
+    line-height:1.55;padding-bottom:80px;}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px;}
+
+  header{display:flex;align-items:center;gap:16px;padding:26px 0 20px;position:sticky;top:0;z-index:10;
+    background:linear-gradient(180deg, var(--bg0) 60%, rgba(7,13,24,0));backdrop-filter:blur(4px);}
+  .logo-chip{height:48px;background:#fff;padding:7px 12px;border-radius:9px;display:flex;align-items:center;flex:0 0 auto;}
+  .logo-chip img{height:100%;display:block;}
+  .htxt .h1{font-size:20px;font-weight:700;letter-spacing:.3px;}
+  .htxt .h2{font-size:12px;color:var(--dim);letter-spacing:1.8px;text-transform:uppercase;margin-top:3px;}
+  .tag{margin-left:auto;background:var(--accent);color:#0a1424;font-size:10.5px;font-weight:800;
+    letter-spacing:1.4px;padding:6px 11px;border-radius:6px;flex:0 0 auto;}
+
+  h2.sec{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-lt);
+    margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  p.lead{color:var(--dim);font-size:14.5px;margin-bottom:14px;}
+  .callout-note{background:rgba(255,212,94,.08);border:1px solid rgba(255,212,94,.35);border-radius:10px;
+    padding:13px 16px;font-size:13.5px;color:#f0e3bf;margin:14px 0;}
+  .callout-note b{color:var(--accent);}
+
+  /* beat sheet */
+  .beat{display:grid;grid-template-columns:74px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid rgba(90,150,220,.12);}
+  .beat .tc{font-variant-numeric:tabular-nums;color:var(--blue-lt);font-weight:700;font-size:13px;}
+  .beat .bt{font-weight:700;font-size:14.5px;margin-bottom:3px;}
+  .beat .bd{color:var(--dim);font-size:13px;}
+  .beat .src{display:inline-block;margin-top:5px;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+    padding:2px 8px;border-radius:5px;}
+  .src.ai{background:rgba(61,139,223,.16);color:#7fb4ec;border:1px solid rgba(61,139,223,.4);}
+  .src.render{background:rgba(66,201,138,.14);color:#5fd6a0;border:1px solid rgba(66,201,138,.4);}
+
+  /* prompt blocks */
+  .pblock{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:16px 0;overflow:hidden;}
+  .phead{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(61,139,223,.08);
+    border-bottom:1px solid var(--line);}
+  .phead .pn{font-weight:700;font-size:14px;}
+  .phead .pmeta{color:var(--dim);font-size:11.5px;margin-left:auto;text-align:right;}
+  .pbody{padding:14px 16px;}
+  .plabel{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);margin:2px 0 6px;}
+  .ptext{background:#0a1322;border:1px solid rgba(90,150,220,.16);border-radius:8px;padding:12px 14px;
+    font-size:13px;line-height:1.6;color:#dbe6f5;white-space:pre-wrap;font-family:'Segoe UI',system-ui,sans-serif;}
+  .neg{color:#e9b9b9;}
+  .copybtn{margin-top:10px;background:var(--blue);color:#fff;border:none;border-radius:7px;
+    padding:8px 15px;font-size:12.5px;font-weight:600;cursor:pointer;letter-spacing:.4px;display:inline-flex;align-items:center;gap:7px;}
+  .copybtn:hover{background:var(--blue-lt);}
+  .copybtn.copied{background:var(--ok);}
+
+  /* tool cards */
+  .tools{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:680px){.tools{grid-template-columns:1fr;}.beat{grid-template-columns:60px 1fr;}}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:15px 16px;}
+  .tool .tn{font-weight:700;font-size:15px;color:#fff;margin-bottom:2px;}
+  .tool .tsub{font-size:11px;color:var(--blue-lt);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;}
+  .tool ul{list-style:none;}
+  .tool li{font-size:12.8px;color:var(--dim);padding:4px 0 4px 16px;position:relative;}
+  .tool li::before{content:'▸';position:absolute;left:0;color:var(--blue-lt);}
+
+  .vo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .voline{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:7px 0;border-bottom:1px solid rgba(90,150,220,.1);}
+  .voline:last-child{border-bottom:none;}
+  .voline .vt{color:var(--blue-lt);font-size:12px;font-variant-numeric:tabular-nums;font-weight:700;}
+  .voline .vw{font-size:14.5px;}
+  .voline .vw small{color:var(--dim);display:block;font-size:11.5px;margin-top:2px;letter-spacing:.5px;}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:12px;text-align:center;}
+  .kbd{background:#0a1322;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px;color:#cfe0f5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo-chip"><img src="data:image/jpeg;base64,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" alt="PulmOne"></div>
+  <div class="htxt">
+    <div class="h1">MiniBox+ Cinematic Film</div>
+    <div class="h2">Script &amp; Ultimate Prompt Pack &nbsp;·&nbsp; v1.0</div>
+  </div>
+  <div class="tag">DRAFT · REACT & REFINE</div>
+</header>
+
+<p class="lead">A copy and paste toolkit for rendering the 15 second MiniBox+ product film in an AI video engine (Veo 3 via Gemini, Higgsfield, Kling, Runway). Every prompt is anchored on the real product photo so the device stays true to life. Read the workflow note first, it will save you credits and headaches.</p>
+
+<div class="callout-note">
+  <b>THE HYBRID WORKFLOW (read this).</b> AI video is incredible at glossy exterior beats: the spin, the floating handpiece, the tablet ignition. It is unreliable at the exploded internals, it does not know your real 16.3 L canister and will invent parts. So: render the exterior hero shots in the AI tool using the prompts below, render the exploded internals beat from the 3D Showcase file we already built, then cut the pieces together in any editor (CapCut is free and fast). One clean 15 second film, best of both.
+</div>
+
+<!-- ================= BEAT SHEET ================= -->
+<h2 class="sec">The 15 Second Beat Sheet</h2>
+<p class="lead">Six beats. Timecodes are the target cut. The SOURCE tag tells you what renders it.</p>
+
+<div class="beat"><div class="tc">0.0–4.0s</div><div>
+  <div class="bt">1 · The Reveal &amp; 360</div>
+  <div class="bd">MiniBox+ suspended in a soft void of light. Slow cinematic orbit, low angle rising to eye level. Weightless, premium, awe.</div>
+  <span class="src ai">AI Video · image-to-video</span></div></div>
+
+<div class="beat"><div class="tc">4.0–6.5s</div><div>
+  <div class="bt">2 · The Handpiece Floats</div>
+  <div class="bd">The handpiece detaches and hangs weightless in space, slowly rotating, frosted mouthpiece catching light, black cable trailing in a graceful arc.</div>
+  <span class="src ai">AI Video · image-to-video</span></div></div>
+
+<div class="beat"><div class="tc">6.5–9.0s</div><div>
+  <div class="bt">3 · The Tablet Ignites</div>
+  <div class="bd">Push in on the Surface tablet. Screen wakes from black, the blue miniBox+ logo pulses to life with concentric light waves rippling out like a heartbeat.</div>
+  <span class="src ai">AI Video · image-to-video</span></div></div>
+
+<div class="beat"><div class="tc">9.0–12.5s</div><div>
+  <div class="bt">4 · Inside the MiniBox</div>
+  <div class="bd">Top cap lifts, the device disassembles in midair. The 16.3 L canister glows at the center, modules suspended around it with technical callouts.</div>
+  <span class="src render">3D Render · use the Showcase file</span></div></div>
+
+<div class="beat"><div class="tc">12.5–14.5s</div><div>
+  <div class="bt">5 · Reassembly</div>
+  <div class="bd">Everything snaps back together into the whole device. Camera settles to a clean hero front angle, screen glowing.</div>
+  <span class="src ai">AI Video · or 3D Render</span></div></div>
+
+<div class="beat"><div class="tc">14.5–15.0s</div><div>
+  <div class="bt">6 · PulmOne End Card</div>
+  <div class="bd">Soft white flash to a clean end card: PulmOne logo centered, tagline "Full PFT. One Device."</div>
+  <span class="src render">Graphic · overlay in editor</span></div></div>
+
+<!-- ================= MASTER STYLE BLOCK ================= -->
+<h2 class="sec">The Ultimate Prompt · Master Style Block</h2>
+<p class="lead">This is the DNA. Paste this block at the top of every shot prompt so the product and look stay identical across clips. Then add the shot line beneath it.</p>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Master Style Block</span><span class="pmeta">reuse on every shot</span></div>
+  <div class="pbody">
+    <div class="plabel">Positive · always include</div>
+    <div class="ptext" id="p-master">Photorealistic cinematic product film of the PulmOne MiniBox plus, a compact medical pulmonary function testing device. Smooth matte white rounded tower body on a wide soft pedestal base, gentle beige top cap. A dark charcoal Microsoft Surface tablet is mounted in a cradle on the right front face, screen softly glowing. A white handheld spirometry handpiece with a frosted translucent mouthpiece sits on the left, connected by a slim black cable. The blue PulmOne logo is printed on the lower front housing. Studio product lighting, seamless graduated background, glossy dark reflective floor, soft rim light, shallow depth of field, 50mm lens, volumetric light, premium high end medical technology aesthetic, ultra clean, hyper detailed, 4k.</div>
+    <button class="copybtn" data-copy="p-master">⧉ Copy master block</button>
+    <div class="plabel" style="margin-top:16px;">Negative · always include</div>
+    <div class="ptext neg" id="p-neg">distorted logo, warped text, extra buttons, gibberish letters, deformed geometry, melting, people, hands, hospital clutter, cables everywhere, watermark, low resolution, plastic toy look, oversaturated.</div>
+    <button class="copybtn" data-copy="p-neg">⧉ Copy negative</button>
+  </div>
+</div>
+
+<!-- ================= PER SHOT PROMPTS ================= -->
+<h2 class="sec">Per-Shot Prompts</h2>
+<p class="lead">Master block + the shot line = the full prompt you paste. Each "Full prompt" button copies both together, ready to drop in. Use the real product photo as the first frame / reference image on every AI shot.</p>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Shot 1 · The Reveal &amp; 360</span><span class="pmeta">~4s · image-to-video<br>first frame: real photo</span></div>
+  <div class="pbody">
+    <div class="plabel">Shot line</div>
+    <div class="ptext" id="s1">The MiniBox plus rests in a dark void of soft graduated light. Slow cinematic 360 degree orbit around the device, camera drifting from a low hero angle rising to eye level. Faint volumetric light rays and floating dust motes, the white housing catching a moving soft rim light. Weightless, elegant, awe inspiring reveal. Smooth steady motion, no cuts.</div>
+    <button class="copybtn" data-copy="s1">⧉ Copy shot line</button>
+    <button class="copybtn" data-copy="full-1">⧉ Copy full prompt</button>
+  </div>
+</div>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Shot 2 · The Handpiece Floats</span><span class="pmeta">~2.5s · image-to-video</span></div>
+  <div class="pbody">
+    <div class="plabel">Shot line</div>
+    <div class="ptext" id="s2">Close on the left side of the device. The white handpiece with its frosted translucent mouthpiece gently detaches and floats upward, suspended weightless in space as if in zero gravity, slowly rotating. The slim black cable trails behind in a graceful floating arc. Soft blue light glints across the sensor. Macro tabletop cinematography, dreamy and precise.</div>
+    <button class="copybtn" data-copy="s2">⧉ Copy shot line</button>
+    <button class="copybtn" data-copy="full-2">⧉ Copy full prompt</button>
+  </div>
+</div>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Shot 3 · The Tablet Ignites</span><span class="pmeta">~2.5s · image-to-video</span></div>
+  <div class="pbody">
+    <div class="plabel">Shot line</div>
+    <div class="ptext" id="s3">Camera pushes in slowly on the mounted Surface tablet. The screen ignites from black. A glowing blue miniBox plus logo pulses to life at the center, soft concentric rings of light rippling outward like a calm heartbeat, reflected faintly in the glossy white housing beside it. Cinematic bloom, clean tech hero shot, shallow focus.</div>
+    <button class="copybtn" data-copy="s3">⧉ Copy shot line</button>
+    <button class="copybtn" data-copy="full-3">⧉ Copy full prompt</button>
+  </div>
+</div>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Shot 4 · Inside the MiniBox</span><span class="pmeta">use the 3D Showcase render<br>AI backup line below</span></div>
+  <div class="pbody">
+    <div class="callout-note" style="margin-top:0;">Render this beat from <b>MiniBox_3D_Showcase</b> (seek ~9–13s, screen record it). It shows your true 16.3 L canister and real callouts. Only use the AI line below if you want a dreamier, less literal look and accept invented internals.</div>
+    <div class="plabel">AI backup shot line</div>
+    <div class="ptext" id="s4">The white top cap lifts away and the device gently disassembles in midair into a clean organized exploded view of floating components. A large softly glowing translucent cylindrical canister sits at the center, precision engineered modules suspended around it connected by thin glowing light lines. Minimal holographic technical callout lines. Futuristic medical engineering visualization, dark studio, elegant, slow float.</div>
+    <button class="copybtn" data-copy="s4">⧉ Copy shot line</button>
+    <button class="copybtn" data-copy="full-4">⧉ Copy full prompt</button>
+  </div>
+</div>
+
+<div class="pblock">
+  <div class="phead"><span class="pn">Shot 5 · Reassembly &amp; Hero</span><span class="pmeta">~2s · image-to-video</span></div>
+  <div class="pbody">
+    <div class="plabel">Shot line</div>
+    <div class="ptext" id="s5">The floating components smoothly reassemble into the complete MiniBox plus. The camera settles to a clean straight on hero front angle, tablet screen glowing softly, handpiece docked on the left. Everything comes to rest, calm and confident. A gentle soft white light begins to bloom from the edges.</div>
+    <button class="copybtn" data-copy="s5">⧉ Copy shot line</button>
+    <button class="copybtn" data-copy="full-5">⧉ Copy full prompt</button>
+  </div>
+</div>
+
+<!-- ================= VO + AUDIO ================= -->
+<h2 class="sec">Voiceover &amp; Sound</h2>
+<p class="lead">15 second read, calm and confident. For Veo 3 you can paste these lines into the prompt as spoken audio. Otherwise record a VO and lay it under the cut.</p>
+
+<div class="vo">
+  <div class="voline"><div class="vt">0–4s</div><div class="vw">One device. Every test.<small>over the reveal</small></div></div>
+  <div class="voline"><div class="vt">4–7s</div><div class="vw">Spirometry. Lung volumes. Diffusion.<small>over handpiece float</small></div></div>
+  <div class="voline"><div class="vt">7–9s</div><div class="vw">Guided, automated, effortless.<small>over tablet ignition</small></div></div>
+  <div class="voline"><div class="vt">9–13s</div><div class="vw">True plethysmography. No body box. No compromise.<small>over the internals</small></div></div>
+  <div class="voline"><div class="vt">13–15s</div><div class="vw">The MiniBox plus. Full PFT, reinvented.<small>over the end card</small></div></div>
+</div>
+
+<div class="callout-note" style="margin-top:16px;">
+  <b>SOUND DESIGN.</b> Ambient cinematic pad building slowly, a deep sub whoosh on the handpiece float and again on the disassembly, a soft rising chime the instant the tablet ignites, and a warm resolving note landing on the PulmOne logo. Silence for a half beat right before the end card hits harder than any music.
+</div>
+
+<!-- ================= TOOL CHEAT SHEET ================= -->
+<h2 class="sec">Tool Cheat Sheet</h2>
+<div class="tools">
+  <div class="tool">
+    <div class="tn">Veo 3 · via Gemini / Flow</div>
+    <div class="tsub">best all-rounder + native audio</div>
+    <ul>
+      <li>8 second clips, so Shots 1 and (2+3) can each be one generation.</li>
+      <li>Use Frames to Video: upload the real MiniBox photo as the start frame to lock fidelity.</li>
+      <li>It can speak the VO, paste the line in quotes inside the prompt.</li>
+      <li>16:9, request "no on screen text" so it does not add captions.</li>
+    </ul>
+  </div>
+  <div class="tool">
+    <div class="tn">Higgsfield</div>
+    <div class="tsub">best cinematic camera control</div>
+    <ul>
+      <li>Image to video from the real photo, then apply a camera preset: Orbit for Shot 1, Push In for Shot 3.</li>
+      <li>Great for the weightless float, use slow motion strength.</li>
+      <li>Stitch its 5s clips for the exterior beats.</li>
+    </ul>
+  </div>
+  <div class="tool">
+    <div class="tn">Kling 2.1 / Runway Gen-4</div>
+    <div class="tsub">strong image-to-video backups</div>
+    <ul>
+      <li>Start frame = real photo. Kling supports start AND end frame for tight control.</li>
+      <li>5 to 10s clips, keep motion "smooth / cinematic".</li>
+      <li>Good fallback if Veo access is limited.</li>
+    </ul>
+  </div>
+  <div class="tool">
+    <div class="tn">Consistency Rules</div>
+    <div class="tsub">follow these on every shot</div>
+    <ul>
+      <li>Always feed the same real product photo as the reference frame.</li>
+      <li>Keep the master style block identical, word for word.</li>
+      <li>Lock the seed if the tool allows it.</li>
+      <li>Render 2 or 3 takes per shot, pick the cleanest, that is normal.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  MiniBox+ Cinematic Film · Script &amp; Ultimate Prompt Pack v1.0 · DRAFT for review with Paul before Avi.<br>
+  Copy buttons put text on your clipboard. Paste with <span class="kbd">Ctrl</span> + <span class="kbd">V</span> into your video tool.
+</footer>
+
+</div>
+
+<script>
+  const MASTER = document.getElementById('p-master').textContent.trim();
+  const NEG = document.getElementById('p-neg').textContent.trim();
+  function fullPrompt(n){
+    const line = document.getElementById('s'+n).textContent.trim();
+    return MASTER + '\n\n' + line + '\n\nAvoid: ' + NEG;
+  }
+  document.querySelectorAll('.copybtn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.dataset.copy;
+      let text;
+      if(key.startsWith('full-')) text = fullPrompt(key.split('-')[1]);
+      else text = document.getElementById(key).textContent.trim();
+      try{ await navigator.clipboard.writeText(text); }
+      catch(e){
+        const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);
+        ta.select();document.execCommand('copy');document.body.removeChild(ta);
+      }
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied'; btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('copied'); }, 1400);
+    });
+  });
+</script>
+</body>
+</html>

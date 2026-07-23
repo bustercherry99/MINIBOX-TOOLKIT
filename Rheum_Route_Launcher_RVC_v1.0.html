@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rheum Route: Rockville Centre</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1e26; --ink:#e8eaf0; --sub:#9aa3b2; --accent:#2f81f7; --green:#2ea44f; --amber:#d4a72c; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink); font-family:-apple-system,Segoe UI,Roboto,sans-serif; padding:16px; max-width:520px; margin:0 auto; }
+  h1 { font-size:1.25rem; margin-bottom:2px; }
+  .sub { color:var(--sub); font-size:.85rem; margin-bottom:14px; }
+  .bigbtn { display:block; text-align:center; background:var(--green); color:#fff; text-decoration:none; font-weight:700; font-size:1.05rem; padding:16px; border-radius:12px; margin-bottom:18px; }
+  .card { background:var(--card); border-radius:12px; padding:14px; margin-bottom:12px; }
+  .card.verify { border-left:4px solid var(--amber); }
+  .card.indep { border-left:4px solid var(--green); }
+  .num { color:var(--sub); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; }
+  .name { font-weight:700; font-size:1.02rem; margin:2px 0; }
+  .addr { color:var(--sub); font-size:.86rem; margin-bottom:10px; }
+  .tag { font-size:.7rem; padding:2px 8px; border-radius:99px; vertical-align:middle; }
+  .tag.v { background:#3a3115; color:var(--amber); }
+  .tag.i { background:#15301d; color:#5fd38a; }
+  .row { display:flex; gap:8px; }
+  .btn { flex:1; text-align:center; text-decoration:none; padding:10px; border-radius:9px; font-size:.9rem; font-weight:600; }
+  .nav { background:var(--accent); color:#fff; }
+  .call { background:#2a303c; color:var(--ink); }
+  .foot { color:var(--sub); font-size:.75rem; margin-top:16px; line-height:1.5; }
+</style>
+</head>
+<body>
+  <h1>Rheumatology Route</h1>
+  <div class="sub">6 stops out of Rockville Centre, closest first. Yellow edge means call to verify affiliation before you burn the visit.</div>
+
+  <a class="bigbtn" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=206+W+Park+Ave%2C+Long+Beach%2C+NY+11561&waypoints=30+Hempstead+Ave%2C+Rockville+Centre%2C+NY+11570%7C2000+N+Village+Ave%2C+Rockville+Centre%2C+NY+11570%7C877+Stewart+Ave%2C+Garden+City%2C+NY+11530%7C1157+Broadway%2C+Hewlett%2C+NY+11557%7C660+Central+Ave%2C+Cedarhurst%2C+NY+11516">&#9654;&nbsp; Run Full Route (6 stops)</a>
+
+  <div class="card indep">
+    <div class="num">Stop 1 &middot; Rockville Centre <span class="tag i">Independent</span></div>
+    <div class="name">Long Island Rheumatology &middot; Dr. Van de Stouwe</div>
+    <div class="addr">30 Hempstead Ave, Unit 156, Rockville Centre, NY 11570</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=30+Hempstead+Ave%2C+Rockville+Centre%2C+NY+11570">Navigate</a>
+      <a class="btn call" href="tel:5168728235">Call 516 872 8235</a>
+    </div>
+  </div>
+
+  <div class="card verify">
+    <div class="num">Stop 2 &middot; Rockville Centre <span class="tag v">Verify first</span></div>
+    <div class="name">Dr. Joseph Cohn</div>
+    <div class="addr">2000 N Village Ave, Ste 407, Rockville Centre, NY 11570</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=2000+N+Village+Ave%2C+Rockville+Centre%2C+NY+11570">Navigate</a>
+      <a class="btn call" href="tel:5166785330">Call 516 678 5330</a>
+    </div>
+  </div>
+
+  <div class="card indep">
+    <div class="num">Stop 3 &middot; Garden City <span class="tag i">Independent</span></div>
+    <div class="name">PRINE Rheumatology (follow up visit)</div>
+    <div class="addr">877 Stewart Ave, Ste 16, Garden City, NY 11530</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=877+Stewart+Ave%2C+Garden+City%2C+NY+11530">Navigate</a>
+    </div>
+  </div>
+
+  <div class="card verify">
+    <div class="num">Stop 4 &middot; Hewlett <span class="tag v">Verify first</span></div>
+    <div class="name">Rheumatology Consultants &middot; Drs. Cohen and Porges</div>
+    <div class="addr">1157 Broadway, Unit 1, Hewlett, NY 11557</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=1157+Broadway%2C+Hewlett%2C+NY+11557">Navigate</a>
+      <a class="btn call" href="tel:5162954481">Call 516 295 4481</a>
+    </div>
+  </div>
+
+  <div class="card indep">
+    <div class="num">Stop 5 &middot; Cedarhurst <span class="tag i">Independent</span></div>
+    <div class="name">Dr. Jonathan Klahr</div>
+    <div class="addr">660 Central Ave, Cedarhurst, NY 11516</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=660+Central+Ave%2C+Cedarhurst%2C+NY+11516">Navigate</a>
+      <a class="btn call" href="tel:5163747122">Call 516 374 7122</a>
+    </div>
+  </div>
+
+  <div class="card indep">
+    <div class="num">Stop 6 &middot; Long Beach <span class="tag i">Independent</span></div>
+    <div class="name">Long Beach Rheumatology &middot; Dr. Gupta</div>
+    <div class="addr">206 W Park Ave, Long Beach, NY 11561</div>
+    <div class="row">
+      <a class="btn nav" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=206+W+Park+Ave%2C+Long+Beach%2C+NY+11561">Navigate</a>
+      <a class="btn call" href="tel:5168973885">Call 516 897 3885</a>
+    </div>
+  </div>
+
+  <div class="foot">Full route starts from wherever you are when you tap it, loops RVC to Garden City, comes down through the Five Towns, and ends in Long Beach. Skip a stop in Google Maps by tapping the stop list and removing it.</div>
+</body>
+</html>

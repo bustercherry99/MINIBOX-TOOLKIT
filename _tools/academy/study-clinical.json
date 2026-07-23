@@ -1,0 +1,393 @@
+{
+ "clinical_overview": {
+  "minutes": 9,
+  "intro": "Almost every conversation you have in a pulmonology or allergy office comes back to one question: what can this patient's lungs actually do? A pulmonary function test answers that in three pieces, and each piece is a different box the practice either owns or does not. If you know what those pieces measure and what a diseased lung does to them, you stop being the person waiting for the doctor to finish talking and start being the person who can finish the sentence.",
+  "sections": [
+   {
+    "h": "Three tests, one picture",
+    "p": "A PFT is not one test. It is a group of noninvasive breathing tests that measure how well the lungs work, and each one answers a different question. Reps get in trouble when they treat all of it as \"spirometry,\" because spirometry is only the first of the three.",
+    "visual": {
+     "t": "table",
+     "head": [
+      "Test",
+      "What it measures"
+     ],
+     "rows": [
+      [
+       "Spirometry",
+       "How much air you can exhale, and how fast you can empty your lungs"
+      ],
+      [
+       "Lung volume test",
+       "How much air your lungs can hold, and how much is left after you exhale"
+      ],
+      [
+       "Lung diffusion capacity (DLCO)",
+       "How easily oxygen gets from the lungs into your bloodstream"
+      ]
+     ],
+     "note": "A complete PFT can take around one and a half hours. Shorter PFTs run about 15 minutes for adults and 15 to 30 minutes for children."
+    },
+    "key": "Spirometry is one third of a PFT. The other two thirds are volumes and diffusion."
+   },
+   {
+    "h": "Three gates, in order",
+    "p": "Every PFT report gets read the same way, and it is always the same three questions in the same order. <b>Gate 1, airflow:</b> is air getting out fast enough? That is the FEV1/FVC ratio. <b>Gate 2, size:</b> are the lungs the right size? That is TLC, total lung capacity, and spirometry cannot give it to you. <b>Gate 3, gas transfer:</b> once air is in there, does it get into the blood? That is DLCO. Walk the gates in order and you almost never get lost.",
+    "visual": {
+     "t": "svg",
+     "id": "gates"
+    },
+    "list": [
+     "Gate 1 fails and gate 2 is fine: air is getting stuck on the way out, which is obstruction",
+     "Gate 1 is fine and gate 2 fails: the lungs are small, which is restriction",
+     "Gate 3 tells you whether the alveoli themselves and their blood supply are damaged",
+     "Normal and abnormal at each gate are set by the limits of normal for that patient, not by a number you memorize"
+    ],
+    "key": "Airflow, then size, then transfer. Same three gates, every single report."
+   },
+   {
+    "h": "Volumes and capacities",
+    "p": "A volume is one slice of a breath. A capacity is two or more volumes added together, which is the only thing that makes the vocabulary hard. Tidal volume is the quiet breath you are taking right now. On top of that you can pull in more (inspiratory reserve) and push out more (expiratory reserve). What is left after the hardest exhale you can manage is residual volume, and it never leaves.",
+    "visual": {
+     "t": "img",
+     "src": "volumes-capacities",
+     "cap": "The classic spirogram. Notice that the four capacities on the right are just the volumes on the left stacked up: inspiratory capacity 3000 mL is tidal volume plus inspiratory reserve, functional residual capacity 3000 mL is expiratory reserve plus residual volume, and total lung capacity 6000 mL is all four volumes together."
+    },
+    "list": [
+     "Tidal volume (VT) 500 mL: the air in one relaxed breath",
+     "Inspiratory reserve volume (IRV) 2500 mL: the extra you can pull in on top of a normal breath",
+     "Expiratory reserve volume (ERV) 1500 mL: the extra you can push out below a normal breath",
+     "Residual volume (RV) 1500 mL: what stays behind no matter how hard you blow",
+     "Vital capacity (VC) 4500 mL: everything you can move in one big breath, top to bottom",
+     "Total lung capacity (TLC) 6000 mL: vital capacity plus the residual volume you cannot exhale"
+    ]
+   },
+   {
+    "h": "The air you cannot exhale",
+    "p": "Here is the sentence that sells a lung volume box. Residual volume is the air still sitting in the lungs after a maximal exhale, and functional residual capacity is the air still in there after a normal relaxed breath out. Neither one ever comes through the mouthpiece, so a spirometer cannot measure them. If a practice only owns spirometry, TLC is a blank on their report, and TLC is gate 2. Tap through the trace and watch which bands never cross the baseline.",
+    "visual": {
+     "t": "svg",
+     "id": "spirogram"
+    },
+    "key": "You cannot blow out residual volume, so spirometry alone can never tell you total lung capacity."
+   },
+   {
+    "h": "Obstruction versus restriction",
+    "p": "Two diseases, two completely different shapes, same total-lung-capacity yardstick. In an obstructive patient the airways cannot empty properly, so air gets trapped and the residual volume swells: the lungs are big but full of stale air. In a restrictive patient the lungs cannot expand and move air in and out at all, so nearly every compartment shrinks, and just about every parameter on every test tends to land under the lower limit of normal.",
+    "visual": {
+     "t": "svg",
+     "id": "compartbars"
+    },
+    "list": [
+     "Obstructive: air trapping, a growing residual volume, and lungs that stay inflated",
+     "Restrictive: a smaller lung across the board, with parameters falling under the lower limit of normal",
+     "Emphysema adds alveolar destruction on top of the trapping, which is why its DLCO is usually low"
+    ],
+    "key": "Obstruction traps air in. Restriction never lets it in. Both feel like breathlessness to the patient."
+   },
+   {
+    "h": "Inside a COPD lung",
+    "p": "This is the picture worth having in your head when a physician says COPD. Two separate things are going wrong. The bronchiole, the small airway, is narrowed and clogged with mucus, which is why air cannot get out quickly. Deeper in, the alveolar walls are breaking down, so the surface area available for gas exchange is disappearing. The first problem shows up on spirometry. The second one only shows up on DLCO.",
+    "visual": {
+     "t": "img",
+     "src": "copd-pathology",
+     "cap": "Health on one side, COPD on the other. On the left the airway is open and the alveolar sacs are intact. On the right, mucus narrows the bronchiole (that is the airflow problem) and the alveolar walls have broken down into large empty spaces (that is the gas transfer problem)."
+    },
+    "key": "Emphysema damages the airway and the air sac. Spirometry sees one of those, DLCO sees the other."
+   },
+   {
+    "h": "Restriction comes from two places",
+    "p": "Restriction is a reduction in the size of the lung, but the cause is not always the lung. Parenchymal restriction means the lung tissue itself is stiff or scarred. Extra-parenchymal restriction means the lung is fine and something outside it is in the way: the pleura, the chest wall, the abdomen, or breathing muscles that are too weak to pull a full breath in. That distinction matters in the room, because a physician chasing weight or a neuromuscular diagnosis is having a different conversation than one chasing fibrosis.",
+    "visual": {
+     "t": "img",
+     "src": "restrictive-causes",
+     "cap": "The two branches of restrictive disease. Everything on the parenchymal side is the lung tissue itself. Everything on the extra-parenchymal side is the pleura, the chest wall, the abdomen, or the muscles, with normal lung tissue caught inside a container that will not open."
+    },
+    "key": "Small lungs do not always mean sick lungs. Sometimes the box around them is the problem."
+   },
+   {
+    "h": "Patterns in common diseases",
+    "p": "Once you have all five measurements, each disease leaves a fingerprint. Read the table down a column, not across a row: one column is one patient's whole story. Notice that muscle weakness gets its own column even though the lung tissue is healthy, and notice that DLCO is the row that separates damage to the air sacs from a plain airflow problem.",
+    "visual": {
+     "t": "img",
+     "src": "pattern-table",
+     "cap": "Respiratory patterns in common diseases. Rows are the measurements (FVC, FEV1, FEV1/FVC, TLC, DLCO) and columns are the disease. The DLCO row is the tie breaker: alveolar destruction drags it down, a purely airway problem does not have to."
+    },
+    "key": "One column equals one fingerprint. You need all five rows to complete it."
+   },
+   {
+    "h": "Normal is a personal number",
+    "p": "There is no universal normal lung. Predicted values depend on height, age and sex, and historically they depended on ethnicity too. GLI, the Global Lung Function Initiative, is the current recommended standard because it is built on a large, diverse global population and takes a race-neutral approach, so the equations do not require race or ethnicity to be entered. The American Thoracic Society and the European Respiratory Society both endorse GLI for interpreting PFTs. If a physician asks whose normal you are comparing their patient to, GLI is the answer.",
+    "visual": {
+     "t": "img",
+     "src": "gli-2012",
+     "cap": "GLI 2012 and the populations behind it. The point of the map and the sample sizes is credibility: these equations are pooled from a large, geographically spread population rather than one local cohort, which is exactly why the major societies point to them."
+    },
+    "key": "GLI is the recommended reference standard, endorsed by ATS and ERS, and it is race-neutral."
+   }
+  ],
+  "angle": "This module gives you the one line that reframes a practice's whole setup: spirometry can never measure residual volume or total lung capacity, so a spirometry-only office is answering gate 1 and guessing at gates 2 and 3. Ask what they do today when spirometry comes back abnormal but the ratio looks fine, or when they suspect emphysema and need a DLCO. If the answer is \"we refer it out,\" that is revenue and continuity of care leaving the building, and the MiniBox+ line is built to keep volumes and diffusion in the room. Lead with the three gates, not with the box."
+ },
+ "respiratory_disease": {
+  "minutes": 11,
+  "intro": "This is the module that lets you stand next to a tech during a test and next to a physician during a readout. PFTs have been used for decades to diagnose lung disease, explain shortness of breath, and track whether a treatment is working. Everything in here is either a number a doctor will quote at you, or a coaching point that decides whether the test in the next room is usable or garbage. Both are worth money to the practice.",
+  "sections": [
+   {
+    "h": "The four numbers",
+    "p": "Nearly every spirometry conversation runs on four values. <b>FVC</b> is the total volume of air exhaled after a maximal inspiration to total lung capacity, in liters. <b>FEV1</b> is the volume exhaled in just the first second, also in liters. <b>FEV1/FVC</b> is that first second expressed as a percent of the whole breath, and it is the ratio everything hinges on. <b>FEF25-75%</b> is the mean expiratory flow during the middle half of the maneuver.",
+    "visual": {
+     "t": "img",
+     "src": "fev1-fvc-vt",
+     "cap": "Volume against time. The dashed line at one second cuts the trace at FEV1, and the flat plateau at the top is FVC, the total volume that came out. Both numbers come from the same single blow."
+    },
+    "list": [
+     "FEV1/FVC is the airflow gate: a low ratio means air is getting stuck on the way out",
+     "FEF25-75% reflects flow through later emptying airways, not necessarily the small airways",
+     "In asthma or obstructive disease, FEF25-75% is measuring flow from the more obstructed airways, which could be small or larger",
+     "Treat FEF25-75% as supporting evidence, never as the headline"
+    ],
+    "key": "One breath, four numbers. The ratio FEV1/FVC is the one that decides obstruction."
+   },
+   {
+    "h": "What good effort looks like",
+    "p": "A usable spirometry effort has a shape, and you can spot a bad one from across the room. The volume-time curve should flatten into a plateau, and total expiration should last at least six seconds. If the volume is still climbing when the patient stops, the test never found its true FVC, and that result has to be interpreted with caution. Coaching the patient to keep pushing when they think they are empty is the single highest-value thing an office staffer can learn.",
+    "visual": {
+     "t": "img",
+     "src": "vt-normal-vs-obstructive",
+     "cap": "Panel A is what you want: the curve levels off into a clear plateau near 4.4 L. Panel B never plateaus. At eight seconds the volume is still rising and has only reached 2.7 L, so the real FVC is somewhere above what got recorded."
+    },
+    "list": [
+     "Free of artifacts: no cough during the first second, no glottis closure, no early cut-off, no leak, no obstructed mouthpiece, and no effort that trails off",
+     "Good start: extrapolated volume under 5% of FVC or 0.15 L, whichever is greater",
+     "Satisfactory exhalation: at least 6 seconds (3 seconds for children under 10), or a clear plateau in the volume-time curve",
+     "A patient who cannot or should not keep exhaling ends the maneuver, and that is fine"
+    ],
+    "key": "No plateau, no confidence. A curve still rising at the end has not found the patient's real FVC."
+   },
+   {
+    "h": "Three good blows, then stop",
+    "p": "Acceptability is about one maneuver. Repeatability is about the session. The ATS rules give the tech a clear finish line, which matters because staff who do not know when to stop either quit too early or exhaust the patient for nothing.",
+    "visual": {
+     "t": "steps",
+     "items": [
+      {
+       "h": "Get three acceptable spirograms",
+       "p": "Three efforts that pass the within-maneuver checks. Only then do you start comparing them to each other."
+      },
+      {
+       "h": "Compare the two largest FVC values",
+       "p": "They must be within 0.150 L of each other. This is the test asking whether the patient did the same thing twice."
+      },
+      {
+       "h": "Compare the two largest FEV1 values",
+       "p": "Same rule, within 0.150 L. Both criteria have to be met, not one."
+      },
+      {
+       "h": "If both are met, you are done",
+       "p": "The session can be concluded. There is no prize for extra blows and a tired patient gives worse data."
+      },
+      {
+       "h": "If not, keep going with limits",
+       "p": "Continue testing until the criteria are met, or a total of eight tests have been performed, or the patient cannot or should not continue."
+      },
+      {
+       "h": "Save at least three",
+       "p": "Keep a minimum of the three satisfactory maneuvers with the record."
+      }
+     ]
+    },
+    "key": "Three acceptable blows, two largest FVC and FEV1 within 0.150 L, maximum eight attempts."
+   },
+   {
+    "h": "Landmarks on the loop",
+    "p": "The flow-volume loop is the same maneuver plotted differently: airflow in liters per second against lung volume instead of against time. Physicians read shape here rather than numbers, which is why a loop tells you things a table cannot. Learn the landmarks so you can follow along when someone points at a screen.",
+    "visual": {
+     "t": "img",
+     "src": "loop-landmarks",
+     "cap": "The expiratory half sits above the line, the inspiratory half below it. Peak flow is the sharp spike right after the blow starts, then FEF25, FEF50 and FEF75 mark flow at progressive points through the breath, and FVC is where the loop closes. FIV1 and FIF50 come from the way back in."
+    },
+    "list": [
+     "Expiration: Peak Flow, FEF25, FEF50, FEF75, FEV0.5, FEV1, FEV3.0, FVC",
+     "Inspiration: FIV1 and FIF50",
+     "A sharp peak flow is a fingerprint of real effort, and a blunt one is a warning sign"
+    ]
+   },
+   {
+    "h": "The loop changes shape",
+    "p": "This is the fastest pattern recognition in the whole field. A normal loop has a sharp peak and a steady fall. Obstruction sags on the way down, because as lung volume drops the airways narrow and collapse and the patient simply cannot maintain flow. Restriction keeps a fairly normal shape but shrinks, a small loop squeezed into a narrow volume. A fixed upper airway obstruction flattens the top and the bottom, because the blockage limits flow in both directions. Flip between them and watch what actually moves.",
+    "visual": {
+     "t": "svg",
+     "id": "fvloop"
+    },
+    "key": "Obstruction sags, restriction shrinks, a fixed upper airway blockage flattens both halves."
+   },
+   {
+    "h": "Obstruction versus restriction",
+    "p": "Here are the two classic patterns side by side. Look at what the ratio does, because that is where people get it backwards. In obstruction, FEV1 falls faster than FVC, so the ratio drops. In restriction, both fall together, so the ratio stays normal or even rises. Restriction shows up as a small lung, and TLC is what confirms it.",
+    "visual": {
+     "t": "table",
+     "head": [
+      "Measurement",
+      "Obstructive",
+      "Restrictive"
+     ],
+     "rows": [
+      [
+       "FVC",
+       "Normal or down",
+       "Down"
+      ],
+      [
+       "FEV1",
+       "Down",
+       "Down"
+      ],
+      [
+       "FEF25-75%",
+       "Down",
+       "Normal to down"
+      ],
+      [
+       "FEV1/FVC",
+       "Down",
+       "Normal to up"
+      ],
+      [
+       "TLC",
+       "Normal or up",
+       "Down"
+      ]
+     ],
+     "note": "Obstructive disorders limit expiratory airflow so the airways cannot empty as fast as normal. Restrictive disorders reduce lung volume and lung compliance."
+    },
+    "list": [
+     "Obstructive examples: asthma, emphysema, cystic fibrosis",
+     "Restrictive examples: interstitial fibrosis, scoliosis, obesity, lung resection, neuromuscular disease, cystic fibrosis",
+     "Cystic fibrosis appears on both lists, which is a good reminder that patients do not read the textbook"
+    ],
+    "key": "Obstruction pulls the ratio down. Restriction leaves it normal or high and pulls TLC down."
+   },
+   {
+    "h": "Every pattern on one grid",
+    "p": "Real reports are messier than two patterns. Five values can be low for reasons that have nothing to do with disease, including a patient who simply did not try hard enough, and the classification below is how that gets sorted out. Notice how often the comments column says the same thing: you need lung volumes to finish the job.",
+    "visual": {
+     "t": "table",
+     "head": [
+      "Pattern",
+      "FEV1",
+      "FVC",
+      "FEV1/FVC",
+      "What it means"
+     ],
+     "rows": [
+      [
+       "Obstructive",
+       "Normal or down",
+       "Normal",
+       "Down",
+       "Airflow limitation"
+      ],
+      [
+       "Restrictive",
+       "Down",
+       "Down",
+       "Normal or up",
+       "TLC must be reduced to confirm it"
+      ],
+      [
+       "Non-specific",
+       "Down",
+       "Down",
+       "Normal",
+       "TLC is normal. Extra testing helps, such as bronchodilator response or airway resistance. When TLC is not available this has been described in population studies as preserved ratio impaired spirometry, or PRISm, in current and former smokers"
+      ],
+      [
+       "Muscle weakness",
+       "Down",
+       "Down",
+       "Normal",
+       "Lack of a sharp peak expiratory flow"
+      ],
+      [
+       "Suboptimal effort",
+       "Down",
+       "Down",
+       "Normal",
+       "Lack of a sharp peak expiratory flow"
+      ],
+      [
+       "Mixed disorder",
+       "Down",
+       "Down",
+       "Down",
+       "Lung volumes are needed to confirm"
+      ]
+     ],
+     "note": "Reduced and elevated results are defined by the lower and upper limits of normal. Muscle weakness and poor effort can look identical on the numbers, which is why the shape of the curve matters."
+    },
+    "key": "Three of the six patterns end with the same instruction: get lung volumes."
+   },
+   {
+    "h": "GOLD versus ATS",
+    "p": "This is a live argument in real clinics and it is worth knowing which side of it your customer sits on. GOLD defines obstruction as FEV1/FVC below 70%, a fixed cut point. ATS defines it as FEV1/FVC below the lower limit of normal for that specific patient. In adults 65 and older with respiratory symptoms who are current or previous smokers, the GOLD criteria proved more sensitive for COPD-related obstruction, agreed better with an expert panel, and did a better job flagging patients who went on to have exacerbations, hospitalization or worse. But GOLD can miss up to 50% of young adults with obstructive lung disease and overdiagnoses healthy nonsmokers, so physicians should use ATS criteria in patients under 65 regardless of smoking status, and in nonsmokers 65 and older.",
+    "visual": {
+     "t": "img",
+     "src": "gold-staging",
+     "cap": "The GOLD severity table for COPD. Two things to notice: severity is graded on FEV1 as a percent of predicted, and it is graded after a bronchodilator, not before. A pre-bronchodilator number does not stage anybody."
+    },
+    "key": "GOLD uses a fixed 70% ratio, ATS uses the patient's own lower limit of normal."
+   },
+   {
+    "h": "Did the inhaler help",
+    "p": "After the baseline test, the patient gets a bronchodilator and blows again. A positive bronchodilator response is an improvement of more than 12% <b>and</b> more than 200 mL. Both, not either. That double threshold exists because a 12% jump on a tiny volume is noise, and 200 mL on a huge lung might just be a better effort the second time.",
+    "visual": {
+     "t": "img",
+     "src": "bd-reversibility",
+     "cap": "A worked case in a 26-year-old male. Read across a row: predicted, lower limit of normal, the actual value, percent predicted, then percent change after the drug. The two loops are the same story in pictures, with the post-bronchodilator loop opening up over the pre-bronchodilator one."
+    },
+    "key": "Bronchodilator response is more than 12% AND more than 200 mL. One without the other does not count."
+   },
+   {
+    "h": "How bad is it",
+    "p": "Grading severity is where percent predicted is slowly losing ground to z-scores. A z-score expresses how far an observed value sits from the predicted value in standard deviations, after accounting for sex, age, height and ancestral grouping, and it is the recommended method for setting the limit of normality and for stating how impaired a patient is. The reason is simple: a fixed percent cut point is harsher on some patients than others, while a z-score means the same thing for everyone.",
+    "visual": {
+     "t": "table",
+     "head": [
+      "z-score",
+      "Severity"
+     ],
+     "rows": [
+      [
+       "Above -1.645",
+       "Normal"
+      ],
+      [
+       "-1.65 to -2.5",
+       "Mild"
+      ],
+      [
+       "-2.51 to -4",
+       "Moderate"
+      ],
+      [
+       "Below -4.1",
+       "Severe"
+      ]
+     ],
+     "note": "A three-level system based on z-scores is the recommended way to state the degree of lung function impairment."
+    },
+    "list": [
+     "The older percent-predicted convention treats above 80% as normal for FEV1, FVC, TLC and DLCO",
+     "Restrictive disease by TLC: under 80% predicted is restriction",
+     "70% to 80% predicted, mild restrictive disease",
+     "60% to 70% predicted, moderate restrictive disease",
+     "50% to 60% predicted, moderately severe restrictive disease",
+     "Under 50% predicted, severe restrictive disease",
+     "Normal values themselves vary with height, age, gender and ethnicity"
+    ],
+    "key": "z-scores are the recommended method. Normal is above -1.645, severe is below -4.1."
+   }
+  ],
+  "angle": "This is the module that earns you credibility with the tech, not just the physician. You can coach an office through the ATS rules in under a minute, three acceptable blows and the two largest FVC and FEV1 within 0.150 L, and bad data is the number one reason a practice quietly stops testing. With the physician, the opening is the pattern grid: non-specific, mixed and restrictive patterns all end with \"get lung volumes to confirm,\" and if the office cannot run volumes and DLCO in house, every one of those patients becomes a referral instead of a completed workup. Ask what happens today to the patient whose ratio is normal but whose FEV1 and FVC are both down."
+ }
+}

@@ -1,0 +1,18 @@
+.vercel
+.env.local
+**/.env.local
+
+# training zip received via WeTransfer — 155MB, exceeds GitHub's 100MB limit,
+# not source we generate, keep the original file wherever it was received too
+wetransfer_2025-training_2026-07-21_1501.zip
+
+# regenerable offline-install build output (rebuilt via node _tools/*.mjs) — the
+# HTML sources are the real thing to protect, these are just packaged copies
+v3/MiniBox_Toolkit_v3_offline.zip
+v3/MiniBox_Toolkit_v3_offline.PREV.zip
+
+# financial/tax documents (EIN/SSN) — stay on disk, never tracked by git
+Patchogue_Submission_v1.0/07_PulmOne_W9_Vendor_Setup.pdf
+Patchogue_Submission_v1.1/08_PulmOne_W9_Vendor_Setup.pdf
+v3/materials/PulmOne-Bank-Information.pdf
+v3/materials/PulmOne-W9.pdf

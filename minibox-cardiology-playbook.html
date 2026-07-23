@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox Cardiology Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1A24;
+    --ink-2:#0E2732;
+    --ink-3:#12303c;
+    --paper:#F1F6F6;
+    --card:#FFFFFF;
+    --line:#DCE6E6;
+    --teal:#0E9E97;
+    --teal-bright:#1FC9BE;
+    --teal-deep:#0A6f6a;
+    --pulse:#E4574C;
+    --muted:#5C7078;
+    --muted-2:#8AA0A6;
+    --readout:#22E0D2;
+    --display:"Space Grotesk",system-ui,sans-serif;
+    --body:"Inter",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:56px;
+  }
+
+  /* Header */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:var(--ink);
+    color:#fff;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .topbar-inner{
+    max-width:1040px;margin:0 auto;
+    padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand .glyph{width:30px;height:30px;flex:0 0 auto;}
+  .brand .word{font-family:var(--display);font-weight:700;letter-spacing:0.02em;font-size:1.02rem;line-height:1;}
+  .brand .sub{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.22em;color:var(--teal-bright);text-transform:uppercase;margin-top:3px;}
+
+  .modeswitch{display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:999px;padding:4px;}
+  .modeswitch button{
+    font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
+    color:rgba(255,255,255,0.7);background:transparent;border:none;cursor:pointer;
+    padding:9px 16px;border-radius:999px;transition:all .18s ease;white-space:nowrap;
+  }
+  .modeswitch button.active{background:var(--teal);color:#fff;}
+  .modeswitch button:focus-visible{outline:2px solid var(--teal-bright);outline-offset:2px;}
+
+  /* Layout */
+  main{max-width:1040px;margin:0 auto;padding:0 20px;}
+  .mode{display:none;}
+  .mode.active{display:block;animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  .eyebrow{font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal-deep);}
+  .section{padding:34px 0;border-bottom:1px solid var(--line);}
+  .section:last-child{border-bottom:none;}
+  h2.sh{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:-0.01em;margin:8px 0 6px;}
+  .lead{color:var(--muted);max-width:60ch;font-size:0.98rem;}
+
+  /* HERO (doctor view) */
+  .hero{background:var(--ink);color:#fff;border-radius:18px;overflow:hidden;margin-top:26px;position:relative;}
+  .hero-inner{padding:38px 30px 30px;position:relative;z-index:2;}
+  .hero .eyebrow{color:var(--teal-bright);}
+  .hero h1{
+    font-family:var(--display);font-weight:700;font-size:2.55rem;line-height:1.02;letter-spacing:-0.02em;
+    margin:14px 0 14px;max-width:16ch;
+  }
+  .hero h1 .em{color:var(--teal-bright);}
+  .hero p{color:rgba(255,255,255,0.74);max-width:52ch;font-size:1.02rem;}
+  .trace-wrap{width:100%;height:90px;margin-top:22px;}
+  .trace{width:100%;height:100%;display:block;}
+  .trace path{fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .trace .base{stroke:rgba(255,255,255,0.10);stroke-width:1.5;}
+  .trace .live{stroke:var(--teal-bright);stroke-width:2.6;filter:drop-shadow(0 0 6px rgba(31,201,190,0.5));}
+  .trace .live.pulse{stroke:var(--pulse);filter:drop-shadow(0 0 6px rgba(228,87,76,0.55));}
+
+  /* thesis chips under hero */
+  .thesis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:26px;}
+  .thesis .cell{background:var(--card);padding:20px 18px;}
+  .thesis .n{font-family:var(--mono);font-size:0.66rem;letter-spacing:0.16em;color:var(--teal-deep);}
+  .thesis .big{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:1;margin:8px 0 6px;letter-spacing:-0.02em;}
+  .thesis .cap{font-size:0.86rem;color:var(--muted);}
+
+  /* evidence pillars */
+  .pillars{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px;}
+  .pillar{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px;position:relative;}
+  .pillar .tag{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#fff;background:var(--teal);display:inline-block;padding:4px 9px;border-radius:6px;}
+  .pillar .tag.risk{background:var(--pulse);}
+  .pillar h3{font-family:var(--display);font-weight:600;font-size:1.16rem;margin:13px 0 7px;}
+  .pillar p{font-size:0.94rem;color:var(--ink);}
+  .pillar .stat{display:flex;align-items:baseline;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);}
+  .pillar .stat .num{font-family:var(--display);font-weight:700;font-size:1.7rem;color:var(--teal-deep);letter-spacing:-0.02em;line-height:1;}
+  .pillar .stat .txt{font-size:0.82rem;color:var(--muted);}
+
+  /* ROI monitor */
+  .roi{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .roi-inputs{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;}
+  .roi-inputs h3{font-family:var(--display);font-weight:600;font-size:1.1rem;margin-bottom:4px;}
+  .roi-inputs .hint{font-size:0.8rem;color:var(--muted);margin-bottom:20px;}
+  .field{margin-bottom:20px;}
+  .field label{display:flex;justify-content:space-between;align-items:baseline;font-size:0.86rem;font-weight:500;margin-bottom:9px;gap:12px;}
+  .field label .val{font-family:var(--mono);font-weight:600;color:var(--teal-deep);font-size:0.92rem;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:5px;background:var(--line);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--teal);border:3px solid #fff;box-shadow:0 1px 6px rgba(10,26,36,0.25);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--teal);border:3px solid #fff;box-shadow:0 1px 6px rgba(10,26,36,0.25);cursor:pointer;}
+  input[type=range]:focus-visible{outline:2px solid var(--teal-bright);outline-offset:4px;}
+  .numfield{display:flex;align-items:center;gap:8px;}
+  .numfield .pre{font-family:var(--mono);color:var(--muted);font-size:0.95rem;}
+  .numfield input[type=number]{font-family:var(--mono);font-size:0.98rem;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%;background:var(--paper);}
+  .numfield input[type=number]:focus-visible{outline:2px solid var(--teal);outline-offset:1px;}
+  .fieldnote{font-size:0.75rem;color:var(--muted-2);margin-top:7px;}
+
+  .roi-out{background:var(--ink);color:#fff;border-radius:16px;padding:26px 24px;position:relative;overflow:hidden;}
+  .roi-out .label{font-family:var(--mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
+  .readout{font-family:var(--mono);font-weight:600;color:var(--readout);letter-spacing:-0.01em;line-height:1;text-shadow:0 0 14px rgba(34,224,210,0.35);}
+  .readout.big{font-size:2.9rem;margin:8px 0 2px;}
+  .roi-sub{font-size:0.82rem;color:rgba(255,255,255,0.6);margin-bottom:22px;}
+  .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+  .roi-cell{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:11px;padding:14px 15px;}
+  .roi-cell .readout{font-size:1.5rem;}
+  .roi-cell .label{margin-bottom:6px;}
+  .roi-foot{font-size:0.72rem;color:rgba(255,255,255,0.42);margin-top:20px;line-height:1.5;}
+
+  /* code stack */
+  .codes{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;}
+  .codes .eyebrow{margin-bottom:14px;display:block;}
+  .code-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line);gap:12px;}
+  .code-row:last-of-type{border-bottom:none;}
+  .code-row .c{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:0.92rem;}
+  .code-row .d{font-size:0.85rem;color:var(--muted);flex:1;}
+  .code-row .p{font-family:var(--mono);font-weight:600;color:var(--teal-deep);font-size:0.92rem;}
+  .code-total{display:flex;justify-content:space-between;margin-top:12px;padding-top:13px;border-top:2px solid var(--ink);font-family:var(--mono);font-weight:600;}
+  .code-total .p{color:var(--teal-deep);}
+
+  /* honest note */
+  .honest{margin-top:22px;background:#EAF4F3;border:1px solid #CDE6E3;border-left:4px solid var(--teal);border-radius:10px;padding:16px 18px;font-size:0.88rem;color:var(--ink-2);}
+  .honest b{color:var(--teal-deep);}
+
+  /* REP MODE */
+  .rep-hero{background:var(--ink-2);color:#fff;border-radius:16px;padding:28px 26px;margin-top:26px;}
+  .rep-hero .eyebrow{color:var(--teal-bright);}
+  .rep-hero h1{font-family:var(--display);font-weight:700;font-size:1.9rem;letter-spacing:-0.015em;margin:12px 0 10px;}
+  .rep-hero p{color:rgba(255,255,255,0.72);max-width:60ch;font-size:0.98rem;}
+  .rep-hero .one{margin-top:16px;font-family:var(--display);font-size:1.15rem;color:var(--teal-bright);font-weight:500;}
+
+  .mind{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;}
+  .mind .m{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px;}
+  .mind .m .k{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal-deep);}
+  .mind .m h4{font-family:var(--display);font-weight:600;font-size:1.05rem;margin:9px 0 7px;}
+  .mind .m p{font-size:0.88rem;color:var(--muted);}
+
+  .qlist{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 22px;}
+  .q{display:flex;gap:16px;padding:15px 0;border-bottom:1px solid var(--line);}
+  .q:last-child{border-bottom:none;}
+  .q .qn{font-family:var(--mono);font-weight:600;color:var(--teal-deep);font-size:0.9rem;flex:0 0 auto;width:26px;}
+  .q .qt{font-size:0.95rem;color:var(--ink);}
+  .q .qt .why{display:block;font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+  .cards{margin-top:20px;display:grid;gap:12px;}
+  .obj{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;}
+  .obj summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:center;gap:14px;font-weight:600;font-size:0.98rem;}
+  .obj summary::-webkit-details-marker{display:none;}
+  .obj summary .icon{flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--pulse);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-size:0.9rem;transition:transform .2s ease;}
+  .obj[open] summary .icon{transform:rotate(45deg);background:var(--teal);}
+  .obj summary .q-txt{flex:1;}
+  .obj .ans{padding:0 20px 20px 60px;color:var(--ink-2);font-size:0.93rem;border-top:1px solid var(--line);margin-top:-1px;padding-top:16px;}
+  .obj .ans .flip{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.08em;color:var(--teal-deep);background:#EAF4F3;border:1px solid #CDE6E3;border-radius:7px;padding:6px 10px;cursor:pointer;}
+  .obj summary:focus-visible{outline:2px solid var(--teal);outline-offset:-2px;}
+
+  .close{margin-top:24px;background:var(--ink);color:#fff;border-radius:16px;padding:28px 26px;}
+  .close .eyebrow{color:var(--teal-bright);}
+  .close h3{font-family:var(--display);font-weight:600;font-size:1.35rem;margin:12px 0 10px;}
+  .close p{color:rgba(255,255,255,0.74);max-width:58ch;font-size:0.96rem;}
+  .close .line{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap;}
+  .close .line span{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.06em;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:9px 13px;color:rgba(255,255,255,0.85);}
+
+  footer{max-width:1040px;margin:0 auto;padding:24px 20px 8px;color:var(--muted-2);font-size:0.72rem;line-height:1.6;}
+
+  @media(max-width:760px){
+    .hero h1{font-size:2rem;}
+    .thesis{grid-template-columns:1fr;}
+    .roi{grid-template-columns:1fr;}
+    .mind{grid-template-columns:1fr;}
+    .roi-grid{grid-template-columns:1fr;}
+    .brand .word{font-size:0.95rem;}
+    .topbar-inner{padding:12px 16px;}
+    main{padding:0 16px;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .trace .live{stroke-dasharray:none !important;stroke-dashoffset:0 !important;animation:none !important;}
+    .mode.active{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="29" height="29" rx="7" stroke="#1FC9BE" stroke-width="2"/>
+        <path d="M5 17 L11 17 L13.5 9 L17 24 L19.5 14 L22 20 L24 17 L27 17" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <div class="word">MiniBox</div>
+        <div class="sub">Cardiology Playbook</div>
+      </div>
+    </div>
+    <div class="modeswitch" role="tablist" aria-label="View mode">
+      <button id="btn-rep" class="active" role="tab" aria-selected="true" onclick="setMode('rep')">Rep Playbook</button>
+      <button id="btn-doc" role="tab" aria-selected="false" onclick="setMode('doc')">Show the Doctor</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= REP MODE ================= -->
+  <section id="mode-rep" class="mode active" role="tabpanel" aria-label="Rep Playbook">
+
+    <div class="rep-hero">
+      <span class="eyebrow">Field brief</span>
+      <h1>Selling PFTs into a cardiology practice</h1>
+      <p>The cardiologist does not want to be a pulmonologist. They want an answer to a question their patient already handed them. Sell the answer, not the machine.</p>
+      <div class="one">One symptom. Two organs. Test in the room the patient is already sitting in.</div>
+    </div>
+
+    <div class="section">
+      <span class="eyebrow">Get in their head</span>
+      <h2 class="sh">Why a cardiologist actually tests</h2>
+      <p class="lead">Every reason maps to a patient already on their schedule. Lead with the one that fits the practice in front of you.</p>
+      <div class="mind">
+        <div class="m">
+          <div class="k">Trigger 01</div>
+          <h4>The breathless patient</h4>
+          <p>Shortness of breath is the symptom the heart and lungs share. A complete study runs about fifteen minutes and tells the cardiologist which organ to treat, instead of treating the heart and hoping.</p>
+        </div>
+        <div class="m">
+          <div class="k">Trigger 02</div>
+          <h4>The amiodarone patient</h4>
+          <p>Baseline diffusion capacity is recommended before amiodarone, and almost nobody gets it. Every atrial fibrillation practice is sitting on scripts with no baseline. This is a safety gap you can close.</p>
+        </div>
+        <div class="m">
+          <div class="k">Trigger 03</div>
+          <h4>The heart failure patient</h4>
+          <p>A quarter to half of heart failure patients also have COPD, and about half of that is undiagnosed. Finding it changes how they dose beta blockers and bronchodilators.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="eyebrow">Open the conversation</span>
+      <h2 class="sh">Discovery questions</h2>
+      <p class="lead">Ask these before you pitch anything. The answers hand you the pitch and size the revenue for the doctor view.</p>
+      <div class="qlist">
+        <div class="q"><div class="qn">01</div><div class="qt">How many of your patients name shortness of breath as a complaint or carry it as a comorbidity?<span class="why">Sizes the whole opportunity and surfaces the differential problem.</span></div></div>
+        <div class="q"><div class="qn">02</div><div class="qt">When a patient's breathlessness could be cardiac or pulmonary, where do you send them today, and how long is the wait?<span class="why">Exposes the referral delay and the answer they are currently missing.</span></div></div>
+        <div class="q"><div class="qn">03</div><div class="qt">How many of your patients are on amiodarone right now, and do you have a baseline diffusion capacity on them?<span class="why">The sharpest hook. Most will pause here.</span></div></div>
+        <div class="q"><div class="qn">04</div><div class="qt">How many PFT referrals leave this practice in a typical month?<span class="why">Turns referral leakage into a dollar figure.</span></div></div>
+        <div class="q"><div class="qn">05</div><div class="qt">When you refer a patient out for testing, do they always come back to you?<span class="why">Names the retention risk of sending patients to a pulmonologist.</span></div></div>
+        <div class="q"><div class="qn">06</div><div class="qt">Who on your staff could run a fifteen minute test that needs almost no training?<span class="why">Preempts the staffing objection before it lands.</span></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="eyebrow">Handle the pushback</span>
+      <h2 class="sh">Objection battlecard</h2>
+      <p class="lead">Tap a question to open the answer. These are the six things a sharp cardiologist will fire back.</p>
+      <div class="cards">
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">I am a cardiologist, not a pulmonologist. This is not my lane.</span></summary>
+          <div class="ans">You are not diagnosing lung disease for its own sake. You are answering the question your patient already brought you: is this breathlessness the heart or the lungs. A complete study runs about fifteen minutes and tells you which, so you treat the right organ the first time. When it is clearly pulmonary, you refer with data instead of a guess.</div>
+        </details>
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">Who runs it? My staff is already maxed out.</span></summary>
+          <div class="ans">A medical assistant runs it after a short training. The MiniBox coaches the patient through the maneuver and flags quality in real time, so you do not need a respiratory therapist. The complete test takes about fifteen minutes, or ten if you run spirometry and diffusion capacity without lung volumes, and it happens during the visit the patient is already in your chair for.</div>
+        </details>
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">Will I actually get paid, or will these get denied?</span></summary>
+          <div class="ans">These are established codes with clear medical necessity when the patient has documented breathlessness or is on a drug like amiodarone. The device produces the report and interpretation that support the claim, and we give you the covered diagnosis list and documentation templates so claims go out clean. This is getting paid for work you are already indicated to do.</div>
+        </details>
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">I do not read PFTs all day. What if I misinterpret one?</span></summary>
+          <div class="ans">Every study can go to a board certified over read, so a signed interpretation comes back to you. You get the clinical answer and the medicolegal cover without becoming a pulmonologist. Over time most cardiologists read the common patterns themselves and keep the over read for the harder ones.</div>
+        </details>
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">What does this cost me, and when do I break even?</span></summary>
+          <div class="ans">Let me show you your own numbers.<br><span class="flip" onclick="setMode('doc')">Flip to the calculator</span></div>
+        </details>
+
+        <details class="obj">
+          <summary><span class="icon">+</span><span class="q-txt">How big is it, and is it as accurate as the hospital lab?</span></summary>
+          <div class="ans">It sits on a countertop, about the size of a small printer. No booth, no body box, no dedicated room. It runs full spirometry, lung volumes, and diffusion capacity to guideline standards. For heart failure patients the one rule is to test when they are stable and euvolemic, not mid decompensation, and we train your staff on exactly that.</div>
+        </details>
+
+      </div>
+    </div>
+
+    <div class="close">
+      <span class="eyebrow">Bring it home</span>
+      <h3>Capture the patient and the answer, same day</h3>
+      <p>Right now the cardiologist refers the breathless patient out, waits, and hands the revenue to the hospital. In office testing keeps the patient, keeps the revenue, and answers the heart or lungs question before the visit ends. Close on care first, then let the numbers confirm it.</p>
+      <div class="line">
+        <span>Keep the patient</span>
+        <span>Keep the revenue</span>
+        <span>Answer same day</span>
+        <span>Close a real safety gap</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= DOCTOR MODE ================= -->
+  <section id="mode-doc" class="mode" role="tabpanel" aria-label="Show the Doctor">
+
+    <div class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Pulmonary function testing in your office</span>
+        <h1>One symptom. <span class="em">Two organs.</span> Test in the room.</h1>
+        <p>Breathlessness is the complaint the heart and the lungs share. A complete study in about fifteen minutes tells you which one to treat, without sending your patient anywhere.</p>
+        <div class="trace-wrap">
+          <svg class="trace" viewBox="0 0 700 90" preserveAspectRatio="none" aria-hidden="true">
+            <path class="base" d="M0 45 L700 45"/>
+            <path class="live pulse" id="trace-pulse" d="M0 45 L150 45 L165 45 L172 22 L180 68 L190 30 L200 45 L300 45"/>
+            <path class="live" id="trace-breath" d="M300 45 C340 45 350 12 400 12 C460 12 470 78 540 78 C600 78 620 45 700 45"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="thesis">
+      <div class="cell">
+        <div class="n">HEART FAILURE + COPD</div>
+        <div class="big">25 to 50%</div>
+        <div class="cap">of heart failure patients also have COPD when spirometry is used, and roughly half of it is undiagnosed.</div>
+      </div>
+      <div class="cell">
+        <div class="n">SPIROMETRY USE</div>
+        <div class="big">~30%</div>
+        <div class="cap">of ambulatory heart failure patients labeled with COPD had spirometry on record. The rest are labeled on a guess.</div>
+      </div>
+      <div class="cell">
+        <div class="n">AMIODARONE BASELINE</div>
+        <div class="big">single digits</div>
+        <div class="cap">the share of amiodarone patients who receive the recommended baseline pulmonary testing in real cohorts.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="eyebrow">Three patients already on your schedule</span>
+      <h2 class="sh">Why testing belongs in cardiology</h2>
+      <div class="pillars">
+
+        <div class="pillar">
+          <span class="tag">The differential</span>
+          <h3>Is the breathlessness the heart or the lungs</h3>
+          <p>Dyspnea is the symptom both organs produce. Without a lung measurement you treat the heart and hope. About a third of heart failure patients are mislabeled with COPD they do not have, and a similar share carry airflow obstruction nobody has confirmed. Both change how you dose beta blockers and inhaled therapy.</p>
+          <div class="stat"><span class="num">15 min</span><span class="txt">a complete in office study, during the visit the patient is already in</span></div>
+        </div>
+
+        <div class="pillar">
+          <span class="tag risk">The amiodarone gap</span>
+          <h3>Protect the patients you already prescribe it to</h3>
+          <p>Guidelines recommend pulmonary function testing with diffusion capacity at baseline before amiodarone, because a falling diffusion capacity is the earliest sign of lung toxicity. Adherence to that recommendation is very low, mostly because the test lives somewhere else. Put it in your office and the baseline actually happens.</p>
+          <div class="stat"><span class="num">DLCO</span><span class="txt">the sensitive early marker, measured on the same device</span></div>
+        </div>
+
+        <div class="pillar">
+          <span class="tag">The capture</span>
+          <h3>Keep the patient and the reimbursement</h3>
+          <p>The testing is indicated. The only question is whether you do it or hand it to the hospital. Every study you refer out is an answer delayed, a patient sent into someone else's orbit, and revenue you were entitled to. Testing in office keeps all three where they belong.</p>
+          <div class="stat"><span class="num">~$147</span><span class="txt">per complete study at Medicare national rates, commercial often higher</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="eyebrow">Run your own numbers</span>
+      <h2 class="sh">What in office testing returns</h2>
+      <p class="lead">Adjust to your practice. The readout updates as you move the dials.</p>
+
+      <div class="roi">
+        <div class="roi-inputs">
+          <h3>Your practice</h3>
+          <div class="hint">Estimate the patients you could appropriately test each week.</div>
+
+          <div class="field">
+            <label for="perweek">Testable patients per week <span class="val" id="perweek-val">10</span></label>
+            <input type="range" id="perweek" min="2" max="40" value="10" step="1" oninput="calc()">
+            <div class="fieldnote">Breathless, heart failure, amiodarone baseline, and preoperative patients.</div>
+          </div>
+
+          <div class="field">
+            <label for="reimb">Reimbursement per complete study</label>
+            <div class="numfield"><span class="pre">$</span><input type="number" id="reimb" value="147" min="0" step="1" oninput="calc()"></div>
+            <div class="fieldnote">Default is the 94060, 94726, 94729 bundle at Medicare national rates.</div>
+          </div>
+
+          <div class="field">
+            <label for="device">Device investment</label>
+            <div class="numfield"><span class="pre">$</span><input type="number" id="device" value="" min="0" step="500" placeholder="Enter your quote" oninput="calc()"></div>
+            <div class="fieldnote">Leave blank until you present the quote. Payback and net fill in once a number is entered.</div>
+          </div>
+        </div>
+
+        <div class="roi-out">
+          <div class="label">Estimated annual PFT revenue</div>
+          <div class="readout big" id="out-annual">$70,560</div>
+          <div class="roi-sub" id="out-studies">480 studies a year at 48 working weeks</div>
+
+          <div class="roi-grid">
+            <div class="roi-cell">
+              <div class="label">Device payback</div>
+              <div class="readout" id="out-payback">add quote</div>
+            </div>
+            <div class="roi-cell">
+              <div class="label">Net after year one</div>
+              <div class="readout" id="out-net">add quote</div>
+            </div>
+          </div>
+
+          <div class="roi-foot">Estimate only. Excludes staff time and consumables. Actual reimbursement depends on payer mix, region, and documented medical necessity. Test heart failure patients when stable and euvolemic.</div>
+        </div>
+      </div>
+
+      <div class="codes">
+        <span class="eyebrow">The complete study, by code</span>
+        <div class="code-row"><span class="c">94060</span><span class="d">Spirometry before and after bronchodilator</span><span class="p">$37.85</span></div>
+        <div class="code-row"><span class="c">94726</span><span class="d">Lung volumes by plethysmography</span><span class="p">$54.99</span></div>
+        <div class="code-row"><span class="c">94729</span><span class="d">Diffusing capacity, DLCO</span><span class="p">$54.34</span></div>
+        <div class="code-total"><span>Complete study</span><span class="p">$147.18</span></div>
+      </div>
+
+      <div class="honest">
+        <b>The honest part.</b> This is not testing everyone to bill everyone. It is testing the symptomatic patient and the monitored patient, which is exactly what clean claims and good care both require. We supply the covered diagnosis list, the documentation templates, and a board certified over read so every study is defensible and every interpretation is signed.
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  MiniBox by PulmOne. Prevalence and monitoring figures reflect peer reviewed cardiology and pulmonology literature. Reimbursement figures are Medicare national averages for 2026 and vary by payer, region, and medical necessity. This tool supports a clinical and business conversation and is not medical, billing, or legal advice.
+</footer>
+
+<script>
+  function setMode(mode){
+    var rep = mode === 'rep';
+    document.getElementById('mode-rep').classList.toggle('active', rep);
+    document.getElementById('mode-doc').classList.toggle('active', !rep);
+    document.getElementById('btn-rep').classList.toggle('active', rep);
+    document.getElementById('btn-doc').classList.toggle('active', !rep);
+    document.getElementById('btn-rep').setAttribute('aria-selected', rep);
+    document.getElementById('btn-doc').setAttribute('aria-selected', !rep);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  var WEEKS = 48;
+  function fmt(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  function calc(){
+    var perWeek = parseInt(document.getElementById('perweek').value, 10) || 0;
+    var reimb = parseFloat(document.getElementById('reimb').value) || 0;
+    var deviceRaw = document.getElementById('device').value.trim();
+    var device = parseFloat(deviceRaw);
+    var deviceSet = deviceRaw !== '' && !isNaN(device) && device > 0;
+
+    document.getElementById('perweek-val').textContent = perWeek;
+
+    var studies = perWeek * WEEKS;
+    var annual = studies * reimb;
+    var monthly = annual / 12;
+
+    document.getElementById('out-annual').textContent = fmt(annual);
+    document.getElementById('out-studies').textContent = studies.toLocaleString('en-US') + ' studies a year at ' + WEEKS + ' working weeks';
+
+    var paybackEl = document.getElementById('out-payback');
+    var netEl = document.getElementById('out-net');
+
+    if(deviceSet && monthly > 0){
+      var months = device / monthly;
+      paybackEl.textContent = (months < 1 ? '<1' : months.toFixed(1)) + ' mo';
+      var net = annual - device;
+      netEl.textContent = (net < 0 ? '-' : '') + fmt(Math.abs(net));
+    } else {
+      paybackEl.textContent = 'add quote';
+      netEl.textContent = 'add quote';
+    }
+  }
+
+  // animate the trace on load, respecting reduced motion
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce) { calc(); return; }
+    ['trace-pulse','trace-breath'].forEach(function(id, i){
+      var p = document.getElementById(id);
+      if(!p) return;
+      var len = p.getTotalLength();
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+      p.style.transition = 'stroke-dashoffset 1.1s ease ' + (i * 0.85) + 's';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ p.style.strokeDashoffset = '0'; }); });
+    });
+    calc();
+  })();
+</script>
+
+</body>
+</html>

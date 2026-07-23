@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Erik Bernard — Email Signature</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; background:#f4f6f9; color:#1c2733; margin:0; padding:32px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:20px; color:#0a3d6b; margin:0 0 4px; }
+  .sub { font-size:14px; color:#5a6b7b; margin:0 0 24px; }
+  .card { background:#fff; border:1px solid #dce3ea; border-radius:10px; padding:26px 28px; }
+  .steps { background:#fff; border:1px solid #dce3ea; border-radius:10px; padding:18px 24px; margin-top:22px; font-size:14px; line-height:1.7; }
+  .steps b { color:#0a3d6b; }
+  .btn { display:inline-block; background:#0a3d6b; color:#fff; border:none; font-size:15px; font-weight:bold; padding:11px 22px; border-radius:6px; cursor:pointer; margin:18px 0 6px; }
+  .btn:active { transform:scale(.98); }
+  .ok { color:#0f7a3d; font-weight:bold; font-size:14px; margin-left:12px; }
+  .label { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:#8a98a6; margin:0 0 8px; }
+  textarea { width:100%; box-sizing:border-box; height:120px; font-family:Consolas,monospace; font-size:12px; border:1px solid #dce3ea; border-radius:8px; padding:10px; color:#33414e; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Your new email signature</h1>
+  <p class="sub">Click the blue button, then paste it into Outlook. Steps are at the bottom.</p>
+
+  <p class="label">Preview — this is exactly what people will see</p>
+  <div class="card">
+    <div id="sig">
+      <table cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;border-collapse:collapse;">
+        <tr><td style="border-left:3px solid #0a3d6b;padding:2px 0 2px 14px;">
+          <div style="font-size:17px;font-weight:bold;color:#0a3d6b;line-height:1.3;">Erik Bernard</div>
+          <div style="font-size:13px;color:#555555;line-height:1.6;">Territory Specialist&nbsp;&nbsp;&middot;&nbsp;&nbsp;NYC Metro</div>
+          <div style="font-size:13px;color:#0a3d6b;font-weight:bold;line-height:1.6;">PulmOne USA</div>
+          <div style="height:9px;line-height:9px;font-size:9px;">&nbsp;</div>
+          <div style="font-size:13px;color:#333333;line-height:1.9;">
+            <span style="color:#0a3d6b;font-weight:bold;">Mobile</span>&nbsp;&nbsp;518-307-2731<br>
+            <span style="color:#0a3d6b;font-weight:bold;">Email</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:erik.bernard@pulm-one.com" style="color:#0e6abf;text-decoration:none;">erik.bernard@pulm-one.com</a><br>
+            <span style="color:#0a3d6b;font-weight:bold;">Web</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.pulm-one.com" style="color:#0e6abf;text-decoration:none;">pulm-one.com</a>
+          </div>
+          <div style="height:12px;line-height:12px;font-size:12px;">&nbsp;</div>
+          <a href="https://www.pulm-one.com/products/#minibox-plus" style="display:inline-block;background:#0a3d6b;color:#ffffff;font-size:13px;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:4px;">Book a MiniBox+ Demo&nbsp;&nbsp;&rarr;</a>
+        </td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="btn" onclick="copySig()">Copy my signature</button>
+  <span id="ok" class="ok" style="display:none;">Copied! Now paste it into Outlook.</span>
+
+  <div class="steps">
+    <b>How to put it in Outlook (web / New Outlook):</b><br>
+    1. Click <b>Copy my signature</b> above.<br>
+    2. In Outlook, click the <b>gear &#9881; (Settings)</b> &rarr; <b>Accounts &rarr; Signatures</b> (or type &ldquo;signature&rdquo; in the settings search).<br>
+    3. Click <b>+ New signature</b>, name it &ldquo;Erik 2026&rdquo;, click in the big box, and press <b>Ctrl + V</b> to paste.<br>
+    4. Set it as the default <b>for new messages</b> (and replies if you like). <b>Save.</b><br><br>
+    <b>Important:</b> if you also use the MiniBox toolkit&rsquo;s &ldquo;Outlook Draft&rdquo;, make sure you only have <b>one</b> signature turned on so it doesn&rsquo;t double up.
+  </div>
+
+  <p class="label" style="margin-top:24px;">Plain-text version (backup, if you ever need it)</p>
+  <textarea readonly>Erik Bernard
+Territory Specialist, NYC Metro
+PulmOne USA
+Mobile: 518-307-2731
+Email: erik.bernard@pulm-one.com
+Web: pulm-one.com
+Book a MiniBox+ Demo: https://www.pulm-one.com/products/#minibox-plus</textarea>
+</div>
+
+<script>
+function copySig(){
+  var node = document.getElementById('sig');
+  var range = document.createRange();
+  range.selectNodeContents(node);
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  try {
+    document.execCommand('copy');
+    document.getElementById('ok').style.display = 'inline';
+  } catch(e) {
+    alert('Press Ctrl+C now to copy, then paste into Outlook.');
+  }
+  sel.removeAllRanges();
+}
+</script>
+</body>
+</html>

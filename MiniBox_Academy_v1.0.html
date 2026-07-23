@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MiniBox Academy — PulmOne Rep Certification 2026</title>
+<style>
+:root{
+  --bg:#0a0e14; --panel:#121822; --panel2:#1a2230; --line:#26303f;
+  --ink:#eef3fa; --mut:#9fb0c4; --dim:#6b7d92;
+  --brand:#28c2c2; --brand2:#1a9e9e; --gold:#f4c542; --red:#ef4444; --green:#34d399;
+  --pulm:#4aa8ff; --allergy:#c78bff; --univ:#8fd694; --cap:#f4c542;
+  --r:16px; --sh:0 8px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+body{padding:0 0 60px;max-width:820px;margin:0 auto}
+a{color:var(--brand)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#0a0e14 70%,rgba(10,14,20,.85));
+  padding:16px 18px 12px;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.hdr-top{display:flex;align-items:center;gap:11px}
+.hdr-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--sh)}
+.hdr-t{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.hdr-s{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.hdr-badge{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--gold);
+  border:1px solid rgba(244,197,66,.4);border-radius:999px;padding:4px 10px;background:rgba(244,197,66,.08)}
+
+/* drive mode bar */
+.drivebar{display:flex;align-items:center;gap:10px;margin-top:12px;padding:9px 12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.drivebar .di{font-size:17px}
+.drivebar .dl{font-size:12.5px;font-weight:700}
+.drivebar .ds{font-size:11px;color:var(--dim);margin-top:1px}
+.toggle{margin-left:auto;width:46px;height:26px;border-radius:999px;background:var(--panel2);
+  border:1px solid var(--line);position:relative;transition:.2s;flex:none}
+.toggle.on{background:var(--brand);border-color:var(--brand)}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:.2s}
+.toggle.on::after{left:22px}
+
+/* home */
+.wrap{padding:16px 16px 0}
+.hero{padding:2px 2px 14px}
+.hero h1{font-size:22px;margin:0 0 4px;font-weight:800;letter-spacing:-.4px}
+.hero p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.5}
+.progress-strip{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap}
+.pstat{flex:1;min-width:88px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.pstat b{display:block;font-size:21px;font-weight:800;letter-spacing:-.5px}
+.pstat span{font-size:11px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+.sec{margin:22px 0 0}
+.sec-h{display:flex;align-items:center;gap:9px;margin:0 2px 11px}
+.sec-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sec-t{font-size:13px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.sec-n{font-size:11px;color:var(--dim);margin-left:auto;font-weight:600}
+.sec-note{font-size:11.5px;color:var(--dim);margin:-6px 2px 11px;line-height:1.4}
+
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:520px){.mods{grid-template-columns:1fr}}
+.mod{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px;
+  text-align:left;transition:.15s;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px}
+.mod:active{transform:scale(.985)}
+.mod.locked{opacity:.62}
+.mod-edge{position:absolute;left:0;top:0;bottom:0;width:4px}
+.mod-h{display:flex;align-items:flex-start;gap:9px}
+.mod-ic{font-size:22px;line-height:1;margin-top:1px}
+.mod-ti{font-size:14.5px;font-weight:800;letter-spacing:-.2px;line-height:1.25}
+.mod-meta{font-size:11px;color:var(--dim);font-weight:600;margin-top:2px}
+.mod-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 7px;border-radius:6px}
+.mod-score{margin-top:auto;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.mod-cert{color:var(--gold)}
+.mod-none{color:var(--dim)}
+.mod-pend{color:var(--red);font-weight:700;font-size:11px}
+
+/* overlay run */
+.ov{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column}
+.ov.on{display:flex}
+.ov-hd{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.ov-x{width:34px;height:34px;border-radius:10px;background:var(--panel);font-size:16px;flex:none}
+.ov-title{font-size:14px;font-weight:800}
+.ov-sub{font-size:11px;color:var(--dim);margin-top:1px}
+.ov-mode{margin-left:auto;display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
+.ov-mode button{font-size:11px;font-weight:800;padding:6px 11px;border-radius:7px;color:var(--dim)}
+.ov-mode button.on{background:var(--brand);color:#04201f}
+.ov-prog{height:4px;background:var(--panel2)}
+.ov-prog i{display:block;height:100%;background:var(--brand);transition:.3s;width:0}
+.ov-body{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 20px;box-shadow:var(--sh)}
+.card-count{font-size:11px;color:var(--dim);font-weight:700;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.speak-btn{margin-left:auto;width:34px;height:34px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);font-size:15px;display:flex;align-items:center;justify-content:center}
+.speak-btn.playing{background:var(--brand);border-color:var(--brand)}
+.q-text{font-size:19px;font-weight:700;line-height:1.4;margin-bottom:20px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{text-align:left;padding:15px 16px;border-radius:13px;background:var(--panel2);border:1.5px solid var(--line);
+  font-size:15px;line-height:1.4;transition:.12s;font-weight:600}
+.choice:active{transform:scale(.99)}
+.choice.correct{background:rgba(52,211,153,.14);border-color:var(--green);color:#d5fbe9}
+.choice.wrong{background:rgba(239,68,68,.13);border-color:var(--red);color:#ffd9d9}
+.choice.dim{opacity:.5}
+.choice-k{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--bg);align-items:center;justify-content:center;font-weight:800;font-size:12px;margin-right:9px;vertical-align:-4px}
+
+.reveal{margin-top:18px;padding:15px 16px;border-radius:13px;background:rgba(40,194,194,.08);border:1px solid rgba(40,194,194,.3);
+  font-size:14px;line-height:1.5;display:none}
+.reveal.on{display:block}
+.reveal b{color:var(--brand)}
+.run-foot{margin-top:20px;display:flex;gap:10px}
+.btn{flex:1;padding:15px;border-radius:13px;font-size:15px;font-weight:800;letter-spacing:.2px}
+.btn-p{background:var(--brand);color:#04201f}
+.btn-g{background:var(--panel2);border:1px solid var(--line)}
+.btn-red{background:rgba(239,68,68,.15);border:1px solid var(--red);color:#ffb3b3}
+.btn-green{background:rgba(52,211,153,.16);border:1px solid var(--green);color:#c9fbe6}
+
+/* flip card */
+.flip{min-height:230px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer}
+.flip-face{font-size:19px;font-weight:700;line-height:1.4}
+.flip-hint{font-size:11.5px;color:var(--dim);margin-top:16px;font-weight:600;letter-spacing:.3px}
+.flip-back{font-size:16px;line-height:1.5;font-weight:600}
+
+/* done */
+.done{text-align:center;padding:20px 6px}
+.done-pct{font-size:60px;font-weight:800;letter-spacing:-2px;line-height:1}
+.done-lbl{font-size:13px;color:var(--mut);margin-top:6px;font-weight:600}
+.done-note{font-size:14px;color:var(--ink);margin:16px auto 0;max-width:400px;line-height:1.5}
+.done-cert{margin:20px auto 0;max-width:360px;padding:16px;border-radius:14px;
+  background:rgba(244,197,66,.09);border:1px solid rgba(244,197,66,.4)}
+.done-cert .c-ic{font-size:30px}
+.done-cert .c-t{font-size:15px;font-weight:800;color:var(--gold);margin-top:6px}
+.done-cert .c-s{font-size:12px;color:var(--mut);margin-top:3px}
+.missed{margin:20px auto 0;max-width:440px;text-align:left}
+.missed h5{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin:0 0 8px}
+.missed ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.missed li{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.4}
+
+.pending-banner{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.35);border-radius:13px;
+  padding:15px 16px;margin:16px 0;font-size:13px;line-height:1.5;color:#ffd9d9}
+.pending-banner b{color:#ff9d9d}
+
+.foot-note{text-align:center;font-size:11px;color:var(--dim);padding:28px 20px 10px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-logo">🎓</div>
+    <div>
+      <div class="hdr-t">MiniBox Academy</div>
+      <div class="hdr-s">PulmOne Rep Certification</div>
+    </div>
+    <div class="hdr-badge">2026</div>
+  </div>
+  <div class="drivebar">
+    <span class="di">🚗</span>
+    <div>
+      <div class="dl">Drive Mode</div>
+      <div class="ds">Reads cards aloud — study hands-free between accounts</div>
+    </div>
+    <button class="toggle" id="drive-toggle" onclick="acToggleDrive()" aria-label="Toggle Drive Mode"></button>
+  </div>
+</div>
+
+<div class="wrap" id="home"></div>
+
+<div class="ov" id="ov">
+  <div class="ov-hd">
+    <button class="ov-x" onclick="acClose()">✕</button>
+    <div>
+      <div class="ov-title" id="ov-title"></div>
+      <div class="ov-sub" id="ov-sub"></div>
+    </div>
+    <div class="ov-mode" id="ov-mode">
+      <button id="mode-test" class="on" onclick="acSetMode('test')">Test It</button>
+      <button id="mode-flip" onclick="acSetMode('flip')">Flip It</button>
+    </div>
+  </div>
+  <div class="ov-prog"><i id="ov-prog-fill"></i></div>
+  <div class="ov-body" id="ov-body"></div>
+</div>
+
+<div class="foot-note">
+  MiniBox Academy · Content lifted verbatim from the 2025/2026 PulmOne training curriculum ·
+  Scores stay on this device, private to you.
+</div>
+
+<script>
+window.ACADEMY_QUIZ = {
+  "system_orientation": {
+    "title": "System Orientation",
+    "questions": [
+      { "q": "What is the primary function of the pneumotachometer in the Minibox system?", "choices": ["a) Measure blood pressure", "b) Convert air flow into proportional differential pressure", "c) Monitor heart rate", "d) Measure body temperature"], "correct": 1 },
+      { "q": "What is the viral and bacterial filtration efficacy of the SpiroGuard Filter?", "choices": ["a) 90%", "b) 95%", "c) 99.9%", "d) 99.999%"], "correct": 3 },
+      { "q": "What should be used to wipe down the exterior surfaces of the Minibox system between patients?", "choices": ["a) Water and soap", "b) Alcohol wipes", "c) PulmOne recommended surface disinfectant (Super Sani-Cloth, Oxivir)", "d) Bleach solution"], "correct": 2 },
+      { "q": "What gas composition is used for the DLCO test in the Minibox system?", "choices": ["a) 21% O2, 0.3% CO, 0.3% CH4, Balance N2", "b) 20% O2, 0.5% CO, 0.5% CH4, Balance N2", "c) 22% O2, 0.2% CO, 0.2% CH4, Balance N2", "d) 19% O2, 0.4% CO, 0.4% CH4, Balance N2"], "correct": 0 },
+      { "q": "What is the maximum weight supported by the Minibox system's software?", "choices": ["a) 500 lbs", "b) 550 lbs", "c) 600 lbs", "d) 650 lbs"], "correct": 3 }
+    ]
+  },
+  "minibox_setup": {
+    "title": "MiniBox Setup",
+    "questions": [
+      { "q": "What is the primary purpose of performing a Nitrogen Washout test?", "choices": ["A) To measure blood oxygen levels", "B) To obtain Total Lung Capacity (TLC)", "C) To diagnose heart conditions", "D) To measure blood pressure"], "correct": 1 },
+      { "q": "During the Nitrogen Washout test, what gas does the patient breathe in?", "choices": ["A) Helium", "B) Carbon Dioxide", "C) 100% Oxygen", "D) Nitrogen"], "correct": 2 },
+      { "q": "Which of the following should be avoided before performing a Nitrogen Washout test according to ATS/ERS Guidelines?", "choices": ["A) Eating a large meal within 2 hours of testing", "B) Drinking water within 1 hour of testing", "C) Sleeping within 30 minutes of testing", "D) Wearing loose clothing"], "correct": 0 },
+      { "q": "What is the acceptable nitrogen concentration level to consider the washout complete?", "choices": ["A) < 2.0% after three consecutive breaths", "B) < 1.5% after three consecutive breaths", "C) < 1.0% after three consecutive breaths", "D) < 0.5% after three consecutive breaths"], "correct": 1 },
+      { "q": "Which of the following is a key quality feature to ensure during the Nitrogen Washout test?", "choices": ["A) Patient should be lying down", "B) Patient should hold their breath", "C) Patient should keep a tight seal at the mouthpiece", "D) Patient should breathe rapidly"], "correct": 2 }
+    ]
+  },
+  "pft_overview": {
+    "title": "PFT Overview",
+    "questions": [
+      { "q": "Which part of the MiniBox breathing circuit is responsible for measuring the pressure difference?", "choices": ["A) SpiroGuard Filter", "B) Pressure Differential Sensor (PDS)", "C) Shutter Mechanism", "D) Demand Valve"], "correct": 1 },
+      { "q": "What gases are used for the DLCO test in the MiniBox Plus system?", "choices": ["A) 21% O2, .3% CO, .3% CH4, Bal N2", "B) 100% O2", "C) 50% O2, 50% CO2", "D) 78% N2, 21% O2, 1% Argon"], "correct": 0 },
+      { "q": "What should be used to wipe down the exterior surfaces of the MiniBox between patients?", "choices": ["A) Alcohol wipes", "B) Water and soap", "C) PulmOne recommended surface disinfectant (Super Sani-Cloth, Oxivir)", "D) Bleach solution"], "correct": 2 },
+      { "q": "What is the purpose of the SpiroGuard Filter in the MiniBox system?", "choices": ["A) To measure lung volumes", "B) To provide high viral and bacterial filtration efficacy", "C) To convert air flow into proportional differential pressure", "D) To support weight up to 650 lbs"], "correct": 1 },
+      { "q": "Which feature is NOT part of the MiniBox Plus system?", "choices": ["A) Lung Volumes \u2013 Plethysmography", "B) Single Breath DLCO", "C) Blood Oxygen Level Monitoring", "D) Pressure Differential Pneumotach"], "correct": 2 }
+    ]
+  },
+  "dlco": {
+    "title": "DLCO",
+    "questions": [
+      { "q": "What is the primary function of the respiratory system?", "choices": ["A) Blood circulation", "B) Gas exchange between body tissues and the surrounding air", "C) Digestion of food", "D) Regulation of body temperature"], "correct": 1 },
+      { "q": "What does DLCO stand for?", "choices": ["A) Diffusing capacity of the Lungs for carbon monoxide", "B) Diffusing capacity of the Lungs for oxygen", "C) Diffusing capacity of the Lungs for nitrogen", "D) Diffusing capacity of the Lungs for methane"], "correct": 0 },
+      { "q": "Which gas is used as an inert tracer in the DLCO test?", "choices": ["A) Helium", "B) Methane (CH4)", "C) Oxygen", "D) Nitrogen"], "correct": 1 },
+      { "q": "What is the recommended breath-hold time during the DLCO test?", "choices": ["A) 5 \u00b1 2 seconds", "B) 8 \u00b1 2 seconds", "C) 10 \u00b1 2 seconds", "D) 12 \u00b1 2 seconds"], "correct": 2 },
+      { "q": "Which of the following is NOT a pre-testing consideration for DLCO?", "choices": ["A) Refrain from smoking on the day of testing", "B) Refrain from drinking alcohol on the day of testing", "C) Exercise immediately prior to testing", "D) Patient should sit for 5 minutes prior to DLCO testing"], "correct": 2 },
+      { "q": "What is the purpose of the \"corrected DLCO\" (DLCO_c) parameter?", "choices": ["A) To measure the total lung capacity", "B) To account for the individual's alveolar volume when interpreting a DLCO test", "C) To measure the breath-hold time", "D) To measure the volume of air exhaled"], "correct": 1 }
+    ]
+  },
+  "lung_volume": {
+    "title": "Lung Volumes",
+    "questions": [
+      { "q": "What is the primary purpose of performing a Nitrogen Washout test?", "choices": ["A) To measure blood oxygen levels", "B) To obtain Total Lung Capacity (TLC)", "C) To diagnose heart conditions", "D) To measure blood pressure"], "correct": 1 },
+      { "q": "During the Nitrogen Washout test, what gas does the patient breathe in?", "choices": ["A) Helium", "B) Carbon Dioxide", "C) 100% Oxygen", "D) Nitrogen"], "correct": 2 },
+      { "q": "Which of the following should be avoided before performing a Nitrogen Washout test according to ATS/ERS Guidelines?", "choices": ["A) Eating a large meal within 2 hours of testing", "B) Drinking water within 1 hour of testing", "C) Sleeping within 30 minutes of testing", "D) Wearing loose clothing"], "correct": 0 },
+      { "q": "What is the acceptable nitrogen concentration level to consider the washout complete?", "choices": ["A) < 2.0% after three consecutive breaths", "B) < 1.5% after three consecutive breaths", "C) < 1.0% after three consecutive breaths", "D) < 0.5% after three consecutive breaths"], "correct": 1 },
+      { "q": "Which of the following is a key quality feature to ensure during the Nitrogen Washout test?", "choices": ["A) Patient should be lying down", "B) Patient should hold their breath", "C) Patient should keep a tight seal at the mouthpiece", "D) Patient should breathe rapidly"], "correct": 2 }
+    ]
+  },
+  "lung_volumes_pleth": {
+    "title": "Lung Volumes & Plethysmography",
+    "questions": [
+      { "q": "What does body plethysmography measure?", "choices": ["A) Blood pressure", "B) Heart rate", "C) Total lung capacity (TLC)", "D) Blood sugar levels"], "correct": 2 },
+      { "q": "Which law is used to calculate Thoracic Gas Volume (TGV) in body plethysmography?", "choices": ["A) Newton's Law", "B) Boyle's Law", "C) Charles's Law", "D) Avogadro's Law"], "correct": 1 },
+      { "q": "What is the volume of air that remains in your lungs after breathing out normally called?", "choices": ["A) Total lung capacity (TLC)", "B) Residual volume (RV)", "C) Functional residual capacity (FRC)", "D) Inspiratory vital capacity (IVC)"], "correct": 2 },
+      { "q": "How often should box calibration be performed for plethysmography?", "choices": ["A) Weekly", "B) Monthly", "C) Daily", "D) Annually"], "correct": 2 },
+      { "q": "What factor does NOT affect airway resistance?", "choices": ["A) Airway diameter", "B) Lung volume", "C) Blood pressure", "D) Mucus secretions"], "correct": 2 }
+    ]
+  },
+  "additional_testing": {
+    "title": "Additional Testing",
+    "questions": [
+      { "q": "What is the primary purpose of measuring airway resistance (RAW)?", "choices": ["A) To determine the volume of air in the lungs", "B) To measure the resistance of the respiratory tract to airflow during inhalation and exhalation", "C) To assess the strength of respiratory muscles", "D) To evaluate the level of nitric oxide in exhaled air"], "correct": 1 },
+      { "q": "What is considered a normal FeNO test result for adults?", "choices": ["A) Less than 10 parts per billion (ppb)", "B) Less than 15 parts per billion (ppb)", "C) Less than 25 parts per billion (ppb)", "D) Less than 30 parts per billion (ppb)"], "correct": 2 },
+      { "q": "Which frequencies are typically used in Frequency Oscillation Testing (FOT) to assess airway narrowing?", "choices": ["A) R5 and R10", "B) R10 and R15", "C) R5 and R20", "D) R15 and R20"], "correct": 2 },
+      { "q": "During a Bronchoprovocation test with methacholine, what is the objective in terms of FEV1 reduction?", "choices": ["A) A drop in FEV1 of 10% or more", "B) A drop in FEV1 of 15% or more", "C) A drop in FEV1 of 20% or more", "D) A drop in FEV1 of 25% or more"], "correct": 2 },
+      { "q": "What is the primary measurement outcome of the 6-minute walk test (6MWT)?", "choices": ["A) The patient's heart rate", "B) The patient's oxygen saturation", "C) The total distance walked in six minutes", "D) The patient's perceived exertion"], "correct": 2 },
+      { "q": "What is the main purpose of the Cardiopulmonary Exercise Test (CPET)?", "choices": ["A) To measure airway resistance", "B) To assess the functional capacity of the heart and lungs during exercise", "C) To evaluate the level of nitric oxide in exhaled air", "D) To measure the strength of respiratory muscles"], "correct": 1 }
+    ]
+  },
+  "final_exam": {
+    "title": "Final Certification Exam",
+    "questions": [
+      { "q": "What is the primary purpose of spirometry?", "choices": ["A) To measure the volume of air in the lungs", "B) To measure the flow of air in and out of the lungs", "C) To assess the strength of respiratory muscles", "D) To evaluate the level of carbon dioxide in exhaled air"], "correct": null },
+      { "q": "What is considered a normal FEV1/FVC ratio for adults?", "choices": ["A) Greater than 50%", "B) Greater than 60%", "C) Greater than 70%", "D) Greater than 80%"], "correct": null },
+      { "q": "Which parameter is typically used to assess small airway function in spirometry?", "choices": ["A) FEV1", "B) FVC", "C) FEF25-75%", "D) PEF"], "correct": null },
+      { "q": "During a Bronchodilator Reversibility Test, what is the minimum improvement in FEV1 that indicates a positive response?", "choices": ["A) 5% increase", "B) 10% increase", "C) 12% increase", "D) 15% increase"], "correct": null },
+      { "q": "What is the primary function of the alveoli in the respiratory system?", "choices": ["A) Blood circulation", "B) Gas exchange between the air and blood", "C) Digestion of food", "D) Regulation of body temperature\\"], "correct": null },
+      { "q": "What does TLC stand for in pulmonary function testing?", "choices": ["A) Total Lung Capacity", "B) Tidal Lung Capacity", "C) Total Laryngeal", "D) Tidal Laryngeal Capacity"], "correct": null },
+      { "q": "Which gas is commonly used in the Helium Dilution test to measure lung volumes?", "choices": ["A) Helium", "B) Methane", "C) Oxygen", "D) Nitrogen"], "correct": null },
+      { "q": "What is the recommended duration for the breath-hold during a single-breath DLCO test?", "choices": ["A) 5 \u00b1 1 seconds", "B) 8 \u00b1 1 seconds", "C) 10 \u00b1 1 seconds", "D) 12 \u00b1 1 seconds"], "correct": null },
+      { "q": "Which of the following is NOT a pre-testing consideration for spirometry?", "choices": ["A) Refrain from smoking on the day of testing", "B) Refrain from drinking alcohol on the day of testing", "C) Avoid using bronchodilators before the test", "D) Exercise immediately prior to testing"], "correct": null },
+      { "q": "What is the primary purpose of performing a Body Plethysmography test?", "choices": ["A) To measure blood oxygen levels", "B) To obtain Total Lung Capacity (TLC)", "C) To diagnose heart conditions", "D) To measure blood pressure"], "correct": null },
+      { "q": "During the Body Plethysmography test, what does the patient breathe in?", "choices": ["A) Helium", "B) Carbon Dioxide", "C) 100% Oxygen", "D) Room air"], "correct": null },
+      { "q": "Which of the following should be avoided before performing a Body Plethysmography test according to ATS/ERS Guidelines?", "choices": ["A) Eating a large meal within 2 hours of testing", "B) Drinking water within 1 hour of testing", "C) Sleeping within 30 minutes of testing", "D) Wearing loose clothing"], "correct": null },
+      { "q": "What is the acceptable helium concentration level to consider the Helium Dilution test complete?", "choices": ["A) < 2.0% after three consecutive breaths", "B) < 1.5% after three consecutive breaths", "C) < 1.0% after three consecutive breaths", "D) < 0.5% after three consecutive breaths"], "correct": null },
+      { "q": "Which of the following is a key quality feature to ensure during the Helium Dilution test?", "choices": ["A) Patient should be lying down", "B) Patient should hold their breath", "C) Patient should keep a tight seal at the mouthpiece", "D) Patient should breathe rapidly"], "correct": null },
+      { "q": "What is the primary purpose of Pulmonary Function Tests (PFTs)?", "choices": ["A) To measure blood pressure", "B) To assess lung function", "C) To diagnose heart disease", "D) To evaluate kidney function"], "correct": null },
+      { "q": "Which of the following tests measures the diffusion capacity of the lungs?", "choices": ["A) Lung volume test", "B) Spirometry", "C) DLCO test", "D) Arterial blood gas test"], "correct": null },
+      { "q": "Which respiratory pattern is typically observed in patients with Chronic Obstructive Pulmonary Disease (COPD)?", "choices": ["A) Normal FVC, decreased FEV1, and decreased DLCO", "B) Increased FVC, normal FEV1, and normal DLCO", "C) Decreased FVC, increased FEV1, and increased DLCO", "D) Decreased FVC, decreased FEV1, and decreased DLCO"], "correct": null },
+      { "q": "What is the recommended standard for interpreting Pulmonary Function Tests (PFTs) according to the document?", "choices": ["A) American Lung Association (ALA) equations", "B) Global Lung Function Initiative (GLI) equations", "C) National Heart, Lung, and Blood Institute (NHLBI) equations", "D) World Health Organization (WHO) equation"], "correct": null },
+      { "q": "What is the primary purpose of performing a Nitrogen Washout test?", "choices": ["A) To measure blood oxygen levels", "B) To obtain Total Lung Capacity (TLC)", "C) To diagnose heart conditions", "D) To measure blood pressure"], "correct": 1 },
+      { "q": "During the Nitrogen Washout test, what gas does the patient breathe in?", "choices": ["A) Helium", "B) Carbon Dioxide", "C) 100% Oxygen", "D) Nitrogen"], "correct": 2 }
+    ]
+  }
+};
+window.ACADEMY_CFG = {
+  certPct: 80,
+  icons: {
+    system_orientation:'🧭', minibox_setup:'🔧', pft_overview:'📋',
+    dlco:'🫁', lung_volume:'🎈', lung_volumes_pleth:'📦',
+    additional_testing:'🧪', final_exam:'🏆'
+  },
+  tags: {
+    additional_testing:[
+      {label:'Allergy',bg:'rgba(199,139,255,.14)',c:'#d9b9ff'},
+      {label:'Pulmonology',bg:'rgba(74,168,255,.14)',c:'#a9d4ff'}
+    ]
+  },
+  pending: {
+    final_exam:'The source Final Exam file shipped with NO answer key marked — 18 of its 20 answers could not be verified from the document. Rather than guess an answer in front of a physician, this exam is locked until the key is confirmed. All 20 questions are loaded and ready; they just need answers signed off.'
+  },
+  sections: [
+    { title:'Device Essentials', color:'#8fd694',
+      note:'Every rep, every specialty starts here. The box, the setup, and how a PFT actually works.',
+      modules:['system_orientation','minibox_setup','pft_overview'] },
+    { title:'Pulmonology', color:'#4aa8ff',
+      note:'The full-PFT story — diffusion and lung volumes. Know these cold for pulmonology accounts.',
+      modules:['dlco','lung_volume','lung_volumes_pleth'] },
+    { title:'Allergy / Immunology', color:'#c78bff',
+      note:'FeNO, methacholine challenge and bronchoprovocation are the asthma workup allergy reps lead with. Heads up: this module also carries pulmonary tests (CPET, 6MWT, oscillometry), so pulmonology reps should take it too.',
+      modules:['additional_testing'] },
+    { title:'Capstone', color:'#f4c542',
+      note:'The full certification exam. Pass everything above, then prove it here.',
+      modules:['final_exam'] }
+  ]
+};
+
+/* ------- persistence (safe no-op if blocked) ------- */
+function acScores(){ try{return JSON.parse(localStorage.getItem('academy-scores')||'{}')}catch(e){return {}} }
+function acSaveScore(k,pct){ try{var s=acScores();var p=s[k]||{};s[k]={last:pct,best:Math.max(pct,p.best||0)};localStorage.setItem('academy-scores',JSON.stringify(s))}catch(e){} }
+function acBest(k){ var s=acScores(); return (s[k]&&s[k].best)||0; }
+function acDrive(){ try{return localStorage.getItem('academy-drive')==='1'}catch(e){return false} }
+
+/* ------- drive mode / TTS ------- */
+var acVoiceOn=false;
+function acToggleDrive(){ acVoiceOn=!acVoiceOn; try{localStorage.setItem('academy-drive',acVoiceOn?'1':'0')}catch(e){}
+  document.getElementById('drive-toggle').classList.toggle('on',acVoiceOn);
+  if(!acVoiceOn&&window.speechSynthesis) speechSynthesis.cancel();
+  if(acVoiceOn&&acMode==='test'&&acQ.length) acSpeakCurrent(); }
+function acStrip(h){ var d=document.createElement('div'); d.innerHTML=h; return (d.textContent||'').replace(/\s+/g,' ').trim(); }
+function acSpeak(txt){ if(!window.speechSynthesis)return; speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(txt); u.rate=.96; u.pitch=1; speechSynthesis.speak(u); }
+function acSpeakCurrent(){ var c=acQ[acI]; if(!c)return;
+  var t=acStrip(c.q); if(acMode==='test'&&c.choices){ c.choices.forEach(function(ch,i){ t+='. '+String.fromCharCode(65+i)+'. '+acStrip(ch); }); }
+  acSpeak(t); markSpeak(true); }
+function markSpeak(on){ var b=document.getElementById('ac-speak'); if(b)b.classList.toggle('playing',on); }
+
+/* ------- state ------- */
+var acModKey='', acMode='test', acQ=[], acI=0, acPicked=null, acFlipped=false,
+    acRight=0, acSeen=0, acMissed=[];
+
+function acShuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+/* ------- home render ------- */
+function acHome(){
+  var q=window.ACADEMY_QUIZ, cfg=window.ACADEMY_CFG;
+  var totalMods=0, certified=0, totalQ=0;
+  cfg.sections.forEach(function(sec){ sec.modules.forEach(function(mk){
+    if(!q[mk])return; totalMods++; totalQ+=q[mk].questions.length;
+    if(acBest(mk)>=cfg.certPct && !cfg.pending[mk]) certified++;
+  });});
+  var h='';
+  h+='<div class="hero"><h1>Know it cold. Walk in ready.</h1>'
+   +'<p>Every module below is a real quiz from the PulmOne curriculum. Flip the cards to study, '
+   +'take the test to prove it. Hit '+cfg.certPct+'% and the module goes gold.</p>'
+   +'<div class="progress-strip">'
+   +'<div class="pstat"><b>'+certified+'/'+totalMods+'</b><span>Modules certified</span></div>'
+   +'<div class="pstat"><b>'+totalQ+'</b><span>Questions in bank</span></div>'
+   +'<div class="pstat"><b>'+cfg.certPct+'%</b><span>To certify</span></div>'
+   +'</div></div>';
+
+  cfg.sections.forEach(function(sec){
+    var mods=sec.modules.filter(function(mk){return q[mk];});
+    if(!mods.length)return;
+    h+='<div class="sec"><div class="sec-h">'
+      +'<span class="sec-dot" style="background:'+sec.color+'"></span>'
+      +'<span class="sec-t" style="color:'+sec.color+'">'+sec.title+'</span>'
+      +'<span class="sec-n">'+mods.length+' module'+(mods.length>1?'s':'')+'</span></div>';
+    if(sec.note) h+='<div class="sec-note">'+sec.note+'</div>';
+    h+='<div class="mods">';
+    mods.forEach(function(mk){
+      var m=q[mk], best=acBest(mk), pend=cfg.pending[mk], cert=best>=cfg.certPct&&!pend;
+      h+='<button class="mod'+(pend?' locked':'')+'" onclick="'+(pend?'acPendingInfo(\''+mk+'\')':'acOpen(\''+mk+'\')')+'">'
+       +'<span class="mod-edge" style="background:'+sec.color+'"></span>'
+       +'<div class="mod-h"><span class="mod-ic">'+(cfg.icons[mk]||'📋')+'</span>'
+       +'<div><div class="mod-ti">'+m.title+'</div>'
+       +'<div class="mod-meta">'+m.questions.length+' questions</div></div></div>';
+      var tags=(cfg.tags[mk]||[]);
+      if(tags.length){ h+='<div class="mod-tags">'; tags.forEach(function(t){
+        h+='<span class="tag" style="background:'+t.bg+';color:'+t.c+'">'+t.label+'</span>'; }); h+='</div>'; }
+      if(pend){ h+='<div class="mod-score mod-pend">⚠ Answer key pending</div>'; }
+      else if(cert){ h+='<div class="mod-score mod-cert">★ Certified · Best '+best+'%</div>'; }
+      else if(best>0){ h+='<div class="mod-score mod-none">Best '+best+'% · keep going</div>'; }
+      else { h+='<div class="mod-score mod-none">Not started</div>'; }
+      h+='</button>';
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('home').innerHTML=h;
+}
+function acPendingInfo(mk){
+  var n=window.ACADEMY_CFG.pending[mk];
+  alert(typeof n==='string'?n:'This module’s answer key is still being confirmed.');
+}
+
+/* ------- open / run ------- */
+function acOpen(mk){
+  acModKey=mk; var m=window.ACADEMY_QUIZ[mk];
+  document.getElementById('ov-title').textContent=m.title;
+  acVoiceOn=acDrive(); document.getElementById('drive-toggle').classList.toggle('on',acVoiceOn);
+  try{acMode=localStorage.getItem('academy-mode')||'test';}catch(e){acMode='test';}
+  acSetModeUI();
+  acStart();
+  var o=document.getElementById('ov'); o.classList.add('on'); document.body.style.overflow='hidden';
+}
+function acClose(){ document.getElementById('ov').classList.remove('on'); document.body.style.overflow='';
+  if(window.speechSynthesis)speechSynthesis.cancel(); acHome(); }
+function acSetMode(m){ acMode=m; try{localStorage.setItem('academy-mode',m)}catch(e){} acSetModeUI(); acStart(); }
+function acSetModeUI(){ document.getElementById('mode-test').classList.toggle('on',acMode==='test');
+  document.getElementById('mode-flip').classList.toggle('on',acMode==='flip'); }
+
+function acStart(){
+  var m=window.ACADEMY_QUIZ[acModKey];
+  acQ=m.questions.filter(function(c){return acMode==='flip'||c.correct!=null;}).map(function(c){
+    var o={q:c.q,choices:c.choices?c.choices.slice():null,correct:c.correct};
+    return o;
+  });
+  acShuffle(acQ);
+  acI=0;acPicked=null;acFlipped=false;acRight=0;acSeen=0;acMissed=[];
+  acRender();
+}
+function acProg(){ var f=document.getElementById('ov-prog-fill');
+  f.style.width=(acQ.length?Math.round((acI/acQ.length)*100):0)+'%'; }
+
+function acRender(){
+  var body=document.getElementById('ov-body'); acProg();
+  document.getElementById('ov-sub').textContent=(acMode==='test'?'Test It':'Flip It')+' · '+
+    (acI<acQ.length?(acI+1)+' of '+acQ.length:'complete');
+  if(acI>=acQ.length){ acDone(); return; }
+  var c=acQ[acI], h='';
+  h+='<div class="card"><div class="card-count">'+(acMode==='test'?'QUESTION ':'CARD ')+(acI+1)+' / '+acQ.length
+   +'<button class="speak-btn" id="ac-speak" onclick="acSpeakCurrent()" aria-label="Read aloud">🔊</button></div>';
+
+  if(acMode==='flip'){
+    if(!acFlipped){
+      h+='<div class="flip" onclick="acFlip()"><div class="flip-face">'+c.q+'</div>'
+       +'<div class="flip-hint">Say the answer out loud — then tap to flip</div></div></div>';
+      h+='<div class="run-foot"><button class="btn btn-p" onclick="acFlip()">Flip it</button></div>';
+    } else {
+      var ans=c.choices?c.choices[c.correct]:'';
+      h+='<div class="flip"><div class="flip-back"><b style="color:var(--green)">✓ </b>'+ans+'</div></div></div>';
+      h+='<div class="run-foot"><button class="btn btn-red" onclick="acFlipGrade(false)">Again</button>'
+       +'<button class="btn btn-green" onclick="acFlipGrade(true)">Got it</button></div>';
+    }
+    body.innerHTML=h;
+    if(acVoiceOn&&!acFlipped) acSpeakCurrent();
+    return;
+  }
+
+  /* test mode */
+  h+='<div class="q-text">'+c.q+'</div><div class="choices">';
+  c.choices.forEach(function(ch,i){
+    var cls='choice', k=String.fromCharCode(65+i), label=ch.replace(/^[a-dA-D]\)\s*/,'');
+    if(acPicked!=null){
+      if(i===c.correct)cls+=' correct';
+      else if(i===acPicked.idx)cls+=' wrong';
+      else cls+=' dim';
+    }
+    h+='<button class="'+cls+'" '+(acPicked!=null?'disabled':'onclick="acAnswer('+i+')"')+'>'
+     +'<span class="choice-k">'+k+'</span>'+label+'</button>';
+  });
+  h+='</div>';
+  if(acPicked!=null){
+    var right=acPicked.idx===c.correct;
+    h+='<div class="reveal on">'+(right?'<b>✓ Correct.</b> ':'<b style="color:var(--red)">✗ Not quite.</b> The answer is <b>'
+      +String.fromCharCode(65+c.correct)+'</b> — '+acStrip(c.choices[c.correct]).replace(/^[a-dA-D]\)\s*/,'')+'.')+'</div>';
+    h+='<div class="run-foot"><button class="btn btn-p" onclick="acNext()">'
+      +(acI+1>=acQ.length?'See results':'Next question')+' →</button></div>';
+  }
+  body.innerHTML=h;
+  if(acVoiceOn&&acPicked==null) acSpeakCurrent();
+}
+
+function acAnswer(i){
+  if(acPicked!=null)return; var c=acQ[acI];
+  acPicked={idx:i}; acSeen++;
+  if(i===c.correct)acRight++; else acMissed.push(c);
+  if(window.speechSynthesis)speechSynthesis.cancel(); markSpeak(false);
+  acRender();
+}
+function acNext(){
+  var c=acQ[acI];
+  if(acPicked&&acPicked.idx!==c.correct){ acQ.push(acQ.splice(acI,1)[0]); }
+  else { acI++; }
+  acPicked=null; acRender();
+}
+function acFlip(){ acFlipped=true; if(window.speechSynthesis&&acVoiceOn){var c=acQ[acI];acSpeak(acStrip(c.choices?c.choices[c.correct]:''));} acRender(); }
+function acFlipGrade(got){
+  var c=acQ[acI];
+  if(!c._scored){c._scored=true;acSeen++;if(got)acRight++;else acMissed.push(c);}
+  if(!got){acQ.push(acQ.splice(acI,1)[0]);}else{acI++;}
+  acFlipped=false; acRender();
+}
+
+function acDone(){
+  var body=document.getElementById('ov-body');
+  document.getElementById('ov-prog-fill').style.width='100%';
+  var pct=acSeen?Math.round((acRight/acSeen)*100):0;
+  var cfg=window.ACADEMY_CFG, cert=pct>=cfg.certPct;
+  if(acMode==='test') acSaveScore(acModKey,pct);
+  var note = pct===100?'Clean run. You can hold this module without the sheet in front of you.'
+    : cert?'You’re certified on this module. Run the misses again to make it automatic.'
+    : 'That’s the honest number. Hit the missed cards, then take it again.';
+  var h='<div class="done"><div class="done-pct" style="color:'+(cert?'var(--gold)':pct>=50?'var(--brand)':'var(--red)')+'">'+pct+'%</div>'
+   +'<div class="done-lbl">'+acRight+' of '+acSeen+' first-time right'+(acMode==='test'?' · graded':' · self-graded')+'</div>'
+   +'<div class="done-note">'+note+'</div>';
+  if(cert&&acMode==='test'){ h+='<div class="done-cert"><div class="c-ic">🏅</div>'
+    +'<div class="c-t">'+window.ACADEMY_QUIZ[acModKey].title+' — Certified</div>'
+    +'<div class="c-s">Best score saved to this device</div></div>'; }
+  if(acMissed.length){
+    h+='<div class="missed"><h5>Needed a second look</h5><ul>';
+    acMissed.forEach(function(c){ h+='<li>'+acStrip(c.q)+'</li>'; }); h+='</ul></div>';
+  }
+  h+='<div class="run-foot" style="max-width:440px;margin:22px auto 0">';
+  if(acMissed.length) h+='<button class="btn btn-g" onclick="acRetryMissed()">Retry misses</button>';
+  h+='<button class="btn btn-p" onclick="acStart()">Run it again</button></div>';
+  h+='<div class="run-foot" style="max-width:440px;margin:10px auto 0"><button class="btn btn-g" onclick="acClose()">Back to Academy</button></div>';
+  h+='</div>';
+  body.innerHTML=h;
+}
+function acRetryMissed(){
+  if(!acMissed.length)return;
+  acQ=acMissed.map(function(c){return {q:c.q,choices:c.choices?c.choices.slice():null,correct:c.correct};});
+  acShuffle(acQ); acI=0;acPicked=null;acFlipped=false;acRight=0;acSeen=0;acMissed=[];
+  acRender();
+}
+
+/* keyboard */
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('ov').classList.contains('on'))return;
+  if(e.key==='Escape'){acClose();return;}
+  if(acMode==='test'){
+    if(acPicked==null&&/^[1-4]$/.test(e.key)){var i=+e.key-1;if(acQ[acI]&&acQ[acI].choices[i]!=null)acAnswer(i);}
+    else if(acPicked!=null&&e.key==='Enter')acNext();
+  } else {
+    if(e.key===' '){e.preventDefault();if(!acFlipped)acFlip();}
+    else if(acFlipped&&e.key==='1')acFlipGrade(false);
+    else if(acFlipped&&e.key==='2')acFlipGrade(true);
+  }
+});
+
+/* init */
+(function(){ acVoiceOn=acDrive(); document.getElementById('drive-toggle').classList.toggle('on',acVoiceOn); acHome(); })();
+</script>
+</body>
+</html>

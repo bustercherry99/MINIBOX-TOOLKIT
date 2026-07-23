@@ -1,0 +1,911 @@
+<style id="mbx-accounts-css">
+/* ===== ACCOUNT MAP (v3.24) — self-contained, append-only. Delete this block + #mbx-accounts to revert. ===== */
+#tab-accounts .ac-wrap{ max-width:1100px; }
+#tab-accounts .ac-bar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:14px 0 12px; }
+#tab-accounts .ac-btn{ font:inherit; font-size:12px; font-weight:700; letter-spacing:.04em; padding:9px 14px; border-radius:7px;
+  border:1px solid var(--gray-200,#e5e7eb); background:#fff; color:#1e40af; cursor:pointer; }
+#tab-accounts .ac-btn:hover{ border-color:#9fb3d9; }
+#tab-accounts .ac-btn.solid{ background:#1e40af; color:#fff; border-color:transparent; }
+#tab-accounts .ac-btn.go{ background:#047857; color:#fff; border-color:transparent; }
+#tab-accounts .ac-btn.warn{ color:#b91c1c; border-color:#fecaca; }
+#tab-accounts .ac-here{ flex:1; min-width:190px; font-size:14px; padding:13px 16px; background:#047857; color:#fff; border-color:transparent; font-weight:800; letter-spacing:.06em; }
+#tab-accounts input.ac-in, #tab-accounts select.ac-in, #tab-accounts textarea.ac-in{
+  font:inherit; font-size:13px; padding:9px 11px; border:1px solid var(--gray-200,#e5e7eb); border-radius:7px; background:#fff; color:#111827; box-sizing:border-box; }
+#tab-accounts .ac-chips{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+#tab-accounts .ac-chip{ font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:5px 11px; border-radius:20px;
+  border:1px solid var(--gray-200,#e5e7eb); background:#fff; color:#6b7280; cursor:pointer; }
+#tab-accounts .ac-chip.on{ background:#111827; color:#fff; border-color:#111827; }
+#tab-accounts .ac-chip .n{ opacity:.6; margin-left:5px; font-weight:600; }
+
+#tab-accounts .ac-map{ height:44vh; min-height:280px; max-height:460px; border:1px solid var(--gray-200,#e5e7eb); border-radius:10px; overflow:hidden; background:#eef1f4; }
+#tab-accounts .ac-map.tall{ height:56vh; }
+#tab-accounts .ac-mapnote{ font-size:11px; color:#9ca3af; margin:6px 2px 14px; }
+/* The map must never be colour-inverted by Night mode — a map has to read like a map.
+   Same double-flip trick the Display switcher uses for images. */
+html[data-mbx-theme="night"] #tab-accounts .ac-map{ filter:invert(1) hue-rotate(180deg); }
+html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
+
+.ac-pin{ width:26px; height:26px; border-radius:50% 50% 50% 2px; transform:rotate(-45deg); border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; }
+.ac-pin span{ transform:rotate(45deg); font-family:'DM Mono',ui-monospace,monospace; font-size:10px; font-weight:700; color:#fff; }
+.ac-pin.s-customer{ background:#047857; } .ac-pin.s-demo{ background:#b45309; }
+.ac-pin.s-prospect{ background:#1e40af; }  .ac-pin.s-service{ background:#b91c1c; }
+.ac-pin.s-cold{ background:#6b7280; }      .ac-pin.s-found{ background:#fff; border-color:#1e40af; }
+.ac-pin.s-found span{ color:#1e40af; }
+.ac-me{ width:16px; height:16px; border-radius:50%; background:#2563eb; border:3px solid #fff; box-shadow:0 0 0 2px rgba(37,99,235,.45), 0 2px 8px rgba(0,0,0,.4); }
+
+#tab-accounts .ac-card{ border:1px solid var(--gray-200,#e5e7eb); border-left-width:4px; border-radius:10px; padding:12px 14px; margin-bottom:9px; background:#fff; cursor:pointer; }
+#tab-accounts .ac-card:hover{ border-color:#c7d2e5; }
+#tab-accounts .ac-card.s-customer{ border-left-color:#047857; } #tab-accounts .ac-card.s-demo{ border-left-color:#b45309; }
+#tab-accounts .ac-card.s-prospect{ border-left-color:#1e40af; } #tab-accounts .ac-card.s-service{ border-left-color:#b91c1c; }
+#tab-accounts .ac-card.s-cold{ border-left-color:#9ca3af; }
+#tab-accounts .ac-nm{ font-size:14.5px; font-weight:800; color:#111827; line-height:1.3; }
+#tab-accounts .ac-sub{ font-size:11.5px; color:#6b7280; margin-top:2px; }
+#tab-accounts .ac-meta{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:7px; }
+#tab-accounts .ac-tag{ font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:20px; background:#f3f4f6; color:#4b5563; }
+#tab-accounts .ac-tag.s-customer{ background:#dcfce7; color:#065f46; } #tab-accounts .ac-tag.s-demo{ background:#fef3c7; color:#92400e; }
+#tab-accounts .ac-tag.s-prospect{ background:#dbeafe; color:#1e3a8a; }  #tab-accounts .ac-tag.s-service{ background:#fee2e2; color:#991b1b; }
+#tab-accounts .ac-dist{ font-family:'DM Mono',ui-monospace,monospace; font-size:11px; color:#047857; font-weight:700; }
+
+/* bottom sheet */
+#mbxa-sheet{ display:none; position:fixed; z-index:99000; left:0; right:0; bottom:0; top:0; background:rgba(8,11,14,.55); }
+#mbxa-sheet.open{ display:block; }
+#mbxa-sheet .ac-panel{ position:absolute; left:0; right:0; bottom:0; max-height:88vh; overflow-y:auto; background:#fff;
+  border-radius:16px 16px 0 0; padding:18px 18px 26px; box-shadow:0 -18px 50px -12px rgba(0,0,0,.6); }
+@media(min-width:760px){ #mbxa-sheet .ac-panel{ left:50%; right:auto; bottom:auto; top:50%; transform:translate(-50%,-50%); width:620px; border-radius:14px; max-height:86vh; } }
+#mbxa-sheet .ac-grab{ width:42px; height:4px; border-radius:4px; background:#d1d5db; margin:0 auto 14px; }
+#mbxa-sheet h3{ margin:0; font-size:19px; font-weight:800; color:#111827; line-height:1.25; }
+#mbxa-sheet .ac-line{ display:flex; gap:10px; padding:9px 0; border-bottom:1px solid #f3f4f6; font-size:13px; color:#111827; }
+#mbxa-sheet .ac-line b{ flex:none; width:96px; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#9ca3af; font-weight:800; padding-top:2px; }
+#mbxa-sheet .ac-acts{ display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 4px; }
+#mbxa-sheet .ac-acts .ac-btn{ flex:1; min-width:132px; text-align:center; }
+#mbxa-sheet .ac-form{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:6px; }
+#mbxa-sheet .ac-form .full{ grid-column:1 / -1; }
+#mbxa-sheet .ac-form label{ display:block; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#9ca3af; font-weight:800; margin-bottom:3px; }
+#mbxa-sheet .ac-form input, #mbxa-sheet .ac-form select, #mbxa-sheet .ac-form textarea{
+  width:100%; font:inherit; font-size:13px; padding:9px 11px; border:1px solid var(--gray-200,#e5e7eb); border-radius:7px; box-sizing:border-box; background:#fff; color:#111827; }
+#mbxa-sheet .ac-found{ border:1px solid var(--gray-200,#e5e7eb); border-radius:9px; padding:10px 12px; margin-bottom:8px; }
+#mbxa-sheet .ac-status{ font-size:12px; color:#047857; min-height:16px; margin-top:8px; }
+#mbxa-sheet .ac-warn{ font-size:12px; color:#b45309; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:9px 11px; margin-top:10px; }
+#mbxa-toast{ position:fixed; z-index:99500; left:50%; transform:translateX(-50%); bottom:26px; background:#111827; color:#fff;
+  font-size:13px; font-weight:600; padding:11px 18px; border-radius:9px; box-shadow:0 12px 30px -8px rgba(0,0,0,.6); display:none; max-width:88vw; }
+#mbxa-toast.show{ display:block; }
+</style>
+
+<script id="mbx-accounts">
+/* ============================================================================
+   ACCOUNT MAP  (v3.24)
+   Every account the team owns, on one map, with the address editable from the
+   parking lot. Self-contained and append-only so it never collides with edits
+   to the other tabs (same pattern as mbx-pwa / mbx-videos-hub).
+
+   Where things live:
+     - shared book ....... /api/accounts   (Upstash, live for everyone)
+     - address to pin .... /api/geocode    (OpenStreetMap, answers cached forever)
+     - find new offices .. /api/nearby     (CMS NPI Registry, free, by specialty)
+     - map ............... vendor/leaflet.js + OpenStreetMap tiles, no API key
+
+   Location rule: the rep's own position is read on demand and NEVER sent
+   anywhere. What syncs is the account book, not a trail of where anyone drove.
+   ========================================================================= */
+(function () {
+  var LS_CACHE = 'mbx_accounts_v1';
+  var LS_QUEUE = 'mbx_accounts_queue_v1';
+  var LS_SEED  = 'mbx_accounts_seeded_v1';
+
+  var ACCTS = [];        // the book
+  var FOUND = [];        // results of a "find nearby" search
+  var DRAFT = null;      // the record the open form started from
+  var PENDING_PIN = null;// exact spot the rep stood on, applied on the next save
+  var POS = null;        // { lat, lng, acc, ts } — this device only
+  var MAP = null, LAYER = null, MEMARK = null, RING = null;
+  var FILTER = 'all', SEARCH = '';
+  var LOADED = false, WATCH = null;
+
+  var STATUSES = [
+    { v: 'customer', t: 'Customer' },
+    { v: 'demo',     t: 'Demo unit out' },
+    { v: 'prospect', t: 'Prospect' },
+    { v: 'service',  t: 'Needs service' },
+    { v: 'cold',     t: 'Cold / no contact' }
+  ];
+
+  /* ---------- tiny helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function ls(get, dflt) { try { return get(); } catch (e) { return dflt; } }
+  function repName() { return ls(function () { return localStorage.getItem('mbx_chat_name') || ''; }, '') || 'a teammate'; }
+  function toast(msg) {
+    var t = $('mbxa-toast'); if (!t) return;
+    t.textContent = msg; t.className = 'show';
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.className = ''; }, 3200);
+  }
+  function addrLine(a) { return [a.addr, a.city, a.state, a.zip].filter(Boolean).join(', '); }
+  function statusText(v) { for (var i = 0; i < STATUSES.length; i++) if (STATUSES[i].v === v) return STATUSES[i].t; return 'Prospect'; }
+  function miles(a, b) {
+    if (!a || !b || a.lat == null || b.lat == null) return null;
+    var R = 3958.8, dLat = (b.lat - a.lat) * Math.PI / 180, dLng = (b.lng - a.lng) * Math.PI / 180;
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+  }
+  function distLabel(m) {
+    if (m == null) return '';
+    if (m < 0.1) return 'you are here';
+    if (m < 1) return (Math.round(m * 10) / 10) + ' mi';
+    return Math.round(m) + ' mi';
+  }
+  function dayLabel(ts) {
+    if (!ts) return 'never';
+    var d = Math.floor((Date.now() - ts) / 86400000);
+    if (d <= 0) return 'today';
+    if (d === 1) return 'yesterday';
+    if (d < 30) return d + ' days ago';
+    return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  /* ---------- storage: local first, cloud when it answers ---------- */
+  function cacheRead() { return ls(function () { return JSON.parse(localStorage.getItem(LS_CACHE)) || []; }, []); }
+  function cacheWrite() { try { localStorage.setItem(LS_CACHE, JSON.stringify(ACCTS)); } catch (e) {} }
+  function queueRead() { return ls(function () { return JSON.parse(localStorage.getItem(LS_QUEUE)) || []; }, []); }
+  function queueWrite(q) { try { localStorage.setItem(LS_QUEUE, JSON.stringify(q)); } catch (e) {} }
+
+  function pushToCloud(account) {
+    return fetch('/api/accounts', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ account: account, by: repName() })
+    }).then(function (r) { return r.json(); });
+  }
+
+  function flushQueue() {
+    var q = queueRead(); if (!q.length) return Promise.resolve();
+    var next = q.shift(); queueWrite(q);
+    return pushToCloud(next).then(function (j) {
+      if (!j || !j.ok) { var qq = queueRead(); qq.unshift(next); queueWrite(qq); return; }
+      return flushQueue();
+    }).catch(function () { var qq = queueRead(); qq.unshift(next); queueWrite(qq); });
+  }
+
+  function load(force) {
+    if (LOADED && !force) return Promise.resolve(ACCTS);
+    ACCTS = cacheRead();
+    render();
+    return fetch('/api/accounts', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j && j.ok && Array.isArray(j.accounts)) {
+          ACCTS = j.accounts; LOADED = true; cacheWrite();
+          if (!ACCTS.length) seedFromTargetLists();
+          else setTimeout(healPins, 2500);
+        }
+        render();
+        return flushQueue();
+      })
+      .catch(function () { render(); });
+  }
+
+  /* Self-healing pins. An address can fail to place the first time — a busy minute at
+     OpenStreetMap, a typo since corrected, a brand new building. Rather than leaving a
+     dead account off the map forever, quietly retry the unpinned ones a few at a time
+     whenever the tab is open. Once one lands it is saved for the whole team. */
+  function healPins() {
+    var todo = ACCTS.filter(function (a) { return a.lat == null && addrLine(a); }).slice(0, 6), i = 0;
+    if (!todo.length) return;
+    (function step() {
+      if (i >= todo.length) { render(); return; }
+      var a = todo[i++];
+      fetch('/api/geocode?addr=' + encodeURIComponent(addrLine(a)))
+        .then(function (r) { return r.json(); })
+        .then(function (g) {
+          if (g && g.ok && g.lat != null) { a.lat = g.lat; a.lng = g.lng; return pushToCloud(a); }
+        })
+        .catch(function () {})
+        .then(function () { setTimeout(step, 1600); });
+    })();
+  }
+
+  /* First run on an empty book: lift the saved target lists that already live in
+     My Day so the map is never an empty grey square. */
+  function seedFromTargetLists() {
+    if (ls(function () { return localStorage.getItem(LS_SEED); }, null)) return;
+    try { localStorage.setItem(LS_SEED, '1'); } catch (e) {}
+    var lists = ls(function () { return JSON.parse(localStorage.getItem('mbx_targetlists_v1')) || {}; }, {});
+    if (typeof MD_SEED_LISTS !== 'undefined') {
+      Object.keys(MD_SEED_LISTS).forEach(function (k) { if (!lists[k]) lists[k] = MD_SEED_LISTS[k]; });
+    }
+    var seeds = [];
+    Object.keys(lists).forEach(function (k) {
+      (lists[k] || []).forEach(function (s) {
+        var parts = String(s.addr || '').split(',').map(function (x) { return x.trim(); });
+        var zipState = parts.length > 1 ? parts[parts.length - 1] : '';
+        var m = /([A-Z]{2})\s+(\d{5})/.exec(zipState) || [];
+        seeds.push({
+          name: String(s.name || '').replace(/\s*\(.*$/, '').trim() || s.name,
+          specialty: /rheum/i.test(k) ? 'Rheumatology' : '',
+          addr: parts[0] || '',
+          city: parts.length >= 3 ? parts[parts.length - 2] : '',
+          state: m[1] || '', zip: m[2] || '',
+          phone: s.phone || '', status: 'prospect',
+          notes: /\(/.test(s.name || '') ? String(s.name).replace(/^[^(]*\(/, '').replace(/\)\s*$/, '') : ''
+        });
+      });
+    });
+    if (!seeds.length) return;
+    toast('Building your map from your saved target lists…');
+    var i = 0;
+    (function step() {
+      if (i >= seeds.length) { load(true); return; }
+      var s = seeds[i++];
+      saveAccount(s, true).then(function () { setTimeout(step, 350); }, function () { setTimeout(step, 350); });
+    })();
+  }
+
+  /* Save one account: pin it on the map first (geocode), then store. Optimistic —
+     the rep never waits on the network. */
+  function saveAccount(a, quiet) {
+    var needsPin = (a.lat == null || a.lng == null) && addrLine(a);
+    var pre = needsPin
+      ? fetch('/api/geocode?addr=' + encodeURIComponent(addrLine(a)))
+          .then(function (r) { return r.json(); })
+          .then(function (g) { if (g && g.ok && g.lat != null) { a.lat = g.lat; a.lng = g.lng; } })
+          .catch(function () {})
+      : Promise.resolve();
+
+    return pre.then(function () {
+      if (!a.id) a.id = 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      a.ts = Date.now(); a.by = repName();
+      var at = -1;
+      for (var i = 0; i < ACCTS.length; i++) if (ACCTS[i].id === a.id) { at = i; break; }
+      if (at >= 0) ACCTS[at] = a; else ACCTS.push(a);
+      cacheWrite(); render();
+
+      return pushToCloud(a).then(function (j) {
+        if (j && j.ok && j.account) {
+          for (var i = 0; i < ACCTS.length; i++) if (ACCTS[i].id === j.account.id) ACCTS[i] = j.account;
+          cacheWrite(); render();
+          if (!quiet) toast('Saved. Everyone on the team sees it now.');
+        } else {
+          var q = queueRead(); q.push(a); queueWrite(q);
+          if (!quiet) toast('Saved on this phone. It will sync when you have signal.');
+        }
+      }).catch(function () {
+        var q = queueRead(); q.push(a); queueWrite(q);
+        if (!quiet) toast('Saved on this phone. It will sync when you have signal.');
+      });
+    });
+  }
+
+  function removeAccount(id) {
+    ACCTS = ACCTS.filter(function (a) { return a.id !== id; });
+    cacheWrite(); render(); closeSheet();
+    fetch('/api/accounts', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', id: id, by: repName() })
+    }).then(function () { toast('Account removed.'); }).catch(function () {});
+  }
+
+  /* ---------- where am I ---------- */
+  function locate(then, quiet) {
+    if (!navigator.geolocation) { if (!quiet) toast('This device will not share its location.'); return; }
+    if (!quiet) toast('Finding you…');
+    navigator.geolocation.getCurrentPosition(function (p) {
+      POS = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, ts: Date.now() };
+      render(); drawMe();
+      if (then) then(POS);
+    }, function (err) {
+      if (!quiet) {
+        toast(err && err.code === 1
+          ? 'Location is switched off for this app. Turn it on in your phone settings to use I am here.'
+          : 'Could not get a fix. Step outside the building and try again.');
+      }
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 20000 });
+  }
+
+  function nearest(pos, list) {
+    var best = null, bestD = Infinity;
+    (list || ACCTS).forEach(function (a) {
+      var d = miles(pos, a);
+      if (d != null && d < bestD) { bestD = d; best = a; }
+    });
+    return best ? { account: best, miles: bestD } : null;
+  }
+
+  /* "I'm here": if a known account is within a quarter mile, open it and stamp the
+     arrival. Otherwise offer to add whatever is at this address. */
+  function imHere() {
+    locate(function (p) {
+      var n = nearest(p);
+      if (n && n.miles <= 0.25) {
+        n.account.lastVisit = Date.now();
+        saveAccount(n.account, true);
+        openAccount(n.account.id, n.miles);
+        toast('You are at ' + n.account.name + '. Arrival stamped.');
+      } else {
+        newHere(p, n);
+      }
+    });
+  }
+
+  /* ---------- the map ---------- */
+  function leafletReady(cb) {
+    if (window.L) return cb();
+    if (leafletReady._loading) { leafletReady._q.push(cb); return; }
+    leafletReady._loading = true; leafletReady._q = [cb];
+    var css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = 'vendor/leaflet.css';
+    document.head.appendChild(css);
+    var s = document.createElement('script');
+    s.src = 'vendor/leaflet.js';
+    s.onload = function () { leafletReady._q.forEach(function (f) { f(); }); leafletReady._q = []; };
+    s.onerror = function () {
+      var el = $('mbxa-map');
+      if (el) el.innerHTML = '<div style="padding:26px 18px; text-align:center; color:#6b7280; font-size:13px;">'
+        + 'The map needs internet. Your accounts are all listed below and everything else still works.</div>';
+    };
+    document.head.appendChild(s);
+  }
+
+  function night() { return document.documentElement.getAttribute('data-mbx-theme') === 'night'; }
+
+  function initMap() {
+    var el = $('mbxa-map');
+    if (!el || MAP) { if (MAP) setTimeout(function () { MAP.invalidateSize(); }, 60); return; }
+    MAP = L.map(el, { zoomControl: true, attributionControl: true }).setView([40.68, -73.65], 10);
+    var url = night()
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    L.tileLayer(url, {
+      maxZoom: 19, subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(MAP);
+    LAYER = L.layerGroup().addTo(MAP);
+    drawPins();
+    locate(null, true);
+  }
+
+  function pinIcon(status, label) {
+    return L.divIcon({
+      className: '', iconSize: [26, 26], iconAnchor: [13, 26], popupAnchor: [0, -24],
+      html: '<div class="ac-pin s-' + status + '"><span>' + esc(label || '') + '</span></div>'
+    });
+  }
+
+  function drawPins() {
+    if (!MAP || !LAYER) return;
+    LAYER.clearLayers();
+    var bounds = [];
+
+    visible().forEach(function (a) {
+      if (a.lat == null || a.lng == null) return;
+      var m = L.marker([a.lat, a.lng], { icon: pinIcon(a.status || 'prospect', (a.name || '?').charAt(0).toUpperCase()) });
+      m.on('click', function () { openAccount(a.id); });
+      m.bindTooltip(esc(a.name), { direction: 'top', offset: [0, -22] });
+      m.addTo(LAYER); bounds.push([a.lat, a.lng]);
+    });
+
+    FOUND.forEach(function (f) {
+      if (f.lat == null || f.lng == null) return;
+      var m = L.marker([f.lat, f.lng], { icon: pinIcon('found', '+') });
+      m.on('click', function () { openFound(f.key); });
+      m.bindTooltip(esc(f.name) + ' (not yet an account)', { direction: 'top', offset: [0, -22] });
+      m.addTo(LAYER); bounds.push([f.lat, f.lng]);
+    });
+
+    drawMe();
+    if (bounds.length && !drawPins._fitted) {
+      try { MAP.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 }); drawPins._fitted = true; } catch (e) {}
+    }
+  }
+
+  function drawMe() {
+    if (!MAP || !POS) return;
+    if (MEMARK) { MAP.removeLayer(MEMARK); MEMARK = null; }
+    if (RING) { MAP.removeLayer(RING); RING = null; }
+    MEMARK = L.marker([POS.lat, POS.lng], {
+      icon: L.divIcon({ className: '', iconSize: [16, 16], iconAnchor: [8, 8], html: '<div class="ac-me"></div>' }),
+      zIndexOffset: 900, interactive: false
+    }).addTo(MAP);
+    RING = L.circle([POS.lat, POS.lng], {
+      radius: 150, color: '#2563eb', weight: 1, opacity: .5, fillColor: '#2563eb', fillOpacity: .06, interactive: false
+    }).addTo(MAP);
+  }
+
+  function flyTo(a) {
+    if (!MAP || a.lat == null) return;
+    MAP.setView([a.lat, a.lng], 16, { animate: true });
+  }
+
+  /* ---------- list ---------- */
+  function visible() {
+    var q = SEARCH.trim().toLowerCase();
+    return ACCTS.filter(function (a) {
+      if (FILTER !== 'all' && (a.status || 'prospect') !== FILTER) return false;
+      if (!q) return true;
+      return (a.name + ' ' + a.specialty + ' ' + addrLine(a) + ' ' + (a.contact || '') + ' ' + (a.notes || ''))
+        .toLowerCase().indexOf(q) !== -1;
+    }).map(function (a) {
+      a._d = POS ? miles(POS, a) : null; return a;
+    }).sort(function (x, y) {
+      if (x._d != null && y._d != null) return x._d - y._d;
+      if (x._d != null) return -1;
+      if (y._d != null) return 1;
+      return String(x.name || '').localeCompare(String(y.name || ''));
+    });
+  }
+
+  function counts() {
+    var c = { all: ACCTS.length };
+    STATUSES.forEach(function (s) { c[s.v] = 0; });
+    ACCTS.forEach(function (a) { var s = a.status || 'prospect'; if (c[s] != null) c[s]++; });
+    return c;
+  }
+
+  function render() {
+    var chips = $('mbxa-chips'), list = $('mbxa-list');
+    if (!chips || !list) return;
+    var c = counts();
+    var opts = [{ v: 'all', t: 'All' }].concat(STATUSES);
+    chips.innerHTML = opts.map(function (o) {
+      return '<button class="ac-chip' + (FILTER === o.v ? ' on' : '') + '" onclick="mbxaFilter(\'' + o.v + '\')">'
+        + esc(o.t) + '<span class="n">' + (c[o.v] || 0) + '</span></button>';
+    }).join('');
+
+    var rows = visible();
+    if (!rows.length) {
+      list.innerHTML = '<div style="border:2px dashed #e5e7eb; border-radius:10px; padding:26px 18px; text-align:center; color:#6b7280; font-size:13px;">'
+        + (ACCTS.length ? 'Nothing matches that.' : 'No accounts yet. Tap <b>I am here</b> in a parking lot, or <b>Add account</b>, and the map fills itself in.')
+        + '</div>';
+    } else {
+      list.innerHTML = rows.map(function (a) {
+        var st = a.status || 'prospect';
+        return '<div class="ac-card s-' + st + '" onclick="mbxaOpen(\'' + a.id + '\')">'
+          + '<div class="ac-nm">' + esc(a.name) + '</div>'
+          + '<div class="ac-sub">' + esc(addrLine(a) || 'No address yet') + '</div>'
+          + '<div class="ac-meta">'
+          +   '<span class="ac-tag s-' + st + '">' + esc(statusText(st)) + '</span>'
+          +   (a.specialty ? '<span class="ac-tag">' + esc(a.specialty) + '</span>' : '')
+          +   (a._d != null ? '<span class="ac-dist">' + distLabel(a._d) + '</span>' : '')
+          +   (a.lat == null ? '<span class="ac-tag" style="background:#fef3c7;color:#92400e;">Not on the map yet</span>' : '')
+          +   '<span style="font-size:11px;color:#9ca3af;">Last visit ' + dayLabel(a.lastVisit) + '</span>'
+          + '</div></div>';
+      }).join('');
+    }
+    drawPins();
+  }
+
+  /* ---------- the sheet: detail, edit, add, find ---------- */
+  function sheet(html) {
+    var s = $('mbxa-sheet');
+    s.innerHTML = '<div class="ac-panel" onclick="event.stopPropagation()"><div class="ac-grab"></div>' + html + '</div>';
+    s.className = 'open';
+  }
+  function closeSheet() { var s = $('mbxa-sheet'); if (s) { s.className = ''; s.innerHTML = ''; } }
+
+  function byId(id) { for (var i = 0; i < ACCTS.length; i++) if (ACCTS[i].id === id) return ACCTS[i]; return null; }
+
+  function openAccount(id, dist) {
+    var a = byId(id); if (!a) return;
+    var d = dist != null ? dist : (POS ? miles(POS, a) : null);
+    var mapsUrl = 'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=' + encodeURIComponent(addrLine(a) || a.name);
+    sheet(
+      '<h3>' + esc(a.name) + '</h3>'
+      + '<div style="margin-top:5px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">'
+      +   '<span class="ac-tag s-' + (a.status || 'prospect') + '">' + esc(statusText(a.status)) + '</span>'
+      +   (a.specialty ? '<span class="ac-tag">' + esc(a.specialty) + '</span>' : '')
+      +   (d != null ? '<span class="ac-dist">' + distLabel(d) + ' away</span>' : '')
+      + '</div>'
+      + '<div style="margin-top:14px;">'
+      +   line('Address', esc(addrLine(a) || 'Not set') + (a.lat == null ? ' <span style="color:#b45309;">(no pin yet)</span>' : ''))
+      +   (a.contact ? line('Contact', esc(a.contact) + (a.title ? ', ' + esc(a.title) : '')) : '')
+      +   (a.phone ? line('Phone', '<a href="tel:' + esc(a.phone.replace(/[^0-9+]/g, '')) + '" style="color:#1e40af; font-weight:700;">' + esc(a.phone) + '</a>') : '')
+      +   (a.devices ? line('Devices', esc(a.devices)) : '')
+      +   (a.stage ? line('Stage', esc(a.stage)) : '')
+      +   (a.nextStep ? line('Next step', esc(a.nextStep)) : '')
+      +   line('Last visit', dayLabel(a.lastVisit))
+      +   (a.notes ? line('Notes', esc(a.notes).replace(/\n/g, '<br>')) : '')
+      + '</div>'
+      + '<div class="ac-acts">'
+      +   '<a class="ac-btn go" href="' + mapsUrl + '" target="_blank" rel="noopener">Navigate</a>'
+      +   '<button class="ac-btn solid" onclick="mbxaLogVisit(\'' + a.id + '\')">Log a visit</button>'
+      +   '<button class="ac-btn" onclick="mbxaRoute(\'' + a.id + '\')">Add to today</button>'
+      + '</div>'
+      + '<div class="ac-acts">'
+      +   '<button class="ac-btn" onclick="mbxaEdit(\'' + a.id + '\')">Edit account</button>'
+      +   '<button class="ac-btn" onclick="mbxaFixHere(\'' + a.id + '\')">They moved &mdash; I am standing at the new address</button>'
+      + '</div>'
+      + '<div id="mbxa-status" class="ac-status"></div>'
+      + '<div style="margin-top:14px; text-align:right;"><button class="ac-btn" onclick="mbxaClose()">Close</button></div>'
+    );
+    flyTo(a);
+  }
+  function line(k, v) { return '<div class="ac-line"><b>' + k + '</b><div>' + v + '</div></div>'; }
+
+  function editForm(a, title, extraNote) {
+    a = a || { status: 'prospect' };
+    DRAFT = JSON.parse(JSON.stringify(a));
+    function f(name, label, val, type, wide) {
+      return '<div' + (wide ? ' class="full"' : '') + '><label>' + label + '</label>'
+        + '<input id="mbxa-f-' + name + '" type="' + (type || 'text') + '" value="' + esc(val || '') + '"></div>';
+    }
+    sheet(
+      '<h3>' + esc(title) + '</h3>'
+      + (extraNote ? '<div class="ac-warn">' + extraNote + '</div>' : '')
+      + '<div class="ac-form" style="margin-top:12px;">'
+      +   f('name', 'Practice name', a.name, 'text', true)
+      +   f('specialty', 'Specialty', a.specialty)
+      +   '<div><label>Status</label><select id="mbxa-f-status">'
+      +     STATUSES.map(function (s) { return '<option value="' + s.v + '"' + ((a.status || 'prospect') === s.v ? ' selected' : '') + '>' + s.t + '</option>'; }).join('')
+      +   '</select></div>'
+      +   f('addr', 'Street address', a.addr, 'text', true)
+      +   f('city', 'Town', a.city)
+      +   '<div style="display:grid; grid-template-columns:1fr 1.4fr; gap:9px;">'
+      +     '<div><label>State</label><input id="mbxa-f-state" value="' + esc(a.state || '') + '"></div>'
+      +     '<div><label>ZIP</label><input id="mbxa-f-zip" value="' + esc(a.zip || '') + '"></div>'
+      +   '</div>'
+      +   f('contact', 'Contact', a.contact)
+      +   f('title', 'Their role', a.title)
+      +   f('phone', 'Phone', a.phone, 'tel')
+      +   f('devices', 'Devices on site', a.devices)
+      +   f('stage', 'Deal stage', a.stage)
+      +   f('nextStep', 'Next step', a.nextStep, 'text', true)
+      +   '<div class="full"><label>Notes</label><textarea id="mbxa-f-notes" rows="3">' + esc(a.notes || '') + '</textarea></div>'
+      + '</div>'
+      + '<div id="mbxa-status" class="ac-status"></div>'
+      + '<div class="ac-acts">'
+      +   '<button class="ac-btn solid" onclick="mbxaSaveForm(\'' + (a.id || '') + '\')">Save</button>'
+      +   '<button class="ac-btn" onclick="mbxaUseMyPosition()">Use where I am standing</button>'
+      +   (a.id ? '<button class="ac-btn warn" onclick="mbxaDelete(\'' + a.id + '\')">Remove</button>' : '')
+      +   '<button class="ac-btn" onclick="mbxaClose()">Cancel</button>'
+      + '</div>'
+    );
+  }
+
+  function readForm(id) {
+    var prev = id ? byId(id) : null;
+    var base = prev || DRAFT || {};
+    var a = JSON.parse(JSON.stringify(base));
+    ['name', 'specialty', 'addr', 'city', 'state', 'zip', 'contact', 'title', 'phone', 'devices', 'stage', 'nextStep', 'notes']
+      .forEach(function (k) { var el = $('mbxa-f-' + k); if (el) a[k] = el.value.trim(); });
+    var st = $('mbxa-f-status'); if (st) a.status = st.value;
+    /* address typed by hand: drop the old pin so it gets looked up fresh */
+    if (addrLine(base) !== addrLine(a)) { a.lat = null; a.lng = null; }
+    /* unless the rep pinned themselves standing on the doorstep */
+    if (PENDING_PIN) { a.lat = PENDING_PIN.lat; a.lng = PENDING_PIN.lng; PENDING_PIN = null; }
+    return a;
+  }
+
+  /* Add whatever is at the spot the rep is standing on right now. */
+  function newHere(p, near) {
+    sheet('<h3>Adding what is here</h3>'
+      + '<div class="ac-status">Reading the street address off your position…</div>');
+    fetch('/api/geocode?lat=' + p.lat + '&lng=' + p.lng)
+      .then(function (r) { return r.json(); })
+      .then(function (g) {
+        var a = { status: 'prospect', lat: p.lat, lng: p.lng, addr: (g && g.addr) || '', city: (g && g.city) || '', state: (g && g.state) || '', zip: (g && g.zip) || '' };
+        var note = 'Dropped on your exact position. Type the practice name and save; the address below came off the map, so correct it if the sign says otherwise.'
+          + (near && near.miles < 2 ? ' Nearest account you already have: <b>' + esc(near.account.name) + '</b>, ' + distLabel(near.miles) + ' away.' : '');
+        editForm(a, 'New account, right here', note);
+      })
+      .catch(function () {
+        editForm({ status: 'prospect', lat: p.lat, lng: p.lng }, 'New account, right here',
+          'Dropped on your exact position. The street lookup did not answer, so type the address in.');
+      });
+  }
+
+  /* ---------- find practices nearby (CMS NPI Registry) ---------- */
+  function findSheet(prefillWhere) {
+    var specialties = ['Internal Medicine', 'Family Medicine', 'Pulmonology', 'Rheumatology', 'Allergy & Immunology',
+      'Cardiology', 'Sleep Medicine', 'Occupational Medicine', 'Geriatrics', 'Pediatrics'];
+    sheet(
+      '<h3>Find practices near you</h3>'
+      + '<div style="font-size:12.5px; color:#6b7280; margin-top:5px;">Every licensed provider in the country, straight from the official CMS registry, grouped so one result is one front door. Nothing here costs anything to search.</div>'
+      + '<div class="ac-form" style="margin-top:13px;">'
+      +   '<div class="full"><label>What are you looking for</label>'
+      +     '<input id="mbxa-q-what" list="mbxa-spec-list" value="Internal Medicine" placeholder="Internal Medicine">'
+      +     '<datalist id="mbxa-spec-list">' + specialties.map(function (s) { return '<option value="' + s + '">'; }).join('') + '</datalist>'
+      +   '</div>'
+      +   '<div><label>Town</label><input id="mbxa-q-city" value="' + esc((prefillWhere && prefillWhere.city) || '') + '" placeholder="Rockville Centre"></div>'
+      +   '<div style="display:grid; grid-template-columns:1fr 1.4fr; gap:9px;">'
+      +     '<div><label>State</label><input id="mbxa-q-state" value="' + esc((prefillWhere && prefillWhere.state) || '') + '"></div>'
+      +     '<div><label>or ZIP</label><input id="mbxa-q-zip" value="' + esc((prefillWhere && prefillWhere.zip) || '') + '"></div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="ac-acts">'
+      +   '<button class="ac-btn solid" onclick="mbxaRunFind()">Search</button>'
+      +   '<button class="ac-btn" onclick="mbxaFindHere()">Use where I am now</button>'
+      +   '<button class="ac-btn" onclick="mbxaClose()">Cancel</button>'
+      + '</div>'
+      + '<div id="mbxa-status" class="ac-status"></div>'
+      + '<div id="mbxa-found"></div>'
+    );
+  }
+
+  function runFind() {
+    var what = ($('mbxa-q-what') || {}).value || 'Internal Medicine';
+    var city = (($('mbxa-q-city') || {}).value || '').trim();
+    var state = (($('mbxa-q-state') || {}).value || '').trim();
+    var zip = (($('mbxa-q-zip') || {}).value || '').trim();
+    if (!city && !zip) { $('mbxa-status').textContent = 'Give me a town or a ZIP code.'; return; }
+    $('mbxa-status').textContent = 'Searching the provider registry…';
+    $('mbxa-found').innerHTML = '';
+
+    var url = '/api/nearby?what=' + encodeURIComponent(what)
+      + (city ? '&city=' + encodeURIComponent(city) : '')
+      + (state ? '&state=' + encodeURIComponent(state) : '')
+      + (zip ? '&postal=' + encodeURIComponent(zip) : '');
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.ok) { $('mbxa-status').textContent = (j && j.error) || 'That search did not come back.'; return; }
+      FOUND = j.places || [];
+      var known = {};
+      ACCTS.forEach(function (a) { known[(a.addr + '|' + a.city).toUpperCase().replace(/\s+/g, ' ')] = true; });
+      FOUND.forEach(function (f) { f.known = !!known[(f.addr + '|' + f.city).toUpperCase().replace(/\s+/g, ' ')]; });
+
+      $('mbxa-status').textContent = FOUND.length
+        ? FOUND.length + ' offices, ' + j.providerCount + ' providers' + (j.capped ? ' (showing the first 200, narrow the town to see more)' : '') + '.'
+        : 'Nothing came back for that. Try a nearby town or a different specialty.';
+
+      $('mbxa-found').innerHTML = FOUND.map(function (f, i) {
+        return '<div class="ac-found">'
+          + '<div style="font-weight:800; font-size:13.5px; color:#111827;">' + esc(f.name) + '</div>'
+          + '<div style="font-size:11.5px; color:#6b7280; margin-top:2px;">' + esc([f.addr, f.city, f.state, f.zip].filter(Boolean).join(', ')) + '</div>'
+          + '<div style="font-size:11.5px; color:#6b7280; margin-top:2px;">' + f.count + ' provider' + (f.count === 1 ? '' : 's') + (f.phone ? ' &middot; ' + esc(f.phone) : '') + '</div>'
+          + '<div style="margin-top:8px; display:flex; gap:7px; flex-wrap:wrap;">'
+          +   (f.known
+                ? '<span class="ac-tag s-customer">Already in your accounts</span>'
+                : '<button class="ac-btn solid" onclick="mbxaAdopt(' + i + ')">Add to my accounts</button>')
+          +   '<a class="ac-btn" href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent([f.addr, f.city, f.state, f.zip].filter(Boolean).join(', ')) + '" target="_blank" rel="noopener">Navigate</a>'
+          + '</div></div>';
+      }).join('');
+
+      pinFound();
+    }).catch(function () { $('mbxa-status').textContent = 'That search did not come back. Try again in a moment.'; });
+  }
+
+  /* Pins for search results arrive a few at a time so OpenStreetMap is never hammered.
+     Every answer is cached on the server, so the next rep in this town gets them instantly. */
+  function pinFound() {
+    var todo = FOUND.filter(function (f) { return f.lat == null; }).slice(0, 40), i = 0;
+    (function step() {
+      if (i >= todo.length) { drawPins(); return; }
+      var f = todo[i++];
+      fetch('/api/geocode?addr=' + encodeURIComponent([f.addr, f.city, f.state, f.zip].filter(Boolean).join(', ')))
+        .then(function (r) { return r.json(); })
+        .then(function (g) { if (g && g.ok && g.lat != null) { f.lat = g.lat; f.lng = g.lng; } })
+        .catch(function () {})
+        .then(function () {
+          if (i % 5 === 0) drawPins();
+          setTimeout(step, 220);
+        });
+    })();
+  }
+
+  function openFound(key) {
+    var f = null;
+    for (var i = 0; i < FOUND.length; i++) if (FOUND[i].key === key) { f = FOUND[i]; break; }
+    if (!f) return;
+    sheet('<h3>' + esc(f.name) + '</h3>'
+      + '<div style="font-size:12.5px; color:#6b7280; margin-top:4px;">' + esc([f.addr, f.city, f.state, f.zip].filter(Boolean).join(', ')) + '</div>'
+      + '<div style="margin-top:12px;">' + f.providers.map(function (p) {
+          return '<div class="ac-line"><b></b><div>' + esc(p.name) + '<div style="font-size:11px; color:#9ca3af;">' + esc(p.taxonomy) + '</div></div></div>';
+        }).join('') + '</div>'
+      + '<div class="ac-acts">'
+      +   '<button class="ac-btn solid" onclick="mbxaAdoptKey(\'' + esc(f.key).replace(/'/g, "\\'") + '\')">Add to my accounts</button>'
+      +   '<button class="ac-btn" onclick="mbxaClose()">Close</button>'
+      + '</div>');
+  }
+
+  function adopt(f) {
+    if (!f) return;
+    editForm({
+      status: 'prospect', name: f.name, specialty: f.specialty,
+      addr: f.addr, city: f.city, state: f.state, zip: f.zip, phone: f.phone,
+      lat: f.lat, lng: f.lng,
+      notes: f.count + ' provider' + (f.count === 1 ? '' : 's') + ' at this address per the CMS registry: '
+        + f.providers.slice(0, 8).map(function (p) { return p.name; }).join(', ') + (f.count > 8 ? ', and others' : '') + '.'
+    }, 'Add ' + f.name, 'Pulled from the official provider registry. Check the practice name against the sign on the door before you save.');
+  }
+
+  /* ---------- the tab ---------- */
+  function ensureTab() {
+    if ($('tab-accounts')) return;
+    var ref = $('tab-myday') || document.querySelector('.tab-panel');
+    if (!ref || !ref.parentNode) return;
+
+    var p = document.createElement('div');
+    p.className = 'tab-panel';
+    p.id = 'tab-accounts';
+    p.innerHTML =
+      '<div class="ac-wrap">'
+      + '<div class="section-head">'
+      +   '<div class="section-icon icon-blue">&#9678;</div>'
+      +   '<div><div class="section-title">Accounts &mdash; The Map</div>'
+      +   '<div class="section-sub">Every account the team owns, pinned. Pull into a lot and tap <b>I am here</b>: the office comes up on its own, the visit is stamped, and if they have moved you fix the address in one tap for everybody. Your own location is read on your phone and never leaves it.</div></div>'
+      + '</div>'
+      + '<div class="ac-bar">'
+      +   '<button class="ac-btn ac-here" onclick="mbxaHere()">I AM HERE</button>'
+      +   '<button class="ac-btn solid" onclick="mbxaAdd()">Add account</button>'
+      +   '<button class="ac-btn" onclick="mbxaFind()">Find practices nearby</button>'
+      +   '<button class="ac-btn" onclick="mbxaRefresh()">Refresh</button>'
+      + '</div>'
+      + '<div class="ac-bar" style="margin-top:0;">'
+      +   '<input class="ac-in" id="mbxa-search" placeholder="Search by practice, doctor, town or note" style="flex:1; min-width:200px;" oninput="mbxaSearch(this.value)">'
+      + '</div>'
+      + '<div class="ac-chips" id="mbxa-chips"></div>'
+      + '<div class="ac-map" id="mbxa-map"></div>'
+      + '<div class="ac-mapnote">Map data &copy; OpenStreetMap contributors and CARTO. Tap a pin to open the account.</div>'
+      + '<div id="mbxa-list"></div>'
+      + '</div>';
+    ref.parentNode.insertBefore(p, ref);
+
+    /* nav button, sitting right next to My Day */
+    var btns = document.querySelectorAll('.tab-btn'), mydayBtn = null;
+    for (var i = 0; i < btns.length; i++) {
+      if ((btns[i].getAttribute('onclick') || '').indexOf("showTab('myday'") !== -1) { mydayBtn = btns[i]; break; }
+    }
+    var b = document.createElement('button');
+    b.className = 'tab-btn';
+    b.textContent = 'Accounts';
+    b.setAttribute('onclick', "showTab('accounts', this); mbxaOpened();");
+    if (mydayBtn && mydayBtn.parentNode) mydayBtn.parentNode.insertBefore(b, mydayBtn);
+    else if (btns.length && btns[0].parentNode) btns[0].parentNode.appendChild(b);
+
+    if (!$('mbxa-sheet')) {
+      var sh = document.createElement('div');
+      sh.id = 'mbxa-sheet';
+      sh.setAttribute('onclick', 'mbxaClose()');
+      document.body.appendChild(sh);
+      var t = document.createElement('div');
+      t.id = 'mbxa-toast';
+      document.body.appendChild(t);
+    }
+  }
+
+  /* ---------- public handlers ---------- */
+  window.mbxaOpened = function () {
+    leafletReady(function () { initMap(); });
+    load();
+  };
+  window.mbxaHere = function () { imHere(); };
+  window.mbxaAdd = function () {
+    if (POS) { newHere(POS, nearest(POS)); }
+    else { editForm({ status: 'prospect' }, 'Add an account', 'Tap <b>Use where I am standing</b> and the address fills itself in.'); }
+  };
+  window.mbxaFind = function () {
+    if (POS) {
+      fetch('/api/geocode?lat=' + POS.lat + '&lng=' + POS.lng).then(function (r) { return r.json(); })
+        .then(function (g) { findSheet(g && g.ok ? g : null); })
+        .catch(function () { findSheet(null); });
+    } else { findSheet(null); }
+  };
+  window.mbxaFindHere = function () {
+    locate(function (p) {
+      fetch('/api/geocode?lat=' + p.lat + '&lng=' + p.lng).then(function (r) { return r.json(); }).then(function (g) {
+        if (g && g.ok) {
+          if ($('mbxa-q-city')) $('mbxa-q-city').value = g.city || '';
+          if ($('mbxa-q-state')) $('mbxa-q-state').value = g.state || '';
+          if ($('mbxa-q-zip')) $('mbxa-q-zip').value = g.zip || '';
+          if ($('mbxa-status')) $('mbxa-status').textContent = 'Set to ' + [g.city, g.state].filter(Boolean).join(', ') + '.';
+        }
+      });
+    });
+  };
+  window.mbxaRunFind = function () { runFind(); };
+  window.mbxaAdopt = function (i) { adopt(FOUND[i]); };
+  window.mbxaAdoptKey = function (k) {
+    for (var i = 0; i < FOUND.length; i++) if (FOUND[i].key === k) return adopt(FOUND[i]);
+  };
+  window.mbxaRefresh = function () { drawPins._fitted = false; load(true); toast('Pulling the latest from the team.'); };
+  window.mbxaFilter = function (v) { FILTER = v; render(); };
+  window.mbxaSearch = function (v) { SEARCH = v; render(); };
+  window.mbxaOpen = function (id) { openAccount(id); };
+  window.mbxaClose = function () { closeSheet(); };
+  window.mbxaEdit = function (id) { editForm(byId(id), 'Edit account'); };
+  window.mbxaDelete = function (id) {
+    var a = byId(id); if (!a) return;
+    if (confirm('Remove ' + a.name + ' from the whole team’s account book?')) removeAccount(id);
+  };
+  window.mbxaSaveForm = function (id) {
+    var a = readForm(id);
+    if (!a.name) { $('mbxa-status').textContent = 'It needs a practice name.'; return; }
+    $('mbxa-status').textContent = 'Saving…';
+    saveAccount(a).then(function () { closeSheet(); });
+  };
+  window.mbxaUseMyPosition = function () {
+    locate(function (p) {
+      fetch('/api/geocode?lat=' + p.lat + '&lng=' + p.lng).then(function (r) { return r.json(); }).then(function (g) {
+        if (g && g.ok) {
+          if ($('mbxa-f-addr')) $('mbxa-f-addr').value = g.addr || '';
+          if ($('mbxa-f-city')) $('mbxa-f-city').value = g.city || '';
+          if ($('mbxa-f-state')) $('mbxa-f-state').value = g.state || '';
+          if ($('mbxa-f-zip')) $('mbxa-f-zip').value = g.zip || '';
+        }
+        if ($('mbxa-status')) $('mbxa-status').textContent = 'Filled in from where you are standing. Save to make it live for the team.';
+        PENDING_PIN = { lat: p.lat, lng: p.lng };
+      });
+    });
+  };
+
+  /* They moved. One tap: the account now sits where the rep is standing, the old
+     address is kept in the change trail, and the whole team has it. */
+  window.mbxaFixHere = function (id) {
+    var a = byId(id); if (!a) return;
+    locate(function (p) {
+      fetch('/api/geocode?lat=' + p.lat + '&lng=' + p.lng).then(function (r) { return r.json(); }).then(function (g) {
+        var next = JSON.parse(JSON.stringify(a));
+        next.lat = p.lat; next.lng = p.lng;
+        if (g && g.ok) { next.addr = g.addr || next.addr; next.city = g.city || next.city; next.state = g.state || next.state; next.zip = g.zip || next.zip; }
+        sheet('<h3>Move ' + esc(a.name) + '?</h3>'
+          + '<div style="margin-top:12px;">'
+          +   line('Was', esc(addrLine(a) || 'no address'))
+          +   line('Now', esc(addrLine(next) || 'your exact position'))
+          + '</div>'
+          + '<div class="ac-warn">This changes the address for everyone on the team straight away. The old one is kept in the account history, so nothing is lost.</div>'
+          + '<div class="ac-acts">'
+          +   '<button class="ac-btn go" onclick="mbxaConfirmMove()">Yes, move it</button>'
+          +   '<button class="ac-btn" onclick="mbxaOpen(\'' + a.id + '\')">Cancel</button>'
+          + '</div>');
+        window.mbxaConfirmMove = function () {
+          saveAccount(next).then(function () {
+            closeSheet();
+            toast('Address updated for the whole team.');
+          });
+        };
+      });
+    });
+  };
+
+  /* A visit note goes to the same shared log My Day already writes to. */
+  window.mbxaLogVisit = function (id) {
+    var a = byId(id); if (!a) return;
+    sheet('<h3>Visit note</h3>'
+      + '<div style="font-size:12.5px; color:#6b7280; margin-top:4px;">' + esc(a.name) + ' &middot; stamped ' + new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + '</div>'
+      + '<div style="margin-top:12px;"><textarea class="ac-in" id="mbxa-note" rows="4" style="width:100%;" placeholder="What happened. Say it the way you would say it out loud."></textarea></div>'
+      + '<div id="mbxa-status" class="ac-status"></div>'
+      + '<div class="ac-acts">'
+      +   '<button class="ac-btn solid" onclick="mbxaSaveNote(\'' + a.id + '\')">Save note</button>'
+      +   '<button class="ac-btn" onclick="mbxaOpen(\'' + a.id + '\')">Cancel</button>'
+      + '</div>');
+  };
+  window.mbxaSaveNote = function (id) {
+    var a = byId(id); if (!a) return;
+    var note = ($('mbxa-note') || {}).value || '';
+    if (!note.trim()) { $('mbxa-status').textContent = 'Type something first.'; return; }
+    a.lastVisit = Date.now();
+    saveAccount(a, true);
+    fetch('/api/visitnotes', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rep: repName(), account: a.name, note: note.trim(), ts: Date.now() })
+    }).then(function () {}).catch(function () {});
+    closeSheet();
+    toast('Note saved to the team log.');
+  };
+
+  /* Send an account straight into today's stop list in My Day. */
+  window.mbxaRoute = function (id) {
+    var a = byId(id); if (!a) return;
+    try {
+      var d = JSON.parse(localStorage.getItem('mbx_myday_v1')) || { date: '', stops: [], expenses: [] };
+      if (!d.stops) d.stops = [];
+      var already = d.stops.some(function (s) { return s.name === a.name; });
+      if (!already) {
+        d.stops.push({ name: a.name, addr: addrLine(a), phone: (a.phone || '').replace(/[^0-9+]/g, ''), arrived: '', departed: '', miles: '', note: '', noteSaved: false });
+        localStorage.setItem('mbx_myday_v1', JSON.stringify(d));
+      }
+      if (typeof mdRender === 'function') mdRender();
+      toast(already ? a.name + ' is already on today’s route.' : a.name + ' added to today’s route.');
+    } catch (e) { toast('Could not add that to today.'); }
+    closeSheet();
+  };
+
+  /* ---------- boot ---------- */
+  function boot() {
+    ensureTab();
+    /* warm the book quietly so the tab is instant when it is opened */
+    setTimeout(function () { load(); }, 1200);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>

@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Command Center — MiniBox+ Toolkit</title>
+<link rel="icon" href="./favicon-32.png">
+<style>
+  :root{
+    --ink:#e8eaed; --ink-dim:#9aa3ad; --line:#252a31;
+    --panel:#14181d; --panel-2:#1a1f26; --bg:#0c0f13;
+    --red:#e05a4e; --amber:#d1a04a; --green:#4f9d6a;
+    --mono:ui-monospace,'SFMono-Regular',Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;}
+  a{color:var(--ink)}
+  .wrap{max-width:920px;margin:0 auto;padding:24px 18px 70px;}
+  .kicker{font:600 11px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim);}
+  h1{font-size:26px;margin:10px 0 6px;letter-spacing:-.01em;}
+  h2{font-size:13px;margin:30px 0 12px;letter-spacing:.18em;text-transform:uppercase;
+    font-family:var(--mono);color:var(--ink-dim);font-weight:600;
+    border-bottom:1px solid var(--line);padding-bottom:9px;}
+  .lede{color:var(--ink-dim);font-size:14px;line-height:1.55;max-width:660px;margin:0 0 18px;}
+
+  /* ── lock screen ── */
+  #lock{max-width:340px;margin:14vh auto 0;text-align:center;}
+  #lock .mark{width:70px;height:70px;border:1px solid var(--line);border-radius:16px;margin:0 auto 20px;
+    display:flex;align-items:center;justify-content:center;font:800 26px/1 var(--mono);color:var(--ink-dim);}
+  #lock input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel);color:var(--ink);font-size:16px;text-align:center;margin:16px 0 10px;}
+  #lock button{width:100%;padding:13px;border:0;border-radius:10px;background:var(--ink);color:#0c0f13;
+    font-weight:800;font-size:15px;cursor:pointer;}
+  #lockerr{color:var(--red);font-size:13px;font-weight:700;min-height:19px;margin-top:11px;}
+  #lock .hint{color:var(--ink-dim);font-size:12px;margin-top:18px;line-height:1.5;}
+
+  /* ── stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:6px;}
+  .stat{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:14px 15px;}
+  .stat b{display:block;font:800 26px/1.1 var(--mono);letter-spacing:-.02em;}
+  .stat span{display:block;font:600 10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:7px;}
+  .stat.alert b{color:var(--red)}
+
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 0;}
+  .filt{background:transparent;color:var(--ink-dim);border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;font:700 12px/1 inherit;cursor:pointer;}
+  .filt.on{color:var(--ink);border-color:#43505e;background:var(--panel-2);}
+  .spacer{flex:1}
+  .ghost{background:transparent;color:var(--ink-dim);border:1px solid var(--line);
+    border-radius:8px;padding:6px 12px;font:700 12px/1 inherit;cursor:pointer;}
+
+  .card{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:15px 16px;margin-bottom:11px;}
+  .card.fixed{opacity:.5}
+  .meta{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+    font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:9px;}
+  .who{color:var(--ink);letter-spacing:.04em;}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:3px 9px;}
+  .pill.open{color:var(--red);border-color:#4a2b28;}
+  .pill.working{color:var(--amber);border-color:#4a3d23;}
+  .pill.fixed{color:var(--green);border-color:#26402f;}
+  .body{font-size:15px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+  .note{margin-top:9px;font-size:13px;color:var(--ink-dim);border-left:2px solid var(--line);padding-left:10px;}
+  /* The once-a-day triage write-up. Whitespace is preserved because it arrives
+     as a written report, not as fields. */
+  .digest{white-space:pre-wrap;font-size:13.5px;line-height:1.55;}
+  .digest .stamp{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-dim);display:block;margin-bottom:9px;}
+  .digest + .digest{opacity:.62}
+  .acts{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px;border-top:1px solid var(--line);padding-top:12px;}
+  .act{background:transparent;border:1px solid var(--line);color:var(--ink-dim);
+    border-radius:8px;padding:6px 12px;font:700 12px/1 inherit;cursor:pointer;}
+  .act:hover{color:var(--ink);border-color:#43505e;}
+  .empty{border:1px dashed var(--line);border-radius:12px;padding:34px 20px;text-align:center;color:var(--ink-dim);font-size:14px;}
+
+  .q{border-bottom:1px solid var(--line);padding:12px 2px;}
+  .q:last-child{border-bottom:0}
+  .q .ask{font-size:14.5px;line-height:1.55;}
+  .q .ans{font-size:13px;line-height:1.55;color:var(--ink-dim);margin-top:6px;}
+  .people{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;}
+  .person{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;}
+  .person b{font-family:var(--mono);color:var(--ink-dim);margin-left:6px;}
+
+  /* ── usage ── */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  @media (max-width:680px){ .cols{grid-template-columns:1fr;} }
+  .rank{list-style:none;margin:0;padding:0;}
+  .rank li{position:relative;padding:8px 10px;margin-bottom:3px;border-radius:7px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-size:13.5px;overflow:hidden;}
+  .rank li .fill{position:absolute;inset:0 auto 0 0;background:#1e2a35;border-radius:7px;z-index:0;}
+  .rank li .nm,.rank li .ct{position:relative;z-index:1;}
+  .rank li .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rank li .ct{font:700 12px/1 var(--mono);color:var(--ink-dim);flex:none;}
+
+  .chart{display:flex;align-items:flex-end;gap:3px;height:96px;margin:4px 0 8px;}
+  .chart .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;}
+  .chart .col i{display:block;background:#3a6b8a;border-radius:3px 3px 0 0;min-height:2px;}
+  .chart .col.today i{background:#5b93b8;}
+  .chartx{display:flex;gap:3px;font:600 9.5px/1 var(--mono);color:var(--ink-dim);}
+  .chartx span{flex:1;text-align:center;overflow:hidden;}
+
+  table.reps{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.reps th{text-align:left;font:600 10.5px/1.4 var(--mono);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-dim);padding:0 8px 9px;border-bottom:1px solid var(--line);}
+  table.reps td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.reps tr:last-child td{border-bottom:0}
+  table.reps td.n{font-family:var(--mono);color:var(--ink-dim);white-space:nowrap;}
+  table.reps .nm{font-weight:600}
+  table.reps .anon{color:var(--ink-dim);font-style:italic;font-weight:400;}
+  .cold{color:var(--amber)}
+  .quiet{color:var(--red)}
+
+  /* ── who's on right now ── */
+  .live{display:flex;flex-wrap:wrap;gap:8px;}
+  .liveperson{display:flex;align-items:center;gap:9px;border:1px solid var(--line);
+    background:var(--panel-2);border-radius:999px;padding:8px 15px 8px 12px;font-size:13.5px;}
+  .liveperson .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none;
+    box-shadow:0 0 0 0 rgba(79,157,106,.55);animation:pulse 2.2s ease-out infinite;}
+  .liveperson.warm .dot{background:var(--amber);animation:none;}
+  .liveperson .sub{color:var(--ink-dim);font:600 11px/1 var(--mono);letter-spacing:.06em;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(79,157,106,.55)}
+    70%{box-shadow:0 0 0 8px rgba(79,157,106,0)}
+    100%{box-shadow:0 0 0 0 rgba(79,157,106,0)}
+  }
+  #livestamp{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <div class="mark">M+</div>
+  <div class="kicker">MiniBox+ Toolkit</div>
+  <h1 style="font-size:21px;margin:9px 0 0;">Command Center</h1>
+  <p style="color:var(--ink-dim);font-size:13.5px;margin:8px 0 0;">Owner only. This is a second password, not the team one.</p>
+  <input id="lockpw" type="password" placeholder="Admin password" autocomplete="current-password"
+         autocapitalize="none" autocorrect="off" spellcheck="false">
+  <button onclick="unlock()">Open</button>
+  <div id="lockerr"></div>
+  <div class="hint">The team password gets you into the toolkit.<br>This one shows what the team is reporting and asking.</div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="kicker">MiniBox+ Toolkit</div>
+  <h1>Command Center</h1>
+  <p class="lede">Everything the team is telling you, in one place. Problem reports come in from
+    <b>Report a problem</b> — in Team Chat or from the Boxy button on any screen.
+    <a href="./index.html">Back to the toolkit</a> ·
+    <a href="#" onclick="lockAgain();return false;">Lock this</a></p>
+
+  <h2 style="margin-top:22px;">Who's on right now</h2>
+  <div class="bar" style="padding-top:0;">
+    <span id="livestamp">checking&hellip;</span>
+    <span class="spacer"></span>
+    <button class="ghost" id="livebtn" onclick="refreshLive()">Refresh</button>
+  </div>
+  <div id="live"><div class="empty">Loading&hellip;</div></div>
+
+  <div class="stats" id="stats" style="margin-top:26px;"></div>
+
+  <h2>Overnight triage</h2>
+  <p class="lede" style="margin-bottom:14px;">Every morning the reports below get read, investigated
+    and where it is safe, fixed and deployed. This is what happened on the last run.</p>
+  <div id="digest"></div>
+
+  <h2>Problem Reports</h2>
+  <div class="bar">
+    <button class="filt on" data-f="open">Open</button>
+    <button class="filt" data-f="working">Working on it</button>
+    <button class="filt" data-f="fixed">Fixed</button>
+    <button class="filt" data-f="all">All</button>
+    <span class="spacer"></span>
+    <button class="ghost" onclick="load()">Refresh</button>
+  </div>
+  <div id="list"></div>
+
+  <h2>What the team is asking Boxy</h2>
+  <div class="card" id="questions"></div>
+
+  <h2>What's actually getting used</h2>
+  <p class="lede" style="margin-bottom:14px;">Which screens and buttons get used, how long reps stay,
+    what they finish, when they open it and on what device &mdash; the product read, not a report card.
+    Nothing anyone types is ever recorded (no notes, emails or customer names), and reps see none of this.</p>
+  <div class="bar">
+    <button class="filt" data-d="7">7 days</button>
+    <button class="filt on" data-d="14">14 days</button>
+    <button class="filt" data-d="30">30 days</button>
+    <span class="spacer"></span>
+    <button class="ghost" onclick="copyUsage()">Copy summary</button>
+  </div>
+  <div id="usage"><div class="empty">Loading&hellip;</div></div>
+
+  <h2>Team Chat activity</h2>
+  <div class="card" id="whos"></div>
+</div>
+
+<script>
+var API = '/api/admin';
+var KEYSTORE = 'mbx_admin_key';
+/* The admin key is held in localStorage so one unlock carries across tabs (the
+   embedded Command Center and the full-screen page are separate tabs, and
+   sessionStorage does not travel between them). It self-clears after HOLD_MS so
+   an unattended machine re-locks itself overnight instead of staying open. */
+var HOLD_MS = 12 * 60 * 60 * 1000;
+
+function keySave(k){
+  try { localStorage.setItem(KEYSTORE, JSON.stringify({ k: k, exp: Date.now() + HOLD_MS })); } catch(e){}
+}
+function keyClear(){
+  try { localStorage.removeItem(KEYSTORE); } catch(e){}
+  try { sessionStorage.removeItem(KEYSTORE); } catch(e){}   // sweep the old spot too
+}
+function keyLoad(){
+  var raw = '';
+  try { raw = localStorage.getItem(KEYSTORE) || ''; } catch(e){}
+  if (!raw) return '';
+  var o = null;
+  try { o = JSON.parse(raw); } catch(e){}
+  if (!o || !o.k || !o.exp || Date.now() > o.exp) { keyClear(); return ''; }
+  return o.k;
+}
+var key = '';
+var filter = 'open';
+var data = { issues: [], questions: [], pulse: {} };
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function when(ts){
+  if(!ts) return '';
+  var d = new Date(ts), mins = Math.round((Date.now()-ts)/60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + ' min ago';
+  if (mins < 60*24) return Math.round(mins/60) + ' hr ago';
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + ' · ' +
+         d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+function call(payload){
+  payload.key = key;
+  return fetch(API, { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload) }).then(function(r){
+      if (r.status === 401) throw new Error('bad-key');
+      return r.json();
+    });
+}
+
+/* ── lock screen ── */
+function unlock(){
+  var pw = (document.getElementById('lockpw').value || '').trim();
+  if (!pw) return;
+  var err = document.getElementById('lockerr');
+  err.textContent = 'Checking…';
+  key = pw;
+  call({ action:'load' })
+    .then(function(d){
+      if (!d || !d.ok) throw new Error('x');
+      keySave(key);
+      err.textContent = '';
+      document.getElementById('lock').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      apply(d);
+      loadUsage();
+      setInterval(load, 60000);
+      // The live panel keeps its own faster clock, and pauses while this tab
+      // is in the background so it isn't polling all night on a sleeping laptop.
+      loadLive();
+      setInterval(function(){
+        if (document.visibilityState === 'visible') loadLive();
+      }, LIVE_POLL_MS);
+      document.addEventListener('visibilitychange', function(){
+        if (document.visibilityState === 'visible') loadLive();
+      });
+    })
+    .catch(function(e){
+      key = '';
+      err.textContent = (e && e.message === 'bad-key')
+        ? 'That is not the admin password.' : 'Could not reach the server — try again.';
+    });
+}
+function lockAgain(){
+  keyClear();
+  location.reload();
+}
+
+/* ── render ── */
+function apply(d){
+  data = d;
+  var open = (d.issues||[]).filter(function(i){ return (i.status||'open')==='open'; }).length;
+  var p = d.pulse || {};
+  document.getElementById('stats').innerHTML =
+      stat(open, 'Open problems', open > 0)
+    + stat((d.issues||[]).length, 'Reports all time')
+    + stat(p.today || 0, 'Messages today')
+    + stat((p.people||[]).length, 'Reps active this week')
+    + stat(p.boxyWeek || 0, 'Boxy answers this week');
+  render();
+  renderDigest();
+  renderQuestions();
+  renderPeople();
+  // When embedded in the toolkit's Command Center tab, tell the parent how many
+  // problems are open so the tab can carry a red badge.
+  try { if (window.parent && window.parent !== window) window.parent.postMessage({ mbxOpenProblems: open }, '*'); } catch (e) {}
+}
+function stat(n, label, alert){
+  return '<div class="stat' + (alert ? ' alert' : '') + '"><b>' + n + '</b><span>' + label + '</span></div>';
+}
+
+function render(){
+  var list = document.getElementById('list');
+  var shown = (data.issues||[]).filter(function(i){ return filter === 'all' || (i.status||'open') === filter; });
+  if (!shown.length){
+    list.innerHTML = '<div class="empty">' + (filter === 'open'
+      ? 'No open problems. Nothing is broken that anyone has told you about.'
+      : 'Nothing in this list yet.') + '</div>';
+    return;
+  }
+  list.innerHTML = shown.map(function(i){
+    var st = i.status || 'open';
+    return '<div class="card ' + st + '">'
+      + '<div class="meta">'
+        + '<span class="who">' + esc(i.name || 'Someone') + '</span>'
+        + '<span>' + esc(i.screen || '') + '</span>'
+        + '<span>' + esc(when(i.ts)) + '</span>'
+        + '<span class="pill ' + st + '">' + (st === 'working' ? 'Working on it' : st) + '</span>'
+      + '</div>'
+      + '<div class="body">' + esc(i.text) + '</div>'
+      + (i.note ? '<div class="note">' + esc(i.note) + '</div>' : '')
+      + '<div class="acts">'
+        + (st !== 'working' ? '<button class="act" onclick="mark(\'' + i.id + '\',\'working\')">Working on it</button>' : '')
+        + (st !== 'fixed'   ? '<button class="act" onclick="markFixed(\'' + i.id + '\')">Mark fixed</button>' : '')
+        + (st !== 'open'    ? '<button class="act" onclick="mark(\'' + i.id + '\',\'open\')">Reopen</button>' : '')
+        + '<button class="act" onclick="addNote(\'' + i.id + '\',\'' + st + '\')">Add a note</button>'
+        + '<button class="act" onclick="copyOne(\'' + i.id + '\')">Copy</button>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+/* Newest write-up in full, the two before it dimmed underneath, so a pattern
+   ("same thing again") is visible without digging. */
+function renderDigest(){
+  var d = (data.digest || []).slice(0, 3);
+  var box = document.getElementById('digest');
+  if (!d.length){
+    box.innerHTML = '<div class="empty">No triage run yet. The first one posts here after it runs.</div>';
+    return;
+  }
+  box.innerHTML = d.map(function(x){
+    return '<div class="card digest"><span class="stamp">' + esc(when(x.ts)) + '</span>'
+      + esc(x.text) + '</div>';
+  }).join('');
+}
+
+var qOpen = false;   // collapsed by default — the usage stats below matter more day to day
+
+function renderQuestions(){
+  var q = (data.questions||[]).filter(function(x){ return !/ISSUE REPORT/i.test(x.text || ''); }).slice(0, 20);
+  if (!q.length){
+    document.getElementById('questions').innerHTML =
+      '<div style="color:var(--ink-dim);font-size:14px;">No questions yet.</div>';
+    return;
+  }
+  var PREVIEW = 2;
+  var shown = qOpen ? q : q.slice(0, PREVIEW);
+  var hidden = q.length - shown.length;
+
+  var html = shown.map(function(x){
+    return '<div class="q"><div class="meta"><span class="who">' + esc(x.name||'') + '</span><span>'
+      + esc(when(x.ts)) + '</span>' + (x.ai ? '' : '<span class="pill">no AI answer</span>') + '</div>'
+      + '<div class="ask">' + esc(x.text) + '</div>'
+      + '<div class="ans">Boxy: ' + esc(String(x.reply||'').slice(0, 320)) + '</div></div>';
+  }).join('');
+
+  if (q.length > PREVIEW){
+    html += '<div style="margin-top:12px;text-align:center;">'
+      + '<button class="ghost" onclick="toggleQuestions()">'
+      + (qOpen ? 'Show less' : 'Show all ' + q.length + ' questions')
+      + '</button></div>';
+  }
+  document.getElementById('questions').innerHTML = html;
+}
+
+window.toggleQuestions = function(){ qOpen = !qOpen; renderQuestions(); };
+
+function renderPeople(){
+  var p = (data.pulse||{}).people || [];
+  document.getElementById('whos').innerHTML = p.length
+    ? '<div style="color:var(--ink-dim);font-size:13px;margin-bottom:10px;">Messages sent in the last 7 days.</div>'
+      + '<div class="people">' + p.map(function(x){
+          return '<span class="person">' + esc(x.name) + '<b>' + x.count + '</b></span>'; }).join('') + '</div>'
+    : '<div style="color:var(--ink-dim);font-size:14px;">Nobody has posted this week.</div>';
+}
+
+/* ── actions ── */
+function byId(id){ var a = data.issues||[]; for (var i=0;i<a.length;i++) if (a[i].id===id) return a[i]; return null; }
+
+function mark(id, status, note, opts){
+  var it = byId(id); if (!it) return;
+  opts = opts || {};
+  var prev = { status: it.status, note: it.note };
+  it.status = status; if (note !== undefined) it.note = note;
+  apply(data);
+  var payload = { action:'setStatus', issueId:id, status:status, note:(note !== undefined ? note : (it.note || '')) };
+  if (opts.notify === false) payload.notify = false;
+  call(payload)
+    .then(function(d){ if (!d || !d.ok) throw new Error('x');
+      if (d.notified) toast((it.name ? it.name.split(' ')[0] : 'The reporter') + ' was notified in Team Chat.'); })
+    .catch(function(){ it.status = prev.status; it.note = prev.note; apply(data);
+      alert("Couldn't save that — check your connection and try again."); });
+}
+
+/* Mark fixed AND tell the person who reported it. Erik types a one-line note
+   (optional); Boxy posts it back to them by name in Team Chat. The reporter is
+   only pinged once, ever, for a given report — the server tracks that. */
+function markFixed(id){
+  var it = byId(id); if (!it) return;
+  var who = it.name ? it.name.split(' ')[0] : 'the reporter';
+  var n = prompt('Marking fixed. Add a one-line note to send back to ' + who
+    + ' (optional — leave blank to just say it\'s resolved).\n\nThey\'ll get it in Team Chat.', it.note || '');
+  if (n === null) return;                 // cancelled — don't change anything
+  mark(id, 'fixed', n);
+}
+
+/* tiny transient confirmation */
+function toast(msg){
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#16351f;color:#d7f5e0;border:1px solid #26402f;padding:10px 16px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,.4);';
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; }, 2600);
+  setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 3100);
+}
+
+function addNote(id, st){
+  var it = byId(id); if (!it) return;
+  var n = prompt('Note for this report (what you did, or what you need from them):', it.note || '');
+  if (n === null) return;
+  mark(id, st, n);
+}
+
+function copyOne(id){
+  var i = byId(id); if (!i) return;
+  var t = 'PROBLEM REPORT\nFrom: ' + (i.name||'') + '\nScreen: ' + (i.screen||'') +
+          '\nWhen: ' + new Date(i.ts).toLocaleString() + '\n\n' + i.text;
+  if (navigator.clipboard) navigator.clipboard.writeText(t);
+}
+
+function load(){
+  if (!key) return;
+  call({ action:'load' }).then(function(d){ if (d && d.ok) apply(d); }).catch(function(){});
+  loadUsage();
+}
+
+/* ── usage ─────────────────────────────────────────────────────────────────
+   Screens opened and buttons pressed, from /api/usage. Loaded separately from
+   the problem reports so a slow usage query never holds up the thing Erik
+   actually needs to act on. */
+var usageDays = 14;
+var usageData = null;
+
+function loadUsage(){
+  if (!key) return;
+  call({ action:'usage', days: usageDays })
+    .then(function(d){ if (d && d.ok) { usageData = d.usage; renderUsage(); } })
+    .catch(function(){
+      document.getElementById('usage').innerHTML =
+        '<div class="empty">Could not load usage right now.</div>';
+    });
+}
+
+/* ── who's on right now ────────────────────────────────────────────────────
+   The toolkit sends a tiny "still here" ping once a minute while it's the
+   visible tab, so last-seen keeps moving even when nobody is clicking.
+   Anyone inside 3 minutes is treated as ON (green, pulsing); inside 30 is
+   "just was" (amber). Both numbers are here, not scattered through the code. */
+var LIVE_ON_MS = 3 * 60000;
+var LIVE_WARM_MS = 30 * 60000;
+var LIVE_POLL_MS = 20000;
+var liveData = null;
+var liveBusy = false;
+
+function loadLive(manual){
+  if (!key || liveBusy) return;
+  liveBusy = true;
+  var btn = document.getElementById('livebtn');
+  var stamp = document.getElementById('livestamp');
+  if (manual && btn) { btn.textContent = 'Checking…'; btn.disabled = true; }
+  if (manual && stamp) stamp.textContent = 'checking…';
+
+  function done(){
+    liveBusy = false;
+    if (btn) { btn.textContent = 'Refresh'; btn.disabled = false; }
+  }
+  call({ action:'live' })
+    .then(function(d){
+      if (d && d.ok) { liveData = d.live; renderLive(); }
+      done();
+    })
+    .catch(function(){
+      done();
+      if (stamp) stamp.textContent = 'could not reach the server';
+    });
+}
+function refreshLive(){ loadLive(true); }
+
+function renderLive(){
+  var box = document.getElementById('live');
+  var stamp = document.getElementById('livestamp');
+  if (!box) return;
+  var people = (liveData && liveData.people) || [];
+  // Server clock, not this browser's — a laptop a few minutes off would
+  // otherwise show everyone as offline (or everyone as on).
+  var now = (liveData && liveData.now) || Date.now();
+  var on = people.filter(function(p){ return p.lastTs && now - p.lastTs <= LIVE_ON_MS; });
+  var warm = people.filter(function(p){
+    return p.lastTs && now - p.lastTs > LIVE_ON_MS && now - p.lastTs <= LIVE_WARM_MS; });
+
+  if (stamp) stamp.textContent = 'as of ' +
+    new Date().toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit',second:'2-digit'});
+
+  function chip(p, warmCls){
+    var mins = Math.round((now - p.lastTs)/60000);
+    var sub = warmCls ? (mins < 1 ? 'a moment ago' : mins + ' min ago')
+                      : (p.lastScreen || 'in the toolkit');
+    return '<span class="liveperson' + (warmCls ? ' warm' : '') + '">'
+      + '<i class="dot"></i><span>' + esc(p.name) + '</span>'
+      + '<span class="sub">' + esc(sub) + '</span></span>';
+  }
+
+  var html = '';
+  if (on.length){
+    html += '<div class="live">' + on.map(function(p){ return chip(p, false); }).join('') + '</div>';
+  } else {
+    html += '<div class="empty">Nobody is in the toolkit this minute.'
+         +  (warm.length ? '' : '<div style="font-size:12.5px;margin-top:8px;">'
+              + 'This updates itself every 20 seconds while you have this open.</div>')
+         +  '</div>';
+  }
+  if (warm.length){
+    html += '<div style="color:var(--ink-dim);font-size:12.5px;margin:14px 0 8px;">In the last half hour</div>'
+         +  '<div class="live">' + warm.map(function(p){ return chip(p, true); }).join('') + '</div>';
+  }
+  html += '<p class="lede" style="margin:14px 0 0;font-size:12.5px;">Green means the toolkit is open '
+       +  'and in front of them right now. Your own screen counts too, so you may see yourself here.</p>';
+  box.innerHTML = html;
+}
+
+function ago(ts){
+  if (!ts) return 'never';
+  var days = Math.floor((Date.now()-ts)/86400000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return days + ' days ago';
+}
+
+/* An up/down arrow when a row is a click list carrying a trend. Green rising,
+   amber falling, nothing when it's steady — so the eye only catches real moves. */
+function trendMark(t){
+  if (t === 'up')   return '<span title="Up vs the week before" style="color:var(--green);font-family:var(--mono);font-size:11px;margin-right:6px;">&#9650;</span>';
+  if (t === 'down') return '<span title="Down vs the week before" style="color:var(--amber);font-family:var(--mono);font-size:11px;margin-right:6px;">&#9660;</span>';
+  return '';
+}
+
+function rankList(items, empty){
+  if (!items || !items.length) return '<div style="color:var(--ink-dim);font-size:14px;">' + empty + '</div>';
+  var max = items[0].count || 1;
+  return '<ul class="rank">' + items.map(function(x){
+    return '<li><i class="fill" style="width:' + Math.max(3, Math.round(x.count/max*100)) + '%"></i>'
+      + '<span class="nm">' + trendMark(x.trend) + esc(x.label) + '</span>'
+      + '<span class="ct">' + x.count + '</span></li>';
+  }).join('') + '</ul>';
+}
+
+/* Screen-time list — same bars as rankList but the value is a duration. */
+function timeList(items, empty){
+  if (!items || !items.length) return '<div style="color:var(--ink-dim);font-size:14px;">' + empty + '</div>';
+  var max = items[0].ms || 1;
+  return '<ul class="rank">' + items.map(function(x){
+    return '<li><i class="fill" style="width:' + Math.max(3, Math.round(x.ms/max*100)) + '%"></i>'
+      + '<span class="nm">' + esc(x.label) + '</span>'
+      + '<span class="ct">' + fmtDur(x.ms) + '</span></li>';
+  }).join('') + '</ul>';
+}
+
+/* ms -> "45s" / "4m" / "1h 5m". Kept coarse; nobody needs the seconds past a minute. */
+function fmtDur(ms){
+  var s = Math.round((ms||0)/1000);
+  if (s < 60) return s + 's';
+  var m = Math.round(s/60);
+  if (m < 60) return m + 'm';
+  var h = Math.floor(m/60);
+  return h + 'h ' + (m%60) + 'm';
+}
+
+/* A tiny column chart for the "when do they use it" buckets. `hi` marks the
+   busiest column so the peak reads at a glance. */
+function miniBars(vals, labels, highlightFn){
+  var peak = vals.reduce(function(m,v){ return Math.max(m,v); }, 0) || 1;
+  var cols = vals.map(function(v,i){
+    var h = Math.max(2, Math.round(v/peak*100));
+    var hi = highlightFn && highlightFn(i,v);
+    return '<div class="col' + (hi ? ' today' : '') + '" title="' + esc(labels[i]) + ': ' + v + '">'
+      + '<i style="height:' + h + '%"></i></div>';
+  }).join('');
+  var xs = labels.map(function(l,i){
+    return '<span>' + (labels.length <= 7 ? esc(l) : (i % 3 === 0 ? esc(l) : '')) + '</span>';
+  }).join('');
+  return '<div class="chart">' + cols + '</div><div class="chartx">' + xs + '</div>';
+}
+
+function renderUsage(){
+  var u = usageData;
+  var box = document.getElementById('usage');
+  if (!u) return;
+
+  var totalEvents = (u.daily||[]).reduce(function(a,b){ return a + (b.events||0); }, 0);
+  if (!totalEvents){
+    box.innerHTML = '<div class="empty">Nothing recorded yet. This fills in as the team uses the toolkit '
+      + '&mdash; give it a day or two after the update reaches everyone.</div>';
+    return;
+  }
+
+  // Bar chart of daily opens.
+  var daily = u.daily || [];
+  var peak = daily.reduce(function(m,d){ return Math.max(m, d.opens||0); }, 0) || 1;
+  var chart = '<div class="chart">' + daily.map(function(d, i){
+    var h = Math.round((d.opens||0)/peak*100);
+    return '<div class="col' + (i === daily.length-1 ? ' today' : '') + '" title="'
+      + esc(d.day) + ': ' + (d.opens||0) + ' opens"><i style="height:' + Math.max(2,h) + '%"></i></div>';
+  }).join('') + '</div>'
+  + '<div class="chartx">' + daily.map(function(d, i){
+      var show = (i === 0 || i === daily.length-1 || i === Math.floor(daily.length/2));
+      return '<span>' + (show ? esc(d.day.slice(5)) : '') + '</span>';
+    }).join('') + '</div>';
+
+  var people = u.people || [];
+  var active7 = people.filter(function(p){ return p.days7 > 0; });
+  var byEmail = people.filter(function(p){ return p.id === 'email'; });
+  var unknown = people.filter(function(p){ return p.id !== 'email'; });
+
+  var tiles = '<div class="stats">'
+    + stat(u.opens7 || 0, 'Opens this week')
+    + stat(active7.length, 'People this week')
+    + stat(u.newThisWeek || 0, 'New this week')
+    + stat(u.avgVisitMs ? fmtDur(u.avgVisitMs) : '—', 'Avg time / visit')
+    + stat(totalEvents, 'Clicks tracked (' + u.days + 'd)')
+    + (unknown.length ? stat(unknown.length, 'No email yet', true) : '')
+    + '</div>';
+
+  var lists = '<div class="cols" style="margin-top:14px;">'
+    + '<div class="card"><div class="meta">Most-used screens &middot; 7 days</div>'
+      + rankList(u.screens7, 'No screens opened this week.') + '</div>'
+    + '<div class="card"><div class="meta">Most-pressed buttons &middot; 7 days</div>'
+      + rankList(u.actions7, 'No buttons pressed this week.') + '</div>'
+    + '</div>'
+    + '<p class="lede" style="margin:10px 0 0;font-size:12px;">'
+      + '<span style="color:var(--green)">&#9650;</span> / <span style="color:var(--amber)">&#9660;</span> '
+      + 'shows what\'s rising or fading vs the week before &mdash; that\'s your read on whether a screen is catching on.</p>';
+
+  // Things reps actually FINISHED — quotes, ROIs, PDFs, logged orders.
+  var outcomes = (u.outcomes7 && u.outcomes7.length)
+    ? '<div class="card" style="margin-top:14px;"><div class="meta">Things reps completed &middot; 7 days</div>'
+        + rankList(u.outcomes7, '') + '</div>'
+    : '';
+
+  // Time on each screen + when they open it.
+  var timeCard = (u.timeByScreen && u.timeByScreen.length)
+    ? '<div class="card"><div class="meta">Time spent per screen &middot; ' + u.days + ' days</div>'
+        + timeList(u.timeByScreen, '') + '</div>'
+    : '<div class="card"><div class="meta">Time spent per screen</div>'
+        + '<div style="color:var(--ink-dim);font-size:13px;">Fills in as reps move between screens.</div></div>';
+
+  var HRLAB = ['12a','1a','2a','3a','4a','5a','6a','7a','8a','9a','10a','11a','12p','1p','2p','3p','4p','5p','6p','7p','8p','9p','10p','11p'];
+  var hod = u.hod || [];
+  var peakHr = hod.reduce(function(bi,v,i,a){ return v > a[bi] ? i : bi; }, 0);
+  var hourCard = (hod.some(function(v){ return v>0; }))
+    ? '<div class="card"><div class="meta">When they open it &middot; hour of day</div>'
+        + miniBars(hod, HRLAB, function(i){ return i === peakHr; }) + '</div>'
+    : '';
+
+  var DOWLAB = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var dowv = u.dow || [];
+  var peakDow = dowv.reduce(function(bi,v,i,a){ return v > a[bi] ? i : bi; }, 0);
+  var dowCard = (dowv.some(function(v){ return v>0; }))
+    ? '<div class="card"><div class="meta">Which day of the week</div>'
+        + miniBars(dowv, DOWLAB, function(i){ return i === peakDow; }) + '</div>'
+    : '';
+
+  var whenBlock = (hourCard || dowCard)
+    ? '<div class="cols" style="margin-top:14px;">' + hourCard + dowCard + '</div>'
+    : '';
+
+  // Phone vs laptop, installed app vs browser tab.
+  var devCard = (u.platforms && u.platforms.length)
+    ? '<div class="card" style="margin-top:14px;"><div class="meta">Devices &middot; active this week</div>'
+        + '<div class="people">' + u.platforms.map(function(x){
+            return '<span class="person">' + esc(x.label) + '<b>' + x.count + '</b></span>'; }).join('')
+        + '</div></div>'
+    : '';
+
+  var timeRow = '<div class="cols" style="margin-top:14px;">' + timeCard + '</div>';
+
+  // Rep by rep — the "who do I check in with" table.
+  var rows = people.map(function(p){
+    var cls = p.days7 === 0 ? ' class="quiet"' : (p.days7 <= 1 ? ' class="cold"' : '');
+    var sub = p.id === 'email' ? esc(p.email)
+            : (p.id === 'name' ? 'no email on file yet' : 'skipped the welcome screen');
+    var badge = p.isNew
+      ? '<span style="font:600 9.5px/1 var(--mono);letter-spacing:.1em;color:var(--green);border:1px solid #26402f;border-radius:999px;padding:2px 6px;margin-left:7px;vertical-align:middle;">NEW</span>'
+      : '';
+    var streak = (p.streak >= 2)
+      ? '<span title="Consecutive days active" style="color:var(--green)">&#128293; ' + p.streak + 'd</span>'
+      : (p.streak === 1 ? '1d' : '&mdash;');
+    return '<tr>'
+      + '<td class="nm' + (p.anon ? ' anon' : '') + '">' + esc(p.name) + badge
+        + '<div style="font-size:11.5px;font-style:normal;font-weight:400;color:var(--ink-dim);margin-top:3px;">'
+        + sub + (p.plat ? ' &middot; ' + esc(p.plat) : '') + '</div></td>'
+      + '<td class="n"' + cls + '>' + ago(p.lastTs) + '</td>'
+      + '<td class="n">' + p.days7 + ' / 7</td>'
+      + '<td class="n">' + streak + '</td>'
+      + '<td class="n">' + p.events7 + '</td>'
+      + '<td class="n" style="white-space:normal;">' + esc(p.lastScreen || '') + '</td>'
+      + '</tr>';
+  }).join('');
+
+  var nag = unknown.length
+    ? '<p class="lede" style="margin-bottom:12px;color:var(--amber);">'
+      + unknown.length + (unknown.length === 1 ? ' person has' : ' people have')
+      + ' not put a work email in yet, so their activity can\'t be tied to a person '
+      + 'and may be split across their phone and laptop.</p>'
+    : '';
+
+  var table = '<h2 style="margin-top:26px;">Rep by rep</h2>'
+    + '<p class="lede" style="margin-bottom:12px;">Identified by the work email each rep enters '
+      + 'on the welcome screen &mdash; the same one their email tools use.</p>'
+    + nag
+    + '<div class="card"><table class="reps"><thead><tr>'
+      + '<th>Who</th><th>Last opened</th><th>Days active</th><th>Streak</th><th>Clicks</th><th>Last screen</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+  box.innerHTML = tiles + chart + lists + outcomes + timeRow + whenBlock + devCard + table;
+}
+
+function copyUsage(){
+  var u = usageData;
+  if (!u) return;
+  function tr(t){ return t === 'up' ? ' (up)' : (t === 'down' ? ' (down)' : ''); }
+  var lines = ['MINIBOX TOOLKIT — USAGE (last ' + u.days + ' days)', ''];
+  lines.push('Opens this week: ' + (u.opens7||0));
+  lines.push('People active this week: ' + (u.people||[]).filter(function(p){return p.days7>0;}).length);
+  lines.push('New this week: ' + (u.newThisWeek||0));
+  lines.push('Average time per visit: ' + (u.avgVisitMs ? fmtDur(u.avgVisitMs) : '—'));
+  lines.push('');
+  lines.push('TOP SCREENS (7d)');
+  (u.screens7||[]).forEach(function(x){ lines.push('  ' + x.label + ' — ' + x.count + tr(x.trend)); });
+  lines.push('');
+  lines.push('TOP BUTTONS (7d)');
+  (u.actions7||[]).forEach(function(x){ lines.push('  ' + x.label + ' — ' + x.count + tr(x.trend)); });
+  lines.push('');
+  lines.push('THINGS REPS COMPLETED (7d)');
+  if ((u.outcomes7||[]).length) (u.outcomes7||[]).forEach(function(x){ lines.push('  ' + x.label + ' — ' + x.count); });
+  else lines.push('  (none yet)');
+  lines.push('');
+  lines.push('TIME PER SCREEN (' + u.days + 'd)');
+  (u.timeByScreen||[]).forEach(function(x){ lines.push('  ' + x.label + ' — ' + fmtDur(x.ms)); });
+  lines.push('');
+  lines.push('DEVICES (active this week)');
+  (u.platforms||[]).forEach(function(x){ lines.push('  ' + x.label + ' — ' + x.count); });
+  lines.push('');
+  lines.push('REP BY REP');
+  (u.people||[]).forEach(function(p){
+    lines.push('  ' + p.name + (p.isNew ? ' [NEW]' : '') + (p.email ? ' <' + p.email + '>' : ' (no email)') +
+      ' — last opened ' + ago(p.lastTs) +
+      ', active ' + p.days7 + '/7 days' + (p.streak >= 2 ? ', ' + p.streak + '-day streak' : '') +
+      ', ' + p.events7 + ' clicks' + (p.plat ? ', ' + p.plat : ''));
+  });
+  var t = lines.join('\n');
+  if (navigator.clipboard) navigator.clipboard.writeText(t);
+}
+
+/* Filter pills — problem-report status and the usage date range. */
+document.addEventListener('click', function(e){
+  var b = e.target.closest ? e.target.closest('.filt') : null;
+  if (!b) return;
+  var group = b.parentNode.querySelectorAll('.filt');
+  for (var i=0;i<group.length;i++) group[i].classList.remove('on');
+  b.classList.add('on');
+  if (b.hasAttribute('data-f')) { filter = b.getAttribute('data-f'); render(); }
+  else if (b.hasAttribute('data-d')) { usageDays = Number(b.getAttribute('data-d')) || 14; loadUsage(); }
+});
+
+document.getElementById('lockpw').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') { e.preventDefault(); unlock(); }
+});
+
+/* Unlocked recently on this machine? Go straight in — any tab, until it expires. */
+(function(){
+  var saved = keyLoad();
+  if (!saved) { document.getElementById('lockpw').focus(); return; }
+  document.getElementById('lockpw').value = saved;
+  unlock();
+})();
+</script>
+</body>
+</html>

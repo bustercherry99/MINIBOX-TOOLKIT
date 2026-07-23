@@ -1,0 +1,197 @@
+{
+  "spirometry": {
+    "minutes": 12,
+    "intro": "Spirometry is the pulmonary function test performed most often, because it has more indications than any other. It is also the test your accounts will run every single day, so it is the test you will be asked about in the hallway, at the front desk, and by the physician between patients. Learn this module cold. If you can explain what the machine is measuring, coach a good blow, and read whether a test was any good, you are useful in that office instead of just present in it.",
+    "sections": [
+      {
+        "h": "How much, and how fast",
+        "p": "Spirometry measures the maximum volume of gas inhaled after a maximum volume of gas exhaled. The patient fills all the way up, empties all the way out, and the device records two things at once: <b>how much</b> air moved and <b>how fast</b> it moved. The maneuver can be done slow or forced, and it can be repeated after a bronchodilator to see if the numbers improve.",
+        "list": [
+          "FVC, forced vital capacity: the total volume of air that can be forced out. This is the \"how much\".",
+          "FEV1, forced expiratory volume in one second: the volume of that FVC forced out in the first second. This is the \"how fast\".",
+          "FEV1/FVC: the fraction of the whole breath that leaves in that first second. Normal is 75 to 80%."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "fv-loop",
+          "cap": "A normal flow volume loop. Flow is on the vertical axis, volume on the horizontal. The blow above the line rockets up to a sharp peak near 7.5 L/s and then falls in a straight, slightly convex line to empty. The curve below the line is the breath back in. Shape first, numbers second: that clean spike and straight ramp down is what a healthy blow looks like."
+        },
+        "key": "FVC answers how much. FEV1 answers how fast. Normal FEV1/FVC is 75 to 80%."
+      },
+      {
+        "h": "Airways or parenchyma",
+        "p": "Two different parts of the lung fail in two different ways, and spirometry is how you tell them apart. The airways are the plumbing, the trachea down to the bronchioles. The parenchyma is the tissue where gas actually crosses over, the alveoli, alveolar ducts and respiratory bronchioles. When the plumbing narrows, air gets stuck on the way out and flow drops. When the tissue stiffens or is lost, the lungs simply hold less and volume drops.",
+        "visual": {
+          "t": "vs",
+          "a": {
+            "h": "Airways problem",
+            "items": [
+              "Trachea down through the bronchioles",
+              "Impairment typically correlated with expiratory airflow obstruction",
+              "The \"how fast\" side of the test suffers",
+              "CBABE: COPD, bronchitis, asthma, bronchiectasis, emphysema"
+            ]
+          },
+          "b": {
+            "h": "Parenchyma problem",
+            "items": [
+              "Alveoli, alveolar ducts, respiratory bronchioles, where gas exchange happens",
+              "Impairment typically correlated with restrictive lung disease",
+              "The \"how much\" side of the test suffers",
+              "Pathologies here are nearly limitless"
+            ]
+          }
+        },
+        "key": "Flow problems point at the airways. Volume problems point at the tissue."
+      },
+      {
+        "h": "The loop shows the pattern",
+        "p": "The flow volume loop is the picture the physician actually looks at, and its shape changes with the disease before you ever read a number off the table. Drag through the shapes below. A normal blow peaks fast and falls in a near straight line. Obstruction scoops the falling edge inward, because the airways collapse and the air trickles out. Restriction keeps the shape but shrinks the whole loop, because there was less air in there to begin with. A fixed upper airway problem flattens the top and the bottom, since the choke point limits both directions.",
+        "visual": { "t": "svg", "id": "fvloop" },
+        "key": "Physicians read the shape first. Learn the four shapes and you can follow the conversation."
+      },
+      {
+        "h": "Before they ever blow",
+        "p": "A test is only as good as the patient in front of it, and ATS/ERS 2019 lists activities that should be avoided before lung function testing. This is a genuinely useful thing to hand an office, because these are the things that quietly wreck a result and then get blamed on the machine. Front desk staff can screen for all four when they confirm the appointment.",
+        "visual": {
+          "t": "img",
+          "src": "pretest-prep",
+          "cap": "The ATS/ERS pre-test list. Notice that every item comes with a physiologic reason, not just a rule: smoking or vaping within 1 hour causes acute bronchoconstriction, intoxicants within 8 hours hurt coordination and comprehension, vigorous exercise within 1 hour can trigger exercise induced bronchoconstriction, and tight clothing physically restricts chest and abdominal expansion."
+        },
+        "list": [
+          "Smoking, vaping or water pipe use within 1 hour before testing",
+          "Consuming intoxicants within 8 hours before testing",
+          "Performing vigorous exercise within 1 hour before testing",
+          "Wearing clothing that substantially restricts full chest and abdominal expansion"
+        ],
+        "key": "Bad prep looks exactly like bad lungs on the report. Screen for it at scheduling."
+      },
+      {
+        "h": "Set the patient up",
+        "p": "Body position changes the answer. Before the first breath, the operator should get the posture, the nose clip and the mouthpiece right, because a leak around the lips or air escaping through the nose costs volume that the patient actually had.",
+        "list": [
+          "Upright sitting position in a stationary chair",
+          "Legs not crossed, feet on the floor",
+          "Head straight or slightly extended",
+          "Nose clip on the lower half of the nose",
+          "Patient slightly bites on the mouthpiece",
+          "Lips sealed firmly around the mouthpiece",
+          "Tongue below the mouthpiece, not blocking it"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "patient-technique",
+          "cap": "Seated upright, nose clip on, handheld unit held level, lips sealed. Nothing here is decoration. The nose clip stops air sneaking out the nose, and sitting upright keeps the belly from pushing up on the diaphragm."
+        },
+        "key": "Upright, nose clipped, tight lip seal, tongue out of the way."
+      },
+      {
+        "h": "The forced maneuver",
+        "p": "This is the ATS/ERS 2019 standard approach for FVC. It starts from normal breathing, and then four things have to happen in order. The most common failure is a slow, casual inhale followed by a pause at the top, and that quietly costs peak flow and FEV1 before the patient has even started to blow.",
+        "visual": {
+          "t": "steps",
+          "items": [
+            { "h": "Inhale completely and rapidly", "p": "Fill all the way to TLC, the fullest the lungs can get, with a pause of less than 2 seconds at the top. Reduced PEF and FEV can occur when inspiration is slow or there is a long pause before the blast." },
+            { "h": "Blast, do not blow", "p": "Expire with maximal effort until no more air can be expelled, while maintaining an upright posture. The subject should be coached to \"blast\", not just \"blow\"." },
+            { "h": "Keep going", "p": "Continue complete expiration for a maximum of 15 seconds. Most patients stop early because it feels finished long before it is." },
+            { "h": "Big breath back in", "p": "Then inspiration at maximal flow back to maximum lung volume. This closes the loop and is part of the test, not an afterthought." }
+          ]
+        },
+        "key": "Fast in, short pause, blast out, keep going, then fast all the way back in."
+      },
+      {
+        "h": "Coach it, never watch it",
+        "p": "According to ATS/ERS 2019, quality results begin with a quality operator. Spirometry is effort dependent, so the person doing the coaching is part of the instrument. This is also where MiniBox+ helps: the wheel on screen turns green when the blow has gone far enough, so the operator has an objective cue instead of a guess.",
+        "visual": {
+          "t": "img",
+          "src": "coaching-front",
+          "cap": "The MiniBox+ PFT Coaching sheet. Note the annotated example loop on the right, with \"Blast Out\" on the way up and \"Full Inhalation\" on the way back. This sheet is the single best leave behind in the bag, because it gives the office the exact words to say."
+        },
+        "list": [
+          "Setup: detach the handheld unit from the MiniBox+ and let it calibrate, then hand it to the patient",
+          "Teeth over the mouthpiece, tight seal with the lips, nose clip on",
+          "Start with 2 to 3 normal relaxed breaths",
+          "Deep inhale, then immediate forced fast exhale",
+          "Squeeze all the air out until the wheel turns green",
+          "Deep breath back in to close the flow volume loop"
+        ],
+        "key": "Quality results begin with a quality operator, ATS/ERS 2019."
+      },
+      {
+        "h": "Slow tests: SVC and MVV",
+        "p": "Not every maneuver is a blast. Slow vital capacity gets the same full breath without the force, which matters when forcing the air out collapses the airways and hides volume the patient really has. It starts from normal tidal breathing, then goes all the way one direction and all the way back the other. Tap the trace below to see how the pieces of a breath stack up.",
+        "visual": { "t": "svg", "id": "spirogram" },
+        "list": [
+          "ERV maneuver, starting with an exhalation: normal breathing, then complete exhalation (ERV), then complete inhalation (VCIN and IC), then back to normal breathing. VCIN and ERV are measured, IC is calculated.",
+          "IC maneuver, starting with an inhalation: normal breathing, then complete inhalation (IC), then complete exhalation (VCEX and ERV), then back to normal breathing. VCEX and IC are measured, ERV is calculated.",
+          "Example from the training set: VCIN 3.95 L, IC 2.70 L, ERV 1.25 L.",
+          "MVV, maximal voluntary ventilation: the maximum volume of air in L/min a subject can breathe over a specified period of time, 12 seconds for normal subjects.",
+          "MVV estimates maximum minute ventilation and can be used to estimate predicted max ventilation for CPET. Coach the patient to an ideal rate of 90 to 110 breaths/min."
+        ],
+        "key": "Slow gets volume honestly. MVV asks how hard the whole system can work."
+      },
+      {
+        "h": "Was that blow acceptable?",
+        "p": "A number the patient did not really earn is worse than no number at all, so ATS/ERS defines exactly what makes a maneuver acceptable. Reps do not grade tests, but you should recognize these, because when an office says the device \"gave a bad result\", nine times out of ten one of these seven was missed.",
+        "visual": {
+          "t": "table",
+          "head": ["#", "Acceptability check"],
+          "rows": [
+            ["1", "A good start of exhalation with extrapolated volume, <5% of FVC or 0.150 L, whichever is greater"],
+            ["2", "Free from artifacts"],
+            ["3", "No cough during first second of exhalation (for FEV1)"],
+            ["4", "No glottis closure or abrupt termination (for FVC)"],
+            ["5", "No early termination or cutoff (for FVC)"],
+            ["6", "Maximal effort provided throughout the maneuver"],
+            ["7", "No obstructed mouthpiece"]
+          ],
+          "note": "Graham, Brian L., et al. \"Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.\" Am J Respir Crit Care Med, vol. 200, no. 8, 2019."
+        },
+        "list": [
+          "End of forced expiration, must achieve one of these three indicators: expiratory plateau, 0.025 L or less in the last 1 second of expiration",
+          "Expiratory time of 15 seconds or more",
+          "FVC is within the repeatability tolerance of, or is greater than, the largest prior observed FVC"
+        ],
+        "key": "Cough in the first second kills FEV1. Stopping early kills FVC."
+      },
+      {
+        "h": "Repeatable, then graded",
+        "p": "One good blow is not a test. The patient has to do it again and land in the same place, which is why properly coached spirometry shows a high degree of repeatability and reliability even in the very sickest patients. It really is like a fingerprint of the lungs. The software then converts \"how many acceptable trials\" and \"how close were they\" into a single letter grade, so anyone in the office can see the quality at a glance without knowing the criteria by heart.",
+        "visual": {
+          "t": "table",
+          "head": ["Grade", "Number of measurements", "Repeatability: age >6 yr", "Repeatability: age 6 yr or under"],
+          "rows": [
+            ["A", "3 or more acceptable", "Within 0.150 L", "Within 0.100 L"],
+            ["B", "2 acceptable", "Within 0.150 L", "Within 0.100 L"],
+            ["C", "2 or more acceptable", "Within 0.200 L", "Within 0.150 L"],
+            ["D", "2 or more acceptable", "Within 0.250 L", "Within 0.200 L"],
+            ["E", "2 or more acceptable", "Greater than 0.250 L", "Greater than 0.200 L"],
+            ["E", "OR 1 acceptable", "N/A", "N/A"],
+            ["U", "0 acceptable AND 1 or more usable", "N/A", "N/A"],
+            ["F", "0 acceptable and 0 usable", "N/A", "N/A"]
+          ],
+          "note": "ATS/ERS 2019 grading. Repeatability criteria are applied to acceptable FVC and FEV1 values."
+        },
+        "key": "Over age 6: the two largest FVCs within 0.150 L, and the two largest FEV1s within 0.150 L."
+      },
+      {
+        "h": "What the report keeps",
+        "p": "The patient blows several times, but only certain numbers travel forward onto the report. The rule is not \"the last one\" or \"the prettiest one\". The largest FVC and the largest FEV1 are taken, even if they came from two different blows, and the rest of the indices come from the single maneuver with the largest sum of FVC plus FEV1. On MiniBox+ this is already handled. Settings come loaded and the system is ready for testing, and the table is configured to display 8 trials per level, pre and post bronchodilator.",
+        "visual": {
+          "t": "img",
+          "src": "minibox-fvc-screen",
+          "cap": "The Forced Vital Capacity Results screen. Look at how much lives on one page: predicted versus best, a quality grade per parameter, percent predicted, the individual trials across the pre column, and both the flow volume loop and the volume time graph. The physician gets shape and numbers in a single look, and the post bronchodilator column sits right beside the pre."
+        },
+        "list": [
+          "Perform the maneuver, then check within maneuver criteria",
+          "Aim for three acceptable FEV1 and three acceptable FVC measurements",
+          "Check between maneuver criteria, that is repeatability",
+          "Determine the largest FVC and the largest FEV1",
+          "Determine other indices from the maneuver with the largest sum of FVC plus FEV1, then store the data"
+        ],
+        "key": "Best FVC and best FEV1 can come from different blows. That is by design."
+      }
+    ],
+    "angle": "Spirometry is the volume driver in every account you sell, so this is the module that turns a demo into a clinical conversation. You can tell a physician that MiniBox+ grades every trial against ATS/ERS 2019 acceptability and repeatability right on screen, displays 8 trials per level pre and post bronchodilator, and shows the flow volume loop and the volume time graph together, so quality is visible before the patient leaves the chair. Then go one better and coach their staff, because ATS/ERS says quality results begin with a quality operator, and the rep who hands over the PFT Coaching sheet and teaches the word \"blast\" instead of \"blow\" is the rep who gets called back."
+  }
+}

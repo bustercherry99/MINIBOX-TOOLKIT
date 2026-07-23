@@ -1,0 +1,698 @@
+
+/* ============================================================================
+   DAILY CUT  (v1.0)
+   A five-letter word, six tries, one word a day — and everybody in the toolkit
+   that day is playing the same one. Solve it and you get the word's place in
+   the rep's own world (what it means on a PFT, or on a call), your streak, and
+   where the rest of the team landed today.
+
+   Erik's ask, 2026-07-22: "a fun game between all of the people, like Wordle,
+   and anybody that was in the toolkit that day can play."
+
+   NORTH STAR CHECK: it's a game. It never touches the usage report, it never
+   nags, "play quietly" is one tick away, and skipping a day costs nothing but
+   a streak. The only thing that leaves the device is a score and a first name,
+   and only when the rep finishes.
+
+   Self-contained + append-only (same pattern as mbx-pwa / mbx-hq): one style
+   block, one IIFE, no edits to the hub markup. The board is injected into the
+   HQ grid at runtime and re-injected whenever HQ re-renders.
+
+   Offline is fine — the word is computed on the device from the date, so the
+   game works with no signal. Only the team scoreboard needs the network.
+   ========================================================================= */
+(function () {
+  'use strict';
+  if (window.mbxDailyReady) return;
+  window.mbxDailyReady = true;
+
+  /* ---------------------------------------------------------------------
+     THE WORDS. Everyday five-letter words with the rep's world folded in —
+     lungs, the test, the office, the call. A word gets a note only when it
+     really belongs to that world; the notes are definitions and field habits,
+     never a clinical claim and never a number this toolkit doesn't already
+     own. 240 words = about eight months before one comes round again.
+     --------------------------------------------------------------------- */
+  var LIST = [
+    'LUNGS','VITAL','TIDAL','FORCE','VALVE','PULSE','CHEST','COUGH',
+    'ABOUT','AGENT','ALERT','ANGLE','APPLE','ARENA','ARROW','ASSET',
+    'NASAL','CURVE','SLOPE','APNEA','MUCUS','SINUS','OXIDE','GASES',
+    'BEACH','BENCH','BLANK','BLEND','BLOCK','BOARD','BOOST','BOUND',
+    'MOUTH','LOBES','SPACE','SCOPE','PROBE','TRACE','RATIO','LIMIT',
+    'BRAIN','BRAVE','BREAD','BREAK','BRICK','BRIEF','BRING','BRUSH',
+    'QUOTA','LEASE','PRICE','VALUE','OFFER','TRUST','REACH','PHONE',
+    'CABIN','CABLE','CARGO','CATCH','CAUSE','CHAIN','CHAIR','CHARM',
+    'EMAIL','VISIT','ROUTE','ORDER','CLOSE','PITCH','BUYER','TERMS',
+    'CHASE','CHECK','CHIEF','CLEAN','CLEAR','CLIFF','CLIMB','CLOCK',
+    'CODES','RATES','AUDIT','CLAIM','SPEND','YIELD','DEMOS','LEADS',
+    'CLOUD','COACH','COAST','COLOR','COUNT','COURT','COVER','CRAFT',
+    'NOTES','GOALS','BONUS','BRAND','MODEL','SETUP','TRAIN','PROOF',
+    'CRANE','CRASH','CREAM','CREEK','CREST','CRISP','CROSS','CROWD',
+    'STUDY','PAPER','LEARN','TEACH','DRILL','BLADE','EDGES','FIELD',
+    'CROWN','CRUSH','DAILY','DANCE','DEBUT','DELAY','DENSE','DEPOT',
+    'NURSE','MEDIC','HEART','BLOOD','SMOKE','FLOWS','TUBES','MASKS',
+    'DRAFT','DRAMA','DREAM','DRESS','DRIFT','DRINK','DRIVE','EAGER',
+    'CHOKE','GASPS','PUFFS','TRIAL','GAUGE','DEPTH','RANGE','CHART',
+    'EAGLE','EARLY','EARTH','ELBOW','ELITE','EMPTY','ENJOY','ENTER',
+    'EQUAL','ERROR','EVENT','EVERY','EXACT','EXTRA','FAITH','FANCY',
+    'FAULT','FAVOR','FENCE','FEVER','FIGHT','FINAL','FIRST','FLAME',
+    'FLASH','FLEET','FLOAT','FLOOR','FLUID','FOCUS','FORGE','FORUM',
+    'FRAME','FRESH','FRONT','FROST','FRUIT','GIANT','GLASS','GLOBE',
+    'GRACE','GRADE','GRAIN','GRAND','GRANT','GRASP','GREAT','GREEN',
+    'GRIND','GROUP','GUARD','GUESS','GUEST','GUIDE','HABIT','HANDY',
+    'HAPPY','HEAVY','HONOR','HORSE','HOTEL','HOUSE','HUMAN','HUMOR',
+    'IDEAL','IMAGE','INDEX','INNER','ISSUE','JOINT','JUDGE','KNIFE',
+    'LABEL','LABOR','LARGE','LASER','LATER','LAUGH','LAYER','LEGAL',
+    'LEVEL','LIGHT','LOCAL','LODGE','LOGIC','LOYAL','LUCKY','LUNCH'
+  ];
+
+  /* Only the words that live in the rep's world get a line. Everything here is
+     definition or field habit — nothing invented, no prices, no CPT codes. */
+  var NOTE = {
+    LUNGS: 'Five lobes between them: three on the right, two on the left, because the heart takes the room.',
+    VITAL: 'Vital capacity is the biggest breath a patient can move — all the way in, all the way out.',
+    TIDAL: 'Tidal volume is the air that moves in one quiet, ordinary breath. It is the small breathing in the middle of every loop.',
+    FORCE: 'The F in FVC. Forced means blast it out, hard and fast, and keep going. Effort is most of the test.',
+    VALVE: 'A one-way valve only lets air travel one direction. Half of respiratory hardware is that single idea.',
+    PULSE: 'Pulse oximetry reads how saturated the blood is. A PFT asks a different question: how the air moves.',
+    CHEST: 'The chest wall springs out, the lungs pull in. That tug-of-war is why a lung has a resting volume at all.',
+    COUGH: 'A cough mid-maneuver ends that trace. Better to stop, reset and go again than to score a bad blow.',
+    NASAL: 'Nose clips go on for a reason. Air that leaks out the nose never gets counted.',
+    CURVE: 'The flow-volume loop is a shape before it is a number. You can read the shape from across the room.',
+    SLOPE: 'Shape first, numbers second. Where the curve falls away tells you as much as the value at the end.',
+    APNEA: 'Sleep apnea is breathing that stops and restarts in sleep — a different study, but often the same patient.',
+    MUCUS: 'Let a patient clear their throat before the maneuver, not during it.',
+    SINUS: 'Upstairs and downstairs share one airway. That is why the allergy conversation reaches the lungs.',
+    OXIDE: 'FeNO measures nitric oxide in exhaled breath — a marker of a particular kind of airway inflammation.',
+    GASES: 'DLCO uses a trace gas the patient breathes in and holds. What comes back out is the measurement.',
+    MOUTH: 'A leak at the lips kills a maneuver. Seal first, then blow.',
+    LOBES: 'Three on the right, two on the left.',
+    SPACE: 'Dead space is the air sitting in the tubing and airways that never reaches the exchange surface.',
+    SCOPE: 'Scope the room before the pitch. Who is standing in it decides what you say.',
+    PROBE: 'Probing beats presenting. The rep who asks longest usually books the demo.',
+    TRACE: 'Every maneuver leaves a trace. Calling out a bad one yourself is what earns the tech.',
+    RATIO: 'FEV1 over FVC is a ratio, and it is the first gate: is airflow obstructed, or not.',
+    LIMIT: 'The lower limit of normal beats a flat percent cutoff. Normal is not the same for every body.',
+    NURSE: 'The person running the test decides whether the numbers mean anything. Train the tech, not only the doctor.',
+    MEDIC: 'Every office has one person who actually runs the device. Find them on visit one.',
+    HEART: 'Heart or lungs? That is the question a PFT is very good at helping answer.',
+    BLOOD: 'Blood carries the oxygen; the lungs deliver it. Two different measurements, two different tests.',
+    SMOKE: 'A smoking history is a large part of why a baseline test exists at all.',
+    FLOWS: 'Flow is volume per second. The tall early peak of the loop is where effort shows itself.',
+    TUBES: 'Filters and mouthpieces are consumables, and consumables are the reason for the second conversation.',
+    MASKS: 'Infection control questions come up in every office. Have the answer ready before they ask.',
+    CHOKE: 'A patient who feels rushed will not give you a good blow. Slow the room down.',
+    GASPS: 'Coach the breath out loud. The maneuver is a performance and you are the coach.',
+    PUFFS: 'Pre and post: test, give the bronchodilator, wait, test again. The change is the finding.',
+    TRIAL: 'A trial of the device in the office beats any brochure ever printed.',
+    GAUGE: 'Calibration is not paperwork. An uncalibrated device produces confident, wrong numbers.',
+    DEPTH: 'Ask one more question than feels comfortable. The real objection is under the first one.',
+    RANGE: 'Predicted values come from a reference set. Who is in that set matters.',
+    CHART: 'A report nobody can read is not a result. Translating it is the job.',
+    QUOTA: 'Quota is the company’s number. The rep’s number is the next conversation.',
+    LEASE: 'Finance-to-own means the practice owns the device at the end of the term.',
+    PRICE: 'Price is the last question, never the first.',
+    VALUE: 'Nobody buys a device. They buy the visit they no longer have to send out of the office.',
+    OFFER: 'An offer with no date on it is a brochure.',
+    TRUST: 'Nobody buys from a rep they are still evaluating.',
+    REACH: 'The office manager schedules, the biller signs off, the doctor decides. Three yeses.',
+    PHONE: 'The call you do not want to make is usually the one that moves the deal.',
+    EMAIL: 'The best follow-up email is the shortest one that names the next step.',
+    VISIT: 'Write the note in the parking lot. By the third office it is gone.',
+    ROUTE: 'A tight route is two more calls a day without a longer day.',
+    ORDER: 'Log it the day it happens. Memory is not a system.',
+    CLOSE: 'Closing is just agreeing out loud on what happens next, and when.',
+    PITCH: 'Say the one thing, then stop talking.',
+    BUYER: 'The person who signs is rarely the person who cares most. Find both.',
+    TERMS: 'Terms live in the Financing tab so they only have to be right in one place.',
+    CODES: 'Codes belong to the Billing Helper. Never quote one from memory.',
+    RATES: 'If a rate appears on two screens, one of them is wrong. This toolkit keeps them in one place on purpose.',
+    AUDIT: 'Documentation is what turns a test into a paid test.',
+    CLAIM: 'A claim is only as good as the record behind it.',
+    SPEND: 'Every practice is spending the money already — usually on sending patients elsewhere.',
+    YIELD: 'The second device in a practice is cheaper to sell than the first one was.',
+    DEMOS: 'A demo that ends without a next date is a visit, not a demo.',
+    LEADS: 'A lead you have not called in a month is not a lead, it is a note.',
+    NOTES: 'The rep with the notes wins the second meeting.',
+    GOALS: 'Pick the number of conversations, not the number of dollars. One you control.',
+    BONUS: 'Nothing pays like the account that reorders without being asked.',
+    BRAND: 'You are the brand in that office. The box is just what you carried in.',
+    MODEL: 'Know the model in the room before you walk in. Aging Devices tab, thirty seconds.',
+    SETUP: 'Install day is the real sale. A device nobody was taught to use gets quietly unplugged.',
+    TRAIN: 'Train two people, not one. The one you trained will be on vacation.',
+    PROOF: 'Proof beats claims. Hand them the study, not the adjective.',
+    STUDY: 'When you cite it, be able to hand it over.',
+    PAPER: 'Everything you leave behind gets read by someone who was not in the room.',
+    LEARN: 'One new thing per week compounds faster than any territory change.',
+    TEACH: 'Teach one thing per visit. That is what gets remembered about you.',
+    DRILL: 'Rehearse the objection before it is asked, out loud, in the car.',
+    BLADE: 'Sharp beats loud.',
+    EDGES: 'The detail nobody else bothered with is usually the whole difference.',
+    FIELD: 'Nothing in here was built at a desk.'
+  };
+
+  /* Day 0 = the day this shipped, so the team sees No. 001 on day one. */
+  var EPOCH = Date.UTC(2026, 6, 22);
+  var LSKEY = 'mbx_daily_v1';
+  var ROWS = 6, COLS = 5;
+  var KEYS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+  var HIT = '█', CLOSE = '▒', MISS = '░';
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function ls(fn, d) { try { var v = fn(); return v == null ? d : v; } catch (e) { return d; } }
+
+  /* Everyone is on Eastern for the purposes of the word, so the whole team
+     rolls over to the next puzzle at the same moment. */
+  function easternDay(ms) {
+    var s = ls(function () {
+      return new Date(ms || Date.now()).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    }, '');
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    var d = new Date((ms || Date.now()) - 4 * 3600000);
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') +
+      '-' + String(d.getUTCDate()).padStart(2, '0');
+  }
+  function dayIndex(day) {
+    var p = day.split('-');
+    return Math.round((Date.UTC(+p[0], +p[1] - 1, +p[2]) - EPOCH) / 86400000);
+  }
+  function wordFor(day) {
+    var n = dayIndex(day);
+    return LIST[((n % LIST.length) + LIST.length) % LIST.length];
+  }
+  function prevDay(day) {
+    var p = day.split('-');
+    return easternDay(Date.UTC(+p[0], +p[1] - 1, +p[2], 12) - 86400000);
+  }
+  function longDate(day) {
+    var p = day.split('-');
+    return ls(function () {
+      return new Date(+p[0], +p[1] - 1, +p[2])
+        .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    }, day);
+  }
+
+  /* ---------- who is playing ---------- */
+  function profile() {
+    return ls(function () { return JSON.parse(localStorage.getItem('pulmone_rep_profile') || '{}'); }, {}) || {};
+  }
+  function myName() {
+    var p = profile();
+    return String((p && p.name) || ls(function () { return localStorage.getItem('mbx_chat_name'); }, '') || '').trim();
+  }
+  function myEmail() {
+    var p = profile();
+    return String((p && (p.email || p.workEmail)) || ls(function () { return localStorage.getItem('mbx_signed_in_email'); }, '') || '').trim();
+  }
+  function myDev() { return ls(function () { return localStorage.getItem('mbx_device_id'); }, '') || ''; }
+  function online() { return (location.protocol === 'https:' || location.protocol === 'http:') && navigator.onLine !== false; }
+
+  /* ---------- saved state ---------- */
+  var S = load();
+  function load() {
+    var d = easternDay();
+    var s = ls(function () { return JSON.parse(localStorage.getItem(LSKEY)); }, null) || {};
+    if (s.day !== d) {
+      s = {
+        day: d, guesses: [], done: false, won: false, posted: false,
+        streak: Number(s.streak) || 0, best: Number(s.best) || 0,
+        played: Number(s.played) || 0, wins: Number(s.wins) || 0,
+        last: s.last || '', dist: s.dist || {}, anon: s.anon === true
+      };
+    }
+    if (!Array.isArray(s.guesses)) s.guesses = [];
+    if (!s.dist) s.dist = {};
+    return s;
+  }
+  function save() { try { localStorage.setItem(LSKEY, JSON.stringify(S)); } catch (e) {} }
+
+  /* ---------- the game itself ---------- */
+  var practice = false, pWord = '', cur = '', busy = false, teamCache = null;
+
+  function answer() { return practice ? pWord : wordFor(S.day); }
+  function guesses() { return practice ? pGuesses : S.guesses; }
+  var pGuesses = [];
+
+  /* Two passes, so a repeated letter can't be marked present more times than
+     the answer actually contains it. */
+  function markOf(guess, ans) {
+    var res = ['x', 'x', 'x', 'x', 'x'], pool = {}, i;
+    for (i = 0; i < COLS; i++) {
+      if (guess[i] === ans[i]) res[i] = 'g';
+      else pool[ans[i]] = (pool[ans[i]] || 0) + 1;
+    }
+    for (i = 0; i < COLS; i++) {
+      if (res[i] === 'g') continue;
+      if (pool[guess[i]] > 0) { res[i] = 'y'; pool[guess[i]] -= 1; }
+    }
+    return res.join('');
+  }
+  var RANK = { x: 0, y: 1, g: 2 };
+  function keyState() {
+    var map = {}, ans = answer(), g = guesses();
+    for (var i = 0; i < g.length; i++) {
+      var m = markOf(g[i], ans);
+      for (var j = 0; j < COLS; j++) {
+        var c = g[i][j];
+        if (!map[c] || RANK[m[j]] > RANK[map[c]]) map[c] = m[j];
+      }
+    }
+    return map;
+  }
+
+  function msg(t, shake) {
+    var el = $('mbxd-msg'); if (el) el.textContent = t || '';
+    if (shake) {
+      var b = $('mbxd-board'); if (!b) return;
+      var r = b.children[guesses().length];
+      if (r) { r.classList.add('bad'); setTimeout(function () { r.classList.remove('bad'); }, 320); }
+    }
+  }
+
+  function drawBoard(popRow) {
+    var host = $('mbxd-board'); if (!host) return;
+    var g = guesses(), ans = answer(), h = '';
+    for (var r = 0; r < ROWS; r++) {
+      h += '<div class="mbxd-row">';
+      for (var c = 0; c < COLS; c++) {
+        if (r < g.length) {
+          var m = markOf(g[r], ans)[c];
+          h += '<div class="mbxd-t' + (r === popRow ? ' pop' : '') + '" data-m="' + m +
+            '" style="animation-delay:' + (c * 70) + 'ms">' + g[r][c] + '</div>';
+        } else if (r === g.length && c < cur.length) {
+          h += '<div class="mbxd-t ink">' + cur[c] + '</div>';
+        } else {
+          h += '<div class="mbxd-t"></div>';
+        }
+      }
+      h += '</div>';
+    }
+    host.innerHTML = h;
+  }
+
+  function drawKeys() {
+    var host = $('mbxd-keys'); if (!host) return;
+    var st = keyState(), h = '';
+    for (var r = 0; r < KEYS.length; r++) {
+      h += '<div class="mbxd-krow">';
+      if (r === 2) h += '<div class="mbxd-k wide" data-k="ENTER">Enter</div>';
+      for (var i = 0; i < KEYS[r].length; i++) {
+        var c = KEYS[r][i];
+        h += '<div class="mbxd-k" data-k="' + c + '"' + (st[c] ? ' data-m="' + st[c] + '"' : '') + '>' + c + '</div>';
+      }
+      if (r === 2) h += '<div class="mbxd-k wide" data-k="DEL">Del</div>';
+      h += '</div>';
+    }
+    host.innerHTML = h;
+  }
+
+  function type(ch) {
+    if (busy || finished()) return;
+    if (cur.length < COLS) { cur += ch; drawBoard(); msg(''); }
+  }
+  function del() {
+    if (busy || finished()) return;
+    cur = cur.slice(0, -1); drawBoard(); msg('');
+  }
+  function finished() { return practice ? pDone : S.done; }
+  var pDone = false;
+
+  function submit() {
+    if (busy || finished()) return;
+    if (cur.length < COLS) { msg('Five letters', true); return; }
+    if (!/^[A-Z]{5}$/.test(cur)) { msg('Letters only', true); return; }
+    var g = guesses(); g.push(cur);
+    var was = cur; cur = '';
+    busy = true;
+    drawBoard(g.length - 1);
+    drawKeys();
+    setTimeout(function () {
+      busy = false;
+      var won = was === answer();
+      var out = won || g.length >= ROWS;
+      if (practice) {
+        if (out) { pDone = true; render(); }
+        else msg('');
+      } else {
+        if (out) { record(won, g.length); render(); }
+        else { save(); msg(''); }
+      }
+    }, 460);
+  }
+
+  /* Streak logic: a win the day after a win extends the run. A miss ends it.
+     A skipped day just resets — no scolding, it's a game. */
+  function record(won, n) {
+    S.done = true; S.won = won;
+    S.played = (Number(S.played) || 0) + 1;
+    if (won) {
+      S.wins = (Number(S.wins) || 0) + 1;
+      S.streak = (S.last === prevDay(S.day)) ? (Number(S.streak) || 0) + 1 : 1;
+      S.dist[n] = (Number(S.dist[n]) || 0) + 1;
+    } else {
+      S.streak = 0;
+      S.dist.X = (Number(S.dist.X) || 0) + 1;
+    }
+    S.best = Math.max(Number(S.best) || 0, Number(S.streak) || 0);
+    S.last = S.day;
+    save();
+    post();
+  }
+
+  /* ---------- the shared scoreboard ---------- */
+  function post() {
+    if (!online() || S.posted) { return; }
+    var body = {
+      day: S.day, name: myName(), email: myEmail(), dev: myDev(),
+      n: S.won ? S.guesses.length : 0, won: S.won, streak: S.streak, anon: S.anon === true
+    };
+    fetch('/api/daily', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.ok) { S.posted = true; save(); teamCache = d; drawTeam(); paintCard(); }
+    }).catch(function () { /* the game doesn't care if the board is down */ });
+  }
+  function fetchTeam(then) {
+    if (!online()) { then(null); return; }
+    fetch('/api/daily?day=' + encodeURIComponent(S.day))
+      .then(function (r) { return r.json(); })
+      .then(function (d) { teamCache = (d && d.ok) ? d : null; then(teamCache); })
+      .catch(function () { then(null); });
+  }
+
+  /* ---------- share ---------- */
+  function gridArt(g, ans) {
+    return g.map(function (w) {
+      return markOf(w, ans).split('').map(function (m) {
+        return m === 'g' ? HIT : (m === 'y' ? CLOSE : MISS);
+      }).join('');
+    }).join('\n');
+  }
+  function shareText() {
+    var n = S.won ? S.guesses.length + '/6' : 'X/6';
+    return 'MiniBox Daily Cut No. ' + (dayIndex(S.day) + 1) + '  ' + n +
+      (S.streak > 1 ? '  (streak ' + S.streak + ')' : '') + '\n' +
+      gridArt(S.guesses, wordFor(S.day));
+  }
+  function copyShare(btn) {
+    var t = shareText();
+    var done = function () { if (btn) { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy result'; }, 1600); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, function () { fallbackCopy(t); done(); });
+    } else { fallbackCopy(t); done(); }
+  }
+  function fallbackCopy(t) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {}
+  }
+  function toChat(btn) {
+    if (!online()) { if (btn) btn.textContent = 'Needs a signal'; return; }
+    var name = myName() || 'A teammate';
+    fetch('/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, text: shareText() })
+    }).then(function () {
+      if (btn) { btn.textContent = 'Posted to Team Chat'; btn.disabled = true; }
+    }).catch(function () { if (btn) btn.textContent = 'Could not post'; });
+  }
+
+  /* ---------- the panel under the board ---------- */
+  function render() {
+    drawBoard(); drawKeys();
+    var after = $('mbxd-after'); if (!after) return;
+    if (!finished()) { after.innerHTML = ''; msg(''); paintCard(); return; }
+
+    var ans = answer();
+    var won = practice ? (pGuesses.length && pGuesses[pGuesses.length - 1] === ans) : S.won;
+    var used = practice ? pGuesses.length : S.guesses.length;
+    var h = '';
+
+    h += '<div class="mbxd-block ' + (won ? 'win' : 'miss') + '">';
+    h += '<div class="mbxd-k">' + (won ? (used === 1 ? 'First blade' : 'Solved in ' + used) : 'Today’s word was') + '</div>';
+    h += '<div class="mbxd-word">' + esc(ans) + '</div>';
+    if (NOTE[ans]) h += '<div class="mbxd-note">' + esc(NOTE[ans]) + '</div>';
+    h += '</div>';
+
+    if (practice) {
+      h += '<div class="mbxd-acts">' +
+        '<button type="button" class="mbxd-act" data-a="practice">Another practice word</button>' +
+        '<button type="button" class="mbxd-act" data-a="back">Back to today</button></div>';
+      after.innerHTML = h;
+      msg('Practice — nothing counted');
+      return;
+    }
+
+    /* your own record */
+    var pct = S.played ? Math.round((S.wins / S.played) * 100) : 0;
+    h += '<div class="mbxd-block"><div class="mbxd-k">Your record</div>';
+    h += '<div class="mbxd-stats">';
+    h += '<div class="mbxd-stat"><b>' + (S.streak || 0) + '</b><span>Streak</span></div>';
+    h += '<div class="mbxd-stat"><b>' + (S.best || 0) + '</b><span>Best</span></div>';
+    h += '<div class="mbxd-stat"><b>' + (S.played || 0) + '</b><span>Played</span></div>';
+    h += '<div class="mbxd-stat"><b>' + pct + '%</b><span>Solved</span></div>';
+    h += '</div>';
+    var mine = S.dist || {}, top = 1;
+    ['1', '2', '3', '4', '5', '6', 'X'].forEach(function (k) { top = Math.max(top, Number(mine[k]) || 0); });
+    h += '<div class="mbxd-bars">';
+    ['1', '2', '3', '4', '5', '6', 'X'].forEach(function (k) {
+      var v = Number(mine[k]) || 0;
+      var isMe = S.won && String(S.guesses.length) === k || (!S.won && k === 'X');
+      h += '<div class="mbxd-bar"><i>' + k + '</i><u class="' + (isMe ? 'me' : '') + '" style="width:' +
+        Math.round((v / top) * 78 + 2) + '%"></u>' + v + '</div>';
+    });
+    h += '</div></div>';
+
+    /* the team */
+    h += '<div class="mbxd-block" id="mbxd-team"><div class="mbxd-k">The team today</div>' +
+      '<div class="mbxd-note">Checking the board…</div></div>';
+
+    h += '<div class="mbxd-grid">' + gridArt(S.guesses, wordFor(S.day)).replace(/\n/g, '<br>') + '</div>';
+    h += '<div class="mbxd-acts">' +
+      '<button type="button" class="mbxd-act" data-a="copy">Copy result</button>' +
+      '<button type="button" class="mbxd-act" data-a="chat">Post to Team Chat</button>' +
+      '<button type="button" class="mbxd-act" data-a="practice">Practice word</button>' +
+      '</div>';
+    h += '<label class="mbxd-anon"><input type="checkbox" id="mbxd-anon"' +
+      (S.anon ? ' checked' : '') + '> Play quietly — show me on the board as &ldquo;a teammate&rdquo;</label>';
+    h += '<div class="mbxd-quiet">Next word at midnight. This is a game: nothing here goes in any report, ' +
+      'and a day you skip costs you nothing but the streak.</div>';
+
+    after.innerHTML = h;
+    msg(won ? 'Back tomorrow' : 'Back tomorrow');
+    if (teamCache) drawTeam(); else fetchTeam(function () { drawTeam(); });
+    paintCard();
+  }
+
+  function drawTeam() {
+    var host = $('mbxd-team'); if (!host) return;
+    var d = teamCache;
+    if (!d) {
+      host.innerHTML = '<div class="mbxd-k">The team today</div><div class="mbxd-note">' +
+        (online() ? 'The board is not answering right now. Your score is safe on this device.'
+                  : 'No signal — the team board needs one. The game itself does not.') + '</div>';
+      return;
+    }
+    var h = '<div class="mbxd-k">The team today</div>';
+    h += '<div class="mbxd-stats">';
+    h += '<div class="mbxd-stat"><b>' + d.played + '</b><span>Played</span></div>';
+    h += '<div class="mbxd-stat"><b>' + d.solved + '</b><span>Solved</span></div>';
+    var avg = 0, k = 0;
+    (d.rows || []).forEach(function (r) { if (r.won) { avg += r.n; k++; } });
+    h += '<div class="mbxd-stat"><b>' + (k ? (avg / k).toFixed(1) : '—') + '</b><span>Avg tries</span></div>';
+    h += '</div>';
+    var me = (myName() || '').toLowerCase();
+    h += '<div class="mbxd-rows">';
+    (d.rows || []).slice(0, 12).forEach(function (r, i) {
+      var mine = me && r.name.toLowerCase() === me;
+      h += '<div class="mbxd-r' + (mine ? ' me' : '') + '"><em>' + (i + 1) + '</em><s>' + esc(r.name) +
+        (r.streak > 1 ? ' <span style="color:var(--gray-600)">· ' + r.streak + ' day run</span>' : '') +
+        '</s><b>' + (r.won ? r.n + '/6' : 'X/6') + '</b></div>';
+    });
+    if (!(d.rows || []).length) h += '<div class="mbxd-note">Nobody else has finished yet. You are first on the board.</div>';
+    h += '</div>';
+    if ((d.best || []).length) {
+      h += '<div class="mbxd-k" style="margin-top:12px">Longest runs going</div><div class="mbxd-rows">';
+      d.best.slice(0, 5).forEach(function (r, i) {
+        h += '<div class="mbxd-r"><em>' + (i + 1) + '</em><s>' + esc(r.name) + '</s><b>' + r.streak + ' days</b></div>';
+      });
+      h += '</div>';
+    }
+    host.innerHTML = h;
+  }
+
+  /* ---------- the sheet ---------- */
+  function build() {
+    if ($('mbxd-back')) return;
+    var back = document.createElement('div');
+    back.id = 'mbxd-back';
+    back.innerHTML =
+      '<div id="mbxd-sheet" role="dialog" aria-label="Daily Cut">' +
+        '<div class="mbxd-top"><div>' +
+          '<div class="mbxd-eyebrow">MiniBox · the whole team, one word</div>' +
+          '<div class="mbxd-title">Daily Cut <span id="mbxd-no" class="mbxd-chip"></span></div>' +
+          '<div class="mbxd-when" id="mbxd-when"></div>' +
+        '</div><button type="button" class="mbxd-x" data-a="close">Close</button></div>' +
+        '<div id="mbxd-board"></div>' +
+        '<div id="mbxd-msg"></div>' +
+        '<div id="mbxd-legend">Six tries. <b>Green bar</b> = right letter, right spot. ' +
+          '<b>Amber bar</b> = right letter, wrong spot. Any five letters are allowed — guess freely.</div>' +
+        '<div id="mbxd-keys"></div>' +
+        '<div id="mbxd-after"></div>' +
+      '</div>';
+    document.body.appendChild(back);
+
+    back.addEventListener('click', function (ev) {
+      if (ev.target === back) { close(); return; }
+      var k = ev.target.closest ? ev.target.closest('[data-k]') : null;
+      if (k) {
+        var v = k.getAttribute('data-k');
+        if (v === 'ENTER') submit(); else if (v === 'DEL') del(); else type(v);
+        return;
+      }
+      var a = ev.target.closest ? ev.target.closest('[data-a]') : null;
+      if (!a) return;
+      var act = a.getAttribute('data-a');
+      if (act === 'close') close();
+      else if (act === 'copy') copyShare(a);
+      else if (act === 'chat') toChat(a);
+      else if (act === 'practice') startPractice();
+      else if (act === 'back') { practice = false; pDone = false; pGuesses = []; cur = ''; open(); }
+    });
+    back.addEventListener('change', function (ev) {
+      if (ev.target && ev.target.id === 'mbxd-anon') {
+        S.anon = !!ev.target.checked; save();
+        msg(S.anon ? 'You show as a teammate' : 'You show by name');
+      }
+    });
+  }
+
+  function onKey(ev) {
+    var back = $('mbxd-back');
+    if (!back || !back.classList.contains('on')) return;
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target && ev.target.tagName;
+    if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+    if (ev.key === 'Escape') { close(); return; }
+    if (ev.key === 'Enter') { submit(); ev.preventDefault(); return; }
+    if (ev.key === 'Backspace') { del(); ev.preventDefault(); return; }
+    if (/^[a-zA-Z]$/.test(ev.key)) { type(ev.key.toUpperCase()); ev.preventDefault(); }
+  }
+
+  function open() {
+    S = load();                       // midnight may have rolled while the app sat open
+    build();
+    practice = false; pDone = false; pGuesses = []; cur = '';
+    var back = $('mbxd-back');
+    $('mbxd-no').textContent = 'No. ' + String(dayIndex(S.day) + 1).padStart(3, '0');
+    $('mbxd-when').textContent = longDate(S.day) + ' — same word for everybody in the toolkit today.';
+    back.classList.add('on');
+    document.documentElement.style.overflow = 'hidden';
+    render();
+    if (S.done && !S.posted) post();
+    if (S.done && !teamCache) fetchTeam(function () { drawTeam(); });
+  }
+  function close() {
+    var back = $('mbxd-back'); if (back) back.classList.remove('on');
+    document.documentElement.style.overflow = '';
+    paintCard();
+  }
+  function startPractice() {
+    practice = true; pDone = false; pGuesses = []; cur = '';
+    var pool = LIST.filter(function (w) { return w !== wordFor(S.day); });
+    pWord = pool[Math.floor(Math.random() * pool.length)];
+    $('mbxd-no').textContent = 'Practice';
+    $('mbxd-when').textContent = 'A spare word. Nothing counted, nothing posted.';
+    $('mbxd-after').innerHTML = '';
+    render();
+    msg('Practice');
+  }
+
+  /* ---------- the card on HQ ---------- */
+  function cardHTML() {
+    S = load();
+    var no = 'No. ' + String(dayIndex(S.day) + 1).padStart(3, '0');
+    var lead, sub, spine;
+    if (!S.done) {
+      lead = 'Today’s word is up';
+      sub = 'Five letters, six tries, and everyone in the toolkit today is on the same one.' +
+        (S.streak > 1 ? '<br>You’re on a ' + S.streak + '-day run.' : '');
+      spine = 'live';
+    } else if (S.won) {
+      lead = S.guesses.length === 1 ? 'First blade' : 'Solved in ' + S.guesses.length;
+      sub = (S.streak > 1 ? S.streak + '-day run' : 'On the board') +
+        (teamCache ? ' · ' + teamCache.solved + ' of ' + teamCache.played + ' solved it today' : '') +
+        '<br>Next word at midnight.';
+      spine = 'calm';
+    } else {
+      lead = 'Missed it today';
+      sub = 'The word is waiting in the card' +
+        (teamCache ? ' · ' + teamCache.solved + ' of ' + teamCache.played + ' got it' : '') +
+        '.<br>Clean slate at midnight.';
+      spine = 'warn';
+    }
+    return '<div class="hq-card" id="mbxd-card" data-spine="' + spine + '">' +
+      '<div class="hq-k"><span>Daily Cut</span><span class="hq-num">' + no + '</span></div>' +
+      '<div class="hq-body"><div class="hq-lead">' + lead + '</div><div class="hq-sub">' + sub + '</div></div>' +
+      '<div class="hq-go"><button type="button" data-mbxd-open="1">' +
+      (S.done ? 'See the word and the board' : 'Play today’s word') + '</button></div>' +
+      '</div>';
+  }
+  function paintCard() {
+    var card = $('mbxd-card'); if (!card) return;
+    var tmp = document.createElement('div');
+    tmp.innerHTML = cardHTML();
+    card.parentNode.replaceChild(tmp.firstChild, card);
+  }
+  function inject() {
+    if ($('mbxd-card')) return true;
+    var grid = document.querySelector('#mbx-hq .hq-grid');
+    if (!grid) return false;
+    var tmp = document.createElement('div');
+    tmp.innerHTML = cardHTML();
+    grid.appendChild(tmp.firstChild);
+    return true;
+  }
+
+  /* ---------- wiring ---------- */
+  function boot() {
+    build();
+    document.addEventListener('keydown', onKey, true);
+    document.addEventListener('click', function (ev) {
+      var b = ev.target && ev.target.closest ? ev.target.closest('[data-mbxd-open]') : null;
+      if (b) { ev.preventDefault(); open(); }
+    });
+
+    /* HQ rewrites its whole grid on every render (tab switch, refresh, coming
+       back to the app), so watch it and put the card back each time. */
+    var tries = 0;
+    var iv = setInterval(function () {
+      if (inject()) {
+        clearInterval(iv);
+        try {
+          var host = $('mbx-hq');
+          var mo = new MutationObserver(function () {
+            if (!$('mbxd-card')) inject();
+          });
+          mo.observe(host, { childList: true, subtree: true });
+        } catch (e) {}
+        /* quietly warm the team board so the card can show today's count */
+        if (S.done) fetchTeam(function () { paintCard(); });
+      } else if (++tries > 60) {
+        clearInterval(iv);
+      }
+    }, 400);
+  }
+
+  window.mbxDailyOpen = open;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();

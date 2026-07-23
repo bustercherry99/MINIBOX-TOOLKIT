@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/chat.js": { "maxDuration": 30 },
+    "api/nearby.js": { "maxDuration": 30 },
+    "api/geocode.js": { "maxDuration": 20 }
+  }
+}

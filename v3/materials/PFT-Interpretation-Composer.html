@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PFT Interpretation Composer &mdash; MiniBox+</title>
+  <style>
+    /* ---- Page shell (standalone) ---- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #f4f6f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      color: #1a1a1a;
+      padding: 24px 16px 48px;
+    }
+    .page-wrap { max-width: 1000px; margin: 0 auto; }
+    .alert-box { border-radius: 8px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 13.5px; line-height: 1.6; }
+    .alert-blue { background: #d6eaf8; color: #0a3d6b; border: 1px solid #a8d0ee; }
+    .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    #tab-rheum { --gray-300:#c8d0d8; --gray-600:#5a6a7a; }
+
+    /* ============================================================
+       Interpretation Composer (extracted from the MiniBox+ toolkit)
+       SCOPED: only applies inside #tab-rheum
+       ============================================================ */
+      #tab-rheum, #tab-rheum .rhp { --rht:#0d8aa6; --rht-deep:#0a6075; --rht-wash:#eaf5f8; --rht-line:#cfe6ec; --rhg:#c98a2b; --rhink:#0e2a3a; --rhsoft:#3a5567; }
+      /* ---- v2.20: Interpretation Composer ---- */
+      #tab-rheum .rhc { display:grid; gap:16px; }
+      #tab-rheum .rhc-card { background:#fff; border:1px solid var(--rht-line); border-radius:14px; overflow:hidden; }
+      #tab-rheum .rhc-head { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; padding:16px 20px; background:linear-gradient(180deg,#0a6075,#084c5d); color:#fff; }
+      #tab-rheum .rhc-head h3 { margin:0; font-size:17px; font-weight:800; letter-spacing:-.01em; }
+      #tab-rheum .rhc-head p { margin:3px 0 0; font-size:12px; color:#9fd0dd; }
+      #tab-rheum .rhc-timer { font-family:'DM Mono','SF Mono','Consolas',monospace; font-size:22px; font-weight:600; letter-spacing:.04em; background:rgba(255,255,255,.12); border-radius:10px; padding:7px 14px; min-width:104px; text-align:center; }
+      #tab-rheum .rhc-timer.run { background:rgba(107,209,140,.22); color:#c7f3d6; }
+      #tab-rheum .rhc-timer-lbl { display:block; font-family:inherit; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#9fd0dd; margin-top:2px; font-weight:700; }
+      #tab-rheum .rhc-body { padding:18px 20px; }
+      #tab-rheum .rhc-steps { display:grid; gap:16px; }
+      #tab-rheum .rhc-step-h { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+      #tab-rheum .rhc-step-n { width:24px; height:24px; border-radius:50%; background:var(--rht); color:#fff; font-family:'DM Mono','SF Mono',monospace; font-size:13px; font-weight:600; display:grid; place-items:center; flex-shrink:0; }
+      #tab-rheum .rhc-step-t { font-size:14.5px; font-weight:800; color:var(--rhink); }
+      #tab-rheum .rhc-step-s { font-size:12px; color:var(--rhsoft); }
+      #tab-rheum .rhc-vals { display:grid; grid-template-columns:repeat(auto-fit,minmax(172px,1fr)); gap:10px; }
+      #tab-rheum .rhc-val { background:#fafaf8; border:1px solid var(--rht-line); border-radius:10px; padding:10px 12px; }
+      #tab-rheum .rhc-val label { display:block; font-size:11px; font-weight:800; color:var(--rhink); letter-spacing:.01em; }
+      #tab-rheum .rhc-val .rhc-hint { display:block; font-size:10px; color:#999; margin:1px 0 6px; line-height:1.35; }
+      /* Two columns, four children (input,tag,input,tag) → the z row and the % row stack.
+         Each input then gets the full card width, so "-3.78" can never be clipped. */
+      #tab-rheum .rhc-val-row { display:grid; grid-template-columns:1fr auto; gap:6px; align-items:center; }
+      #tab-rheum .rhc-val input { width:100%; min-width:0; font-family:'DM Mono','SF Mono','Consolas',monospace; font-size:14px; font-weight:600; color:var(--rht-deep); border:1px solid var(--gray-300); border-radius:7px; padding:6px 9px; background:#fff; text-align:right; letter-spacing:.01em; }
+      #tab-rheum .rhc-val input::placeholder { font-size:12px; font-weight:600; letter-spacing:.02em; color:#b9b9b4; }
+      #tab-rheum .rhc-val input:focus { outline:none; border-color:#0d8aa6; box-shadow:0 0 0 3px rgba(13,138,166,.13); }
+      #tab-rheum .rhc-val input::-webkit-outer-spin-button, #tab-rheum .rhc-val input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+      #tab-rheum .rhc-val input[type=number] { -moz-appearance:textfield; appearance:textfield; }
+      #tab-rheum .rhc-val-tag { font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9a9a94; align-self:center; min-width:26px; }
+      #tab-rheum .rhc-val-warn { display:none; font-size:10.5px; font-weight:600; color:#b45309; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:5px 8px; margin-top:5px; line-height:1.45; }
+      /* Signature block — typed name/date beat fighting an underscore line inside a textarea. */
+      #tab-rheum .rhc-sign { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-bottom:11px; }
+      #tab-rheum .rhc-sign-f { background:#f4fbfc; border:1px solid var(--rht-line); border-radius:10px; padding:10px 12px; }
+      #tab-rheum .rhc-sign-f label { display:block; font-size:11px; font-weight:800; color:var(--rhink); }
+      #tab-rheum .rhc-sign-f .rhc-hint { display:block; font-size:10px; color:#999; margin:1px 0 6px; line-height:1.35; }
+      #tab-rheum .rhc-sign-f input { width:100%; min-width:0; font-family:inherit; font-size:13.5px; font-weight:600; color:var(--rht-deep); border:1px solid var(--gray-300); border-radius:7px; padding:7px 9px; background:#fff; }
+      #tab-rheum .rhc-sign-f input:focus { outline:none; border-color:#0d8aa6; box-shadow:0 0 0 3px rgba(13,138,166,.13); }
+      #tab-rheum .rhc-sign-f input::placeholder { font-weight:500; color:#b9b9b4; }
+      #tab-rheum .rhc-where { display:flex; gap:9px; align-items:flex-start; background:#f4fbfc; border:1px solid var(--rht-line); border-left:3px solid var(--rht); border-radius:8px; padding:10px 12px; margin-top:11px; font-size:11.5px; line-height:1.5; color:var(--rhink); }
+      #tab-rheum .rhc-where b { color:var(--rht-deep); }
+      #tab-rheum .rhc-btnrow { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+      #tab-rheum .rhc-btn { font-size:12.5px; font-weight:700; border-radius:999px; padding:9px 17px; cursor:pointer; border:1.5px solid var(--rht); background:var(--rht); color:#fff; transition:all .12s; }
+      #tab-rheum .rhc-btn:hover { filter:brightness(1.07); }
+      #tab-rheum .rhc-btn.ghost { background:#fff; color:var(--rht-deep); }
+      #tab-rheum .rhc-btn.ghost:hover { background:#eaf5f8; filter:none; }
+      #tab-rheum .rhc-gates { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; }
+      #tab-rheum .rhc-gate { border:1.5px solid var(--gray-300); border-radius:11px; padding:12px 14px; background:#fff; opacity:.5; transition:all .18s; }
+      #tab-rheum .rhc-gate.live { opacity:1; border-color:#0d8aa6; background:#f3fafc; }
+      #tab-rheum .rhc-gate-n { font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--rht); }
+      #tab-rheum .rhc-gate-q { font-size:13px; font-weight:800; color:var(--rhink); margin-top:3px; }
+      #tab-rheum .rhc-gate-a { font-size:12px; color:var(--rhsoft); margin-top:5px; line-height:1.45; font-family:'DM Mono','SF Mono',monospace; }
+      #tab-rheum .rhc-gate-a b { color:var(--rht-deep); }
+      #tab-rheum .rhc-verdict { border-radius:12px; padding:15px 18px; border:1.5px solid var(--rht-line); background:linear-gradient(180deg,#f3fafc,#eaf5f8); }
+      #tab-rheum .rhc-verdict.hit { border-color:#c98b1d; background:linear-gradient(180deg,#fffaf0,#fdf1dc); }
+      #tab-rheum .rhc-verdict-lbl { font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; font-weight:800; color:var(--rhsoft); }
+      #tab-rheum .rhc-verdict-v { font-size:20px; font-weight:800; color:var(--rht-deep); margin-top:3px; letter-spacing:-.015em; }
+      #tab-rheum .rhc-verdict.hit .rhc-verdict-v { color:#9a6510; }
+      #tab-rheum .rhc-verdict-sev { font-size:12.5px; color:var(--rhsoft); margin-top:5px; }
+      #tab-rheum .rhc-verdict-sev select { font-size:12.5px; font-weight:700; border:1px solid var(--gray-300); border-radius:6px; padding:3px 7px; margin-left:5px; background:#fff; color:var(--rht-deep); }
+      #tab-rheum .rhc-out { width:100%; min-height:190px; font-family:'Georgia',serif; font-size:14px; line-height:1.65; color:var(--rhink); border:1.5px solid var(--rht-line); border-radius:11px; padding:15px 17px; background:#fffef9; resize:vertical; }
+      #tab-rheum .rhc-out:focus { outline:none; border-color:#0d8aa6; box-shadow:0 0 0 3px rgba(13,138,166,.11); }
+      #tab-rheum .rhc-flag { display:flex; gap:11px; align-items:flex-start; border-radius:11px; padding:13px 16px; margin-top:12px; border:1px solid #e6c98a; border-left:4px solid #c98b1d; background:#fffaf0; }
+      #tab-rheum .rhc-flag-i { font-size:17px; line-height:1; flex-shrink:0; }
+      #tab-rheum .rhc-flag-t { font-size:13px; font-weight:800; color:#9a6510; }
+      #tab-rheum .rhc-flag-d { font-size:12.5px; color:var(--rhsoft); margin-top:3px; line-height:1.55; }
+      #tab-rheum .rhc-note { font-size:11.5px; color:#8a8a8a; line-height:1.55; margin-top:11px; }
+      #tab-rheum .rhc-demo { display:none; margin-top:12px; border:1.5px dashed var(--rht); background:#f2fafc; border-radius:12px; padding:13px 15px; }
+      #tab-rheum .rhc-demo.on { display:block; }
+      #tab-rheum .rhc-demo-h { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+      #tab-rheum .rhc-demo-tag { font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--rht); border-radius:999px; padding:3px 10px; }
+      #tab-rheum .rhc-demo-t { font-size:13px; font-weight:800; color:var(--rht-deep); }
+      #tab-rheum .rhc-demo-d { font-size:12.5px; color:var(--rhsoft); line-height:1.6; margin-top:7px; }
+      #tab-rheum .rhc-demo-d b { color:var(--rht-deep); }
+      #tab-rheum .rhc-toast { position:fixed; left:50%; bottom:28px; transform:translate(-50%,14px); background:#0a6075; color:#fff; font-size:13px; font-weight:700; padding:11px 22px; border-radius:999px; opacity:0; pointer-events:none; transition:all .22s; z-index:9999; }
+      #tab-rheum .rhc-toast.on { opacity:1; transform:translate(-50%,0); }
+      @media(max-width:720px){ #tab-rheum .rhc-head { flex-direction:column; align-items:stretch; text-align:center; } }
+      /* ---- "See the report" — where every number actually comes from ---- */
+      #rhrep-overlay { display:none; position:fixed; inset:0; z-index:99991; background:rgba(14,42,58,.66); align-items:center; justify-content:center; padding:18px; }
+      #rhrep-overlay.on { display:flex; }
+      #rhrep-overlay .rhrep-card { background:#fff; border-radius:18px; max-width:860px; width:100%; max-height:92vh; overflow:auto; box-shadow:0 24px 70px rgba(0,0,0,.35); animation:rhactUp .22s ease; }
+      #rhrep-overlay .rhrep-top { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--rht-line); padding:16px 24px 13px; display:flex; align-items:flex-start; justify-content:space-between; gap:14px; z-index:2; }
+      #rhrep-overlay .rhrep-tag { font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:800; color:var(--rhg); }
+      #rhrep-overlay .rhrep-title { font-size:19px; font-weight:800; color:var(--rhink); letter-spacing:-.01em; margin-top:4px; }
+      #rhrep-overlay .rhrep-sub { font-size:12.5px; color:var(--rhsoft); margin-top:4px; line-height:1.5; }
+      #rhrep-overlay .rhrep-x { border:0; background:none; font-size:16px; color:#8a8a8a; cursor:pointer; padding:4px 8px; flex:none; }
+      #rhrep-overlay .rhrep-x:hover { color:var(--rhink); }
+      #rhrep-overlay .rhrep-body { padding:18px 24px 24px; }
+      #rhrep-overlay .rhrep-sheet { border:1px solid var(--rht-line); border-radius:12px; overflow:hidden; }
+      #rhrep-overlay .rhrep-head { background:var(--rht-deep); color:#fff; padding:11px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+      #rhrep-overlay .rhrep-brand { font-weight:800; font-size:14px; letter-spacing:-.01em; }
+      #rhrep-overlay .rhrep-kind { font-size:11px; opacity:.85; }
+      #rhrep-overlay .rhrep-demo-note { background:#fff8e8; border-bottom:1px solid #f0dfb8; color:#8a6520; font-size:11.5px; font-weight:700; padding:7px 16px; text-align:center; }
+      #rhrep-overlay .rhrep-pt { display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px 14px; padding:13px 16px; background:var(--rht-wash); border-bottom:1px solid var(--rht-line); }
+      #rhrep-overlay .rhrep-pt div span { display:block; font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--rhsoft); font-weight:800; }
+      #rhrep-overlay .rhrep-pt div b { font-size:13.5px; color:var(--rhink); }
+      #rhrep-overlay .rhrep-sec { font-size:11px; letter-spacing:.11em; text-transform:uppercase; font-weight:800; color:var(--rhsoft); padding:13px 16px 5px; }
+      #rhrep-overlay table.rhrep-t { width:100%; border-collapse:collapse; font-size:13px; }
+      #rhrep-overlay table.rhrep-t th { text-align:right; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--rhsoft); font-weight:800; padding:5px 10px; border-bottom:1.5px solid var(--rht-line); }
+      #rhrep-overlay table.rhrep-t th:first-child, #rhrep-overlay table.rhrep-t td:first-child { text-align:left; }
+      #rhrep-overlay table.rhrep-t td { text-align:right; padding:7px 10px; border-bottom:1px solid #eef4f6; color:var(--rhink); font-variant-numeric:tabular-nums; }
+      #rhrep-overlay tr.rhrep-use { background:#f3fbfd; cursor:pointer; }
+      #rhrep-overlay tr.rhrep-use:hover { background:#e2f4f9; }
+      #rhrep-overlay tr.rhrep-use td { border-bottom:1px solid var(--rht-line); }
+      #rhrep-overlay tr.rhrep-use td:first-child { box-shadow:inset 3px 0 0 var(--rht); font-weight:700; }
+      #rhrep-overlay .rhrep-pin { display:inline-grid; place-items:center; width:17px; height:17px; border-radius:50%; background:var(--rht); color:#fff; font-size:10px; font-weight:800; margin-right:7px; vertical-align:1px; }
+      #rhrep-overlay td.rhrep-z { font-family:'DM Mono','SF Mono',monospace; font-weight:700; }
+      #rhrep-overlay td.rhrep-z.low { color:#b4432c; }
+      #rhrep-overlay td.rhrep-z.ok { color:#1c7a4a; }
+      #rhrep-overlay .rhrep-flag { font-size:10.5px; font-weight:800; letter-spacing:.04em; }
+      #rhrep-overlay .rhrep-flag.low { color:#b4432c; }
+      #rhrep-overlay .rhrep-flag.ok { color:#1c7a4a; }
+      #rhrep-overlay tr.rhrep-sec2 td { color:var(--rhsoft); font-size:12px; }
+      #rhrep-overlay .rhrep-clicknote { font-size:12px; color:var(--rht-deep); background:var(--rht-wash); border:1px solid var(--rht-line); border-radius:9px; padding:9px 13px; margin:14px 0 0; font-weight:700; }
+      #rhrep-overlay .rhrep-z-explain { margin-top:16px; border:1px solid var(--rht-line); border-radius:12px; padding:15px 17px; }
+      #rhrep-overlay .rhrep-z-explain h4 { font-size:14.5px; font-weight:800; color:var(--rhink); margin-bottom:7px; }
+      #rhrep-overlay .rhrep-z-explain p { font-size:13px; color:var(--rhsoft); line-height:1.62; margin-bottom:9px; }
+      #rhrep-overlay .rhrep-scale { position:relative; height:38px; margin:13px 0 7px; }
+      /* z scale runs -5 .. +3, so x% = ((z+5)/8)*100. LLN (z -1.645) lands at 41.9%. */
+      #rhrep-overlay .rhrep-scale-bar { position:absolute; left:0; right:0; top:13px; height:6px; border-radius:3px; background:linear-gradient(90deg,#e8b4a5 0%,#f2d9a8 36%,#cfe8d8 44%,#cfe8d8 100%); }
+      #rhrep-overlay .rhrep-scale-lln { position:absolute; top:5px; bottom:9px; width:2px; background:#c98a2b; left:41.9%; }
+      #rhrep-overlay .rhrep-scale-lbl { position:absolute; top:24px; font-size:10px; font-weight:800; color:var(--rhsoft); transform:translateX(-50%); white-space:nowrap; }
+      #rhrep-overlay .rhrep-dot { position:absolute; top:11px; width:10px; height:10px; border-radius:50%; background:#b4432c; border:2px solid #fff; box-shadow:0 0 0 1px #b4432c; transform:translateX(-50%); }
+      #rhrep-overlay .rhrep-dot.ok { background:#1c7a4a; box-shadow:0 0 0 1px #1c7a4a; }
+      #rhrep-overlay .rhrep-dot b { position:absolute; top:-17px; left:50%; transform:translateX(-50%); font-size:9.5px; font-weight:800; color:var(--rhsoft); white-space:nowrap; }
+      #rhrep-overlay .rhrep-foot { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+      @media (max-width:640px){
+        #rhrep-overlay .rhrep-body { padding:14px 13px 18px; }
+        #rhrep-overlay .rhrep-top { padding:14px 15px 11px; }
+        #rhrep-overlay table.rhrep-t { font-size:12px; }
+        #rhrep-overlay table.rhrep-t td, #rhrep-overlay table.rhrep-t th { padding:6px 6px; }
+      }
+      @keyframes rhactUp { from { transform:translateY(14px); opacity:0; } to { transform:none; opacity:1; } }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+  <div id="tab-rheum" class="rhp">
+
+    <div id="rheum-view-composer">
+      <div class="alert-box alert-blue">
+        <div class="alert-icon">&#9432;</div>
+        <div><strong>What this is:</strong> a drafting aid for the physician reading a MiniBox+ report. Type the numbers off the report &mdash; the same ATS/ERS decision tree printed on the report classifies the pattern and produces a draft interpretation, ready for physician review and signature. Everything stays in this file on your computer: nothing you type is saved or sent anywhere, and it works with no internet connection.</div>
+      </div>
+
+      <div class="rhc">
+        <div class="rhc-card">
+          <div class="rhc-head">
+            <div>
+              <h3> Interpretation Composer</h3>
+              <p>ATS/ERS pattern logic &middot; LLN &amp; z-score based &middot; signature-ready draft</p>
+            </div>
+            <div>
+              <div class="rhc-timer" id="rhc-timer">0:00</div>
+              <span class="rhc-timer-lbl" id="rhc-timer-lbl">time to signature</span>
+            </div>
+          </div>
+
+          <div class="rhc-body">
+            <div class="rhc-steps">
+
+              <!-- STEP 1 -->
+              <div>
+                <div class="rhc-step-h">
+                  <div class="rhc-step-n">1</div>
+                  <div>
+                    <div class="rhc-step-t">Type in what the report says</div>
+                    <div class="rhc-step-s">Copy the numbers straight off the MiniBox+ report: the <b>Z-score</b> column if it has one (usually a negative number, like &minus;2.31), otherwise the <b>% Predicted</b> column. One box per row is enough &mdash; just type the number. Not sure what it should look like, or what a Z-score even is? Hit <b> See the report these come from</b> below &mdash; it shows the actual MiniBox+ printout with these six numbers marked, and you can tap any one of them to drop it straight in here.</div>
+                  </div>
+                </div>
+                <div class="rhc-vals">
+                  <div class="rhc-val">
+                    <label>FEV<sub>1</sub>/FVC ratio</label>
+                    <span class="rhc-hint">Gate 1 &mdash; obstruction</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.01" id="rhc-ratio-z" placeholder="z-score" oninput="rhcRun()">
+                      <span class="rhc-val-tag">z</span>
+                      <input type="number" step="0.1" id="rhc-ratio-p" placeholder="% pred" oninput="rhcRun()">
+                      <span class="rhc-val-tag">% pred</span>
+                    </div>
+                    <div class="rhc-val-warn" id="rhc-ratio-warn"></div>
+                  </div>
+                  <div class="rhc-val">
+                    <label>TLC</label>
+                    <span class="rhc-hint">Gate 2 &mdash; restriction</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.01" id="rhc-tlc-z" placeholder="z-score" oninput="rhcRun()">
+                      <span class="rhc-val-tag">z</span>
+                      <input type="number" step="0.1" id="rhc-tlc-p" placeholder="% pred" oninput="rhcRun()">
+                      <span class="rhc-val-tag">% pred</span>
+                    </div>
+                  </div>
+                  <div class="rhc-val">
+                    <label>DL<sub>CO</sub> (corrected)</label>
+                    <span class="rhc-hint">Gate 3 &mdash; gas exchange</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.01" id="rhc-dlco-z" placeholder="z-score" oninput="rhcRun()">
+                      <span class="rhc-val-tag">z</span>
+                      <input type="number" step="0.1" id="rhc-dlco-p" placeholder="% pred" oninput="rhcRun()">
+                      <span class="rhc-val-tag">% pred</span>
+                    </div>
+                  </div>
+                  <div class="rhc-val">
+                    <label>FVC</label>
+                    <span class="rhc-hint">supporting</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.01" id="rhc-fvc-z" placeholder="z-score" oninput="rhcRun()">
+                      <span class="rhc-val-tag">z</span>
+                      <input type="number" step="0.1" id="rhc-fvc-p" placeholder="% pred" oninput="rhcRun()">
+                      <span class="rhc-val-tag">% pred</span>
+                    </div>
+                  </div>
+                  <div class="rhc-val">
+                    <label>FEV<sub>1</sub></label>
+                    <span class="rhc-hint">grades severity</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.01" id="rhc-fev1-z" placeholder="z-score" oninput="rhcRun()">
+                      <span class="rhc-val-tag">z</span>
+                      <input type="number" step="0.1" id="rhc-fev1-p" placeholder="% pred" oninput="rhcRun()">
+                      <span class="rhc-val-tag">% pred</span>
+                    </div>
+                  </div>
+                  <div class="rhc-val">
+                    <label>BMI</label>
+                    <span class="rhc-hint">optional &mdash; triggers the obesity check</span>
+                    <div class="rhc-val-row">
+                      <input type="number" step="0.1" id="rhc-bmi" placeholder="kg/m&sup2;" oninput="rhcRun()">
+                    </div>
+                  </div>
+                </div>
+                <div class="rhc-btnrow">
+                  <button type="button" class="rhc-btn ghost" id="rhc-demo-btn" onclick="rhcDemoToggle()"> Load the ILD demo case</button>
+                  <button type="button" class="rhc-btn ghost" onclick="rhRepOpen()"> See the report these come from</button>
+                  <button type="button" class="rhc-btn ghost" onclick="rhcClear()">Clear</button>
+                  <button type="button" class="rhc-btn ghost" onclick="rhcTimerToggle()" id="rhc-timer-btn"> Start timer</button>
+                </div>
+                <div class="rhc-demo" id="rhc-demo-card">
+                  <div class="rhc-demo-h">
+                    <span class="rhc-demo-tag">Demo case</span>
+                    <span class="rhc-demo-t">RA patient on methotrexate, new shortness of breath</span>
+                  </div>
+                  <div class="rhc-demo-d">
+                    These are the numbers off a real MiniBox+ report. The lungs move air fine &mdash; the <b>ratio is normal</b> &mdash; but the lungs are <b>small</b> (TLC 54% predicted) and <b>gas transfer is down</b> (DLCO 54% predicted). BMI is 41.8, so the tool also raises the obesity question, because body habitus can shrink lung volumes on its own.
+                    <br><br>
+                    <b>What it should land on:</b> restriction with a reduced DLCO &mdash; the pattern that points at an interstitial lung process, which is exactly what you&rsquo;re watching for in a connective-tissue-disease patient. Scroll down and the tree, the flags, and the finished paragraph all follow from these six numbers.
+                    <br><br>
+                    Press the button again to take the demo back out and put your own numbers in.
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 2 -->
+              <div>
+                <div class="rhc-step-h">
+                  <div class="rhc-step-n">2</div>
+                  <div>
+                    <div class="rhc-step-t">The tree does the classifying</div>
+                    <div class="rhc-step-s">Same three gates, same order, as the chart printed on the MiniBox+ report.</div>
+                  </div>
+                </div>
+                <div class="rhc-gates">
+                  <div class="rhc-gate" id="rhc-g1">
+                    <div class="rhc-gate-n">Gate 1 &middot; Airflow</div>
+                    <div class="rhc-gate-q">FEV<sub>1</sub>/FVC &ge; LLN?</div>
+                    <div class="rhc-gate-a" id="rhc-g1a">&mdash;</div>
+                  </div>
+                  <div class="rhc-gate" id="rhc-g2">
+                    <div class="rhc-gate-n">Gate 2 &middot; Size</div>
+                    <div class="rhc-gate-q">TLC &ge; LLN?</div>
+                    <div class="rhc-gate-a" id="rhc-g2a">&mdash;</div>
+                  </div>
+                  <div class="rhc-gate" id="rhc-g3">
+                    <div class="rhc-gate-n">Gate 3 &middot; Gas exchange</div>
+                    <div class="rhc-gate-q">DL<sub>CO</sub> &ge; LLN?</div>
+                    <div class="rhc-gate-a" id="rhc-g3a">&mdash;</div>
+                  </div>
+                </div>
+                <div class="rhc-verdict" id="rhc-verdict" style="margin-top:12px;">
+                  <div class="rhc-verdict-lbl">Pattern</div>
+                  <div class="rhc-verdict-v" id="rhc-verdict-v">Enter values to classify</div>
+                  <div class="rhc-verdict-sev" id="rhc-verdict-sev" style="display:none;">
+                    Severity:
+                    <select id="rhc-sev" onchange="rhcCompose()">
+                      <option>Mild</option><option>Moderate</option><option>Moderately severe</option><option>Severe</option><option>Very severe</option>
+                    </select>
+                    <span style="font-size:11px;color:#999;margin-left:6px;">graded on FEV<sub>1</sub> %pred &mdash; confirm against the report</span>
+                  </div>
+                </div>
+                <div id="rhc-flags"></div>
+              </div>
+
+              <!-- STEP 3 -->
+              <div>
+                <div class="rhc-step-h">
+                  <div class="rhc-step-n">3</div>
+                  <div>
+                    <div class="rhc-step-t">Sign the draft</div>
+                    <div class="rhc-step-s">Type the name and date below and they drop into the bottom of the draft. Edit the text freely &mdash; the bracketed prompts are where the rheumatologist adds the clinical context only they have.</div>
+                  </div>
+                </div>
+                <div class="rhc-sign">
+                  <div class="rhc-sign-f">
+                    <label>Interpreted by</label>
+                    <span class="rhc-hint">name and credentials &mdash; goes on the signature line</span>
+                    <input type="text" id="rhc-signer" placeholder="Jane Rivera, MD" oninput="rhcCompose()">
+                  </div>
+                  <div class="rhc-sign-f">
+                    <label>Date</label>
+                    <span class="rhc-hint">defaults to today</span>
+                    <input type="date" id="rhc-signdate" oninput="rhcCompose()">
+                  </div>
+                </div>
+                <textarea class="rhc-out" id="rhc-out" placeholder="The draft interpretation appears here once a pattern is classified."></textarea>
+                <div class="rhc-btnrow">
+                  <button type="button" class="rhc-btn" onclick="rhcCopy()"> Copy interpretation</button>
+                  <button type="button" class="rhc-btn" onclick="rhcPrint()"> Print / save as PDF</button>
+                  <button type="button" class="rhc-btn ghost" onclick="rhcCompose()"> Regenerate draft</button>
+                  <button type="button" class="rhc-btn ghost" onclick="window.open('https://minibox-pft-suite.vercel.app','_blank')"> Teach them to read it &mdash; PFT Suite &rarr;</button>
+                </div>
+                <div class="rhc-where">
+                  <div></div>
+                  <div><b>Where does &ldquo;Copy&rdquo; put it?</b> On your clipboard &mdash; nothing is sent anywhere and nothing is saved here. Click into the patient&rsquo;s chart in your EMR and paste with <b>Ctrl&#8202;+&#8202;V</b> (<b>&#8984;&#8202;+&#8202;V</b> on a Mac). Copying is only how you carry the text over; if you&rsquo;d rather put a signed page in the file or hand one to the patient, use <b>Print / save as PDF</b> instead. In a demo, Copy is also what stops the clock.</div>
+                </div>
+                <div class="rhc-note">
+                  <strong>Use it honestly:</strong> this is a drafting aid built on ATS/ERS pattern logic, not a diagnosis. Every interpretation requires physician review and signature &mdash; the same standard the MiniBox+ report itself states. Quality/acceptability of the maneuvers is the interpreting physician&rsquo;s call.
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="rhc-toast" id="rhc-toast">Copied</div>
+    </div><!-- end rheum-view-composer -->
+
+    <div id="rhrep-overlay" class="rhp" onclick="if(event.target===this)rhRepClose()">
+      <div class="rhrep-card">
+        <div class="rhrep-top">
+          <div>
+            <div class="rhrep-tag">The source document</div>
+            <div class="rhrep-title">This is the report the numbers come off</div>
+            <div class="rhrep-sub">The MiniBox+ prints this. Every box in the Composer is one number on this page &mdash; the six that matter are marked and numbered in the order the Composer asks for them. <b>Tap any marked row to drop it straight into the form.</b></div>
+          </div>
+          <button type="button" class="rhrep-x" onclick="rhRepClose()" aria-label="Close">&#10005;</button>
+        </div>
+        <div class="rhrep-body">
+          <div class="rhrep-sheet">
+            <div class="rhrep-head">
+              <div>
+                <div class="rhrep-brand">PulmOne MiniBox+</div>
+                <div class="rhrep-kind">Pulmonary Function Test Report &middot; PFT Outside The Box</div>
+              </div>
+              <div class="rhrep-kind">Test date 03 / 14 / 2026</div>
+            </div>
+            <div class="rhrep-demo-note">DEMONSTRATION REPORT &mdash; sample values for training. Not a real patient.</div>
+            <div class="rhrep-pt">
+              <div><span>Patient</span><b>Demo, R.A.</b></div>
+              <div><span>Age / Sex</span><b>58 &middot; Female</b></div>
+              <div><span>Height</span><b>5&prime;5&Prime;</b></div>
+              <div><span>Weight</span><b>251 lb</b></div>
+              <div><span>BMI</span><b><span class="rhrep-pin">6</span>41.8</b></div>
+              <div><span>Reference</span><b>NHANES III</b></div>
+            </div>
+
+            <div class="rhrep-sec">Spirometry &mdash; how much air, how fast</div>
+            <table class="rhrep-t">
+              <tr><th>Parameter</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Z-score</th><th>Flag</th></tr>
+              <tr class="rhrep-use" onclick="rhRepPick('ratio')" title="Click to fill Gate 1 in the Composer">
+                <td><span class="rhrep-pin">1</span>FEV<sub>1</sub>/FVC</td><td>81.1</td><td>83.5</td><td>103%</td>
+                <td class="rhrep-z ok">+0.38</td><td><span class="rhrep-flag ok">NORMAL</span></td></tr>
+              <tr class="rhrep-use" onclick="rhRepPick('fvc')" title="Click to fill FVC in the Composer">
+                <td><span class="rhrep-pin">4</span>FVC (L)</td><td>4.04</td><td>1.94</td><td>48%</td>
+                <td class="rhrep-z low">&minus;4.55</td><td><span class="rhrep-flag low">&darr; LOW</span></td></tr>
+              <tr class="rhrep-use" onclick="rhRepPick('fev1')" title="Click to fill FEV1 in the Composer">
+                <td><span class="rhrep-pin">5</span>FEV<sub>1</sub> (L)</td><td>3.24</td><td>1.62</td><td>50%</td>
+                <td class="rhrep-z low">&minus;4.18</td><td><span class="rhrep-flag low">&darr; LOW</span></td></tr>
+              <tr class="rhrep-sec2"><td>FEF 25&ndash;75 (L/s)</td><td>3.30</td><td>2.05</td><td>62%</td><td class="rhrep-z">&minus;1.42</td><td></td></tr>
+            </table>
+
+            <div class="rhrep-sec">Lung volumes &mdash; how big are the lungs</div>
+            <table class="rhrep-t">
+              <tr><th>Parameter</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Z-score</th><th>Flag</th></tr>
+              <tr class="rhrep-use" onclick="rhRepPick('tlc')" title="Click to fill Gate 2 in the Composer">
+                <td><span class="rhrep-pin">2</span>TLC (L)</td><td>5.94</td><td>3.21</td><td>54%</td>
+                <td class="rhrep-z low">&minus;3.78</td><td><span class="rhrep-flag low">&darr; LOW</span></td></tr>
+              <tr class="rhrep-sec2"><td>RV (L)</td><td>1.98</td><td>1.22</td><td>62%</td><td class="rhrep-z">&minus;1.55</td><td></td></tr>
+            </table>
+
+            <div class="rhrep-sec">Diffusion (DLCO) &mdash; is oxygen crossing over</div>
+            <table class="rhrep-t">
+              <tr><th>Parameter</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Z-score</th><th>Flag</th></tr>
+              <tr class="rhrep-use" onclick="rhRepPick('dlco')" title="Click to fill Gate 3 in the Composer">
+                <td><span class="rhrep-pin">3</span>DLCO corr.</td><td>17.40</td><td>9.40</td><td>54%</td>
+                <td class="rhrep-z low">&minus;3.61</td><td><span class="rhrep-flag low">&darr; LOW</span></td></tr>
+              <tr class="rhrep-sec2"><td>VA (L)</td><td>5.60</td><td>3.55</td><td>63%</td><td class="rhrep-z">&minus;1.48</td><td></td></tr>
+            </table>
+            <div style="height:12px"></div>
+          </div>
+
+          <div class="rhrep-clicknote">👆 Tap any numbered row above and it fills that box in the Composer &mdash; so you can see exactly which number lands where.</div>
+
+          <div class="rhrep-z-explain">
+            <h4>&ldquo;What&rsquo;s a Z-score?&rdquo; &mdash; the question you&rsquo;ll get</h4>
+            <p><b>How many steps a value sits above or below the average healthy person</b> of the same age, height, sex and ethnicity. <b>0 means exactly predicted.</b> Anything below <b>&minus;1.645</b> counts as abnormal &mdash; that&rsquo;s the LLN line. A &minus;4 means &ldquo;far, far below normal.&rdquo;</p>
+            <p>It&rsquo;s the modern ATS/ERS standard because <b>one number</b> tells you how far off a patient is, no matter which parameter you&rsquo;re looking at &mdash; and unlike &ldquo;80% of predicted,&rdquo; it already accounts for the fact that normal ranges differ by age and size.</p>
+            <div class="rhrep-scale">
+              <div class="rhrep-scale-bar"></div>
+              <div class="rhrep-scale-lln"></div>
+              <div class="rhrep-dot" style="left:15.3%"><b>TLC &minus;3.78</b></div>
+              <div class="rhrep-dot" style="left:17.4%"></div>
+              <div class="rhrep-dot ok" style="left:67.3%"><b>ratio +0.38</b></div>
+              <div class="rhrep-scale-lbl" style="left:41.9%">LLN &minus;1.645</div>
+              <div class="rhrep-scale-lbl" style="left:62.5%">predicted (0)</div>
+            </div>
+            <p style="margin-top:20px">That picture is the whole case in one line: <b>airflow sits in the normal zone, the lungs and the gas transfer are off the left edge.</b> Normal ratio, small lungs, low DLCO &mdash; restriction with a gas-exchange defect.</p>
+            <p style="margin-bottom:0"><b>If the report has no Z-score column</b>, use the <b>% Predicted</b> column instead and the Composer falls back to the 80% rule. The z-score is better where you have it.</p>
+          </div>
+
+          <div class="rhrep-foot">
+            <button type="button" class="rhc-btn" onclick="rhRepFillAll()"> Fill all six boxes from this report</button>
+            <button type="button" class="rhc-btn ghost" onclick="rhRepClose()">Close</button>
+            <button type="button" class="rhc-btn ghost" onclick="window.open('https://minibox-pft-suite.vercel.app','_blank')">Explore a live report &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end #tab-rheum -->
+  </div><!-- end page-wrap -->
+
+  <script>
+/* ============================================================
+   v2.20 — Rheumatology Interpretation Composer
+   Mirrors the ATS/ERS decision chart printed on the MiniBox+
+   report: Gate 1 airflow -> Gate 2 size -> Gate 3 gas exchange.
+   z-score is authoritative; %pred is the fallback when z is blank.
+   ============================================================ */
+var RHC_Z_LLN = -1.645;          /* 5th percentile — ATS/ERS 2022 */
+var RHC_PCT_LLN = 80;            /* fallback only, when no z given */
+var RHC_RATIO_PCT_LLN = 70;      /* fallback only — fixed ratio */
+
+function rhcNum(id){
+  var el = document.getElementById(id);
+  if (!el || el.value === '' || el.value === null) return null;
+  var v = parseFloat(el.value);
+  return isNaN(v) ? null : v;
+}
+/* Returns true (normal), false (below LLN), or null (unknown). */
+function rhcNormal(zId, pId, pctLLN){
+  var z = rhcNum(zId);
+  if (z !== null) return z >= RHC_Z_LLN;
+  var p = rhcNum(pId);
+  /* A value like 0.78 in the % box is the raw ratio, not % predicted — refuse to classify on it. */
+  if (p !== null && !(pId === 'rhc-ratio-p' && rhcRatioLooksRaw(p))) return p >= pctLLN;
+  return null;
+}
+function rhcRatioLooksRaw(p){ return p > 0 && p <= 1.5; }
+function rhcGateText(zId, pId, ok){
+  var z = rhcNum(zId), p = rhcNum(pId), bits = [];
+  if (pId === 'rhc-ratio-p' && p !== null && rhcRatioLooksRaw(p)) p = null;
+  if (z !== null) bits.push('z ' + (z > 0 ? '+' : '') + z.toFixed(2));
+  if (p !== null) bits.push(p.toFixed(0) + '% pred');
+  if (!bits.length) return '&mdash;';
+  var verdict = ok === null ? '' : (ok ? ' &rarr; <b>normal</b>' : ' &rarr; <b>below LLN</b>');
+  return bits.join(' &middot; ') + verdict;
+}
+function rhcSeverity(){
+  var z = rhcNum('rhc-fev1-z'), p = rhcNum('rhc-fev1-p');
+  if (p === null && z === null) return null;
+  if (p !== null){
+    if (p >= 70) return 'Mild';
+    if (p >= 60) return 'Moderate';
+    if (p >= 50) return 'Moderately severe';
+    if (p >= 35) return 'Severe';
+    return 'Very severe';
+  }
+  if (z >= -2) return 'Mild';
+  if (z >= -2.5) return 'Moderate';
+  if (z >= -3) return 'Moderately severe';
+  if (z >= -4) return 'Severe';
+  return 'Very severe';
+}
+
+function rhcClassify(){
+  var airflow = rhcNormal('rhc-ratio-z','rhc-ratio-p', RHC_RATIO_PCT_LLN);
+  var size    = rhcNormal('rhc-tlc-z','rhc-tlc-p', RHC_PCT_LLN);
+  var gas     = rhcNormal('rhc-dlco-z','rhc-dlco-p', RHC_PCT_LLN);
+  if (airflow === null || size === null) return { key:'incomplete', airflow:airflow, size:size, gas:gas };
+  var key;
+  if (airflow && size)        key = (gas === false) ? 'normal-lowdlco' : 'normal';
+  else if (airflow && !size)  key = (gas === false) ? 'restrict-ild'   : 'restrict-extra';
+  else if (!airflow && size)  key = (gas === false) ? 'obstruct-emph'  : 'obstruct';
+  else                        key = 'mixed';
+  return { key:key, airflow:airflow, size:size, gas:gas };
+}
+
+var RHC_PATTERNS = {
+  'normal':          { label:'Normal spirometry, lung volumes and gas exchange', ild:false },
+  'normal-lowdlco':  { label:'Isolated reduction in DLCO', ild:true },
+  'restrict-ild':    { label:'Restriction with reduced DLCO — consistent with ILD', ild:true },
+  'restrict-extra':  { label:'Restriction with preserved DLCO', ild:false },
+  'obstruct':        { label:'Obstructive ventilatory defect', ild:false },
+  'obstruct-emph':   { label:'Obstruction with reduced DLCO', ild:false },
+  'mixed':           { label:'Mixed obstructive and restrictive defect', ild:true }
+};
+
+function rhcRun(){
+  rhcDemoDriftCheck();
+  var r = rhcClassify();
+  var vEl = document.getElementById('rhc-verdict-v');
+  var wrap = document.getElementById('rhc-verdict');
+  var sevRow = document.getElementById('rhc-verdict-sev');
+  if (!vEl) return;
+
+  /* Catch the natural mistake: typing the ratio itself (0.78) instead of its % predicted. */
+  var rw = document.getElementById('rhc-ratio-warn');
+  if (rw){
+    var rp = rhcNum('rhc-ratio-p');
+    if (rp !== null && rhcRatioLooksRaw(rp)){
+      rw.innerHTML = 'That looks like the ratio itself (' + rp + ') &mdash; this box wants the <b>% Predicted</b> number from the report (usually near 100). Or type the ratio&rsquo;s <b>Z-score</b> in the z box instead.';
+      rw.style.display = 'block';
+    } else {
+      rw.style.display = 'none';
+    }
+  }
+
+  document.getElementById('rhc-g1a').innerHTML = rhcGateText('rhc-ratio-z','rhc-ratio-p', r.airflow);
+  document.getElementById('rhc-g2a').innerHTML = rhcGateText('rhc-tlc-z','rhc-tlc-p', r.size);
+  document.getElementById('rhc-g3a').innerHTML = rhcGateText('rhc-dlco-z','rhc-dlco-p', r.gas);
+  document.getElementById('rhc-g1').classList.toggle('live', r.airflow !== null);
+  document.getElementById('rhc-g2').classList.toggle('live', r.size !== null);
+  document.getElementById('rhc-g3').classList.toggle('live', r.gas !== null);
+
+  if (r.key === 'incomplete'){
+    vEl.textContent = 'Enter FEV₁/FVC and TLC to classify';
+    wrap.classList.remove('hit');
+    sevRow.style.display = 'none';
+    document.getElementById('rhc-flags').innerHTML = '';
+    return;
+  }
+  var pat = RHC_PATTERNS[r.key];
+  vEl.textContent = pat.label;
+  wrap.classList.toggle('hit', !!pat.ild);
+
+  if (r.key === 'normal'){
+    sevRow.style.display = 'none';
+  } else {
+    var sev = rhcSeverity();
+    sevRow.style.display = '';
+    if (sev) document.getElementById('rhc-sev').value = sev;
+  }
+  rhcFlags(r);
+  rhcCompose();
+}
+
+function rhcFlags(r){
+  var host = document.getElementById('rhc-flags');
+  if (!host) return;
+  var out = '', bmi = rhcNum('rhc-bmi');
+  var dz = rhcNum('rhc-dlco-z'), dp = rhcNum('rhc-dlco-p');
+
+  /* The objection a rheumatologist will raise first. */
+  if (bmi !== null && bmi >= 30 && r.size === false){
+    if (r.gas === false){
+      out += '<div class="rhc-flag"><div class="rhc-flag-i">&#9878;&#65039;</div><div>'
+        + '<div class="rhc-flag-t">Expect: &ldquo;that&rsquo;s the obesity, not ILD.&rdquo;</div>'
+        + '<div class="rhc-flag-d">BMI ' + bmi.toFixed(1) + ' does restrict lung volumes &mdash; but obesity typically <strong>preserves or raises</strong> DLCO. '
+        + 'A reduced DLCO' + (dz !== null ? ' (z ' + dz.toFixed(2) + ')' : (dp !== null ? ' (' + dp.toFixed(0) + '% pred)' : ''))
+        + ' alongside the restriction is a genuine gas-exchange defect and is not explained by body habitus. That is the answer to the objection.</div></div></div>';
+    } else {
+      out += '<div class="rhc-flag"><div class="rhc-flag-i">&#9878;&#65039;</div><div>'
+        + '<div class="rhc-flag-t">Body habitus may explain this restriction</div>'
+        + '<div class="rhc-flag-d">BMI ' + bmi.toFixed(1) + ' with restriction but a preserved DLCO fits an extrapulmonary/obesity pattern rather than ILD. Say so in the interpretation rather than leaving it open.</div></div></div>';
+    }
+  }
+  if (RHC_PATTERNS[r.key] && RHC_PATTERNS[r.key].ild){
+    out += '<div class="rhc-flag"><div class="rhc-flag-i">&#129504;</div><div>'
+      + '<div class="rhc-flag-t">This is the CTD-ILD pattern</div>'
+      + '<div class="rhc-flag-d">In a patient with a known connective-tissue disease, this result is what the ACR/CHEST ILD guidance is asking you to catch. Tie the interpretation to their rheumatologic diagnosis &mdash; that is what makes it clinically and administratively defensible.</div></div></div>';
+  }
+  if (r.gas === null){
+    out += '<div class="rhc-flag"><div class="rhc-flag-i">&#9888;&#65039;</div><div>'
+      + '<div class="rhc-flag-t">No DLCO entered</div>'
+      + '<div class="rhc-flag-d">DLCO is often the earliest abnormality in CTD-ILD. Without it the pattern can be described but ILD cannot be assessed &mdash; the third gate is where this diagnosis usually declares itself.</div></div></div>';
+  }
+  host.innerHTML = out;
+}
+
+function rhcVal(zId, pId, name){
+  var z = rhcNum(zId), p = rhcNum(pId), bits = [];
+  if (pId === 'rhc-ratio-p' && p !== null && rhcRatioLooksRaw(p)) p = null;
+  if (p !== null) bits.push(p.toFixed(0) + '% predicted');
+  if (z !== null) bits.push('z-score ' + (z > 0 ? '+' : '') + z.toFixed(2));
+  if (!bits.length) return '';
+  return name + ' ' + bits.join(', ');
+}
+
+function rhcCompose(){
+  var out = document.getElementById('rhc-out');
+  if (!out) return;
+  var r = rhcClassify();
+  if (r.key === 'incomplete'){ out.value = ''; return; }
+
+  var sevEl = document.getElementById('rhc-sev');
+  var sev = (document.getElementById('rhc-verdict-sev').style.display === 'none') ? null : (sevEl ? sevEl.value : null);
+
+  var measured = [];
+  ['rhc-fvc-z|rhc-fvc-p|FVC','rhc-fev1-z|rhc-fev1-p|FEV₁','rhc-ratio-z|rhc-ratio-p|FEV₁/FVC','rhc-tlc-z|rhc-tlc-p|TLC','rhc-dlco-z|rhc-dlco-p|DLCO']
+    .forEach(function(spec){
+      var s = spec.split('|'), t = rhcVal(s[0], s[1], s[2]);
+      if (t) measured.push(t);
+    });
+
+  var body = {
+    'normal': 'Spirometry, lung volumes and diffusing capacity are all within normal limits. There is no evidence of an obstructive or restrictive ventilatory defect, and gas exchange is preserved.',
+    'normal-lowdlco': 'Spirometry and lung volumes are within normal limits, but the diffusing capacity is reduced in isolation. An isolated reduction in DLCO may precede any volume loss in connective-tissue-disease-associated interstitial lung disease, and may also be seen in pulmonary vascular disease or anaemia.',
+    'restrict-ild': 'There is a restrictive ventilatory defect with a reduced diffusing capacity. The FEV₁/FVC ratio is preserved, which argues against airflow obstruction as the cause of the reduced volumes. The combination of reduced lung volumes and impaired gas exchange is consistent with an interstitial process.',
+    'restrict-extra': 'There is a restrictive ventilatory defect with a preserved diffusing capacity. This combination more often reflects an extrapulmonary cause of reduced volumes — chest wall restriction, neuromuscular weakness, or body habitus — than an interstitial process.',
+    'obstruct': 'There is an obstructive ventilatory defect. Lung volumes are preserved and the diffusing capacity is normal.',
+    'obstruct-emph': 'There is an obstructive ventilatory defect accompanied by a reduced diffusing capacity, a combination that suggests emphysematous change rather than airways disease alone.',
+    'mixed': 'There is a mixed defect, with both a reduced FEV₁/FVC ratio and reduced lung volumes. Each component should be considered separately.'
+  }[r.key];
+
+  var impression = {
+    'normal': 'Normal pulmonary function study.',
+    'normal-lowdlco': 'Isolated reduction in diffusing capacity.',
+    'restrict-ild': (sev ? sev + ' restrictive' : 'Restrictive') + ' ventilatory defect with reduced DLCO, consistent with an interstitial lung process.',
+    'restrict-extra': (sev ? sev + ' restrictive' : 'Restrictive') + ' ventilatory defect with preserved DLCO.',
+    'obstruct': (sev ? sev + ' obstructive' : 'Obstructive') + ' ventilatory defect.',
+    'obstruct-emph': (sev ? sev + ' obstructive' : 'Obstructive') + ' ventilatory defect with reduced DLCO.',
+    'mixed': (sev ? sev + ' mixed' : 'Mixed') + ' obstructive and restrictive defect.'
+  }[r.key];
+
+  var recs = {
+    'normal': 'Given the patient’s underlying rheumatologic diagnosis, continue surveillance at the interval appropriate to their disease and therapy.',
+    'normal-lowdlco': 'Recommend correlation with HRCT and consideration of pulmonary vascular disease. Repeat testing to establish the trajectory.',
+    'restrict-ild': 'Recommend correlation with high-resolution CT of the chest. Serial pulmonary function testing at [3–6 month] intervals will establish whether the process is stable or progressive, which is the measurement that drives treatment decisions.',
+    'restrict-extra': 'Correlate clinically. If an interstitial process remains a concern, HRCT and serial testing are recommended.',
+    'obstruct': 'Correlate clinically; consider bronchodilator response testing if not already performed.',
+    'obstruct-emph': 'Correlate clinically and with chest imaging.',
+    'mixed': 'Recommend correlation with high-resolution CT of the chest and serial pulmonary function testing.'
+  }[r.key];
+
+  var txt = 'INTERPRETATION\n\n';
+  if (measured.length) txt += 'Measured values: ' + measured.join('; ') + '.\n\n';
+  txt += body + '\n\n';
+  txt += 'Clinical context: [' + (RHC_PATTERNS[r.key].ild
+      ? 'state the patient’s connective-tissue disease, disease duration, current immunosuppressive therapy, and any respiratory symptoms'
+      : 'state the patient’s rheumatologic diagnosis, current therapy, and any respiratory symptoms') + '].\n\n';
+  txt += 'IMPRESSION: ' + impression + '\n\n';
+  txt += recs + '\n\n';
+  txt += rhcSignBlock();
+
+  out.value = txt;
+}
+
+/* Name and date each get their OWN line. The old single-line
+   "Interpreted by: ____  Date: ____" wrapped the moment anyone typed into it,
+   which shoved the date onto the next line and looked broken. */
+function rhcSignBlock(){
+  var nameEl = document.getElementById('rhc-signer');
+  var dateEl = document.getElementById('rhc-signdate');
+  var name = nameEl ? nameEl.value.trim() : '';
+  var date = rhcDateText(dateEl ? dateEl.value : '');
+  /* Short rules on purpose: a longer underscore run wraps on a phone-width textarea,
+     which is the wrapping that made this block look broken in the first place. */
+  return 'Interpreted by: ' + (name || '__________________') + '\n'
+       + 'Date: ' + (date || '__________');
+}
+
+/* yyyy-mm-dd from the date input → the m/d/yyyy a US chart expects. */
+function rhcDateText(v){
+  if (!v) return '';
+  var p = v.split('-');
+  if (p.length !== 3) return v;
+  return (+p[1]) + '/' + (+p[2]) + '/' + p[0];
+}
+
+/* Date defaults to today, but only once — so clearing it on purpose sticks. */
+var rhcSignSeeded = false;
+function rhcInitSign(){
+  if (rhcSignSeeded) return;
+  var d = document.getElementById('rhc-signdate');
+  if (!d) return;
+  rhcSignSeeded = true;
+  if (!d.value){
+    var n = new Date(), pad = function(x){ return (x < 10 ? '0' : '') + x; };
+    d.value = n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate());
+  }
+  rhcCompose();
+}
+
+/* The other way out of the tool: a clean signed page for the chart.
+   Uses a hidden iframe rather than window.open so pop-up blockers can't eat it. */
+function rhcPrint(){
+  var out = document.getElementById('rhc-out');
+  if (!out || !out.value.trim()){ rhcToast('Nothing to print yet — enter the numbers first'); return; }
+  var esc = function(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+  var old = document.getElementById('rhc-printframe');
+  if (old && old.parentNode) old.parentNode.removeChild(old);
+  var f = document.createElement('iframe');
+  f.id = 'rhc-printframe';
+  f.setAttribute('aria-hidden','true');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;';
+  document.body.appendChild(f);
+  var d = f.contentWindow.document;
+  d.open();
+  d.write('<!doctype html><html><head><meta charset="utf-8"><title>Pulmonary Function Interpretation</title>'
+    + '<style>@page{margin:0.75in;}'
+    + 'body{font-family:Georgia,"Times New Roman",serif;font-size:11.5pt;line-height:1.55;color:#111;margin:0;}'
+    + 'h1{font-family:Arial,Helvetica,sans-serif;font-size:12pt;letter-spacing:.09em;text-transform:uppercase;'
+    + 'border-bottom:1.5px solid #111;padding-bottom:7px;margin:0 0 16px;}'
+    + 'pre{font-family:inherit;font-size:inherit;white-space:pre-wrap;word-wrap:break-word;margin:0;}'
+    + '.foot{margin-top:26px;padding-top:9px;border-top:1px solid #bbb;'
+    + 'font-family:Arial,Helvetica,sans-serif;font-size:8.5pt;color:#555;}'
+    + '</style></head><body><h1>Pulmonary Function Interpretation</h1><pre>'
+    + esc(out.value)
+    + '</pre><div class="foot">Physician review and signature required. Drafted with the MiniBox+ interpretation composer '
+    + '(ATS/ERS pattern logic); not a diagnosis.</div></body></html>');
+  d.close();
+  try { f.contentWindow.focus(); } catch(e){}
+  setTimeout(function(){
+    try { f.contentWindow.print(); } catch(e){ rhcToast('Your browser blocked printing'); }
+  }, 150);
+  rhcTimerStop();
+  rhcToast('Print sheet ready — pick "Save as PDF" to file it');
+}
+
+/* PulmOne MiniBox+ demonstration report — restriction with reduced DLCO. */
+var RHC_DEMO = { 'rhc-ratio-z':0.38, 'rhc-ratio-p':103, 'rhc-tlc-z':-3.78, 'rhc-tlc-p':54,
+                 'rhc-dlco-z':-3.61, 'rhc-dlco-p':54, 'rhc-fvc-z':-4.55, 'rhc-fvc-p':48,
+                 'rhc-fev1-z':-4.18, 'rhc-fev1-p':50, 'rhc-bmi':41.8 };
+
+/* ---- "See the report" — the source document behind the six boxes.
+        Every value shown in the overlay is read from RHC_DEMO, so the report
+        and the demo case can never drift apart. ---- */
+function rhRepOpen(){
+  var o = document.getElementById('rhrep-overlay');
+  if (!o) return;
+  o.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function rhRepClose(){
+  var o = document.getElementById('rhrep-overlay');
+  if (!o) return;
+  o.classList.remove('on');
+  document.body.style.overflow = '';
+}
+/* Tapping a row on the report drops that one number into its box — the point
+   being to SHOW which number lands where, not just to save typing. */
+function rhRepPick(param){
+  var zEl = document.getElementById('rhc-' + param + '-z');
+  var pEl = document.getElementById('rhc-' + param + '-p');
+  if (zEl) zEl.value = RHC_DEMO['rhc-' + param + '-z'];
+  if (pEl) pEl.value = RHC_DEMO['rhc-' + param + '-p'];
+  rhcRun();
+  rhcToast(({ratio:'Gate 1 · FEV₁/FVC', tlc:'Gate 2 · TLC', dlco:'Gate 3 · DLCO',
+             fvc:'FVC', fev1:'FEV₁'})[param] + ' filled in');
+  if (zEl) rhRepFlash(zEl);
+  if (pEl) rhRepFlash(pEl);
+}
+function rhRepFlash(el){
+  el.style.transition = 'background-color .25s';
+  el.style.backgroundColor = '#d8f0f7';
+  setTimeout(function(){ el.style.backgroundColor = ''; }, 900);
+}
+function rhRepFillAll(){
+  rhRepClose();
+  rhcLoadCase();
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape'){
+    var o = document.getElementById('rhrep-overlay');
+    if (o && o.classList.contains('on')) rhRepClose();
+  }
+});
+function rhcLoadCase(){
+  var set = RHC_DEMO;
+  Object.keys(set).forEach(function(k){ var el = document.getElementById(k); if (el) el.value = set[k]; });
+  rhcDemoChrome(true);
+  rhcRun();
+  rhcToast('Demo case loaded — restriction with reduced DLCO');
+}
+/* Same button loads the demo and takes it back out, so it's always reversible. */
+function rhcDemoToggle(){
+  var card = document.getElementById('rhc-demo-card');
+  if (card && card.classList.contains('on')) { rhcClear(); rhcToast('Demo case removed'); }
+  else { rhcLoadCase(); }
+}
+/* Once the rep starts typing over the demo numbers, it stops being the demo. */
+function rhcDemoDriftCheck(){
+  var card = document.getElementById('rhc-demo-card');
+  if (!card || !card.classList.contains('on')) return;
+  var same = Object.keys(RHC_DEMO).every(function(k){
+    var el = document.getElementById(k);
+    return el && el.value !== '' && Number(el.value) === RHC_DEMO[k];
+  });
+  if (!same) rhcDemoChrome(false);
+}
+function rhcDemoChrome(on){
+  var card = document.getElementById('rhc-demo-card');
+  var btn  = document.getElementById('rhc-demo-btn');
+  if (card) card.classList.toggle('on', !!on);
+  if (btn)  btn.innerHTML = on ? '✕ Remove the demo case' : '📋 Load the ILD demo case';
+}
+function rhcClear(){
+  ['rhc-ratio-z','rhc-ratio-p','rhc-tlc-z','rhc-tlc-p','rhc-dlco-z','rhc-dlco-p',
+   'rhc-fvc-z','rhc-fvc-p','rhc-fev1-z','rhc-fev1-p','rhc-bmi'].forEach(function(k){
+    var el = document.getElementById(k); if (el) el.value = '';
+  });
+  rhcDemoChrome(false);
+  rhcRun();
+}
+function rhcCopy(){
+  var out = document.getElementById('rhc-out');
+  if (!out || !out.value.trim()) { rhcToast('Nothing to copy yet'); return; }
+  var done = function(){ rhcToast('Copied — now paste it into the chart with Ctrl+V'); rhcTimerStop(); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(out.value).then(done, function(){ out.select(); document.execCommand('copy'); done(); });
+  } else { out.select(); document.execCommand('copy'); done(); }
+}
+function rhcToast(msg){
+  var t = document.getElementById('rhc-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('on'); }, 1900);
+}
+
+/* ---- the clock: the whole "3 minutes to signature" claim, made visible ---- */
+var rhcT0 = null, rhcTick = null;
+function rhcTimerToggle(){ rhcTick ? rhcTimerStop() : rhcTimerStart(); }
+function rhcTimerStart(){
+  rhcT0 = new Date().getTime();
+  document.getElementById('rhc-timer').classList.add('run');
+  document.getElementById('rhc-timer-btn').innerHTML = '&#9724; Stop';
+  document.getElementById('rhc-timer-lbl').textContent = 'running';
+  rhcTick = setInterval(function(){
+    var s = Math.floor((new Date().getTime() - rhcT0) / 1000);
+    document.getElementById('rhc-timer').textContent = Math.floor(s/60) + ':' + ('0' + (s%60)).slice(-2);
+  }, 250);
+}
+function rhcTimerStop(){
+  if (!rhcTick) return;
+  clearInterval(rhcTick); rhcTick = null;
+  document.getElementById('rhc-timer').classList.remove('run');
+  document.getElementById('rhc-timer-btn').innerHTML = 'Start timer';
+  document.getElementById('rhc-timer-lbl').textContent = 'time to signature';
+}
+
+rhcInitSign();
+rhcRun();
+  </script>
+</body>
+</html>

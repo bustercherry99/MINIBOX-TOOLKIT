@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  MiniBox PFT Report Studio. TEACHING TOOL (not a clinical device)
+  ----------------------------------------------------------------------------
+  CLINICAL ONCE-OVER CHECKLIST (for whoever reviews before this goes to a
+  real physician). The math and layout are solid; these are the numbers to vet:
+
+    • Predicted engine: FVC & FEV1 use the NHANES III / Hankinson 1999 adult
+      equations (see NHANES{} coefficients); FEV1/FVC is derived; lung volumes
+      & DLCO are SIZE-SCALED from the sample (ANCHOR{}), not true equations.
+      Ethnicity uses the ATS Caucasian-times-factor convention (ETH_FACTOR{}).
+      A full clinical build would add GLI-2012 (spirometry) + GLI-2017 (DLCO)
+      with the official age-spline LLNs.
+    • The four preset "Best" number sets in PRESETS{} (Normal/Asthma/COPD/ILD)
+. Confirm each is a fair, unmistakable example of its pattern.
+    • Teaching thresholds LLN_RATIO=70, LLN_PCT=80, LLN_DLCO=75. These are
+      simple %-of-predicted cutoffs, not the SEE-based per-parameter LLNs.
+    • Post-bronchodilator "significant" rule: +12% AND +200 mL (see postBD()).
+
+  Everything on-screen is generated FROM these numbers, so once they're blessed
+  the whole report is trustworthy. Until then the on-page banner says so.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MiniBox PFT Report Studio</title>
+<style>
+  :root{
+    --ink:#1a2230; --mut:#5b6774; --line:#d7dde5; --bg:#eef1f5;
+    --brand:#0e7c54; --brandsoft:#e5f4ec; --accent:#c62828; --accentsoft:#fdecec;
+    --warn:#b26a00; --warnsoft:#fdf3e3; --grid:#e7ecf1;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.4}
+
+  /* ---- CONTROL BAR ---- */
+  .bar{position:sticky;top:0;z-index:20;background:#0f1622;color:#fff;
+    padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    box-shadow:0 2px 12px rgba(0,0,0,.25)}
+  .bar .brand{font-weight:800;font-size:15px;margin-right:6px;letter-spacing:.02em}
+  .bar .brand span{color:#5fd6a0}
+  .trylab{font-size:12px;color:#9fb0c4;font-weight:700;letter-spacing:.02em}
+  .presets{display:flex;gap:6px;flex-wrap:wrap}
+  .pbtn{background:#1c2637;border:1px solid #2e3c52;color:#cdd6e2;font-size:12.5px;font-weight:700;
+    padding:6px 12px;border-radius:999px;cursor:pointer;transition:.15s}
+  .pbtn:hover{background:#26344a;color:#fff}
+  .pbtn.active{background:#5fd6a0;border-color:#5fd6a0;color:#08251a}
+  .barspacer{flex:1}
+  .toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#cdd6e2;cursor:pointer;user-select:none}
+  .toggle input{accent-color:#5fd6a0;width:16px;height:16px}
+  /* ---- "it's here if you want it" pulse on the Reading-guide toggle ----
+     A slow, soft green breath. A gentle nudge that the plain-English layer
+     exists, without shoving it in anyone's face. Goes quiet the moment the
+     user touches the toggle (adds .silenced). Motion stays always-on. */
+  .guidedot{width:7px;height:7px;border-radius:50%;background:#5fd6a0;flex:none;
+    box-shadow:0 0 0 0 rgba(95,214,160,.6);animation:guidepulse 2.8s ease-in-out infinite}
+  @keyframes guidepulse{
+    0%{box-shadow:0 0 0 0 rgba(95,214,160,.55);opacity:.85}
+    50%{box-shadow:0 0 0 6px rgba(95,214,160,0);opacity:1}
+    100%{box-shadow:0 0 0 0 rgba(95,214,160,0);opacity:.85}}
+  .toggle.silenced .guidedot{display:none}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 14px 70px;display:grid;
+    grid-template-columns:270px 1fr;gap:18px;align-items:start}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}}
+
+  /* ---- EDITOR ---- */
+  /* NOTE: editor scrolls normally with the page (no position:sticky). A pinned
+     panel next to a much taller report reads as a "frozen then jerk" scroll. */
+  .editor{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 14px 6px}
+  .editor h3{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--brand)}
+  .editor .hint{font-size:11.5px;color:var(--mut);margin:0 0 12px}
+  .grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);
+    margin:12px 0 4px;border-bottom:1px solid var(--line);padding-bottom:3px}
+  .fld{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:5px 0}
+  .fld label{font-size:12.5px;color:var(--ink)}
+  .fld input{width:82px;text-align:right;padding:5px 8px;border:1px solid var(--line);border-radius:8px;
+    font-size:13px;font-variant-numeric:tabular-nums}
+  .fld input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  .editor .note{font-size:11px;color:var(--mut);margin:10px 0 8px;line-height:1.35}
+  .fld select{padding:5px 6px;border:1px solid var(--line);border-radius:8px;font-size:12px;background:#fff;max-width:150px}
+  .fld select:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  .htpair{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--mut)}
+  .htpair input{width:44px;text-align:right;padding:5px 6px;border:1px solid var(--line);border-radius:8px;
+    font-size:13px;font-variant-numeric:tabular-nums}
+  .htpair input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  .grp.pt{color:var(--brand)}
+
+  /* ---- REPORT SHEET ---- */
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(20,30,50,.08)}
+  .rhead{display:flex;justify-content:space-between;align-items:flex-start;
+    padding:14px 20px;border-bottom:2px solid var(--brand)}
+  .rhead .co{font-weight:800;font-size:18px;color:var(--brand)}
+  .rhead .co small{display:block;font-weight:600;color:var(--mut);font-size:11px}
+  .rhead .rt{text-align:right;font-size:12px;color:var(--mut)}
+  .rhead .rt b{color:var(--ink);font-size:13px}
+
+  section{padding:6px 20px}
+  h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--brand);
+    margin:16px 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px 24px;font-size:12.5px}
+  .grid2 span{color:var(--mut)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{text-align:right;padding:5px 8px;border-bottom:1px solid #eef1f4}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--mut);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;
+    border-bottom:1.5px solid var(--line)}
+  .u{color:var(--mut);font-size:11px}
+  /* simple view (default): hide reference columns + secondary rows until "Full detail" is on */
+  body.simple .ptable th:nth-child(2),body.simple .ptable td:nth-child(2),
+  body.simple .ptable th:nth-child(3),body.simple .ptable td:nth-child(3){display:none}
+  body.simple tr.sec{display:none}
+  .lo{color:var(--accent);font-weight:800}
+  .ok{color:var(--brand);font-weight:800}
+  .hi{color:var(--warn);font-weight:800}
+  .mut{color:var(--mut);font-weight:600}
+
+  /* tap/hover glossary terms */
+  .term{border-bottom:1px dashed #9aa6b4;cursor:help;transition:background .12s}
+  .term:hover{background:var(--brandsoft)}
+  #gloss{position:fixed;z-index:60;display:none;max-width:320px;background:#0f1622;color:#eef2f7;
+    border-radius:12px;padding:12px 14px 13px;box-shadow:0 12px 34px rgba(8,14,24,.42);
+    font-size:13px;line-height:1.5}
+  #gloss .gt{font-weight:800;font-size:13px;color:#5fd6a0;margin:0 0 5px;display:block}
+  #gloss .gb{margin:0}
+  #gloss .gx{position:absolute;top:7px;right:10px;color:#9fb0c4;cursor:pointer;font-weight:800;font-size:14px}
+  #gloss .gln{margin:8px 0 0;padding-top:8px;border-top:1px solid #26344a;font-size:12px;color:#b9c6d6}
+  #gloss .gref{display:block;margin:7px 0 0;padding:6px 8px;background:#162130;border-radius:7px;
+    font-size:11.5px;color:#8fe3bd;line-height:1.45}
+  /* hoverable number cells (auto-wired). Pred. / Best / %Pred. */
+  td.num{cursor:help;text-decoration:underline dotted #c2ccd6;text-underline-offset:3px;text-decoration-thickness:1px}
+  td.num:hover{background:var(--brandsoft);text-decoration-color:var(--brand)}
+  /* numbers stay underlined even with the Reading guide off. The dotted hint IS the
+     invitation to hover, and it matches the case trainers. Print still strips it. */
+  @media print{td.num{text-decoration:none}}
+  body.noguide .term{border-bottom:none;cursor:auto}
+  body.noguide .term:hover{background:none}
+  /* ---- parameter NAMES + section HEADINGS always coach ----
+     Same call we settled for the numbers in v1.8: the numbers explained themselves
+     but the label beside them didn't, so you could learn that 5.30 was "what they
+     actually blew" without ever learning what FVC IS. Knowing the parameter matters
+     at least as much as its value, so these carry the dotted hint at all times,
+     Reading guide on or off. Print strips it. */
+  .term.pterm,.term.hterm,
+  body.noguide .term.pterm,body.noguide .term.hterm{
+    border-bottom:none;cursor:help;
+    text-decoration:underline dotted #c2ccd6;text-underline-offset:3px;text-decoration-thickness:1px}
+  .term.pterm:hover,.term.hterm:hover,
+  body.noguide .term.pterm:hover,body.noguide .term.hterm:hover{
+    background:var(--brandsoft);text-decoration-color:var(--brand)}
+  .term.hterm,body.noguide .term.hterm{text-decoration-color:#9ecfba}
+  @media print{.term.pterm,.term.hterm{text-decoration:none;background:none}}
+  .rowkey td{background:var(--brandsoft);font-weight:700}
+
+  /* ---- hover a parameter row and the WHOLE line lights up ----
+     Reading a PFT is a left-to-right act: you find FVC, then track that line across
+     Pred → Best → %Pred → Flag. Lighting only the one cell under the cursor made you
+     hold the row in your head. Now the row washes green and the exact cell you're on
+     goes a shade deeper, so you never lose your place across six columns.
+     Specificity note: the row rule (0,2,3) outranks the older `td.num:hover` (0,2,1),
+     so the per-cell tint is restated below at (0,3,3) or it would be swallowed. */
+  .ptable tbody tr:hover td{background:#f1f8f4}
+  .ptable tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--brand)}
+  .ptable tbody tr.rowkey:hover td{background:#d9ece2}
+  .ptable tbody tr:hover td.num:hover{background:#cbe7d8;text-decoration-color:var(--brand)}
+  @media print{.ptable tbody tr:hover td{background:none;box-shadow:none}}
+
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.charts{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:8px 6px 4px;position:relative}
+  .card .ct{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);
+    text-align:center;font-weight:700;margin:2px 0 4px}
+  svg{display:block;width:100%;height:auto}
+  .axlab{font-size:9px;fill:var(--mut)}
+  .gridln{stroke:var(--grid);stroke-width:1}
+  .axis{stroke:#aab4c0;stroke-width:1.2}
+
+  /* draggable chart handles. Grab a dot and reshape the loop */
+  .handle{cursor:grab;touch-action:none}
+  .handle:active{cursor:grabbing}
+  .hdot{fill:#0e7c54;stroke:#fff;stroke-width:1.6;transition:r .1s,fill .1s;
+    filter:drop-shadow(0 1px 2px rgba(14,124,84,.4))}
+  .handle:hover .hdot{r:7.5;fill:#12a06d}
+  body.dragging{cursor:grabbing;user-select:none}
+  body.dragging .hdot{r:7.5;fill:#12a06d}
+  .chartlegend{font-size:11.5px;color:var(--mut);margin:0 0 8px}
+  .chartlegend b{font-weight:700}
+
+  /* ---- "Breathe it" player: ride the loop, narrate one full breath ---- */
+  .breathe{margin:6px 4px 2px}
+  .breathebtn{width:100%;border:none;cursor:pointer;font-family:inherit;
+    background:linear-gradient(90deg,#0e7c54,#12a06d);color:#fff;font-weight:800;font-size:13px;
+    padding:8px 14px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    box-shadow:0 3px 12px rgba(14,124,84,.32);transition:.15s;letter-spacing:.01em}
+  .breathebtn:hover{filter:brightness(1.06);box-shadow:0 4px 16px rgba(14,124,84,.45)}
+  .breathebtn.playing{background:linear-gradient(90deg,#b26a00,#d98400)}
+  .bhint{font-size:11.5px;color:var(--mut);line-height:1.35;margin:8px 2px 2px;min-height:30px}
+  /* ---- full-panel breath wash ----
+     The whole graph panel tints + a big word names the action, synced to the marker.
+     Cool BLUE = blowing OUT, warm AMBER = breathing IN. So when the line shoots UP,
+     the panel is BLUE / EXHALE, killing the "the line goes up so I'm breathing in"
+     mix-up (it goes up because you're blowing out FAST). */
+  .fvstage{position:relative;overflow:hidden;border-radius:10px}
+  .fvstage svg{position:relative;z-index:1}
+  .bwash{position:absolute;inset:0;z-index:0;pointer-events:none;background:transparent;
+    box-shadow:inset 0 0 0 0 transparent;transition:background .5s ease,box-shadow .5s ease}
+  .bword{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+    font-weight:900;font-size:clamp(34px,11vw,54px);letter-spacing:.05em;white-space:nowrap;
+    color:transparent;opacity:0;transition:color .4s ease}
+  body.breathing .bword,body.blowing .bword{animation:bwordpulse 1.9s ease-in-out infinite}
+  @keyframes bwordpulse{0%,100%{opacity:.16}50%{opacity:.30}}
+  .fvstage.ready  .bwash{background:rgba(120,130,145,.10);box-shadow:inset 0 0 0 3px rgba(120,130,145,.20)}
+  .fvstage.exhale .bwash{background:rgba(37,99,235,.15); box-shadow:inset 0 0 0 3px rgba(37,99,235,.34)}
+  .fvstage.inhale .bwash{background:rgba(245,158,11,.17);box-shadow:inset 0 0 0 3px rgba(245,158,11,.36)}
+  .fvstage.ready  .bword{color:#5b6774}
+  .fvstage.exhale .bword{color:#2563eb}
+  .fvstage.inhale .bword{color:#d97706}
+  /* ---- the "PUSH IT ALL THE WAY OUT" tail of the blow ----
+     Real PFT techs shout "keep going: push, push, push!" as the patient rides the
+     exhale down to empty. Deeper blue + a fast, hard blink so the whole panel throbs
+     on the descending limb, each throb IS a "push". */
+  .fvstage.push .bwash{background:rgba(29,78,216,.20);box-shadow:inset 0 0 0 3px rgba(29,78,216,.5);
+    animation:pushwash .58s ease-in-out infinite}
+  .fvstage.push .bword{color:#1d4ed8;letter-spacing:.08em}
+  @keyframes pushwash{0%,100%{opacity:.5}50%{opacity:1}}
+  body.breathing .fvstage.push .bword{animation:pushword .58s ease-in-out infinite}
+  @keyframes pushword{0%,100%{opacity:.20}50%{opacity:.58}}
+  /* extra phase for the volume-time blow: the long squeeze after the 1-second blast */
+  .fvstage.squeeze .bwash{background:rgba(13,148,136,.15);box-shadow:inset 0 0 0 3px rgba(13,148,136,.34)}
+  .fvstage.squeeze .bword{color:#0d9488}
+  /* the travelling breath marker + its trail */
+  .bdot{fill:#ff8a3d;stroke:#fff;stroke-width:1.8;opacity:0;
+    filter:drop-shadow(0 0 5px rgba(255,138,61,.9))}
+  body.breathing .handle{pointer-events:none;opacity:.35;transition:opacity .2s}
+  body.breathing .anno{opacity:0;transition:opacity .2s}
+
+  /* interpretation tree */
+  .interp{background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:14px;margin:6px 0}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px}
+  .node{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-weight:600}
+  .node.on{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 3px 10px rgba(14,124,84,.3)}
+  .node.dim{opacity:.4}
+  .arrow{color:var(--mut);font-weight:800}
+  .verdict{margin-top:10px;font-size:14px}
+  .verdict b{color:var(--brand)}
+
+  /* reading guide overlay */
+  .guide{background:var(--brandsoft);border:1px solid #bfe3d1;border-radius:12px;padding:12px 16px;margin:12px 0}
+  .guide h3{margin:0 0 6px;font-size:12.5px;color:var(--brand);text-transform:uppercase;letter-spacing:.08em}
+  .guide ul{margin:6px 0 0;padding-left:18px;font-size:13px}
+  .guide li{margin:4px 0}
+  body.noguide .guide{display:none}
+  .anno{font-size:10px;fill:var(--accent);font-weight:700}
+  body.noguide .anno{display:none}
+
+  .disc{background:#fff8e6;border:1px solid #f0dca0;color:#7a5b00;border-radius:10px;
+    padding:9px 12px;font-size:11px;margin:12px 20px 4px}
+  .foot{padding:10px 20px 18px;font-size:11px;color:var(--mut);border-top:1px solid var(--line)}
+
+  /* ---- big plain-English verdict banner ---- */
+  .bignews{display:flex;gap:12px;align-items:center;margin:12px 20px 2px;padding:12px 16px;
+    border-radius:12px;border:1px solid}
+  .bignews .emo{font-size:26px;line-height:1}
+  .bignews .bt{font-size:19px;font-weight:800;line-height:1.25}
+  .bignews .bs{font-size:12.5px;color:var(--mut);margin-top:2px}
+  .bignews.ok{background:var(--brandsoft);border-color:#bfe3d1}
+  .bignews.ok .bt{color:var(--brand)}
+  .bignews.hi{background:var(--warnsoft);border-color:#f0dca0}
+  .bignews.hi .bt{color:var(--warn)}
+  .bignews.lo{background:var(--accentsoft);border-color:#f3c9c9}
+  .bignews.lo .bt{color:var(--accent)}
+
+  /* ---- guided "Show me how it works" tour ---- */
+  .showme{background:#5fd6a0;border:none;color:#08251a;font-weight:800;font-size:13px;
+    padding:7px 15px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 2px 10px rgba(95,214,160,.35);transition:.15s}
+  .showme:hover{background:#6ee3ae}
+  .tourback{position:fixed;inset:0;background:rgba(8,14,24,.5);z-index:70;display:none}
+  body.touring .tourback{display:block}
+  .tourcard{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:80;
+    width:min(580px,93vw);background:#0f1622;color:#eef2f7;border-radius:16px;
+    box-shadow:0 18px 50px rgba(8,14,24,.55);padding:18px 22px 16px;display:none}
+  body.touring .tourcard{display:block}
+  .tourcard .step{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5fd6a0;font-weight:800}
+  .tourcard h4{margin:4px 0 7px;font-size:20px;line-height:1.2}
+  .tourcard p{margin:0;font-size:14.5px;line-height:1.5;color:#dbe3ec}
+  .tourcard .analogy{margin:9px 0 0;font-size:13.5px;color:#9fb0c4}
+  .tourcard .nav{display:flex;gap:8px;align-items:center;margin-top:16px}
+  .tourcard .nav .sp{flex:1}
+  .tbtn{border:1px solid #2e3c52;background:#1c2637;color:#cdd6e2;font-weight:700;font-size:13px;
+    padding:8px 16px;border-radius:999px;cursor:pointer;transition:.15s}
+  .tbtn:hover{background:#26344a;color:#fff}
+  .tbtn.primary{background:#5fd6a0;border-color:#5fd6a0;color:#08251a}
+  .tbtn.primary:hover{background:#6ee3ae}
+  .tbtn.ghost{background:none;border:none;color:#9fb0c4}
+  .tbtn.ghost:hover{background:none;color:#fff}
+
+  /* ---- severity pill on the verdict banner ---- */
+  .sevpill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;
+    padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;
+    background:#0f1622;color:#fff;text-transform:uppercase}
+
+  /* ---- Lung Age. Compact one-liner ---- */
+  .lungage{margin:2px 0 14px;padding:7px 13px;border-radius:10px;border:1px solid var(--line);
+    background:#fbfcfe;font-size:12.5px;line-height:1.4}
+  .lungage .lanum{font-size:15px;font-weight:900}
+  .lungage .lasub{color:var(--mut)}
+  .lungage.ok{background:var(--brandsoft);border-color:#bfe3d1} .lungage.ok .lanum{color:var(--brand)}
+  .lungage.hi{background:var(--warnsoft);border-color:#f0dca0} .lungage.hi .lanum{color:var(--warn)}
+  .lungage.lo{background:var(--accentsoft);border-color:#f3c9c9} .lungage.lo .lanum{color:var(--accent)}
+
+  /* ---- Z-score strip chart ---- */
+  .zexpl{font-size:12px;color:var(--mut);margin:2px 0 12px;line-height:1.45}
+  .zrow{display:grid;grid-template-columns:80px minmax(0,300px) 46px;align-items:center;gap:10px;margin:3px 0}
+  .zlab{font-size:12px;font-weight:700}
+  .zstrip{width:100%;max-width:300px;height:auto;display:block}
+  /* draggable z dots. Grab anywhere on the strip, like a slider */
+  .zstrip.zdrag .zhit{cursor:grab}
+  .zstrip.zdrag .zdot{transition:r .12s ease, filter .12s ease}
+  .zstrip.zdrag:hover .zdot{r:7;filter:drop-shadow(0 1px 3px rgba(14,124,84,.5))}
+  body.dragging .zstrip.zdrag .zhit{cursor:grabbing}
+  @media print{.zstrip.zdrag .zhit{display:none}}
+  .zval{font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+  .zval.lo{color:var(--accent)} .zval.ok{color:var(--brand)}
+  .zt{font-size:8.5px;fill:var(--mut)}
+  .zkey{font-size:11px;color:var(--mut);margin:10px 0 0;display:flex;gap:16px;flex-wrap:wrap}
+  .zkey b{color:var(--warn)}
+
+  /* ---- Live-wiring: change ripple (flash whatever just moved) ---- */
+  @keyframes ripple{
+    0%{background:#fff3bf;box-shadow:0 0 0 3px rgba(255,214,102,.55)}
+    55%{background:#fff3bf;box-shadow:0 0 0 3px rgba(255,214,102,.28)}
+    100%{background:transparent;box-shadow:0 0 0 0 rgba(255,214,102,0)}}
+  .justchanged{animation:ripple 1.15s ease-out;border-radius:6px}
+
+  /* ---- "What just changed" ticker (fixed under the control bar) ---- */
+  .tickwrap{position:fixed;left:0;right:0;top:0;z-index:19;display:flex;justify-content:center;pointer-events:none}
+  .tickin{margin-top:50px;max-width:900px;width:calc(100% - 24px);background:#0f1622;color:#dbe3ec;
+    border-radius:0 0 14px 14px;padding:8px 15px;font-size:12.5px;line-height:1.45;
+    box-shadow:0 10px 26px rgba(8,14,24,.28);display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    transform:translateY(-160%);opacity:0;transition:transform .28s ease,opacity .28s ease}
+  .tickin.show{transform:translateY(0);opacity:1}
+  .tickin .tk{font-weight:800;color:#5fd6a0;letter-spacing:.03em;text-transform:uppercase;font-size:11px}
+  .tickin b{color:#fff;font-variant-numeric:tabular-nums}
+  .tickin .arr{color:#7c8ba0;font-weight:800;margin:0 1px}
+
+  /* ---- Interactive interpretation flowchart ---- */
+  .fc{background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;margin:6px 0}
+  .fcgate{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:0 0 8px;padding:7px 10px;
+    border-radius:9px;background:#fff;border:1px solid var(--line)}
+  .fcgate.dim{background:#eef1f5;border-style:dashed;border-color:#c3ccd6;box-shadow:none}
+  .fcgate.dim .glabel,.fcgate.dim .gq{color:#98a3b0}
+  .fcgate.dim .gnum{background:#e2e7ed;color:#98a3b0}
+  .fcgate .glabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);min-width:46px}
+  .fcgate .gq{font-size:12.5px;color:var(--ink)}
+  .fcgate .gnum{font-weight:800;font-variant-numeric:tabular-nums;background:#eef1f4;border-radius:6px;padding:1px 7px}
+  .gres{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+  .gres.yes{background:var(--accentsoft);color:var(--accent)}
+  .gres.no{background:var(--brandsoft);color:var(--brand)}
+  .gres.skip{background:#e2e7ed;color:#8a94a1}
+  .fcends{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}
+  .fcends .end{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;
+    font-weight:800;font-size:12.5px;color:var(--ink);transition:.15s;text-align:left;font-family:inherit}
+  .fcends .end small{display:block;font-weight:600;color:var(--mut);font-size:10.5px;margin-top:2px}
+  .fcends .end:hover{border-color:var(--brand);box-shadow:0 4px 14px rgba(14,124,84,.18);transform:translateY(-1px)}
+  .fcends .end.on{background:var(--brand);color:#fff;border-color:var(--brand);
+    animation:endglow 1.7s ease-in-out infinite}
+  .fcends .end.on small{color:#cdefe0}
+  @keyframes endglow{0%,100%{box-shadow:0 4px 16px rgba(14,124,84,.30)}50%{box-shadow:0 5px 24px rgba(14,124,84,.60)}}
+  .fchint{font-size:11.5px;color:var(--mut);margin:11px 0 0}
+  .fchint b{color:var(--brand)}
+
+  /* ---- "Show me on the graph" spotlight ----
+     The tables say FEV1 = 1.75 L. The graph draws a squiggle. Nothing on the page ever
+     connected the two, so people memorised the numbers and the picture as two separate
+     facts. Click a parameter name and the exact geometry it is measured from lights up
+     in crimson (deliberately not green/grey/blue/amber, so it can never be mistaken for
+     the patient trace, the predicted ghost, or the breath player). */
+  .spotband{fill:rgba(214,51,111,.10)}
+  .spotline{stroke:#d6336c;stroke-width:1.5;stroke-dasharray:5 4;opacity:.9}
+  .spotsolid{stroke:#d6336c;stroke-width:2;stroke-linecap:round}
+  .spotcurve{fill:none;stroke:#d6336c;stroke-width:5;opacity:.8;stroke-linecap:round}
+  .spotdot{fill:#d6336c;stroke:#fff;stroke-width:2}
+  .spotring{fill:none;stroke:#d6336c;stroke-width:2;opacity:.75;animation:spotpulse 1.7s ease-out infinite}
+  @keyframes spotpulse{0%{r:6;opacity:.8}100%{r:18;opacity:0}}
+  .spotlab{font-size:10px;font-weight:800;fill:#a61e4d;
+    paint-order:stroke;stroke:#fff;stroke-width:3.4px;stroke-linejoin:round}
+  body.noguide .spotlab{display:block}   /* the spotlight is opt-in by click, never hidden by the guide toggle */
+  /* the chart that does NOT carry this measurement steps back so the eye goes to the one that does */
+  .card.spotoff{opacity:.4;transition:opacity .2s}
+  .spotbar{display:none;margin:10px 0 0;padding:10px 13px;border-radius:11px;
+    background:#fff0f5;border:1px solid #f7c6d9;color:#7a123c;font-size:12.5px;line-height:1.5;
+    gap:9px;align-items:flex-start}
+  .spotbar.on{display:flex}
+  .spotbar .sk{font-weight:900;color:#d6336c;white-space:nowrap;letter-spacing:.02em}
+  .spotbar .sb{flex:1}
+  .spotbar b{color:#a61e4d}
+  .spotx{border:none;background:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:16px;
+    line-height:1;color:#c98aa5;padding:0 2px}
+  .spotx:hover{color:#a61e4d}
+  .spothint{font-size:11.5px;color:var(--mut);margin:0 0 8px}
+  .spothint b{color:#d6336c}
+  @media print{.spotbar{display:none!important}.card.spotoff{opacity:1}}
+
+  @media print{
+    .bar,.editor,.tourback,.tourcard,.breathe{display:none!important}
+    .wrap{display:block;max-width:none;padding:0}
+    body{background:#fff}.sheet{box-shadow:none;border:none;border-radius:0}
+  }
+</style>
+</head>
+<body class="noguide">
+
+<div id="gloss" role="dialog" aria-label="Definition"></div>
+<div class="tourback" id="tourBack"></div>
+<div class="tourcard" id="tourCard"></div>
+
+<div class="bar">
+  <div class="brand">MiniBox <span>PFT Report Studio</span></div>
+  <span class="trylab">Try a pattern:</span>
+  <div class="presets" id="presets"></div>
+  <div class="barspacer"></div>
+  <label class="toggle guidehint" id="guideToggle"><input type="checkbox" id="guideChk"> Reading guide <span class="guidedot" aria-hidden="true"></span></label>
+  <label class="toggle"><input type="checkbox" id="detailChk" checked> Full detail</label>
+  <label class="toggle"><input type="checkbox" id="editChk" checked> Edit numbers</label>
+</div>
+
+<div class="tickwrap"><div class="tickin" id="tickin"></div></div>
+
+<div class="wrap">
+  <!-- EDITOR -->
+  <div class="editor" id="editor">
+    <h3>Customize the report</h3>
+    <p class="hint">Tap a pattern up top or type any number. Everything redraws instantly.</p>
+
+    <div id="lungAgeSlot"></div>
+
+    <div class="grp pt">Patient. Sets the predicted values</div>
+    <div class="fld"><label>Age (yrs)</label><input type="number" step="0.1" id="ptAge"></div>
+    <div class="fld"><label>Height</label>
+      <span class="htpair"><input type="number" id="ptFt">ft<input type="number" id="ptIn">in</span></div>
+    <div class="fld"><label>Weight (lbs)</label><input type="number" step="1" id="ptWt"></div>
+    <div class="fld"><label>Sex</label>
+      <select id="ptSex"><option value="M">Male</option><option value="F">Female</option></select></div>
+    <div class="fld"><label>Ethnicity</label>
+      <select id="ptEth">
+        <option value="white">White / Caucasian</option>
+        <option value="black">Black / African-American</option>
+        <option value="asian">Asian</option>
+        <option value="hispanic">Hispanic / Latino</option>
+        <option value="other">Other</option>
+      </select></div>
+
+    <div id="fields"></div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="sheet" id="report"></div>
+</div>
+
+<script>
+/* ---------- predicted-value engine (NHANES III / Hankinson 1999) ----------
+   FVC & FEV1 use the published NHANES III adult regression equations
+   (predicted = b0 + b1·age + b2·age² + b3·height_cm²). FEV1/FVC predicted is
+   derived from those. Volumes & diffusion (no NHANES III equation) are scaled
+   to body size from the sample so they still move with the patient, clearly
+   labelled "size-est." Ethnicity uses the ATS convention of applying the
+   Caucasian equation with a correction factor.  ---- see review checklist up top */
+const NHANES = {
+  FVC:  { M:[-0.1933, 0.00064, -0.000269, 0.00018642], F:[-0.3560, 0.018700, -0.000382, 0.00014815] },
+  FEV1: { M:[ 0.5536,-0.01303, -0.000172, 0.00014098], F:[ 0.4333,-0.00361, -0.000194, 0.00011496] }
+};
+const ETH_FACTOR = { white:1.00, black:0.88, asian:0.93, hispanic:0.93, other:1.00 };
+const ETH_LABEL  = { white:"White / Caucasian", black:"Black / African-American",
+                     asian:"Asian", hispanic:"Hispanic / Latino", other:"Other" };
+/* anchor set = the original sample's predicteds, used to size-scale volumes/DLCO */
+const ANCHOR = { FEF2575:5.03, PEF:10.17, FEF25:8.66, FEF50:5.73, FEF75:2.32,
+                 TLC:7.20, RV:1.52, DLCO:34.34, VA:6.71, KCO:5.14 };
+
+/* live patient inputs (drive the predicted column) */
+let PT = { name:"Will PulmOne", id:"Test", ageY:23.9, ft:5, inch:11, sex:"M",
+           eth:"white", wt:175, smoker:"No", date:"Feb 27, 2023" };
+const htCm = p => (p.ft*12 + (+p.inch||0)) * 2.54;
+const nhanes = (param,sex,age,cm)=>{ const b=NHANES[param][sex]; return b[0]+b[1]*age+b[2]*age*age+b[3]*cm*cm; };
+
+function computePred(p){
+  const age=+p.ageY, cm=htCm(p), sex=(p.sex==="F"?"F":"M"), ef=ETH_FACTOR[p.eth]||1;
+  const fvc  = nhanes("FVC", sex, age, cm) * ef;
+  const fev1 = nhanes("FEV1",sex, age, cm) * ef;
+  /* size factor vs. the original sample (white male, 23.9 y, 5'11") */
+  const scale = fvc / (nhanes("FVC","M",23.9, 180.34) * 1.00);
+  return {
+    ratio: fev1/fvc*100, FVC:fvc, FEV1:fev1, VC:fvc,
+    FEF2575:ANCHOR.FEF2575*scale, PEF:ANCHOR.PEF*scale,
+    FEF25:ANCHOR.FEF25*scale, FEF50:ANCHOR.FEF50*scale, FEF75:ANCHOR.FEF75*scale,
+    TLC:ANCHOR.TLC*scale, RV:ANCHOR.RV*scale, DLCO:ANCHOR.DLCO*scale, VA:ANCHOR.VA*scale,
+    KCO:ANCHOR.KCO   /* intensive. Barely varies with size */
+  };
+}
+let PRED = computePred(PT);
+/* header display strings, rebuilt from the live inputs */
+const PATIENT = () => ({ name:PT.name, id:PT.id, age:(+PT.ageY).toFixed(1), sex:(PT.sex==="F"?"Female":"Male"),
+  ht:`${PT.ft}'${PT.inch}"`, wt:`${PT.wt} lbs`, smoker:PT.smoker, date:PT.date, eth:ETH_LABEL[PT.eth] });
+
+/* ---------- BMI context note ---------- */
+/* Weight does NOT change the predicted equations (age/height/sex/ethnicity only),
+   but a high BMI can itself squeeze the lungs into a restrictive-looking pattern. 
+   a real interpretation point, shown here as a plain-English teaching note. */
+function bmiValue(){
+  const cm=htCm(PT), lbs=+PT.wt;
+  if(!cm || !lbs) return null;
+  return (lbs*0.453592) / Math.pow(cm/100, 2);
+}
+function bmiNote(){
+  const b=bmiValue(); if(!b) return "";
+  const bmi=b.toFixed(1);
+  if(b>=40) return `<div class="disc" style="margin:10px 0 0;background:var(--warnsoft);border-color:#f0dca0;color:var(--warn)">
+    <b>Body weight matters here.</b> BMI ≈ ${bmi} (severe obesity). At this size the chest wall itself can press the lungs
+    down and produce <b>smaller volumes. A restrictive-looking pattern. Even with healthy lung tissue.</b> Weigh that before
+    calling a low TLC "lung disease."</div>`;
+  if(b>=30) return `<div class="disc" style="margin:10px 0 0;background:var(--warnsoft);border-color:#f0dca0;color:var(--warn)">
+    <b>Body weight matters here.</b> BMI ≈ ${bmi} (obese). Extra body weight can nudge the lung volumes down on its own,
+    so a mildly small reading may be body habitus rather than true lung disease.</div>`;
+  return "";
+}
+
+/* ---------- disease presets (measured "Best" values) ---------- */
+const PRESETS = {
+  Normal:  { FVC:5.60, FEV1:4.65, PEF:9.90, FEF25:8.40, FEF50:5.50, FEF75:2.20,
+             TLC:7.05, RV:1.55, DLCO:33.50, VA:6.60, post:null },
+  Asthma:  { FVC:5.30, FEV1:3.10, PEF:7.02, FEF25:4.30, FEF50:2.10, FEF75:0.70,
+             TLC:7.16, RV:2.31, DLCO:33.05, VA:6.55, post:{FEV1:3.66, FVC:5.58} },
+  COPD:    { FVC:3.90, FEV1:1.75, PEF:4.50, FEF25:2.00, FEF50:0.80, FEF75:0.30,
+             TLC:8.60, RV:4.20, DLCO:14.50, VA:5.10, post:{FEV1:1.86, FVC:4.05} },
+  ILD:     { FVC:2.75, FEV1:2.38, PEF:6.73, FEF25:4.90, FEF50:3.20, FEF75:1.28,
+             TLC:3.89, RV:1.14, DLCO:18.70, VA:5.94, post:null }
+};
+const PRESET_LABELS = { Normal:"Normal", Asthma:"Asthma", COPD:"COPD / Emphysema", ILD:"ILD / Pneumonitis" };
+
+/* extra number-set the flowchart can reach that the top buttons don't: restriction
+   with a NORMAL DLCO = the chest-wall / neuromuscular pattern (lungs fine, cage/muscles limit). */
+const EXTRA = { CWNM: { FVC:3.30, FEV1:2.95, PEF:7.40, FEF25:6.00, FEF50:4.10, FEF75:1.70,
+                        TLC:4.80, RV:1.10, DLCO:30.50, VA:5.20, post:null },
+  /* spirometry and volumes deliberately identical to Normal, ONLY DLCO is down. That's
+     the whole teaching point: this pattern is invisible without the box. */
+                LOWDLCO: { FVC:5.60, FEV1:4.65, PEF:9.90, FEF25:8.40, FEF50:5.50, FEF75:2.20,
+                        TLC:7.05, RV:1.55, DLCO:16.80, VA:6.60, post:null } };
+/* clicking any outcome box on the flowchart drives the numbers to that pattern */
+const DX_TARGET = { "Normal":PRESETS.Normal, "Asthma / CB":PRESETS.Asthma, "Emphysema":PRESETS.COPD,
+                    "ILD Pneumonitis":PRESETS.ILD, "CW / NM disorders":EXTRA.CWNM,
+                    "Isolated low DLCO":EXTRA.LOWDLCO };
+const DX_TO_PRESET = { "Normal":"Normal", "Asthma / CB":"Asthma", "Emphysema":"COPD",
+                       "ILD Pneumonitis":"ILD", "CW / NM disorders":null, "Isolated low DLCO":null };
+const DXNAME = { "Normal":"Normal", "Asthma / CB":"Asthma", "Emphysema":"Emphysema",
+                 "ILD Pneumonitis":"ILD / Pneumonitis", "CW / NM disorders":"Chest-wall / NM",
+                 "Isolated low DLCO":"Isolated low DLCO" };
+const LABK = { FEV1:"FEV1", FVC:"FVC", ratio:"ratio", TLC:"TLC", DLCO:"DLCO" };
+
+let D = { ...PRESETS.Normal };   // live working values. Open on the calm, healthy picture
+let activePreset = "Normal";
+
+/* ---------- helpers ---------- */
+const pct = (v,p)=> Math.round(v/p*100);
+const f1  = v=> (Math.round(v*100)/100).toFixed(2);
+const LLN_RATIO = 70, LLN_PCT = 80, LLN_DLCO = 75;   // teaching thresholds
+/* rows that only appear with "Full detail" on: the story reads fine without them */
+const SEC_ROWS = new Set(["FEF 25 to 75","PEF","RV/TLC","VC","VA","DLCO/VA (KCO)"]);
+
+/* ---------- plain-English glossary (tap / hover any dashed term) ---------- */
+const GLOSS = {
+  ratio:{t:"FEV1/FVC ratio", d:"The share of your air you can blow out in the first second. It's the most important spirometry number. A <b>low ratio is the definition of obstruction</b> (narrowed or blocked airways)."},
+  lln:{t:"LLN: Lower Limit of Normal", d:"The cutoff below which a value counts as abnormal. It is <b>not one fixed number</b>. It rides on the <b>predicted</b> value, which this tool now calculates for each person from their <b>age, height, sex and ethnicity</b>. That's why a tall 25-year-old and a small 70-year-old get very different 'normal' lines.", ln:"Predicteds use NHANES III. The abnormal cutoff here is a simple teaching rule (ratio 70%, volumes/flows 80% of predicted); a full build would use the SEE-based per-parameter LLN."},
+  reduced:{t:"Reduced / low", d:"This value came in <b>lower than expected</b> for this person. On its own it just means 'below normal'. It's the <b>pattern</b> of which numbers are low that points to a cause."},
+  normal:{t:"Normal", d:"This value sits in the <b>expected range</b> for this person, nothing to flag here."},
+  fvc:{t:"FVC: Forced Vital Capacity", d:"The <b>total air you can blow out</b> in one big breath. Think 'how big is the tank.'"},
+  fev1:{t:"FEV1: air in the first second", d:"How much you blow out in the <b>first ONE second</b>. Think 'how fast can you empty.' A low FEV1 with a normal-size tank = a flow problem = obstruction."},
+  fef:{t:"FEF 25 to 75", d:"How fast air moves in the <b>middle</b> of the breath. Reflects the <b>small airways</b>. Often the first thing to dip."},
+  pef:{t:"PEF: Peak Expiratory Flow", d:"The single <b>fastest burst</b> of air, right at the start. Like the top speed of your exhale."},
+  tlc:{t:"TLC: Total Lung Capacity", d:"Every bit of air the lungs hold when <b>completely full</b>. Small TLC = restriction (stiff/small lungs); large TLC = hyperinflation (air stuck in)."},
+  rv:{t:"RV: Residual Volume", d:"Air <b>left behind</b> that you can't blow out. When it climbs, air is getting trapped."},
+  rvtlc:{t:"RV/TLC", d:"What fraction of the lungs is <b>dead-end trapped air</b>. A high ratio is another sign air is getting stuck."},
+  vc:{t:"VC: Vital Capacity", d:"The usable air from a full breath down to empty. A close cousin of FVC."},
+  dlco:{t:"DLCO: gas exchange", d:"How well <b>oxygen crosses from the lungs into the blood</b>. Only a full box like the MiniBox measures it; a plain spirometer can't. It's what separates <b>asthma (normal)</b> from <b>emphysema (low)</b>."},
+  va:{t:"VA: Alveolar Volume", d:"The lung volume the DLCO test actually reached. Used to put DLCO in context."},
+  kco:{t:"KCO (DLCO/VA)", d:"Gas exchange <b>per unit of lung reached</b>. Helps tell 'the tissue is damaged' from 'there was simply less lung to test.'"},
+  airtrap:{t:"Air trapping", d:"Air that <b>can't get back out</b>, so it stacks up behind narrowed airways. Shows up as a high RV. Common in asthma and COPD."},
+  elevated:{t:"Elevated", d:"This value is <b>higher than expected</b>. Here it points to trapped air, not anything good."},
+  hyperinflated:{t:"Hyperinflated", d:"The lungs are <b>over-filled</b> because old air can't escape: the chest sits 'puffed up.' A COPD hallmark."},
+  smalllungs:{t:"Small lungs", d:"The lungs measure <b>smaller than expected</b>: the restriction picture (stiff or shrunken lungs), the opposite of obstruction."},
+  dlcolow:{t:"Low DLCO", d:"Gas exchange is <b>below normal</b>. Oxygen isn't crossing into the blood as well as it should. In an obstructive picture, low DLCO points to <b>emphysema</b>."},
+  reversibility:{t:"Reversibility (post-inhaler)", d:"After an inhaler, the test is repeated. A big jump (<b>≥12% AND ≥200 mL</b> in FEV1) = 'reversible' = points to <b>asthma</b>. Little change = 'fixed' = more like <b>COPD</b>."},
+  nhanes:{t:"NHANES III reference equations", d:"The published U.S. reference set (Hankinson 1999) that turns a person's <b>age, height, sex and ethnicity</b> into their expected 'predicted' lung numbers. It's why a tall young man and a short older woman get very different 'normal' lines.", ln:"FVC & FEV1 use the real NHANES III equations here; lung volumes and DLCO are scaled to body size. A full clinical build would add GLI-2012/2017 and per-parameter LLNs."},
+  predcol:{t:"Predicted column", d:"What's <b>expected for this specific person</b>. Every 'Best' value is judged against it. That's how a raw number becomes 'normal' or 'low.' Edit age, height, sex or ethnicity on the left and this whole column recalculates."},
+  zscore:{t:"Z-score", d:"How many steps a value sits <b>above or below the average healthy person</b> of the same age, height, sex and ethnicity. <b>0 = exactly predicted.</b> Anything below <b>−1.645 counts as abnormal</b> (that's the LLN line). A −4 means 'far, far below normal.' It's the modern standard because <b>one number</b> captures how far off you are, no matter which parameter you're looking at.", ln:"Shown here as a teaching estimate, calibrated so the LLN sits at z −1.645. A full clinical build reads the z-score straight from the GLI reference splines."},
+  fef25:{t:"FEF25: flow at 25% blown out", d:"How fast air is moving <b>early</b> in the blow, once a quarter of the breath is out. Still mostly the big airways."},
+  fef50:{t:"FEF50: flow at 50% blown out", d:"Flow at the <b>halfway point</b> of the breath. This is where the small airways start to show themselves, and where an obstructed loop starts to <b>scoop inward</b>."},
+  fef75:{t:"FEF75: flow at 75% blown out", d:"Flow near the <b>end</b> of the blow, when only the smallest airways are still emptying. The <b>first number to fall</b> in early obstruction and the deepest part of the scoop."},
+  /* section headings: what is this whole block of the report for */
+  sec_spiro:{t:"Spirometry: the blowing test", d:"The part anybody can do with a mouthpiece: <b>take the biggest breath you can, then blast it all out</b>. It answers two questions, <b>how much</b> air (FVC) and <b>how fast</b> it comes out (FEV1, PEF, FEF). It's the first gate of every interpretation, because a low FEV1/FVC ratio is what <b>obstruction</b> looks like."},
+  sec_vol:{t:"Lung volumes: how big are the lungs", d:"Blowing out can't tell you about the air you <b>can't</b> blow out. A full box like the MiniBox measures the whole tank, <b>TLC</b> (everything the lungs hold) and <b>RV</b> (what's left behind at the end). Small lungs = <b>restriction</b>. Big lungs with a high RV = <b>air trapping / hyperinflation</b>. This is the second gate, and a plain spirometer can't reach it."},
+  sec_dlco:{t:"Diffusion (DLCO): gas exchange", d:"Moving air is only half the job. DLCO asks the other half: <b>does oxygen actually cross from the lung into the blood?</b> The patient breathes in a trace gas and the box measures how much disappeared into the bloodstream. It's the third gate, and it's the number that separates <b>asthma (normal DLCO)</b> from <b>emphysema (low)</b>, and <b>ILD (low)</b> from a stiff chest wall (normal)."},
+  sec_graphs:{t:"The graphs", d:"The same breath drawn two ways. The <b>flow/volume loop</b> plots how fast against how much, so shape tells the story (a scooped-in top curve = obstruction). The <b>volume/time</b> curve plots air piling up out of you over seconds, so the steep start is FEV1 and the flat top is FVC. Grab any dot: the tables and the verdict follow."},
+  lungage:{t:"Lung age", d:"Takes how much air you can blow out in one second and asks: <b>a healthy person with these lungs would be how old?</b> When someone's lung age is way above their real age, the damage suddenly feels real. It's the number that lands hardest.", ln:"Estimated with the Morris/Temple lung-age formula from FEV1, height and sex. A motivational teaching figure, not a diagnosis."}
+};
+/* wrap any text so it becomes a tappable glossary term */
+const gt = (key,html)=> GLOSS[key] ? `<span class="term" data-g="${key}">${html}</span>` : html;
+/* map a parameter name to its glossary key */
+const PGLOSS = {"FEV1/FVC":"ratio","FVC":"fvc","FEV1":"fev1","FEF 25 to 75":"fef","PEF":"pef",
+  "TLC":"tlc","RV":"rv","RV/TLC":"rvtlc","VC":"vc","DLCO":"dlco","VA":"va","DLCO/VA (KCO)":"kco",
+  /* editor-panel labels carry their own units, so they need their own keys */
+  "FVC (L)":"fvc","FEV1 (L)":"fev1","PEF (L/s)":"pef","FEF25 (L/s)":"fef25","FEF50 (L/s)":"fef50",
+  "FEF75 (L/s)":"fef75","TLC (L)":"tlc","RV (L)":"rv","VA (L)":"va",
+  /* editor group headers point at the same section explainers as the report headings */
+  "Spirometry":"sec_spiro","Volumes":"sec_vol","Diffusion":"sec_dlco"};
+/* a parameter name is ALWAYS hoverable (class pterm), never gated by the Reading guide */
+const pname = n => PGLOSS[n] ? `<span class="term pterm" data-g="${PGLOSS[n]}">${n}</span>` : n;
+/* a section heading: hover the title of a block to learn what the whole block is for */
+const hname = (key,html) => GLOSS[key] ? `<span class="term hterm" data-g="${key}">${html}</span>` : html;
+/* same glossary, but wrapped around the NUMBER. Hover the value (e.g. 5.30) and it
+   explains what that reading is, not just the label. Makes every "Best" number self-explaining. */
+const pvalue = (n,html) => PGLOSS[n] ? gt(PGLOSS[n], html) : html;
+
+function ratio(){ return D.FEV1/D.FVC*100; }
+function flag(pctVal, lowCut=LLN_PCT){
+  if(pctVal < lowCut) return gt('reduced',`<span class="lo">↓ low</span>`);
+  return gt('normal',`<span class="ok">normal</span>`);
+}
+
+/* classify like the device's ATS/ERS tree */
+function classify(){
+  const r = ratio();
+  const tlcPct = pct(D.TLC, PRED.TLC);
+  const dlcoPct = pct(D.DLCO, PRED.DLCO);
+  if(r < LLN_RATIO){
+    return dlcoPct < LLN_DLCO
+      ? { branch:"obstruction", dx:"Emphysema", label:"Obstruction, Emphysema" }
+      : { branch:"obstruction", dx:"Asthma / CB", label:"Obstruction, Asthma" };
+  }
+  if(tlcPct < LLN_PCT){
+    return dlcoPct < LLN_DLCO
+      ? { branch:"restriction", dx:"ILD Pneumonitis", label:"Restriction: ILD / Pneumonitis" }
+      : { branch:"restriction", dx:"CW / NM disorders", label:"Restriction: Chest-wall / Neuromuscular" };
+  }
+  /* GATE 3 standing on its own. Airflow normal, lungs normal-sized. But if gas transfer
+     is still down, this is NOT a normal study. Leaving it out let the report flag DLCO
+     "↓ LOW" in the table while the banner said "Healthy lungs" on the same screen.
+     Clinically this is the isolated-low-DLCO picture: pulmonary vascular disease, anemia,
+     or early emphysema before airflow drops. */
+  if(dlcoPct < LLN_DLCO){
+    return { branch:"lowdlco", dx:"Isolated low DLCO", label:"Normal airflow & volumes: isolated low DLCO" };
+  }
+  return { branch:"normal", dx:"Normal", label:"Normal study" };
+}
+
+/* ---------- shared chart geometry (used to DRAW and to invert a drag back into a number) ---------- */
+const FVG = {W:360,H:300,mL:40,mR:12,mT:12,mB:28,xmax:6,ymin:-6,ymax:12};
+FVG.pw=FVG.W-FVG.mL-FVG.mR; FVG.ph=FVG.H-FVG.mT-FVG.mB;
+const VTG = {W:360,H:300,mL:40,mR:12,mT:12,mB:28,tmax:6,vmax:6};
+VTG.pw=VTG.W-VTG.mL-VTG.mR; VTG.ph=VTG.H-VTG.mT-VTG.mB;
+const fvX = v=> FVG.mL + Math.min(v,FVG.xmax)/FVG.xmax*FVG.pw;   // volume  -> px
+const fvY = f=> FVG.mT + (FVG.ymax-f)/(FVG.ymax-FVG.ymin)*FVG.ph; // flow    -> px
+const vtX = t=> VTG.mL + t/VTG.tmax*VTG.pw;                       // time    -> px
+const vtY = v=> VTG.mT + (VTG.vmax-v)/VTG.vmax*VTG.ph;            // volume  -> px
+
+/* FEV1 IS, physically, the volume blown out in the first second. And that equals the
+   time you accumulate integrating dt = dV / flow along the expiratory limb until t = 1s.
+   So when the loop's SHAPE changes (a drag), the correct FEV1. And therefore the whole
+   obstruction verdict. Falls straight out of the new shape. This is what makes the loop
+   drive the diagnosis instead of just illustrating it. */
+function loopExpPts(d){ const F=d.FVC;
+  return [[0,0],[0.15*F,d.PEF],[0.25*F,d.FEF25],[0.50*F,d.FEF50],[0.75*F,d.FEF75],[F,0]]; }
+function flowAtVol(pts,V){                     // linear-interp flow at exhaled volume V
+  if(V<=pts[0][0]) return pts[0][1];
+  for(let i=1;i<pts.length;i++){ if(V<=pts[i][0]){ const [v0,f0]=pts[i-1],[v1,f1]=pts[i];
+    const t=(V-v0)/((v1-v0)||1); return f0+(f1-f0)*t; } }
+  return pts[pts.length-1][1];
+}
+function fev1FromLoop(d){                       // volume exhaled by t = 1.0 s
+  const pts=loopExpPts(d), F=d.FVC, N=1600, dV=F/N; let t=0, V=0;
+  const peakX=0.15*F, risePos=0.03*F;           // real flow rockets to PEF almost at once;
+  const flowModel=v=>{                          // this rise (calibrated so the 4 presets
+    if(v<peakX) return v>=risePos ? d.PEF       // reproduce their own stated FEV1 to ~0.1L)
+                                  : d.PEF*(v/risePos);
+    return flowAtVol(pts, v);                    // descending limb = the draggable control points
+  };
+  for(let i=0;i<N;i++){ const f=Math.max(0.05, flowModel(V+dV/2)); const dt=dV/f;
+    if(t+dt>=1) return Math.min(F, V + dV*(1-t)/dt);   // crossed 1s inside this step
+    t+=dt; V+=dV;
+  }
+  return F;                                     // whole FVC emptied within 1 s
+}
+/* ---------- THE INVERSE: set FEV1, and make the LOOP say so ----------------------
+   fev1FromLoop() reads a shape and returns a number. That only ran one way, so setting
+   FEV1 directly (typing it, dragging its z-dot, or dragging the ratio dot) moved the
+   number while the loop kept its healthy shape. A report contradicting its own graph.
+   This runs it backwards: scale the descending flow limb by k until the loop actually
+   integrates to the FEV1 asked for. fev1FromLoop is monotonic in k, so bisection is
+   exact and cheap (~40 iters, well under a frame).
+   The exponents matter. Later flows move MORE than PEF (0.4 → 1.3), so a falling FEV1
+   scoops the curve concave the way real obstruction does, instead of uniformly shrinking
+   a normal-shaped loop. PEF barely budges, which is also what you see clinically. */
+function shapeLoopToFEV1(target){
+  const base={PEF:D.PEF,FEF25:D.FEF25,FEF50:D.FEF50,FEF75:D.FEF75};
+  const apply=k=>{ D.PEF  =base.PEF  *Math.pow(k,0.4); D.FEF25=base.FEF25*Math.pow(k,0.7);
+                   D.FEF50=base.FEF50*Math.pow(k,1.0); D.FEF75=base.FEF75*Math.pow(k,1.3); };
+  const want=clampN(target, 0.05, D.FVC);
+  let lo=0.02, hi=6;
+  apply(hi); if(fev1FromLoop(D)<want){ D.FEV1=fev1FromLoop(D); return; }  // ceiling: can't blow faster
+  apply(lo); if(fev1FromLoop(D)>want){ D.FEV1=fev1FromLoop(D); return; }  // floor
+  for(let i=0;i<40;i++){ const k=(lo+hi)/2; apply(k);
+    if(fev1FromLoop(D)<want) lo=k; else hi=k; }
+  apply((lo+hi)/2);
+  D.FEV1=fev1FromLoop(D);            // number now READ BACK off the shape, the two can't disagree
+}
+/* the patient's own predicted numbers, shaped like D so the same drawing code makes a ghost loop */
+function predD(){ return {FVC:PRED.FVC, PEF:PRED.PEF, FEF25:PRED.FEF25, FEF50:PRED.FEF50, FEF75:PRED.FEF75, FEV1:PRED.FEV1}; }
+
+/* ---------- "SHOW ME ON THE GRAPH" ------------------------------------------------
+   Click any parameter name and the exact geometry that number is measured FROM lights
+   up on the charts. PEF is the tip. FVC is the width. FEV1 is the first-second slice.
+   FEF 25-75 is the middle half of the way down. The volumes and DLCO get an honest
+   answer too: they are not on these graphs at all, they come from the box.
+   SPOT is a global because render() rebuilds both SVGs from scratch on every keystroke
+   and drag frame, so the spotlight has to be part of the generated markup, not a
+   decoration bolted on afterwards (it would be wiped on the next frame). */
+let SPOT=null;
+const SPOT_OF={fvc:'FVC',fev1:'FEV1',ratio:'RATIO',fef:'FEF2575',pef:'PEF',
+  fef25:'FEF25',fef50:'FEF50',fef75:'FEF75',vc:'VC',
+  tlc:'OFFBOX',rv:'OFFBOX',rvtlc:'OFFBOX',dlco:'OFFDL',va:'OFFDL',kco:'OFFDL'};
+const FEFPT={FEF25:[0.25,'FEF25'],FEF50:[0.50,'FEF50'],FEF75:[0.75,'FEF75']};
+
+/* --- the flow-volume loop overlay --- */
+function spotFV(){
+  if(!SPOT||SPOT==='OFFBOX'||SPOT==='OFFDL') return '';
+  const F=D.FVC, y0=fvY(0), T=FVG.mT, PH=FVG.ph, L=FVG.mL, R=FVG.mL+FVG.pw;
+  const n=v=>(+v).toFixed(1);
+  const cy=v=>Math.max(T+11, Math.min(T+PH-4, v));            // keep labels inside the plot
+  const cx=v=>Math.max(L+4, Math.min(R-4, v));
+  const band =(a,b)=>`<rect class="spotband" x="${n(Math.min(a,b))}" y="${T}" width="${n(Math.abs(b-a))}" height="${PH}"/>`;
+  const vline=a=>`<line class="spotline" x1="${n(a)}" y1="${T}" x2="${n(a)}" y2="${T+PH}"/>`;
+  const hline=(y,a,b)=>`<line class="spotline" x1="${n(a)}" y1="${n(y)}" x2="${n(b)}" y2="${n(y)}"/>`;
+  const hspan=(y,a,b)=>`<line class="spotsolid" x1="${n(a)}" y1="${n(y)}" x2="${n(b)}" y2="${n(y)}"/>`+
+    [a,b].map(x=>`<line class="spotsolid" x1="${n(x)}" y1="${n(y-4)}" x2="${n(x)}" y2="${n(y+4)}"/>`).join('');
+  const vspan=(x,a,b)=>`<line class="spotsolid" x1="${n(x)}" y1="${n(a)}" x2="${n(x)}" y2="${n(b)}"/>`+
+    [a,b].map(y=>`<line class="spotsolid" x1="${n(x-4)}" y1="${n(y)}" x2="${n(x+4)}" y2="${n(y)}"/>`).join('');
+  const pin  =(x,y)=>`<circle class="spotring" cx="${n(x)}" cy="${n(y)}" r="6"/><circle class="spotdot" cx="${n(x)}" cy="${n(y)}" r="5"/>`;
+  const lab  =(x,y,t,a)=>`<text class="spotlab" x="${n(cx(x))}" y="${n(cy(y))}" text-anchor="${a||'middle'}">${t}</text>`;
+  /* thicken just the stretch of the real trace this number is read off */
+  const seg  =(a,b)=>`<clipPath id="spotClip"><rect x="${n(Math.min(a,b))}" y="0" width="${n(Math.abs(b-a))}" height="${FVG.H}"/></clipPath>`+
+    `<path class="spotcurve" d="${smooth(fvLimbs(D).exp)}" clip-path="url(#spotClip)"/>`;
+
+  if(SPOT==='PEF'){
+    const px=fvX(0.15*F), py=fvY(D.PEF);
+    return hline(py,L,px)+vspan(L+9,y0,py)+pin(px,py)+
+      lab(px+9,py-11,`PEF ${f1(D.PEF)} L/s. the very tip`,'start');
+  }
+  if(FEFPT[SPOT]){
+    const [frac,key]=FEFPT[SPOT], px=fvX(frac*F), py=fvY(D[key]);
+    return vline(px)+hline(py,L,px)+pin(px,py)+
+      lab(px+9,py-11,`${key} ${f1(D[key])} L/s, at ${frac*100}% blown out`,'start');
+  }
+  if(SPOT==='FEV1'){
+    const xe=fvX(Math.min(D.FEV1,F));
+    return band(fvX(0),xe)+seg(fvX(0),xe)+vline(xe)+hspan(y0+18,fvX(0),xe)+
+      lab((fvX(0)+xe)/2,y0+33,`FEV1 ${f1(D.FEV1)} L. out in second one`);
+  }
+  if(SPOT==='FVC'||SPOT==='VC'){
+    return band(fvX(0),fvX(F))+hspan(y0+18,fvX(0),fvX(F))+pin(fvX(F),y0)+
+      lab(fvX(F/2),y0+33,`${SPOT} ${f1(F)} L. the full width of the loop`);
+  }
+  if(SPOT==='RATIO'){
+    const xe=fvX(Math.min(D.FEV1,F));
+    return band(fvX(0),xe)+seg(fvX(0),xe)+vline(xe)+
+      hspan(y0+18,fvX(0),xe)+lab((fvX(0)+xe)/2,y0+14,`FEV1 ${f1(D.FEV1)}`)+
+      hspan(y0+40,fvX(0),fvX(F))+lab(fvX(F/2),y0+55,`of FVC ${f1(F)} = ${Math.round(ratio())}%`);
+  }
+  if(SPOT==='FEF2575'){
+    const a=fvX(0.25*F), b=fvX(0.75*F);
+    return band(a,b)+seg(a,b)+vline(a)+vline(b)+
+      pin(fvX(0.50*F),fvY(D.FEF50))+
+      lab((a+b)/2,fvY(D.FEF50)+22,`FEF 25 to 75. the middle half of the blow`);
+  }
+  return '';
+}
+/* --- the volume-time overlay (FEV1 and FVC are far clearer on the stopwatch chart) --- */
+function spotVT(){
+  if(!SPOT) return '';
+  const T=VTG.mT, PH=VTG.ph, L=VTG.mL, R=VTG.mL+VTG.pw, n=v=>(+v).toFixed(1);
+  const v1=Math.min(VTG.vmax,D.FEV1), vF=Math.min(VTG.vmax,D.FVC);
+  const cy=v=>Math.max(T+11, Math.min(T+PH-4, v));
+  const hline=(y,a,b)=>`<line class="spotline" x1="${n(a)}" y1="${n(y)}" x2="${n(b)}" y2="${n(y)}"/>`;
+  const vspan=(x,a,b)=>`<line class="spotsolid" x1="${n(x)}" y1="${n(a)}" x2="${n(x)}" y2="${n(b)}"/>`+
+    [a,b].map(y=>`<line class="spotsolid" x1="${n(x-4)}" y1="${n(y)}" x2="${n(x+4)}" y2="${n(y)}"/>`).join('');
+  const pin=(x,y)=>`<circle class="spotring" cx="${n(x)}" cy="${n(y)}" r="6"/><circle class="spotdot" cx="${n(x)}" cy="${n(y)}" r="5"/>`;
+  const lab=(x,y,t,a)=>`<text class="spotlab" x="${n(x)}" y="${n(cy(y))}" text-anchor="${a||'middle'}">${t}</text>`;
+  const box=(x1,y1,x2,y2)=>`<rect class="spotband" x="${n(x1)}" y="${n(y1)}" width="${n(x2-x1)}" height="${n(y2-y1)}"/>`;
+
+  if(SPOT==='FEV1'||SPOT==='RATIO'){
+    let s=box(vtX(0),vtY(v1),vtX(1),vtY(0))+hline(vtY(v1),L,vtX(1))+vspan(L+9,vtY(0),vtY(v1))+
+      pin(vtX(1),vtY(v1))+lab(vtX(1)+7,vtY(v1)-10,`FEV1 ${f1(D.FEV1)} L at the 1-second mark`,'start');
+    if(SPOT==='RATIO') s+=hline(vtY(vF),L,R)+vspan(L+22,vtY(0),vtY(vF))+
+      lab(vtX(VTG.tmax)-4,vtY(vF)-8,`FVC ${f1(D.FVC)} L`,'end');
+    return s;
+  }
+  if(SPOT==='FVC'||SPOT==='VC'){
+    return hline(vtY(vF),L,R)+vspan(L+9,vtY(0),vtY(vF))+pin(vtX(VTG.tmax),vtY(vF))+
+      lab(vtX(VTG.tmax)-4,vtY(vF)-10,`${SPOT} ${f1(D.FVC)} L. where the line goes flat`,'end');
+  }
+  return '';
+}
+/* --- the plain-English caption under the two charts --- */
+function spotBar(){
+  if(!SPOT) return '<div class="spotbar" id="spotBar"></div>';
+  const F=D.FVC, C={
+    PEF:['PEF',`The <b>very tip</b> of the flow-volume loop. How high the trace climbs = the fastest the air ever moves, in the first split second of the blow. Here that peak is <b>${f1(D.PEF)} L/sec</b>. It is an effort number: it tells you they blew hard, and it dents early in obstruction.`],
+    FVC:['FVC',`The <b>full width</b> of the loop along the bottom, and the <b>height of the plateau</b> on the stopwatch chart. All the air they can push out in one breath: <b>${f1(F)} L</b>. Think "how big is the tank."`],
+    VC:['VC',`Same measure as FVC, just blown out gently instead of forced, so it is read the same way: the <b>full width</b> of the loop, <b>${f1(F)} L</b>. In obstruction VC can beat FVC, because a slow breath does not slam the airways shut.`],
+    FEV1:['FEV1',`Not a point on the loop. A <b>slice of it</b>. Follow the trace from the start until one second has gone by; the shaded strip is the air that got out in that time: <b>${f1(D.FEV1)} L</b>. It is much easier to see on the stopwatch chart, where it is simply the height of the line at the 1-second mark.`],
+    RATIO:['FEV1 / FVC',`Two spans compared: the first-second slice (<b>${f1(D.FEV1)} L</b>) measured against the whole tank (<b>${f1(F)} L</b>) = <b>${Math.round(ratio())}%</b>. This is the single number that defines obstruction, and this is the picture of it: how much of the loop empties in the very first second.`],
+    FEF2575:['FEF 25 to 75',`The <b>middle half</b> of the way down. Ignore the first quarter (all effort) and the last quarter (all noise) and average the flow across the stretch in between: <b>${f1((D.FEF25+D.FEF50+D.FEF75)/3)} L/sec</b>. This is the part of the curve that <b>scoops inward</b> first when the small airways narrow.`],
+    FEF25:['FEF25',`The flow at the moment <b>25% of the breath</b> is out, one quarter of the way down the descending limb: <b>${f1(D.FEF25)} L/sec</b>.`],
+    FEF50:['FEF50',`The flow at the <b>halfway</b> point of the blow: <b>${f1(D.FEF50)} L/sec</b>. The dot that scoops the loop, and the one worth dragging to see obstruction appear.`],
+    FEF75:['FEF75',`The flow with only <b>a quarter of the breath left</b>: <b>${f1(D.FEF75)} L/sec</b>. Deep in the small airways, and usually the first flow to fall.`],
+    OFFBOX:['Not on these graphs',`<b>TLC and RV are not measured by blowing</b>, so they cannot appear on either chart. They are the air you <i>cannot</i> push out. It takes the sealed box (body plethysmography) to reach them, which is exactly the part a plain spirometer misses. See the Lung Volumes table.`],
+    OFFDL:['Not on these graphs',`<b>DLCO is not a flow or a volume</b>, so no shape on these charts can show it. It is a separate breath: the patient inhales a trace gas and the box measures how much crossed into the blood. It is the third gate, and the number that splits asthma from emphysema.`]
+  }[SPOT];
+  if(!C) return '<div class="spotbar" id="spotBar"></div>';
+  return `<div class="spotbar on" id="spotBar"><span class="sk">${C[0]}</span>
+    <span class="sb">${C[1]}</span>
+    <button class="spotx" type="button" id="spotX" title="Clear the spotlight">&times;</button></div>`;
+}
+function setSpot(key){
+  const s=SPOT_OF[key]; if(!s) return false;
+  SPOT = (SPOT===s) ? null : s;             // click the same parameter again = put the spotlight away
+  FLASH=false; render();
+  if(SPOT){
+    const st=document.getElementById(spotFV()?'fvStage':'vtStage')||document.getElementById('fvStage');
+    const r=st&&st.getBoundingClientRect();
+    if(r && (r.top<56 || r.bottom>window.innerHeight)) st.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  return !!SPOT;
+}
+function clearSpot(){ if(!SPOT) return; SPOT=null; FLASH=false; render(); }
+
+/* ---------- SVG: flow-volume loop (generated from the numbers) ---------- */
+function smooth(pts){
+  if(pts.length<2) return "";
+  let d=`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[i-1]||pts[i], p1=pts[i], p2=pts[i+1], p3=pts[i+2]||p2;
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    d+=` C ${c1x.toFixed(1)} ${c1y.toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  }
+  return d;
+}
+/* build the expiratory + inspiratory limbs (as point arrays) for any data set */
+function fvLimbs(d){
+  const F=d.FVC;
+  const exp=[ {x:fvX(0),y:fvY(0)}, {x:fvX(0.15*F),y:fvY(d.PEF)},
+    {x:fvX(0.25*F),y:fvY(d.FEF25)}, {x:fvX(0.50*F),y:fvY(d.FEF50)},
+    {x:fvX(0.75*F),y:fvY(d.FEF75)}, {x:fvX(F),y:fvY(0)} ];
+  const PIF=Math.max(2, d.PEF*0.55);
+  const insp=[ {x:fvX(F),y:fvY(0)}, {x:fvX(0.5*F),y:fvY(-PIF)}, {x:fvX(0),y:fvY(0)} ];
+  return {exp,insp};
+}
+function flowVolumeSVG(){
+  const {W,H,mL,mR,mT,mB,xmax,ymin,ymax,pw,ph}=FVG;
+  let g="";
+  for(let v=0;v<=xmax;v++){ g+=`<line class="gridln" x1="${fvX(v)}" y1="${mT}" x2="${fvX(v)}" y2="${mT+ph}"/>`;
+    g+=`<text class="axlab" x="${fvX(v)}" y="${H-14}" text-anchor="middle">${v}</text>`; }
+  for(let f=ymin;f<=ymax;f+=3){ g+=`<line class="gridln" x1="${mL}" y1="${fvY(f)}" x2="${mL+pw}" y2="${fvY(f)}"/>`;
+    g+=`<text class="axlab" x="${mL-4}" y="${fvY(f)+3}" text-anchor="end">${f}</text>`; }
+  const pat=fvLimbs(D), pre=fvLimbs(predD());
+  const anno = `<text class="anno" x="${fvX(0.55*D.FVC)}" y="${fvY(D.FEF50)-8}" text-anchor="middle">${classify().branch==='obstruction'?'scooped = blocked airways':classify().branch==='restriction'?'small loop = stiff/small lungs':'full, rounded = healthy'}</text>`;
+  // draggable handles on the patient's expiratory limb (↕ = flow) + the FVC endpoint (↔ = volume)
+  const F=D.FVC;
+  const hdl=(x,y,key,lab)=>`<g class="handle" data-h="fv:${key}"><circle cx="${x}" cy="${y}" r="13" fill="transparent"/><circle class="hdot" cx="${x}" cy="${y}" r="5.2"/><title>${lab}</title></g>`;
+  const handles =
+    hdl(fvX(0.15*F),fvY(D.PEF),  'PEF',  'Drag ↕  PEF, peak flow')+
+    hdl(fvX(0.25*F),fvY(D.FEF25),'FEF25','Drag ↕  FEF25')+
+    hdl(fvX(0.50*F),fvY(D.FEF50),'FEF50','Drag ↕  FEF50: mid-flow (scoop this for obstruction)')+
+    hdl(fvX(0.75*F),fvY(D.FEF75),'FEF75','Drag ↕  FEF75, small airways')+
+    hdl(fvX(F),     fvY(0),      'FVC',  'Drag ↔  FVC: loop width / total air');
+  return `<svg id="fvSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Flow-volume loop">
+    ${g}
+    <line class="axis" x1="${mL}" y1="${fvY(0)}" x2="${mL+pw}" y2="${fvY(0)}"/>
+    <line class="axis" x1="${mL}" y1="${mT}" x2="${mL}" y2="${mT+ph}"/>
+    <text class="axlab" x="${mL+pw/2}" y="${H-2}" text-anchor="middle">Volume (L)</text>
+    <text class="axlab" x="10" y="${mT+ph/2}" text-anchor="middle" transform="rotate(-90 10 ${mT+ph/2})">Flow (L/s)</text>
+    <path d="${smooth(pre.exp)}"  fill="none" stroke="#9aa6b4" stroke-width="1.5" stroke-dasharray="4 4" opacity=".85"/>
+    <path d="${smooth(pre.insp)}" fill="none" stroke="#9aa6b4" stroke-width="1.2" stroke-dasharray="4 4" opacity=".5"/>
+    <path id="fvExp"  d="${smooth(pat.exp)}"  fill="none" stroke="#0e7c54" stroke-width="2.4"/>
+    <path id="fvInsp" d="${smooth(pat.insp)}" fill="none" stroke="#0e7c54" stroke-width="1.6" opacity=".55"/>
+    ${anno}
+    ${spotFV()}
+    ${handles}
+    <circle id="breathDot" class="bdot" cx="${fvX(0)}" cy="${fvY(0)}" r="6.5"/>
+  </svg>`;
+}
+
+/* ---------- "Breathe it" player markup (button + narrated caption) ----------
+   The whole confusion with a flow-volume loop is that people don't realize the
+   squiggle is ONE breath. And that the climb off zero is the blow-OUT, not the
+   breath in. This rides a marker around the loop and narrates each beat. */
+function breathePlayer(){
+  return `<div class="breathe">
+      <button class="breathebtn" id="breatheBtn" type="button">▶ Breathe it: watch one full breath</button>
+      <div class="bhint" id="bHint">Press ▶. The panel glows <b style="color:#2563eb">blue as you blow OUT</b> (the line shoots up because you're fast, not because you're inhaling) and <b style="color:#d97706">amber as you breathe IN</b>.</div>
+    </div>`;
+}
+
+/* ---------- "Blow it out" player markup (volume-time twin of "Breathe it") ----------
+   The volume-time chart is the OTHER way to draw the same blow: instead of "how fast
+   vs how empty", it's "how much air has come OUT so far vs the clock". People misread
+   it as lung volume going up, it's the pile of exhaled air growing. This narrates it:
+   deep breath in (chart hasn't started), the 1-second BLAST (= FEV1), then the long
+   squeeze until the line goes flat (= FVC, tank empty). */
+const BLOW_IDLE='Press ▶: this is the same blow on a stopwatch. The line is <b>air piling up OUT of you</b>: it rockets in second one (that\'s <b>FEV1</b>) and goes flat when you\'re empty (that\'s <b>FVC</b>).';
+function blowPlayer(){
+  return `<div class="breathe">
+      <button class="breathebtn" id="blowBtn" type="button">▶ Blow it out: watch the whole 6-second blow</button>
+      <div class="bhint" id="blowHint">${BLOW_IDLE}</div>
+    </div>`;
+}
+
+/* ---------- SVG: volume-time spirogram ---------- */
+function vtPath(FVC,fev1){
+  const r=fev1/FVC;
+  const tau=-1/Math.log(Math.max(0.05, 1-Math.min(0.98,r)));   // so V(1s)=FEV1
+  let p=`M ${vtX(0)} ${vtY(0)}`;
+  for(let t=0.05;t<=VTG.tmax;t+=0.1){ const v=FVC*(1-Math.exp(-t/tau)); p+=` L ${vtX(t).toFixed(1)} ${vtY(v).toFixed(1)}`; }
+  return p;
+}
+function volumeTimeSVG(){
+  const {W,H,mL,mR,mT,mB,tmax,vmax,pw,ph}=VTG;
+  let g="";
+  for(let t=0;t<=tmax;t++){ g+=`<line class="gridln" x1="${vtX(t)}" y1="${mT}" x2="${vtX(t)}" y2="${mT+ph}"/>`;
+    g+=`<text class="axlab" x="${vtX(t)}" y="${H-14}" text-anchor="middle">${t}</text>`; }
+  for(let v=0;v<=vmax;v++){ g+=`<line class="gridln" x1="${mL}" y1="${vtY(v)}" x2="${mL+pw}" y2="${vtY(v)}"/>`;
+    g+=`<text class="axlab" x="${mL-4}" y="${vtY(v)+3}" text-anchor="end">${v}</text>`; }
+  const fev1=D.FEV1;
+  const marker=`<line x1="${vtX(1)}" y1="${mT}" x2="${vtX(1)}" y2="${mT+ph}" stroke="#c62828" stroke-dasharray="3 3" stroke-width="1"/>
+    <text class="anno" x="${vtX(1)+4}" y="${vtY(fev1)-8}">FEV1 @ 1s</text>`;
+  const hdl=(x,y,key,lab)=>`<g class="handle" data-h="vt:${key}"><circle cx="${x}" cy="${y}" r="13" fill="transparent"/><circle class="hdot" cx="${x}" cy="${y}" r="5.2"/><title>${lab}</title></g>`;
+  const handles =
+    hdl(vtX(1),   vtY(Math.min(vmax,fev1)), 'FEV1','Drag ↕  FEV1: air out in the first second')+
+    hdl(vtX(tmax),vtY(Math.min(vmax,D.FVC)),'FVC', 'Drag ↕  FVC, total air');
+  return `<svg id="vtSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Volume-time curve">
+    ${g}
+    <line class="axis" x1="${mL}" y1="${mT+ph}" x2="${mL+pw}" y2="${mT+ph}"/>
+    <line class="axis" x1="${mL}" y1="${mT}" x2="${mL}" y2="${mT+ph}"/>
+    <text class="axlab" x="${mL+pw/2}" y="${H-2}" text-anchor="middle">Time (sec)</text>
+    <text class="axlab" x="10" y="${mT+ph/2}" text-anchor="middle" transform="rotate(-90 10 ${mT+ph/2})">Volume (L)</text>
+    <path d="${vtPath(PRED.FVC, PRED.FEV1)}" fill="none" stroke="#9aa6b4" stroke-width="1.5" stroke-dasharray="4 4" opacity=".85"/>
+    <path id="vtPat" d="${vtPath(D.FVC, D.FEV1)}" fill="none" stroke="#0e7c54" stroke-width="2.4"/>
+    ${marker}
+    ${spotVT()}
+    ${handles}
+    <circle id="blowDot" class="bdot" cx="${vtX(0)}" cy="${vtY(0)}" r="6.5"/>
+  </svg>`;
+}
+
+/* ---------- render tables + tree + guide ---------- */
+function spiroRows(){
+  const r=ratio();
+  const rows=[
+    ["FEV1/FVC","%",PRED.ratio,r, r<LLN_RATIO?gt('lln',`<span class="lo">↓ below LLN</span>`):gt('normal',`<span class="ok">normal</span>`),true],
+    ["FVC","L",PRED.FVC,D.FVC,flag(pct(D.FVC,PRED.FVC))],
+    ["FEV1","L",PRED.FEV1,D.FEV1,flag(pct(D.FEV1,PRED.FEV1))],
+    ["FEF 25 to 75","L/sec",PRED.FEF2575,(D.FEF25+D.FEF50+D.FEF75)/3,flag(pct((D.FEF25+D.FEF50+D.FEF75)/3,PRED.FEF2575))],
+    ["PEF","L/sec",PRED.PEF,D.PEF,flag(pct(D.PEF,PRED.PEF))]
+  ];
+  return rows.map(([n,u,p,b,fl,key])=>{
+    const dc={"FEV1/FVC":"flag:ratio","FVC":"flag:FVC","FEV1":"flag:FEV1"}[n];
+    return `<tr class="${key?'rowkey ':''}${SEC_ROWS.has(n)?'sec':''}">
+    <td>${pname(n)}</td><td class="u">${u}</td><td>${f1(p)}</td><td>${f1(b)}</td>
+    <td>${n.includes('/')?'n/a':pct(b,p)+'%'}</td><td${dc?` data-cell="${dc}"`:''}>${fl}</td></tr>`;}).join("");
+}
+function volRows(){
+  const rvtlc = D.RV/D.TLC*100;
+  const rows=[
+    ["TLC","L",PRED.TLC,D.TLC,pct(D.TLC,PRED.TLC), pct(D.TLC,PRED.TLC)<LLN_PCT?gt('smalllungs',`<span class="lo">↓ small lungs</span>`):pct(D.TLC,PRED.TLC)>115?gt('hyperinflated',`<span class="hi">↑ hyperinflated</span>`):gt('normal',`<span class="ok">normal</span>`)],
+    ["RV","L",PRED.RV,D.RV,pct(D.RV,PRED.RV), pct(D.RV,PRED.RV)>130?gt('airtrap',`<span class="hi">↑ air trapping</span>`):gt('normal',`<span class="ok">normal</span>`)],
+    ["RV/TLC","%",PRED.RV/PRED.TLC*100,rvtlc,Math.round(rvtlc/(PRED.RV/PRED.TLC*100)*100), rvtlc>35?gt('elevated',`<span class="hi">↑ elevated</span>`):gt('normal',`<span class="ok">normal</span>`)],
+    ["VC","L",PRED.VC,D.FVC,pct(D.FVC,PRED.VC),flag(pct(D.FVC,PRED.VC))]
+  ];
+  return rows.map(([n,u,p,b,pc,fl])=>{
+    const dc={"TLC":"flag:TLC","RV":"flag:RV"}[n];
+    return `<tr class="${SEC_ROWS.has(n)?'sec':''}"><td>${pname(n)}</td><td class="u">${u}</td><td>${f1(p)}</td><td>${f1(b)}</td><td>${pc}%</td><td${dc?` data-cell="${dc}"`:''}>${fl}</td></tr>`;}).join("");
+}
+function dlcoRows(){
+  const kco=D.DLCO/D.VA;
+  return [
+    ["DLCO","mL/min/mmHg",PRED.DLCO,D.DLCO,pct(D.DLCO,PRED.DLCO), pct(D.DLCO,PRED.DLCO)<LLN_DLCO?gt('dlcolow',`<span class="lo">↓ LOW</span>`):gt('normal',`<span class="ok">NORMAL</span>`),true],
+    ["VA","L",PRED.VA,D.VA,pct(D.VA,PRED.VA),flag(pct(D.VA,PRED.VA))],
+    ["DLCO/VA (KCO)","",PRED.KCO,kco,pct(kco,PRED.KCO), pct(kco,PRED.KCO)<LLN_DLCO?gt('dlcolow',`<span class="lo">↓ low</span>`):gt('normal',`<span class="ok">normal</span>`)]
+  ].map(([n,u,p,b,pc,fl,key])=>{
+    const dc={"DLCO":"flag:DLCO"}[n];
+    return `<tr class="${key?'rowkey ':''}${SEC_ROWS.has(n)?'sec':''}"><td>${pname(n)}</td><td class="u">${u}</td><td>${f1(p)}</td><td>${f1(b)}</td><td>${pc}%</td><td${dc?` data-cell="${dc}"`:''}>${fl}</td></tr>`;}).join("");
+}
+function postBD(){
+  if(!D.post) return "";
+  const dF=D.post.FEV1-D.FEV1, pF=Math.round(dF/D.FEV1*100);
+  const sig = dF>=0.20 && pF>=12;
+  return `<section><h2>Post-Bronchodilator (repeat after an inhaler)</h2>
+    <table><thead><tr><th>Parameter</th><th>Pre</th><th>Post</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td>FEV1 (L)</td><td>${f1(D.FEV1)}</td><td><b>${f1(D.post.FEV1)}</b></td>
+        <td class="${sig?'ok':'mut'}">${dF>=0?'+':''}${f1(dF)} L &nbsp;(${pF>=0?'+':''}${pF}%)</td></tr>
+    </tbody></table>
+    <p style="font-size:12px;color:var(--mut);margin:6px 0 0">
+      ${sig?'<b>Significant reversibility</b> (≥12% and ≥200 mL). Airways open with an inhaler → points to <b>asthma</b>.'
+            :'Little change after the inhaler → <b>fixed</b> obstruction, more typical of COPD than asthma.'}</p>
+    </section>`;
+}
+function interpTree(){
+  const c=classify();
+  const r=ratio();
+  const ratioLow=r<LLN_RATIO;
+  const tlcPct=pct(D.TLC,PRED.TLC), tlcLow=tlcPct<LLN_PCT;
+  const dlcoPct=pct(D.DLCO,PRED.DLCO), dlcoLow=dlcoPct<LLN_DLCO;
+
+  /* Gate 1: the one question that splits obstruction from everything else */
+  const gate1=`<div class="fcgate"><span class="glabel">Gate 1</span>
+    <span class="gq">Is ${gt('ratio','FEV1/FVC')} below the ${gt('lln','LLN')} of 70%?
+      <span class="gnum">${Math.round(r)}%</span></span>
+    ${ratioLow?'<span class="gres yes">LOW → obstruction</span>'
+              :'<span class="gres no">OK → not obstruction</span>'}</div>`;
+
+  /* Gate 2: branches on the answer to Gate 1 */
+  let gate2='';
+  if(ratioLow){
+    gate2=`<div class="fcgate"><span class="glabel">Gate 2</span>
+      <span class="gq">Is ${gt('dlco','DLCO')} (gas exchange) below 75%?
+        <span class="gnum">${dlcoPct}%</span></span>
+      ${dlcoLow?'<span class="gres yes">LOW → emphysema</span>'
+               :'<span class="gres no">normal → asthma</span>'}</div>`;
+  }else{
+    gate2=`<div class="fcgate"><span class="glabel">Gate 2</span>
+      <span class="gq">Are the lungs small, ${gt('tlc','TLC')} below 80%?
+        <span class="gnum">${tlcPct}%</span></span>
+      ${tlcLow?'<span class="gres yes">LOW → restriction</span>'
+              :'<span class="gres no">normal-size → healthy</span>'}</div>`;
+    /* Gate 3 always runs. It used to read "not needed, lungs normal-sized" whenever TLC
+       was normal, which silently threw away a low DLCO and let the banner call the study
+       healthy while the table flagged DLCO low. Normal-sized lungs don't excuse bad transfer. */
+    gate2+=`<div class="fcgate"><span class="glabel">Gate 3</span>
+      <span class="gq">Then is ${gt('dlco','DLCO')} below 75%?
+        <span class="gnum">${dlcoPct}%</span></span>
+      ${tlcLow ? (dlcoLow?'<span class="gres yes">LOW → ILD (scarring)</span>'
+                        :'<span class="gres no">normal → chest-wall / NM</span>')
+               : (dlcoLow?'<span class="gres yes">LOW → isolated low DLCO</span>'
+                        :'<span class="gres no">normal → healthy</span>')}</div>`;
+  }
+
+  const ENDS=[
+    ["Normal","Normal","everything normal"],
+    ["Asthma / CB","Asthma","obstruction · DLCO ok"],
+    ["Emphysema","Emphysema","obstruction · DLCO low"],
+    ["ILD Pneumonitis","ILD / Pneumonitis","small lungs · DLCO low"],
+    ["CW / NM disorders","Chest-wall / NM","small lungs · DLCO ok"],
+    ["Isolated low DLCO","Isolated low DLCO","airflow &amp; size ok · DLCO low"]
+  ];
+  const ends=ENDS.map(([dx,lab,sub])=>
+    `<button type="button" class="end ${c.dx===dx?'on':''}" data-dx="${dx}">${lab}<small>${sub}</small></button>`).join("");
+
+  return `<div class="fc">
+    ${gate1}
+    ${gate2}
+    <div class="fcends">${ends}</div>
+    <div class="fchint" data-cell="verdictline">Reads: <b>${c.label}</b> &nbsp;·&nbsp;
+      Click any box to morph the whole report into that pattern.</div>
+  </div>`;
+}
+function readingGuide(){
+  const c=classify();
+  const lines={
+    obstruction:[
+      "<b>Ratio (FEV1/FVC) is low</b> → air comes out slowly. That's <b>obstruction</b>, a blockage.",
+      "<b>Look at the loop</b>: the scooped, caved-in shape is the picture of blocked airways.",
+      D.post ? "<b>Did it improve after the inhaler?</b> Big jump = asthma. Little change = COPD." : "Check DLCO: normal = asthma, low = emphysema.",
+      "<b>DLCO</b> tells asthma (normal) from emphysema (low), only the box measures this."
+    ],
+    restriction:[
+      "<b>Ratio is normal or high</b>, but <b>TLC is low</b> → the lungs are <b>small/stiff</b>. That's restriction.",
+      "<b>Look at the loop</b>: tall and narrow, squeezed onto a small volume.",
+      "<b>DLCO low</b> → the lung tissue itself is scarred (ILD). <b>DLCO normal</b> → it's the muscles or chest wall, lungs are fine.",
+      "ILD is exactly what a rheumatologist watches for, this catches it early."
+    ],
+    normal:[
+      "<b>Ratio normal, lungs full-sized, DLCO normal</b>. Everything sits in the healthy range.",
+      "The loop is full and rounded; the spirogram rises fast and levels off.",
+      "A clean baseline to compare future tests against."
+    ],
+    lowdlco:[
+      "<b>Ratio normal, TLC normal</b>: the first two gates pass, so airflow and lung size are fine.",
+      "<b>But DLCO is low</b> → air gets in and out; oxygen just isn't crossing into the blood.",
+      "<b>The graphs look normal here</b>, and that's the lesson. Only the box measures DLCO, so this pattern is invisible on spirometry alone.",
+      "Think blood-vessel disease, anemia, or emphysema caught early, before airflow drops."
+    ]
+  };
+  return `<div class="guide"><h3>How to read this in 10 seconds</h3><ul>${lines[c.branch].map(l=>`<li>${l}</li>`).join("")}</ul>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--brand)"><b>Tip:</b> tap anything underlined for a plain-English definition. Every <b>section heading</b>, every <b>parameter name</b>, every <b>number</b> in the tables, and every field in the editor on the left.</p></div>`;
+}
+
+/* ---------- Z-score (teaching estimate) ----------
+   Calibrated so a value at its LLN threshold lands on z = −1.645.
+   z = (%pred − 100) / spread, where spread = (100 − LLN%) / 1.645.
+   A full clinical build would read z straight from the GLI splines. */
+const Z_LLN = -1.645;
+function zOf(pctPred, llnPct){ const s=(100-llnPct)/1.645; return s ? (pctPred-100)/s : 0; }
+/* shared strip geometry. Used to DRAW the strip and to invert a drag back into a z */
+const ZG = {W:300,H:30,pad:8,zmin:-5,zmax:3};
+const zX  = v => ZG.pad+(Math.min(ZG.zmax,Math.max(ZG.zmin,v))-ZG.zmin)/(ZG.zmax-ZG.zmin)*(ZG.W-2*ZG.pad);
+const xToZ= x => ZG.zmin+(x-ZG.pad)/(ZG.W-2*ZG.pad)*(ZG.zmax-ZG.zmin);
+/* the inverse of zOf(): what %predicted puts the dot at this z? */
+const pctFromZ = (z,llnPct) => 100 + z*((100-llnPct)/1.645);
+function zStrip(z, param){
+  const {W,H,pad,zmax}=ZG, X=zX;
+  const xln=X(Z_LLN), x0=X(0), xd=X(z), abn=z<Z_LLN;
+  let ticks="";
+  [-4,-2,0,2].forEach(t=>{ ticks+=`<text class="zt" x="${X(t)}" y="${H-2}" text-anchor="middle">${t>0?'+'+t:t}</text>`; });
+  return `<svg class="zstrip${param?' zdrag':''}" viewBox="0 0 ${W} ${H}" role="img" aria-label="z-score ${z.toFixed(1)}">
+    <rect x="${pad}" y="6" width="${W-2*pad}" height="10" rx="5" fill="#eef1f4"/>
+    <rect x="${xln}" y="6" width="${X(zmax)-xln}" height="10" rx="5" fill="var(--brandsoft)"/>
+    <line x1="${xln}" y1="2" x2="${xln}" y2="20" stroke="#b26a00" stroke-width="1.4" stroke-dasharray="3 2"/>
+    <line x1="${x0}" y1="4" x2="${x0}" y2="18" stroke="#aab4c0" stroke-width="1"/>
+    <circle class="zdot" cx="${xd}" cy="11" r="5.5" fill="${abn?'#c62828':'#0e7c54'}" stroke="#fff" stroke-width="1.6"/>
+    ${ticks}
+    ${param?`<rect class="zhit" x="0" y="0" width="${W}" height="${H}" fill="transparent" data-h="z:${param}"/>`:''}
+  </svg>`;
+}
+/* ONE spec, read by both the drawing pass and the drag-inverse, so a dot can never
+   land somewhere the drag wouldn't put it. `key` is the value the dot actually moves;
+   the ratio row has no value of its own, so dragging it moves FEV1 (FVC is the volume
+   anchor. Exactly the lever the flow/volume loop already pulls). */
+function zRows(){ return [
+  {n:"FEV1/FVC", pp:ratio()/PRED.ratio*100,   lln:LLN_RATIO/PRED.ratio*100, key:"ratio"},
+  {n:"FVC",      pp:pct(D.FVC, PRED.FVC),     lln:80, key:"FVC"},
+  {n:"FEV1",     pp:pct(D.FEV1,PRED.FEV1),    lln:80, key:"FEV1"},
+  {n:"TLC",      pp:pct(D.TLC, PRED.TLC),     lln:80, key:"TLC"},
+  {n:"DLCO",     pp:pct(D.DLCO,PRED.DLCO),    lln:75, key:"DLCO"}
+];}
+const zLLNfor = key => (zRows().find(r=>r.key===key)||{lln:80}).lln;
+function zScoreSection(){
+  const body=zRows().map(({n,pp,lln,key})=>{
+    const z=zOf(pp,lln), abn=z<Z_LLN;
+    const dc={"FVC":"z:FVC","FEV1":"z:FEV1","TLC":"z:TLC","DLCO":"z:DLCO"}[n];
+    return `<div class="zrow"><div class="zlab">${pname(n)}</div>${zStrip(z,key)}
+      <div class="zval ${abn?'lo':'ok'}"${dc?` data-cell="${dc}"`:''}>${z>=0?'+':'−'}${Math.abs(z).toFixed(1)}</div></div>`;
+  }).join("");
+  return `<section><h2>${gt('zscore','Where every number lands: the Z-score view')}</h2>
+    <p class="zexpl">The whole report in one picture: <b>each dot is this patient</b>.
+      Left of the amber ${gt('lln','line')} = below normal, and the farther left, the worse.
+      <b style="color:var(--brand)">Drag any dot</b>. The tables, the graphs and the verdict all follow.</p>
+    <div class="zchart">${body}</div>
+    <div class="zkey"><span>🟢 dot = normal</span><span>🔴 dot = below normal</span>
+      <span><b>▏</b> amber line = LLN (z −1.645)</span><span>middle tick = predicted (z 0)</span></div>
+  </section>`;
+}
+
+/* ---------- severity (teaching: graded off FEV1 %predicted) ---------- */
+function severity(){
+  const c=classify(); if(c.branch==='normal') return null;
+  // airflow is normal in this branch. Grade it off the measure that's actually impaired
+  const p = c.branch==='lowdlco' ? pct(D.DLCO,PRED.DLCO) : pct(D.FEV1,PRED.FEV1);
+  if(p>=70) return "Mild";
+  if(p>=50) return "Moderate";
+  return "Severe";
+}
+
+/* ---------- lung age (Morris/Temple estimate from FEV1) ---------- */
+function lungAge(){
+  const HI=PT.ft*12+(+PT.inch||0), f=D.FEV1;
+  const la=(PT.sex==='F') ? (3.56*HI - 40*f - 77.28) : (2.87*HI - 31.25*f - 39.375);
+  return Math.max(18, Math.round(la));
+}
+function lungAgeCard(){
+  const la=lungAge(), real=+PT.ageY, older=la-real;
+  const tone = older>=15?'lo' : older>=5?'hi' : 'ok';
+  const tail = older>=15 ? `lungs test ~<b>${Math.round(older)} yrs older</b> than they are`
+             : older>=5  ? `a touch older than their real age`
+             : `right about their real age`;
+  return `<div class="lungage ${tone}" data-cell="lungage">Estimated ${gt('lungage','lung age')}:
+    <b class="lanum">${la} yrs</b> <span class="lasub">: person is ${real.toFixed(0)}, ${tail}.</span></div>`;
+}
+
+/* ---------- one-sentence plain-English verdict (the answer, up top) ---------- */
+function verdictBanner(){
+  const c=classify();
+  const sev=severity();
+  const V={
+    "Normal":            {emo:"🟢", cls:"ok", txt:"Healthy lungs: air moves in and out freely.",
+                          sub:"Every number sits in the normal range. Nothing to flag."},
+    "Asthma / CB":       {emo:"🟡", cls:"hi", txt:"Blocked airways (obstruction): like breathing through a straw.",
+                          sub:"The lungs are full-size but empty slowly. Gas exchange is normal. The asthma picture, and it opens up with an inhaler."},
+    "Emphysema":         {emo:"🔴", cls:"lo", txt:"Blocked airways AND damaged air sacs.",
+                          sub:"Air comes out slowly and oxygen doesn't cross into the blood well. That combination is emphysema."},
+    "ILD Pneumonitis":   {emo:"🔴", cls:"lo", txt:"Small, stiff lungs (restriction), with scarring.",
+                          sub:"The lungs can't expand and oxygen transfer is low. The pattern of scarred lung tissue (ILD)."},
+    "CW / NM disorders": {emo:"🟡", cls:"hi", txt:"Small lungs (restriction), but the tissue is healthy.",
+                          sub:"The lungs themselves are fine; something outside them (chest wall or muscles) is limiting the breath."},
+    "Isolated low DLCO": {emo:"🟡", cls:"hi", txt:"Air moves fine, but oxygen isn't crossing over.",
+                          sub:"Airflow and lung size both check out, so the first two gates look normal. It's the transfer step that falls down. Think blood-vessel disease, anemia, or emphysema caught before airflow drops."}
+  };
+  const v=V[c.dx]||V["Normal"];
+  const pill = sev ? `<span class="sevpill">${sev}</span>` : '';
+  return `<div class="bignews ${v.cls}" data-cell="verdict"><span class="emo">${v.emo}</span>
+    <div><div class="bt">${v.txt}${pill}</div><div class="bs">${v.sub}</div></div></div>`;
+}
+
+function render(){
+  if(breathing) stopBreathe();   // any live edit / morph / drag ends the breath ride cleanly
+  if(blowing) stopBlow();        // same deal for the volume-time blow
+  const c=classify();
+  const P=PATIENT();
+  document.getElementById('lungAgeSlot').innerHTML = lungAgeCard();
+  document.getElementById('report').innerHTML = `
+    <div class="rhead">
+      <div class="co">PulmOne <small>Service (US) · DFW, Texas · 844-785-6663 · service@pulm-one.com</small></div>
+      <div class="rt"><b>Pulmonary Function Test Report</b><br>PFT Outside The Box</div>
+    </div>
+    ${verdictBanner()}
+    <section><h2>Patient Details</h2>
+      <div class="grid2">
+        <div><span>Name:</span> ${P.name} &nbsp; <span>ID:</span> ${P.id}</div>
+        <div><span>Session Date:</span> ${P.date}</div>
+        <div><span>Age:</span> ${P.age} &nbsp; <span>Gender:</span> ${P.sex}</div>
+        <div><span>Height:</span> ${P.ht} &nbsp; <span>Weight:</span> ${P.wt}</div>
+        <div><span>Ethnicity:</span> ${P.eth} &nbsp; <span>Smoker:</span> ${P.smoker}</div>
+        <div><span>Pattern:</span> <b style="color:var(--brand)">${PRESET_LABELS[activePreset]||'Custom'}</b></div>
+      </div>
+      <p style="font-size:11px;color:var(--mut);margin:8px 0 0">"Normal" here is calculated for this exact person. 
+        their age, height, sex &amp; ethnicity (<span class="term" data-g="nhanes">NHANES III</span>).
+        Edit the patient on the left and every <span class="term" data-g="predcol">expected value</span> updates.</p>
+      ${bmiNote()}
+    </section>
+
+    ${readingGuide()}
+
+    <section><h2>${hname('sec_spiro','Spirometry. How much air, how fast')}</h2>
+      <table class="ptable"><thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Flag</th></tr></thead>
+      <tbody>${spiroRows()}</tbody></table>
+    </section>
+
+    <section><h2>${hname('sec_graphs','Graphs. Grab a dot and reshape; the numbers follow')}</h2>
+      <p class="chartlegend">
+        <b style="color:#0e7c54">━ This patient</b> &nbsp;·&nbsp;
+        <b style="color:#9aa6b4">┄ Healthy predicted</b> &nbsp;·&nbsp;
+        Drag any <b style="color:#0e7c54">●</b>. The flags and verdict recompute as you pull.
+      </p>
+      <p class="spothint">Want to know where a number actually comes from? <b>Click any parameter name</b>
+        (FVC, FEV1, PEF, FEF 25 to 75, in the tables or the panel on the left) and the graphs
+        light up the exact spot it is measured.</p>
+      <div class="charts">
+        <div class="card${SPOT&&!spotFV()?' spotoff':''}"><div class="ct">Flow / Volume Loop</div>
+          <div class="fvstage" id="fvStage">${flowVolumeSVG()}<div class="bwash" id="bWash"></div><div class="bword" id="bWord"></div></div>
+          ${breathePlayer()}</div>
+        <div class="card${SPOT&&!spotVT()?' spotoff':''}"><div class="ct">Volume / Time</div>
+          <div class="fvstage" id="vtStage">${volumeTimeSVG()}<div class="bwash"></div><div class="bword" id="vtWord"></div></div>
+          ${blowPlayer()}</div>
+      </div>
+      ${spotBar()}
+    </section>
+
+    <section><h2>${hname('sec_vol','Lung Volumes: how big are the lungs')}</h2>
+      <table class="ptable"><thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Flag</th></tr></thead>
+      <tbody>${volRows()}</tbody></table>
+    </section>
+
+    <section><h2>${hname('sec_dlco','Diffusion (DLCO). Gas exchange')}</h2>
+      <table class="ptable"><thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>%Pred</th><th>Flag</th></tr></thead>
+      <tbody>${dlcoRows()}</tbody></table>
+    </section>
+
+    ${postBD()}
+
+    ${zScoreSection()}
+
+    <section><h2>Interpretation Chart (ATS/ERS)</h2>
+      ${interpTree()}
+    </section>
+
+    <div class="disc"><b>Training sample, not a real patient.</b> The numbers are illustrative of each classic pattern,
+      chosen to teach pattern recognition, and are <b>pending a clinical once-over</b>. They are not a diagnostic
+      reference range and must not be used to interpret a real test.</div>
+    <div class="foot">PulmOne · PFT Outside The Box · MiniBox Report Studio v2.1 (every label coaches, not just every number) &nbsp;|&nbsp; Built for the rep.</div>
+  `;
+  afterRender();
+}
+
+/* ---------- editor fields ---------- */
+const FIELDS=[
+  ["Spirometry", [["FVC","FVC (L)"],["FEV1","FEV1 (L)"],["PEF","PEF (L/s)"],
+    ["FEF25","FEF25 (L/s)"],["FEF50","FEF50 (L/s)"],["FEF75","FEF75 (L/s)"]]],
+  ["Volumes",    [["TLC","TLC (L)"],["RV","RV (L)"]]],
+  ["Diffusion",  [["DLCO","DLCO"],["VA","VA (L)"]]]
+];
+function buildFields(){
+  let html="";
+  for(const [grp,items] of FIELDS){
+    html+=`<div class="grp">${pname(grp)}</div>`;
+    for(const [key,lab] of items){
+      html+=`<div class="fld"><label>${pname(lab)}</label>
+        <input type="number" step="0.01" data-k="${key}" value="${D[key]}"></div>`;
+    }
+  }
+  const box=document.getElementById('fields'); box.innerHTML=html;
+  box.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',()=>{
+      const k=inp.dataset.k, v=parseFloat(inp.value);
+      if(!isNaN(v)){
+        // typing FEV1 has the same duty as dragging it. Reshape the loop so the graph agrees
+        if(k==='FEV1') shapeLoopToFEV1(v);
+        else { D[k]=v; if(k==='FVC'){ if(D.FEV1>D.FVC) D.FEV1=D.FVC;
+                                      D.FEV1=clampN(fev1FromLoop(D),0.05,D.FVC); } }
+        activePreset=null; markPresets(); FLASH=true; render(); }
+    });
+  });
+}
+function syncFields(){ document.querySelectorAll('#fields input').forEach(inp=>{ inp.value=D[inp.dataset.k]; }); }
+
+/* ---------- patient controls (drive the predicted engine) ---------- */
+function buildPatient(){
+  const g=id=>document.getElementById(id);
+  g('ptAge').value=PT.ageY; g('ptFt').value=PT.ft; g('ptIn').value=PT.inch;
+  g('ptWt').value=PT.wt; g('ptSex').value=PT.sex;  g('ptEth').value=PT.eth;
+  const repredict=()=>{ PRED=computePred(PT); FLASH=true; render(); };
+  g('ptAge').addEventListener('input',e=>{ const v=parseFloat(e.target.value); if(!isNaN(v)){ PT.ageY=v; repredict(); }});
+  g('ptFt').addEventListener('input', e=>{ const v=parseInt(e.target.value,10); if(!isNaN(v)){ PT.ft=v;   repredict(); }});
+  g('ptIn').addEventListener('input', e=>{ const v=parseInt(e.target.value,10); if(!isNaN(v)){ PT.inch=v; repredict(); }});
+  g('ptWt').addEventListener('input', e=>{ const v=parseFloat(e.target.value); if(!isNaN(v)){ PT.wt=v; FLASH=true; render(); }});
+  g('ptSex').addEventListener('change',e=>{ PT.sex=e.target.value; repredict(); });
+  g('ptEth').addEventListener('change',e=>{ PT.eth=e.target.value; repredict(); });
+}
+
+/* ---------- presets ---------- */
+function applyPreset(k){ activePreset=k; markPresets(); animateTo(PRESETS[k]); }
+function buildPresets(){
+  const box=document.getElementById('presets');
+  box.innerHTML=Object.keys(PRESETS).map(k=>`<button class="pbtn" data-p="${k}">${PRESET_LABELS[k]}</button>`).join("");
+  box.querySelectorAll('.pbtn').forEach(b=>b.addEventListener('click',()=>applyPreset(b.dataset.p)));
+}
+
+/* ---------- guided "Show me how it works" tour ---------- */
+const TOUR=[
+  {preset:"Normal", step:"Start here", title:"This is a healthy set of lungs",
+   body:"Everything you're looking at came from real numbers. Up top, the green banner gives you the answer in one line. The blue loop on the graph is full and rounded. Air moves in and out freely.",
+   analogy:"💡 Think of a big balloon that fills up and empties fast and easy."},
+  {preset:"Asthma", step:"Pattern 1 of 3", title:"Asthma: the airways get narrow",
+   body:"Now the airways are squeezed tight. Watch the loop cave in on top. Air still goes IN fine, it just comes OUT slowly. The tank is still full-size; it's a speed problem, not a size problem.",
+   analogy:"💡 Like breathing out through a coffee stirrer. The good news: an inhaler opens it right back up."},
+  {preset:"COPD", step:"Pattern 2 of 3", title:"COPD / Emphysema: blocked AND damaged",
+   body:"Same narrowed airways, but now the air sacs themselves are wrecked. The loop caves in even harder, air gets trapped, and the oxygen-transfer number (DLCO) drops. This time an inhaler barely helps.",
+   analogy:"💡 The straw is blocked and the balloon has holes, oxygen can't cross into the blood."},
+  {preset:"ILD", step:"Pattern 3 of 3", title:"ILD: small, stiff lungs",
+   body:"The opposite problem. The airways are fine, but the lungs are scarred and stiff, so the whole loop shrinks down small. This is exactly the pattern a rheumatologist watches for, and this catches it early.",
+   analogy:"💡 Like trying to inflate a balloon that's turned to leather."},
+  {preset:"Normal", step:"That's the whole game", title:"Three patterns: now you can read any PFT",
+   body:"Blocked (obstruction), small &amp; stiff (restriction), or healthy. Every real report is just some version of these three. Close this and click the buttons up top yourself. Or type any number and watch the story change.",
+   analogy:"💡 You just learned to read a lung test at a glance."}
+];
+let tourI=0;
+function renderTour(){
+  const t=TOUR[tourI];
+  applyPreset(t.preset);
+  const last=tourI===TOUR.length-1, first=tourI===0;
+  const card=document.getElementById('tourCard');
+  card.innerHTML=`
+    <div class="step">${t.step} &nbsp;·&nbsp; ${tourI+1} of ${TOUR.length}</div>
+    <h4>${t.title}</h4>
+    <p>${t.body}</p>
+    <p class="analogy">${t.analogy}</p>
+    <div class="nav">
+      <button class="tbtn ghost" id="tourQuit">Close</button>
+      <span class="sp"></span>
+      ${first?'':'<button class="tbtn" id="tourPrev">← Back</button>'}
+      <button class="tbtn primary" id="tourNext">${last?'Done ✓':'Next →'}</button>
+    </div>`;
+  card.querySelector('#tourQuit').onclick=endTour;
+  card.querySelector('#tourNext').onclick=()=> last?endTour():(tourI++,renderTour());
+  const pv=card.querySelector('#tourPrev'); if(pv) pv.onclick=()=>{ tourI--; renderTour(); };
+}
+function startTour(){
+  tourI=0;
+  /* clean, neutral demo patient so weight/other notes don't distract from the lesson */
+  PT.wt=175; const w=document.getElementById('ptWt'); if(w) w.value=175;
+  PRED=computePred(PT);
+  document.body.classList.add('touring');
+  renderTour();
+}
+function endTour(){ document.body.classList.remove('touring'); }
+document.getElementById('tourBack').addEventListener('click',endTour);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.body.classList.contains('touring')) endTour(); });
+function markPresets(){
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.toggle('active',b.dataset.p===activePreset));
+}
+
+/* ---------- toggles ---------- */
+document.getElementById('guideChk').addEventListener('change',e=>{
+  document.body.classList.toggle('noguide',!e.target.checked);
+  document.getElementById('guideToggle').classList.add('silenced');  // once they've noticed it, stop the pulse
+});
+document.getElementById('detailChk').addEventListener('change',e=>document.body.classList.toggle('simple',!e.target.checked));
+document.getElementById('editChk').addEventListener('change',e=>{
+  document.getElementById('editor').style.display=e.target.checked?'':'none';
+  document.querySelector('.wrap').style.gridTemplateColumns=e.target.checked?'':'1fr';
+});
+
+/* ---------- glossary popover (tap / hover any dashed term) ---------- */
+const glossEl=document.getElementById('gloss');
+
+/* ---------- number-column coaching (auto-wired, same engine as the case trainers) ----------
+   Every Pred. / Best / %Pred. cell explains ITSELF. What the number is, not just what the
+   row is called. Re-run after each render() because the report is rebuilt from scratch. */
+function _bottles(v){ const n=v/2; return n.toFixed(1).replace(/\.0$/,''); }
+function _sizeLine(unit,valStr){ if(!/^L$/i.test((unit||'').trim())) return ''; const v=parseFloat(valStr); if(!isFinite(v)) return ''; return `≈ ${_bottles(v)} two‑liter soda bottles of air`; }
+const NUMDEF = {
+  pred:{ t:'Predicted: the healthy target',
+    d:(c)=>{ const s=_sizeLine(c.unit,c.val);
+      return `<b>Predicted ${c.param} = ${c.val}${c.unit?' '+c.unit:''}.</b> What a <b>healthy</b> person matching this patient (age, height, sex, ethnicity) would be expected to hit, the bar this row is measured against.`
+        + (s?`<span class="gref">Real-world size: ${s}. A healthy adult empties about 5 to 6 L, roughly three soda bottles, in one full breath.</span>`:''); } },
+  best:{ t:'Best: what they actually blew',
+    d:(c)=>{ const s=_sizeLine(c.unit,c.val), ps=_sizeLine(c.unit,c.pred);
+      const pRef = c.pred ? ` A healthy match would be expected around <b>${c.pred}${c.unit?' '+c.unit:''}</b>${ps?` (${ps})`:''}.` : '';
+      return `<b>${c.param} best = ${c.val}${c.unit?' '+c.unit:''}.</b> The patient's <b>own best real effort</b> on this test.${pRef}`
+        + (s?`<span class="gref">Real-world size: ${s} in one breath.</span>`:''); } },
+  pct:{ t:'% of Predicted: how far off',
+    d:(c)=>`<b>${c.val} of predicted.</b> The best effort shown as a <b>share of the healthy target</b>, the fastest "how far off" read. Roughly <b>80% and up is the usual normal zone</b>; the lower it falls, the more this measure is underperforming.` }
+};
+function wireNumbers(){
+  document.querySelectorAll('table').forEach(tbl=>{
+    if(!tbl.tHead||!tbl.tHead.rows.length) return;
+    const heads=[...tbl.tHead.rows[0].cells].map(c=>c.textContent.trim().toLowerCase());
+    const unitIdx=heads.findIndex(h=>h.includes('unit'));
+    const predIdx=heads.findIndex(h=>!h.includes('%')&&h.includes('pred'));
+    const colType=heads.map(h=> h.includes('%')?'pct' : h.includes('pred')?'pred' : h.includes('best')?'best' : null);
+    [...tbl.tBodies].forEach(tb=>[...tb.rows].forEach(row=>{
+      const p0=row.cells[0]; if(!p0) return;
+      const param=((p0.querySelector('.term')?.textContent)||p0.textContent).trim().replace(/\s+/g,' ');
+      const unit=(unitIdx>-1&&row.cells[unitIdx])?row.cells[unitIdx].textContent.trim():'';
+      const predVal=(predIdx>-1&&row.cells[predIdx])?row.cells[predIdx].textContent.trim():'';
+      [...row.cells].forEach((cell,i)=>{
+        const ct=colType[i]; if(!ct) return;
+        if(cell.querySelector('.term')) return;
+        const val=cell.textContent.trim();
+        if(!val||val==='n/a'||val==='-') return;
+        cell.classList.add('num');
+        cell._num={col:ct,param,unit,val,pred:predVal};
+      });
+    }));
+  });
+}
+function defFor(el){
+  if(el.classList.contains('num')&&el._num){ const n=el._num, b=NUMDEF[n.col]; if(b) return {t:b.t, d:b.d(n)}; }
+  const g=GLOSS[el.dataset.g]; if(g) return {t:g.t, d:g.d, ln:g.ln};
+  return null;
+}
+
+let glossPinned=false;
+function showGloss(el){
+  const g=defFor(el); if(!g) return;
+  glossEl.innerHTML=`<span class="gx" data-close>&times;</span>
+    <span class="gt">${g.t}</span><p class="gb">${g.d}</p>${g.ln?`<p class="gln">${g.ln}</p>`:''}`;
+  glossEl.style.display='block';
+  const r=el.getBoundingClientRect();
+  const gw=glossEl.offsetWidth, gh=glossEl.offsetHeight;
+  let left=r.left; if(left+gw>window.innerWidth-10) left=window.innerWidth-10-gw;
+  let top=r.bottom+8; if(top+gh>window.innerHeight-10) top=Math.max(10,r.top-gh-8);
+  glossEl.style.left=Math.max(10,left)+'px'; glossEl.style.top=top+'px';
+}
+function hideGloss(){ glossEl.style.display='none'; glossPinned=false; }
+/* which glossary key does a clicked element stand for? Parameter names and section
+   headings carry it on data-g; a NUMBER cell only knows its row's parameter, so it is
+   translated back through the same PGLOSS map the labels use. Clicking "1.75" should
+   light up the graph exactly like clicking the word FEV1 beside it. */
+function spotKeyOf(el){
+  if(el.dataset && el.dataset.g) return el.dataset.g;
+  if(el._num) return PGLOSS[el._num.param];
+  return null;
+}
+/* click a term = pin it open AND spotlight it on the graphs; click anywhere else = close */
+document.addEventListener('click',e=>{
+  if(e.target.closest('#spotX')){ clearSpot(); e.stopPropagation(); return; }
+  if(e.target.closest('[data-close]')){ hideGloss(); clearSpot(); return; }
+  const t=e.target.closest('.term,td.num');
+  if(t){
+    glossPinned=true; showGloss(t);
+    const lit=setSpot(spotKeyOf(t));          // NOTE: this re-renders, so t is dead after here
+    if(lit) glossEl.insertAdjacentHTML('beforeend',
+      '<p class="gln" style="color:#a61e4d"><b>Marked on the graph below</b>, exactly where this is measured.</p>');
+    e.stopPropagation(); return;
+  }
+  if(!e.target.closest('#gloss')){ hideGloss(); clearSpot(); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ hideGloss(); clearSpot(); } });
+/* hover to peek on desktop (only when nothing is pinned) */
+document.addEventListener('mouseover',e=>{ const t=e.target.closest('.term,td.num'); if(t&&!glossPinned) showGloss(t); });
+document.addEventListener('mouseout', e=>{ const t=e.target.closest('.term,td.num'); if(t&&!glossPinned) hideGloss(); });
+window.addEventListener('scroll',()=>{ if(!glossPinned) hideGloss(); },true);
+
+/* ---------- DRAG THE CHARTS. Reshape a loop, the numbers + verdict follow ---------- */
+let drag=null;
+const clampN=(v,lo,hi)=> Math.max(lo, Math.min(hi, v));
+function svgUnits(svg,e){ const r=svg.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*(360/r.width), y:(e.clientY-r.top)*(300/r.height) }; }
+function applyDrag(e){
+  if(!drag) return;
+  /* ---- dragging a Z-SCORE dot: run the z math backwards ----
+     z → %predicted → the actual measured value. Because every other panel is derived
+     from D[], moving the dot ripples out to the tables, both graphs and the verdict for
+     free. The ratio row owns no value of its own, so it moves FEV1 against a fixed FVC. */
+  if(drag.chart==='z'){
+    const hit=document.querySelector(`.zhit[data-h="z:${drag.param}"]`); if(!hit) return;
+    const r=hit.getBoundingClientRect(); if(!r.width) return;
+    const z=Math.max(ZG.zmin,Math.min(ZG.zmax, xToZ((e.clientX-r.left)*(ZG.W/r.width))));
+    const pp=pctFromZ(z, zLLNfor(drag.param));
+    if(drag.param==='ratio'){
+      const targetRatio = pp/100*PRED.ratio;                    // %pred of the ratio → the ratio itself
+      shapeLoopToFEV1(targetRatio/100*D.FVC);                   // reshape the loop, don't just retype FEV1
+    } else if(drag.param==='FEV1'){
+      shapeLoopToFEV1(pp/100*PRED.FEV1);                        // ditto: the graph has to agree
+    } else {
+      const v = clampN(pp/100*PRED[drag.param], 0.05, 99);
+      D[drag.param]=v;
+      if(drag.param==='FVC'){                                   // FVC is the loop's x-extent…
+        if(D.FEV1>D.FVC) D.FEV1=D.FVC;
+        D.FEV1=clampN(fev1FromLoop(D),0.05,D.FVC);              // …so re-read FEV1 off the new shape
+      }
+    }
+    activePreset=null; markPresets(); syncFields(); render();
+    return;
+  }
+  const svg=document.getElementById(drag.chart==='fv'?'fvSvg':'vtSvg'); if(!svg) return;
+  const u=svgUnits(svg,e);
+  if(drag.chart==='fv'){
+    if(drag.param==='FVC'){                                  // ↔ total volume
+      D.FVC = clampN((u.x-FVG.mL)/FVG.pw*FVG.xmax, 0.5, FVG.xmax);
+    } else {                                                 // ↕ a flow
+      const f = FVG.ymax - (u.y-FVG.mT)/FVG.ph*(FVG.ymax-FVG.ymin);
+      D[drag.param] = clampN(f, 0.05, FVG.ymax);
+    }
+    // the loop's SHAPE now defines FEV1 (volume out in the first second) → drives the ratio & dx
+    D.FEV1 = clampN(fev1FromLoop(D), 0.05, D.FVC);
+  } else {                                                   // volume-time chart
+    const vol = VTG.vmax - (u.y-VTG.mT)/VTG.ph*VTG.vmax;
+    if(drag.param==='FEV1'){ shapeLoopToFEV1(clampN(vol, 0.05, D.FVC)); }  // loop must follow too
+    else { D.FVC = clampN(vol, 0.3, VTG.vmax); if(D.FEV1>D.FVC) D.FEV1=D.FVC;
+           D.FEV1 = clampN(fev1FromLoop(D), 0.05, D.FVC); }
+  }
+  activePreset=null; markPresets(); syncFields(); render();
+}
+document.addEventListener('pointerdown',e=>{
+  const h=e.target.closest('[data-h]'); if(!h) return;
+  const [chart,param]=h.getAttribute('data-h').split(':');
+  drag={chart,param}; document.body.classList.add('dragging');
+  e.preventDefault(); e.stopPropagation();
+});
+/* apply directly on each move. The report is small enough to re-render live, and this
+   avoids any rAF-throttle guard that could jam if a frame is ever dropped */
+document.addEventListener('pointermove',e=>{
+  if(!drag) return; e.preventDefault(); applyDrag(e);
+},{passive:false});
+function endDrag(){ if(drag){ drag=null; document.body.classList.remove('dragging');
+  FLASH=true; render();   // one flash + ticker for the whole gesture (diff vs. where the drag began)
+} }
+document.addEventListener('pointerup',endDrag);
+document.addEventListener('pointercancel',endDrag);
+
+/* ---------- LIVE WIRING: smooth morph between states ---------------------------
+   Clicking a pattern (top buttons, flowchart outcomes, or the guided tour) tweens
+   every value from where it is now to the target over ~0.65s, re-rendering each
+   frame. So you literally WATCH the loop, tables, verdict and z-scores transform,
+   e.g. a normal lung caving into an asthmatic one. Typing and dragging stay instant
+   (you're the one moving them); the morph is only for jumps between named patterns. */
+let tween=null;
+function animateTo(target, ms=680){
+  if(tween){ cancelAnimationFrame(tween); tween=null; }
+  // if the tab is hidden, rAF is paused. Jump straight to the target so the report is never left stale
+  if(document.hidden){ D={...target}; syncFields(); FLASH=true; render(); return; }
+  const from={...D};
+  const keys=Object.keys(target).filter(k=>k!=='post' && typeof target[k]==='number');
+  const start=performance.now();
+  function frame(now){
+    const t=Math.min(1,(now-start)/ms);
+    const e = t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;   // easeInOutQuad
+    keys.forEach(k=>{ const a=(typeof from[k]==='number')?from[k]:target[k]; D[k]=a+(target[k]-a)*e; });
+    syncFields(); render();
+    if(t<1){ tween=requestAnimationFrame(frame); }
+    else { tween=null; D={...target}; syncFields(); FLASH=true; render(); }
+  }
+  tween=requestAnimationFrame(frame);
+}
+
+/* click any outcome box on the interpretation flowchart → drive to that pattern */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.end[data-dx]'); if(!b) return;
+  const dx=b.getAttribute('data-dx'), target=DX_TARGET[dx]; if(!target) return;
+  activePreset=DX_TO_PRESET[dx]; markPresets(); animateTo(target);
+});
+
+/* ---------- LIVE WIRING: change ripple + "what just changed" ticker ------------
+   After a discrete change (type / drag-release / pattern jump) we diff the key
+   read-outs against the last committed state, flash whatever moved, and post a
+   one-line cause→effect ticker. During a drag or a morph's in-between frames we
+   leave PREV alone, so the flash reflects the WHOLE gesture, not one frame of it. */
+let PREV=null, FLASH=false, tickTimer=null;
+function snapshot(){
+  const r=ratio();
+  return {
+    dx: classify().dx,
+    la: lungAge(),
+    'flag:ratio': r<LLN_RATIO?'lo':'ok',
+    'flag:FVC':  pct(D.FVC,PRED.FVC)<LLN_PCT?'lo':'ok',
+    'flag:FEV1': pct(D.FEV1,PRED.FEV1)<LLN_PCT?'lo':'ok',
+    'flag:TLC':  (pct(D.TLC,PRED.TLC)<LLN_PCT?'lo':pct(D.TLC,PRED.TLC)>115?'hi':'ok'),
+    'flag:RV':   pct(D.RV,PRED.RV)>130?'hi':'ok',
+    'flag:DLCO': pct(D.DLCO,PRED.DLCO)<LLN_DLCO?'lo':'ok',
+    'z:FVC':  zOf(pct(D.FVC,PRED.FVC),80)<Z_LLN,
+    'z:FEV1': zOf(pct(D.FEV1,PRED.FEV1),80)<Z_LLN,
+    'z:TLC':  zOf(pct(D.TLC,PRED.TLC),80)<Z_LLN,
+    'z:DLCO': zOf(pct(D.DLCO,PRED.DLCO),75)<Z_LLN,
+    _num:{ FEV1:D.FEV1, FVC:D.FVC, ratio:r, TLC:D.TLC, DLCO:D.DLCO }
+  };
+}
+function afterRender(){
+  wireNumbers();                     // report was just rebuilt. Re-attach the per-number coaching
+  const cur=snapshot();
+  if(!PREV){ PREV=cur; return; }
+  if(!FLASH) return;               // mid-drag / mid-morph frame → keep PREV as the last committed state
+  const sel=[];
+  Object.keys(cur).forEach(k=>{
+    if(k==='_num') return;
+    if(JSON.stringify(cur[k])===JSON.stringify(PREV[k])) return;
+    if(k==='dx') sel.push('[data-cell="verdict"]','[data-cell="verdictline"]');
+    else if(k==='la') sel.push('[data-cell="lungage"]');
+    else sel.push(`[data-cell="${k}"]`);
+  });
+  if(sel.length){
+    requestAnimationFrame(()=>document.querySelectorAll(sel.join(',')).forEach(el=>{
+      el.classList.remove('justchanged'); void el.offsetWidth; el.classList.add('justchanged');
+    }));
+  }
+  showTicker(PREV,cur);
+  PREV=cur; FLASH=false;
+}
+function showTicker(prev,cur){
+  const el=document.getElementById('tickin'); if(!el) return;
+  const n=cur._num, p=prev._num, parts=[];
+  const mv=(k,dp,suf)=>{ const thr = k==='ratio'?1 : k==='DLCO'?0.3 : 0.03;
+    if(Math.abs(n[k]-p[k])>=thr) parts.push(`${LABK[k]} ${p[k].toFixed(dp)}${suf}<span class="arr">→</span><b>${n[k].toFixed(dp)}${suf}</b>`); };
+  mv('FEV1',2,''); mv('FVC',2,''); mv('ratio',0,'%'); mv('TLC',2,''); mv('DLCO',1,'');
+  const dxChanged = prev.dx!==cur.dx;
+  if(!dxChanged && !parts.length) return;
+  let html = dxChanged ? `<span class="tk">Now reads</span> <b>${DXNAME[cur.dx]||cur.dx}</b>` : `<span class="tk">Live</span>`;
+  if(parts.length) html += ' &nbsp; '+parts.slice(0,3).join(' &nbsp;·&nbsp; ');
+  el.innerHTML=html; el.classList.add('show');
+  if(tickTimer) clearTimeout(tickTimer);
+  tickTimer=setTimeout(()=>el.classList.remove('show'), 3800);
+}
+
+/* ---------- "BREATHE IT". Ride the loop and narrate one full breath ----------
+   The whole shape is ONE breath, and the climb off zero is the blow-OUT (not the
+   breath in). The thing people miss. A marker travels the patient's loop while
+   the trace draws itself on: full lungs → BLAST out (the climb) → squeeze empty →
+   pull it all back IN (the bottom curve). No D values change, so this never calls
+   render(); and render() (from any real edit) calls stopBreathe(), so the loop
+   animation and the live re-render can never fight over the DOM. */
+let breatheRAF=null, breathing=false;
+const HOLD=1600, EXH=4200, INH=3400;            // ms: lungs-full beat, blow out, breathe back in (slow enough to READ)
+const PUSH_AT=0.5;                              // fraction along the exhale where "EXHALE" hands off to the blinking "PUSH!" (the descent to empty)
+function setHint(html){ const h=document.getElementById('bHint'); if(h) h.innerHTML=html; }
+const HINT_IDLE='Press ▶: the panel glows <b style="color:#2563eb">blue as you blow OUT</b> (the line shoots up because you\'re fast, not because you\'re inhaling) and <b style="color:#d97706">amber as you breathe IN</b>.';
+/* tint the WHOLE graph panel + set the big word behind the loop, synced to the marker.
+   blue = blowing OUT, amber = breathing IN, grey = lungs full & holding. */
+/* shrink the big word until it fits its panel, long phrases ("KEEP SQUEEZING",
+   "DEEP BREATH IN") otherwise overflow the card and get clipped to "EEP SQUEEZING" */
+function fitWord(w){
+  if(!w) return;
+  w.style.fontSize='';                                   // reset to the CSS clamp, then measure
+  const st=w.parentElement; if(!st||!w.textContent) return;
+  const max=st.clientWidth-20;
+  const cur=w.scrollWidth;
+  if(cur>max){ const fs=parseFloat(getComputedStyle(w).fontSize);
+    w.style.fontSize=Math.max(15, fs*max/cur)+'px'; }
+}
+function setBreath(mode){
+  const st=document.getElementById('fvStage'); if(!st) return;
+  st.classList.remove('ready','exhale','inhale','push'); if(mode) st.classList.add(mode);
+  const w=document.getElementById('bWord');
+  if(w){ w.textContent = mode==='exhale' ? 'EXHALE' : mode==='push' ? 'PUSH!' : mode==='inhale' ? 'INHALE' : 'LUNGS FULL'; fitWord(w); }
+}
+function stopBreathe(){
+  if(breatheRAF){ cancelAnimationFrame(breatheRAF); breatheRAF=null; }
+  breathing=false; document.body.classList.remove('breathing');
+  const exp=document.getElementById('fvExp'), insp=document.getElementById('fvInsp');
+  if(exp){ exp.style.strokeDasharray=''; exp.style.strokeDashoffset=''; }   // restore the full loop
+  if(insp){ insp.style.strokeDasharray=''; insp.style.strokeDashoffset=''; }
+  const dot=document.getElementById('breathDot'); if(dot) dot.style.opacity='';
+  setBreath(null);                                                          // clear the wash + word
+  const b=document.getElementById('breatheBtn');
+  if(b){ b.classList.remove('playing'); b.textContent='▶ Breathe it: watch one full breath'; }
+  setHint(HINT_IDLE);
+}
+function startBreathe(){
+  const svg=document.getElementById('fvSvg');
+  const exp=document.getElementById('fvExp'), insp=document.getElementById('fvInsp'), dot=document.getElementById('breathDot');
+  if(!svg||!exp||!insp||!dot) return;
+  const expLen=exp.getTotalLength(), inspLen=insp.getTotalLength();
+  exp.style.strokeDasharray=expLen;  exp.style.strokeDashoffset=expLen;    // hide, then draw-on as we pass
+  insp.style.strokeDasharray=inspLen; insp.style.strokeDashoffset=inspLen;
+  const o=exp.getPointAtLength(0);                                         // origin = lungs full, flow 0
+  dot.setAttribute('cx',o.x); dot.setAttribute('cy',o.y); dot.style.opacity=1;
+  breathing=true; document.body.classList.add('breathing');
+  const b=document.getElementById('breatheBtn'); if(b){ b.classList.add('playing'); b.textContent='⏸ Stop'; }
+  setBreath('ready'); setHint('▶ Playing: the whole panel lights up with each phase.');
+  let phase='', start=performance.now(); const total=HOLD+EXH+INH;
+  function frame(now){
+    if(!exp.isConnected){ stopBreathe(); return; }        // SVG re-rendered from under us, bail
+    const el=now-start;
+    if(el>=total){                                        // done. Full loop drawn, marker resting at origin
+      exp.style.strokeDashoffset=0; insp.style.strokeDashoffset=0;
+      const pe=insp.getPointAtLength(inspLen); dot.setAttribute('cx',pe.x); dot.setAttribute('cy',pe.y);
+      setBreath(null);
+      breatheRAF=null; breathing=false; document.body.classList.remove('breathing');
+      if(b){ b.classList.remove('playing'); b.textContent='▶ Breathe it again'; }
+      setHint('<b>That\'s one full breath.</b> Blue was you blowing OUT (the whole top curve), amber was breathing back IN. ▶ to run it again.');
+      return;
+    }
+    if(el<HOLD){
+      if(phase!=='ready'){ phase='ready'; setBreath('ready'); }   // lungs full, nothing drawn yet
+    } else if(el<HOLD+EXH){
+      const p=(el-HOLD)/EXH;                              // along the exhale (top curve), blue
+      exp.style.strokeDashoffset=expLen*(1-p);
+      const pt=exp.getPointAtLength(expLen*p);
+      dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+      const want = p>=PUSH_AT ? 'push' : 'exhale';       // tail of the blow (riding down to empty) → blinking "PUSH!"
+      if(phase!==want){ phase=want; setBreath(want);
+        setHint(want==='push'
+          ? 'Almost empty: <b style="color:#1d4ed8">keep going: push, push, push!</b> In a real test the tech is shouting for every last bit of air. That long tail is the whole story in COPD.'
+          : '<b style="color:#2563eb">Blowing OUT</b>, hard and fast. The line rockets up because you\'re FAST, not because you\'re breathing in.'); }
+    } else {
+      const p=(el-HOLD-EXH)/INH;                          // along the inhale (bottom curve), amber
+      insp.style.strokeDashoffset=inspLen*(1-p);
+      const pt=insp.getPointAtLength(inspLen*p);
+      dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+      if(phase!=='inhale'){ phase='inhale'; setBreath('inhale'); }
+    }
+    breatheRAF=requestAnimationFrame(frame);
+  }
+  breatheRAF=requestAnimationFrame(frame);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#breatheBtn')) return;
+  if(breathing) stopBreathe(); else startBreathe();
+});
+
+/* ---------- "BLOW IT OUT". Narrate the volume-time curve as one long blow ----------
+   Same contract as "Breathe it": touches only styles/attributes, never D, so it never
+   triggers render(); and render() calls stopBlow(), so a live edit always wins.
+   Chart time is remapped so the first second (the FEV1 blast) plays in slow motion
+   and the long flat squeeze doesn't drag. */
+let blowRAF=null, blowing=false;
+const B_HOLD=1800, B_BLAST=2600, B_SQUEEZE=3600;   // ms: deep-breath beat, chart 0→1s, chart 1s→end
+function setBlowHint(html){ const h=document.getElementById('blowHint'); if(h) h.innerHTML=html; }
+function setBlow(mode){
+  const st=document.getElementById('vtStage'); if(!st) return;
+  st.classList.remove('ready','exhale','inhale','squeeze'); if(mode) st.classList.add(mode);
+  const w=document.getElementById('vtWord');
+  if(w){ w.textContent = mode==='inhale' ? 'DEEP BREATH IN' : mode==='exhale' ? 'BLAST!' : mode==='squeeze' ? 'KEEP SQUEEZING' : ''; fitWord(w); }
+}
+function stopBlow(){
+  if(blowRAF){ cancelAnimationFrame(blowRAF); blowRAF=null; }
+  blowing=false; document.body.classList.remove('blowing');
+  const pat=document.getElementById('vtPat');
+  if(pat){ pat.style.strokeDasharray=''; pat.style.strokeDashoffset=''; }
+  const dot=document.getElementById('blowDot'); if(dot) dot.style.opacity='';
+  setBlow(null);
+  const b=document.getElementById('blowBtn');
+  if(b){ b.classList.remove('playing'); b.textContent='▶ Blow it out: watch the whole 6-second blow'; }
+  setBlowHint(BLOW_IDLE);
+}
+function startBlow(){
+  const pat=document.getElementById('vtPat'), dot=document.getElementById('blowDot');
+  if(!pat||!dot) return;
+  /* same math as vtPath, so the dot rides exactly on the drawn line */
+  const r=D.FEV1/D.FVC, tau=-1/Math.log(Math.max(0.05, 1-Math.min(0.98,r)));
+  const volAt=t=> D.FVC*(1-Math.exp(-t/tau));
+  /* cumulative path length at each chart-time sample → dashoffset that draws on in sync */
+  const samples=[{t:0,x:vtX(0),y:vtY(0),len:0}];
+  for(let t=0.05;t<=VTG.tmax;t+=0.1){
+    const p=samples[samples.length-1], x=vtX(t), y=vtY(volAt(t));
+    samples.push({t,x,y,len:p.len+Math.hypot(x-p.x,y-p.y)});
+  }
+  const totalLen=samples[samples.length-1].len;
+  const lenAt=tc=>{
+    for(let i=1;i<samples.length;i++) if(samples[i].t>=tc){
+      const a=samples[i-1], b2=samples[i], f=(tc-a.t)/(b2.t-a.t);
+      return a.len+(b2.len-a.len)*f;
+    }
+    return totalLen;
+  };
+  pat.style.strokeDasharray=totalLen; pat.style.strokeDashoffset=totalLen;   // hide, then draw on
+  dot.setAttribute('cx',vtX(0)); dot.setAttribute('cy',vtY(0)); dot.style.opacity=1;
+  blowing=true; document.body.classList.add('blowing');
+  const b=document.getElementById('blowBtn'); if(b){ b.classList.add('playing'); b.textContent='⏸ Stop'; }
+  setBlow('inhale');
+  setBlowHint('First, suck in every bit of air you can hold. The chart hasn\'t started yet: the clock starts the instant you blow.');
+  let phase='inhale', start=performance.now(); const total=B_HOLD+B_BLAST+B_SQUEEZE;
+  function frame(now){
+    if(!pat.isConnected){ stopBlow(); return; }          // SVG re-rendered from under us, bail
+    const el=now-start;
+    if(el>=total){                                       // done. Full curve drawn, dot at the flat top
+      pat.style.strokeDashoffset=0;
+      const last=samples[samples.length-1];
+      dot.setAttribute('cx',last.x); dot.setAttribute('cy',last.y);
+      setBlow(null);
+      blowRAF=null; blowing=false; document.body.classList.remove('blowing');
+      if(b){ b.classList.remove('playing'); b.textContent='▶ Blow it out again'; }
+      setBlowHint('<b>That\'s the whole test.</b> Steep start = open airways (the height at the red line is <b>FEV1</b>). The flat top = tank empty. That height is <b>FVC</b>, every drop you had. Blocked airways turn the rocket into a slow, dragged-out climb.');
+      return;
+    }
+    let tc;                                              // chart time for this frame
+    if(el<B_HOLD){ tc=0;
+      if(phase!=='inhale'){ phase='inhale'; setBlow('inhale'); }
+    } else if(el<B_HOLD+B_BLAST){ tc=(el-B_HOLD)/B_BLAST;         // 0→1s in slow motion
+      if(phase!=='exhale'){ phase='exhale'; setBlow('exhale');
+        setBlowHint('<b>GO: blast it out!</b> The line rockets up because air is <b>pouring out of you</b>. Where it crosses the red dashed line: that\'s <b>FEV1</b>: everything you got rid of in second one.'); }
+    } else { tc=1+(el-B_HOLD-B_BLAST)/B_SQUEEZE*(VTG.tmax-1);     // 1s→end
+      if(phase!=='squeeze'){ phase='squeeze'; setBlow('squeeze');
+        setBlowHint('<b>Keep pushing, don\'t stop!</b> The line flattens because you\'re <b>running out of air</b>, not because you quit. Where it levels off = <b>FVC</b>, your total air.'); }
+    }
+    pat.style.strokeDashoffset=Math.max(0, totalLen-lenAt(tc));
+    dot.setAttribute('cx',vtX(tc)); dot.setAttribute('cy',vtY(volAt(tc)));
+    blowRAF=requestAnimationFrame(frame);
+  }
+  blowRAF=requestAnimationFrame(frame);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#blowBtn')) return;
+  if(blowing) stopBlow(); else startBlow();
+});
+
+/* ---------- init ---------- */
+buildPresets(); buildFields(); buildPatient(); markPresets(); render();
+</script>
+</body>
+</html>

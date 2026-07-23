@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Field Sales Playbook &amp; Physician Leave-Behind Pack</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark: #0a3d6b;
+    --blue-mid: #0c5299;
+    --blue-brand: #0e6abf;
+    --blue-light: #d6eaf8;
+    --teal: #0e9e8e;
+    --teal-light: #d4f5f1;
+    --amber: #e67e22;
+    --amber-light: #fef3e2;
+    --red: #c0392b;
+    --red-light: #fde8e6;
+    --green: #27ae60;
+    --green-light: #e8f8f0;
+    --purple: #7e22ce;
+    --purple-light: #f3e8ff;
+    --gray-100: #f4f6f9;
+    --gray-200: #e8ecf0;
+    --gray-300: #c8d0d8;
+    --gray-600: #5a6a7a;
+    --gray-800: #1e2d3d;
+    --text: #1a2733;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #eef2f7;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header { background: var(--blue-dark); padding: 0; }
+  .header-inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 28px 32px 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .header-brand { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 5px; }
+  .header-title { font-size: 28px; font-weight: 700; color: #fff; line-height: 1.15; }
+  .header-sub { font-size: 13px; color: #a8d0ee; margin-top: 5px; max-width: 720px; }
+  .header-badges { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 4px; }
+  .hbadge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 5px; padding: 4px 12px; font-size: 11px; font-weight: 500; color: #cce4f7; white-space: nowrap; }
+
+  /* TABS */
+  .tab-bar { background: var(--blue-mid); }
+  .tab-bar-inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 0 32px;
+    display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+  }
+  .tab-bar-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none; border: none;
+    border-bottom: 3px solid transparent;
+    padding: 14px 14px; font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.6); cursor: pointer; white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: rgba(255,255,255,0.95); }
+  .tab-btn.active { color: #fff; border-bottom-color: #5bc8f5; }
+
+  /* CONTENT */
+  .content-wrap { max-width: 1180px; margin: 0 auto; padding: 32px 32px 60px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .section-head.mt { margin-top: 32px; }
+  .section-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .icon-blue { background: var(--blue-light); }
+  .icon-teal { background: var(--teal-light); }
+  .icon-amber { background: var(--amber-light); }
+  .icon-green { background: var(--green-light); }
+  .icon-red { background: var(--red-light); }
+  .icon-purple { background: var(--purple-light); }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--blue-dark); }
+  .section-sub { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  /* CARD */
+  .card-grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .card { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); padding: 20px 22px; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--blue-dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card-body { font-size: 13.5px; color: #374151; line-height: 1.65; }
+  .card-body strong { font-weight: 600; color: var(--blue-dark); }
+
+  /* ALERT */
+  .alert-box {
+    border-radius: 8px; padding: 14px 18px;
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-bottom: 16px; font-size: 13.5px; line-height: 1.6;
+  }
+  .alert-blue { background: var(--blue-light); color: var(--blue-dark); border: 1px solid #a8d0ee; }
+  .alert-green { background: var(--green-light); color: #14532d; border: 1px solid #86efac; }
+  .alert-amber { background: var(--amber-light); color: #713f12; border: 1px solid #fcd34d; }
+  .alert-red { background: var(--red-light); color: #7f1d1d; border: 1px solid #fca5a5; }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--gray-200); margin: 28px 0; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--gray-200); border-radius: 8px; padding: 12px 16px; }
+  .check-box { width: 18px; height: 18px; border: 2px solid var(--gray-300); border-radius: 4px; flex-shrink: 0; margin-top: 1px; cursor: pointer; transition: background 0.15s, border-color 0.15s; display: flex; align-items: center; justify-content: center; }
+  .check-box.checked { background: var(--green); border-color: var(--green); color: #fff; font-size: 13px; font-weight: 700; }
+  .check-text { font-size: 13.5px; color: var(--gray-800); line-height: 1.5; }
+  .check-text strong { color: var(--blue-dark); }
+  .check-item.checked .check-text { color: var(--gray-600); text-decoration: line-through; }
+
+  /* QUESTION BANK */
+  .qbank { display: flex; flex-direction: column; gap: 10px; }
+  .qitem { background: #fff; border-radius: 8px; border: 1px solid var(--gray-200); border-left: 3px solid var(--blue-brand); padding: 12px 18px; }
+  .qtype { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 4px; }
+  .qtext { font-size: 14px; color: var(--gray-800); font-weight: 500; line-height: 1.5; }
+  .qhint { font-size: 12px; color: var(--gray-600); margin-top: 6px; line-height: 1.5; }
+  .qhint strong { color: var(--green); }
+
+  /* DEMO FLOW */
+  .demo-flow { display: flex; flex-direction: column; gap: 14px; }
+  .demo-step {
+    background: #fff; border-radius: 10px; border: 1px solid var(--gray-200);
+    padding: 0; overflow: hidden;
+  }
+  .demo-step-hdr {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px;
+    background: var(--gray-100); border-bottom: 1px solid var(--gray-200);
+  }
+  .demo-time {
+    background: var(--blue-dark); color: #fff;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+    padding: 4px 12px; border-radius: 5px; flex-shrink: 0;
+    min-width: 70px; text-align: center;
+  }
+  .demo-step-title { font-size: 15px; font-weight: 700; color: var(--blue-dark); }
+  .demo-step-sub { font-size: 11.5px; color: var(--gray-600); margin-top: 1px; }
+  .demo-step-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .demo-col-title { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 8px; }
+  .demo-actions { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .demo-actions li { font-size: 12.5px; color: var(--gray-800); line-height: 1.5; padding-left: 16px; position: relative; }
+  .demo-actions li::before { content: "▸"; position: absolute; left: 0; color: var(--blue-brand); font-weight: 700; }
+  .demo-script { background: var(--blue-light); border-radius: 7px; padding: 12px 15px; font-size: 12.5px; color: var(--blue-dark); line-height: 1.55; font-style: italic; border-left: 3px solid var(--blue-brand); }
+  .demo-script strong { font-style: normal; font-weight: 700; color: var(--blue-dark); }
+  @media (max-width: 700px) { .demo-step-body { grid-template-columns: 1fr; } }
+
+  /* OBJECTIONS */
+  .obj-group { margin-bottom: 24px; }
+  .obj-group-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .obj-group-tag { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 5px; }
+  .obj-tag-clinical { background: #dbeafe; color: #1e40af; }
+  .obj-tag-financial { background: var(--green-light); color: #14532d; }
+  .obj-tag-competitive { background: var(--amber-light); color: #92400e; }
+  .obj-tag-operational { background: var(--purple-light); color: #6d28d9; }
+  .obj-tag-stall { background: var(--red-light); color: #7f1d1d; }
+  .obj-group-title { font-size: 15px; font-weight: 700; color: var(--blue-dark); }
+  .obj-list { display: flex; flex-direction: column; gap: 10px; }
+  .obj-card { background: #fff; border: 1px solid var(--gray-200); border-radius: 9px; overflow: hidden; }
+  .obj-objection { padding: 12px 18px; background: var(--gray-100); border-bottom: 1px solid var(--gray-200); }
+  .obj-objection-lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 4px; }
+  .obj-objection-text { font-size: 13.5px; color: var(--gray-800); font-weight: 500; font-style: italic; }
+  .obj-response { padding: 12px 18px; }
+  .obj-response-lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; }
+  .obj-response-text { font-size: 13px; color: #374151; line-height: 1.6; }
+  .obj-response-text strong { font-weight: 600; color: var(--blue-dark); }
+  .obj-proof { margin-top: 8px; font-size: 11.5px; color: var(--gray-600); background: var(--gray-100); border-radius: 5px; padding: 6px 10px; border-left: 2px solid var(--blue-brand); }
+
+  /* PATIENT FIT */
+  .fit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .fit-card { background: #fff; border-radius: 11px; border: 1px solid var(--gray-200); overflow: hidden; }
+  .fit-hdr { padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--gray-200); }
+  .fit-icon { font-size: 24px; flex-shrink: 0; width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .fit-icon-1 { background: #dbeafe; }
+  .fit-icon-2 { background: var(--amber-light); }
+  .fit-icon-3 { background: var(--purple-light); }
+  .fit-icon-4 { background: var(--green-light); }
+  .fit-icon-5 { background: #fde8e6; }
+  .fit-icon-6 { background: #fef3c7; }
+  .fit-icon-7 { background: var(--teal-light); }
+  .fit-icon-8 { background: #ede9fe; }
+  .fit-title { font-size: 15px; font-weight: 700; color: var(--blue-dark); }
+  .fit-subtitle { font-size: 11.5px; color: var(--gray-600); margin-top: 1px; }
+  .fit-body { padding: 16px 18px; }
+  .fit-section { margin-bottom: 12px; }
+  .fit-section:last-child { margin-bottom: 0; }
+  .fit-lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 4px; }
+  .fit-text { font-size: 12.5px; color: #374151; line-height: 1.55; }
+  .fit-text strong { color: var(--blue-dark); font-weight: 600; }
+  .fit-why { background: var(--green-light); border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #14532d; line-height: 1.5; }
+  .fit-why strong { color: #065f46; }
+  @media (max-width: 700px) { .fit-grid { grid-template-columns: 1fr; } }
+
+  /* LEAVE-BEHIND */
+  .lb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
+  .lb-card { background: #fff; border-radius: 11px; border: 1px solid var(--gray-200); padding: 18px 20px; cursor: pointer; transition: border-color 0.15s, transform 0.12s; }
+  .lb-card:hover { border-color: var(--blue-brand); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(10,61,107,0.08); }
+  .lb-card-num { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--gray-600); letter-spacing: 0.1em; }
+  .lb-card-title { font-size: 16px; font-weight: 700; color: var(--blue-dark); margin-top: 4px; margin-bottom: 6px; }
+  .lb-card-desc { font-size: 12.5px; color: var(--gray-600); line-height: 1.55; }
+  .lb-card-cta { margin-top: 10px; font-size: 11.5px; font-weight: 700; color: var(--blue-brand); letter-spacing: 0.04em; }
+
+  /* LB Viewer */
+  #lb-viewer { display: none; background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+  #lb-viewer.open { display: block; }
+  .lb-viewer-bar { background: var(--blue-dark); color: #fff; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .lb-viewer-title { font-size: 13.5px; font-weight: 700; }
+  .lb-viewer-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .lb-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+    color: #fff; border-radius: 6px; padding: 7px 14px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.2); }
+  .lb-btn-primary { background: var(--green); border-color: var(--green); }
+  .lb-btn-primary:hover { background: #22994f; }
+
+  /* Physician-facing one-pager look */
+  .lb-doc {
+    padding: 44px 54px;
+    background: #fff;
+    color: #1a2733;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+  }
+  .lb-doc h1 { font-size: 22px; font-weight: 800; color: var(--blue-dark); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .lb-doc .lb-sub { font-size: 13px; color: var(--gray-600); margin-bottom: 22px; font-weight: 500; }
+  .lb-doc h2 { font-size: 13px; font-weight: 700; color: var(--blue-brand); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 22px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--gray-200); }
+  .lb-doc p { font-size: 13.5px; color: #374151; margin-bottom: 12px; }
+  .lb-doc p strong { font-weight: 600; color: var(--blue-dark); }
+  .lb-doc ul { margin-left: 20px; margin-bottom: 12px; }
+  .lb-doc ul li { font-size: 13px; color: #374151; margin-bottom: 6px; line-height: 1.55; }
+  .lb-doc .lb-kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .lb-doc .lb-kpi { background: var(--gray-100); border-radius: 8px; padding: 14px; text-align: center; border-top: 3px solid var(--blue-brand); }
+  .lb-doc .lb-kpi-num { font-size: 22px; font-weight: 800; color: var(--blue-dark); line-height: 1.1; }
+  .lb-doc .lb-kpi-lbl { font-size: 10.5px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+  .lb-doc .lb-quote { font-style: italic; color: var(--gray-600); border-left: 3px solid var(--blue-brand); padding: 8px 14px; margin: 14px 0; background: var(--blue-light); border-radius: 0 6px 6px 0; font-size: 12.5px; }
+  .lb-doc .lb-footer { margin-top: 30px; padding-top: 16px; border-top: 1.5px solid var(--gray-200); font-size: 11px; color: var(--gray-600); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .lb-doc .lb-footer strong { color: var(--blue-dark); font-weight: 600; }
+  .lb-doc table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12.5px; }
+  .lb-doc table th { background: var(--blue-dark); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .lb-doc table td { padding: 9px 12px; border-bottom: 1px solid var(--gray-200); }
+  .lb-doc table tr:nth-child(even) td { background: var(--gray-100); }
+  .lb-doc .lb-highlight { background: var(--green-light); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #14532d; border-left: 3px solid var(--green); margin: 12px 0; }
+  .lb-doc .lb-highlight strong { color: #065f46; font-weight: 700; }
+
+  /* EMAIL TEMPLATES */
+  .email-grid { display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
+  @media (max-width: 900px) { .email-grid { grid-template-columns: 1fr; } }
+  .email-list { display: flex; flex-direction: column; gap: 6px; background: #fff; border: 1px solid var(--gray-200); border-radius: 10px; padding: 10px; max-height: 700px; overflow-y: auto; }
+  .email-item {
+    padding: 10px 12px; border-radius: 7px; cursor: pointer;
+    border: 1px solid transparent; transition: background 0.15s, border-color 0.15s;
+  }
+  .email-item:hover { background: var(--gray-100); }
+  .email-item.active { background: var(--blue-light); border-color: #a8d0ee; }
+  .email-item-cat { font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 2px; }
+  .email-item-title { font-size: 13px; font-weight: 600; color: var(--blue-dark); line-height: 1.35; }
+  .email-item-sub { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+  .email-preview { background: #fff; border: 1px solid var(--gray-200); border-radius: 10px; overflow: hidden; }
+  .email-preview-bar { background: var(--blue-dark); color: #fff; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .email-preview-title { font-size: 13.5px; font-weight: 700; }
+  .email-preview-body { padding: 22px 26px; }
+  .email-field { margin-bottom: 12px; }
+  .email-field-lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-600); margin-bottom: 4px; }
+  .email-field-val { font-size: 13.5px; color: var(--blue-dark); font-weight: 600; padding: 8px 12px; background: var(--gray-100); border-radius: 6px; font-family: 'Inter', sans-serif; }
+  .email-body-wrap { background: #fefcf5; border: 1px solid #f4e9c8; border-radius: 6px; padding: 16px 18px; white-space: pre-wrap; font-size: 13px; color: #374151; line-height: 1.65; font-family: 'Inter', sans-serif; }
+  .email-body-wrap .merge { background: #fef3c7; color: #713f12; padding: 1px 5px; border-radius: 3px; font-weight: 600; }
+  .email-note { margin-top: 12px; font-size: 11.5px; color: var(--gray-600); line-height: 1.5; background: var(--gray-100); border-radius: 6px; padding: 8px 12px; border-left: 3px solid var(--blue-brand); }
+  .email-note strong { color: var(--blue-dark); font-weight: 600; }
+
+  /* CLOSE & COMMIT */
+  .close-category { margin-bottom: 24px; }
+  .close-cat-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 10px 16px; background: var(--blue-dark); border-radius: 8px; color: #fff; }
+  .close-cat-title { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+  .close-cat-sub { font-size: 11.5px; color: #a8d0ee; margin-top: 1px; }
+  .close-item { background: #fff; border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px 18px; margin-bottom: 8px; }
+  .close-situation { font-size: 11.5px; font-weight: 700; color: var(--amber); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .close-line { font-size: 14px; color: var(--blue-dark); font-weight: 600; font-style: italic; line-height: 1.5; }
+  .close-note { margin-top: 6px; font-size: 12px; color: var(--gray-600); line-height: 1.55; }
+
+  /* HOME DASHBOARD */
+  .dash-hero {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-brand));
+    border-radius: 12px; padding: 28px 32px; color: #fff; margin-bottom: 22px;
+  }
+  .dash-hero-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #a8d0ee; }
+  .dash-hero-title { font-size: 26px; font-weight: 800; margin-top: 6px; margin-bottom: 8px; line-height: 1.15; letter-spacing: -0.01em; }
+  .dash-hero-text { font-size: 14px; color: #cce4f7; line-height: 1.55; max-width: 720px; }
+  .dash-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .dash-tile { background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s, border-color 0.15s; text-decoration: none; color: inherit; display: block; }
+  .dash-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.08); border-color: var(--blue-brand); }
+  .dash-tile-icon { font-size: 26px; margin-bottom: 10px; }
+  .dash-tile-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 4px; }
+  .dash-tile-desc { font-size: 11.5px; color: var(--gray-600); line-height: 1.5; }
+
+  /* WORKFLOW PROGRESS */
+  .workflow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 22px; }
+  .wf-step { background: #fff; border: 1px solid var(--gray-200); border-left: 4px solid var(--blue-brand); border-radius: 8px; padding: 12px 14px; }
+  .wf-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue-brand); font-weight: 500; }
+  .wf-name { font-size: 12.5px; font-weight: 700; color: var(--blue-dark); margin-top: 2px; }
+  .wf-desc { font-size: 10.5px; color: var(--gray-600); margin-top: 3px; line-height: 1.4; }
+  @media (max-width: 700px) { .workflow { grid-template-columns: 1fr 1fr; } }
+
+  /* TOAST */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--blue-dark); color: #fff; padding: 12px 22px;
+    border-radius: 8px; font-size: 13px; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    z-index: 9999; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* FOOTER */
+  .toolkit-footer { max-width: 1180px; margin: 0 auto 40px; padding: 0 32px; }
+  .footer-bar { background: var(--blue-dark); border-radius: 10px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .fl-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 3px; }
+  .fl-val { font-size: 13px; font-weight: 500; color: #fff; }
+  .fdiv { width: 1px; background: rgba(255,255,255,0.18); align-self: stretch; min-height: 32px; }
+
+  @media (max-width: 700px) {
+    .header-inner { padding: 20px 18px 0; }
+    .tab-bar-inner { padding: 0 12px; }
+    .content-wrap { padding: 20px 16px 40px; }
+    .grid-2, .grid-3, .grid-4, .lb-grid { grid-template-columns: 1fr; }
+    .footer-bar { flex-direction: column; }
+    .fdiv { display: none; }
+    .lb-doc { padding: 24px 20px; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .site-header, .tab-bar, .toolkit-footer,
+    .lb-viewer-bar, .email-preview-bar,
+    .no-print, .tab-panel:not(.print-target) { display: none !important; }
+    .print-target { display: block !important; }
+    .lb-doc { padding: 0; }
+    @page { margin: 0.6in; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">PulmOne &mdash; Field Sales Playbook</div>
+      <div class="header-title">MiniBox+&#8482; Sales Playbook &amp; Physician Leave-Behind Pack</div>
+      <div class="header-sub">Pre-call prep, in-office demo scripts, 30+ objection handlers, 12 email templates, and 5 physician-ready one-pagers you can email or print in one click.</div>
+    </div>
+    <div class="header-badges">
+      <div class="hbadge">Rep Playbook</div>
+      <div class="hbadge">Physician-Ready</div>
+      <div class="hbadge">v1.0</div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-bar-inner">
+      <button class="tab-btn active" onclick="showTab('home', this)">&#127968; Home</button>
+      <button class="tab-btn" onclick="showTab('prep', this)">&#127919; Pre-Call Prep</button>
+      <button class="tab-btn" onclick="showTab('demo', this)">&#127916; Demo Playbook</button>
+      <button class="tab-btn" onclick="showTab('objections', this)">&#9876; Objection Library</button>
+      <button class="tab-btn" onclick="showTab('fit', this)">&#129658; Patient-Fit Library</button>
+      <button class="tab-btn" onclick="showTab('leavebehind', this)" style="color:#86efac; font-weight:700;">&#128196; Leave-Behind Pack</button>
+      <button class="tab-btn" onclick="showTab('email', this)" style="color:#fcd34d; font-weight:700;">&#9993; Email Library</button>
+      <button class="tab-btn" onclick="showTab('close', this)">&#127919; Close &amp; Commit</button>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+<!-- =========================== HOME =========================== -->
+<div class="tab-panel active" id="tab-home">
+
+  <div class="dash-hero">
+    <div class="dash-hero-label">MiniBox+ Field Playbook &mdash; Your end-to-end selling system</div>
+    <div class="dash-hero-title">Walk in prepared. Present with confidence. Follow up in 30 seconds.</div>
+    <div class="dash-hero-text">Everything you need to move from cold account to signed order &mdash; pre-call qualification, an in-office demo script tuned to the time you have, 30+ objection handlers, and a 5-piece physician leave-behind pack that you can print or email in one click the moment the meeting ends.</div>
+  </div>
+
+  <div class="section-head">
+    <div class="section-icon icon-blue">&#128301;</div>
+    <div>
+      <div class="section-title">The 5-Step Deal Flow</div>
+      <div class="section-sub">What to use, in what order, to move a physician from curious to committed</div>
+    </div>
+  </div>
+
+  <div class="workflow">
+    <div class="wf-step"><div class="wf-num">STEP 01</div><div class="wf-name">Prep</div><div class="wf-desc">Research the practice. Size patient volume. Map the decision-maker.</div></div>
+    <div class="wf-step"><div class="wf-num">STEP 02</div><div class="wf-name">Demo</div><div class="wf-desc">Walk the doctor through a 15/30/60-min in-office demo with a live patient.</div></div>
+    <div class="wf-step"><div class="wf-num">STEP 03</div><div class="wf-name">Handle</div><div class="wf-desc">Clear every objection with a calm, evidence-backed response.</div></div>
+    <div class="wf-step"><div class="wf-num">STEP 04</div><div class="wf-name">Leave Behind</div><div class="wf-desc">Email the physician a 1-page summary before you leave the parking lot.</div></div>
+    <div class="wf-step"><div class="wf-num">STEP 05</div><div class="wf-name">Close</div><div class="wf-desc">Trial-close, ask for the pilot, lock in the signature.</div></div>
+  </div>
+
+  <div class="section-head mt">
+    <div class="section-icon icon-green">&#9889;</div>
+    <div>
+      <div class="section-title">Quick Jump</div>
+      <div class="section-sub">Tap a tile to open the playbook chapter you need right now</div>
+    </div>
+  </div>
+
+  <div class="dash-tiles">
+    <a class="dash-tile" onclick="showTabByName('prep')"><div class="dash-tile-icon">&#127919;</div><div class="dash-tile-title">Pre-Call Prep</div><div class="dash-tile-desc">Discovery questions, practice sizing, decision-maker map, research checklist.</div></a>
+    <a class="dash-tile" onclick="showTabByName('demo')"><div class="dash-tile-icon">&#127916;</div><div class="dash-tile-title">Demo Playbook</div><div class="dash-tile-desc">15, 30, and 60-minute in-office scripts with talk tracks and device choreography.</div></a>
+    <a class="dash-tile" onclick="showTabByName('objections')"><div class="dash-tile-icon">&#9876;</div><div class="dash-tile-title">Objection Library</div><div class="dash-tile-desc">30+ objections organized by clinical, financial, competitive, operational, stall.</div></a>
+    <a class="dash-tile" onclick="showTabByName('fit')"><div class="dash-tile-icon">&#129658;</div><div class="dash-tile-title">Patient-Fit Library</div><div class="dash-tile-desc">8 patient archetypes &mdash; which doctors win most by running PFTs in-office.</div></a>
+    <a class="dash-tile" onclick="showTabByName('leavebehind')"><div class="dash-tile-icon">&#128196;</div><div class="dash-tile-title">Physician Leave-Behinds</div><div class="dash-tile-desc">5 one-page summaries &mdash; copy as email or print to PDF in one click.</div></a>
+    <a class="dash-tile" onclick="showTabByName('email')"><div class="dash-tile-icon">&#9993;</div><div class="dash-tile-title">Email Library</div><div class="dash-tile-desc">12 templates from first-touch to lost-deal revive. All click-to-copy with merge fields.</div></a>
+    <a class="dash-tile" onclick="showTabByName('close')"><div class="dash-tile-icon">&#127919;</div><div class="dash-tile-title">Close &amp; Commit</div><div class="dash-tile-desc">Trial closes, commitment questions, pilot structures, buying-signal playbook.</div></a>
+  </div>
+
+  <div class="alert-box alert-green">
+    <div class="alert-icon">&#9989;</div>
+    <div><strong>Pairs with the MiniBox+ Master Toolkit.</strong> Use the Master Toolkit for clinical proof, CPT codes, competitive spec sheets, and the ROI calculator. Use this Playbook for everything you say, ask, send, and do in the field.</div>
+  </div>
+
+</div>
+
+<!-- =========================== PRE-CALL PREP =========================== -->
+<div class="tab-panel" id="tab-prep">
+
+  <div class="section-head">
+    <div class="section-icon icon-blue">&#127919;</div>
+    <div>
+      <div class="section-title">Pre-Call Prep &amp; Discovery</div>
+      <div class="section-sub">Every great demo starts 48 hours before you walk in the door</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-blue">
+    <div class="alert-icon">&#9432;</div>
+    <div><strong>The rule:</strong> a MiniBox+ demo without prep is a 50% conversation. With 30 minutes of research, the same demo becomes 90% relevant &mdash; and physicians notice the difference instantly.</div>
+  </div>
+
+  <div class="section-head mt">
+    <div class="section-icon icon-teal">&#128203;</div>
+    <div>
+      <div class="section-title">Account Research Checklist</div>
+      <div class="section-sub">Knock these out before you step into the practice &mdash; tap to mark complete</div>
+    </div>
+  </div>
+
+  <div class="checklist" id="prep-checklist">
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Practice size:</strong> how many providers, how many physical locations, PCP vs specialty split.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Current PFT setup:</strong> do they own a body box, a spirometer only, or send patients out? (NPI database + Doximity + website billing page)</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Patient mix:</strong> COPD heavy? Allergy/asthma? Post-COVID long-haul? Pediatric? Pre-op clearance? (Review their website, provider bios, patient-review sites)</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Volume estimate:</strong> multiply providers x 3-5 PFT-eligible patients per day x working days. This becomes your ROI anchor.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Payer mix:</strong> Medicare-heavy? Commercial? Any known contract issues with 94726/94729? (CMS data + State Medical Board + NCQA)</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Decision-maker map:</strong> who owns the device purchase &mdash; owning physician, managing partner, practice administrator, CFO of a group? Never walk in blind.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Existing equipment age:</strong> if they have a body box, is it Jaeger, MGC, Morgan? If ultrasound, is it NDD? Drive the replace-vs-complement framing early.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>EMR system:</strong> Epic, Athena, Cerner, NextGen, eClinicalWorks? Pre-empt the "does it integrate?" objection.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Competitive footprint:</strong> has an NDD / Jaeger / MGC rep been in recently? LinkedIn activity, recent posts, conference appearances.</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text"><strong>Personal hook:</strong> alma mater, fellowship, publications, board positions, hobbies. One human detail doubles rapport in the first 60 seconds.</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-head">
+    <div class="section-icon icon-purple">&#128172;</div>
+    <div>
+      <div class="section-title">Discovery Questions &mdash; By Role</div>
+      <div class="section-sub">Ask different questions of different stakeholders. Never lead with price.</div>
+    </div>
+  </div>
+
+  <div class="card-grid grid-3">
+
+    <div class="card">
+      <div class="card-title" style="color:#1e40af;">The Physician</div>
+      <div class="qbank">
+        <div class="qitem"><div class="qtype">Clinical</div><div class="qtext">"When you see a new COPD or asthma patient, what PFTs do you run before you finalize the treatment plan?"</div><div class="qhint"><strong>Listening for:</strong> spirometry only vs full PFT. If spirometry only, they're under-diagnosing &mdash; open the "trapped air" conversation.</div></div>
+        <div class="qitem"><div class="qtype">Pain</div><div class="qtext">"What happens when you need lung volumes and DLCO &mdash; do you send them out, schedule them back, or skip the test?"</div><div class="qhint"><strong>Listening for:</strong> workflow friction. 40% of referred PFTs never happen. That's your opening.</div></div>
+        <div class="qitem"><div class="qtype">Emotion</div><div class="qtext">"How often do you get a PFT report back from the hospital and wish you could just review it in front of the patient?"</div><div class="qhint"><strong>Listening for:</strong> frustration. Anchor to same-visit results: patient leaves with a diagnosis, not another appointment.</div></div>
+        <div class="qitem"><div class="qtype">Future</div><div class="qtext">"If you could run complete PFTs in your own exam rooms in 15 minutes, what would change for your practice?"</div><div class="qhint"><strong>Listening for:</strong> their vision. Make them say it. Whatever they describe is your closing hook.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:var(--green);">The Practice Manager / Admin</div>
+      <div class="qbank">
+        <div class="qitem"><div class="qtype">Operational</div><div class="qtext">"Where do you currently lose time &mdash; scheduling, rescheduling, or re-running failed tests?"</div><div class="qhint"><strong>Listening for:</strong> 19% test failure rate on body boxes (Verona study). MiniBox+ is 8.2%. That's hours back per week.</div></div>
+        <div class="qitem"><div class="qtype">Financial</div><div class="qtext">"What's your annual maintenance spend on existing equipment &mdash; PM contracts, sensor replacement, consumables?"</div><div class="qhint"><strong>Listening for:</strong> $4K-6K in PM contracts. MiniBox+ is $0.</div></div>
+        <div class="qitem"><div class="qtype">Billing</div><div class="qtext">"Are you billing 94726 today? What percent of those get reimbursed on first submission?"</div><div class="qhint"><strong>Listening for:</strong> denial history. MiniBox+ bills same codes as body box; easy to transfer workflow.</div></div>
+        <div class="qitem"><div class="qtype">Staffing</div><div class="qtext">"Who runs your PFTs today &mdash; a dedicated RT, a cross-trained MA, or the doctor?"</div><div class="qhint"><strong>Listening for:</strong> staffing cost. MiniBox+ can be run by any MA after 2 hours of training. Frees the RT or unblocks a practice that has none.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:var(--amber);">The Owning Partner / CFO</div>
+      <div class="qbank">
+        <div class="qitem"><div class="qtype">Revenue</div><div class="qtext">"What's the gap between how many PFTs you should be running clinically and how many you actually run each month?"</div><div class="qhint"><strong>Listening for:</strong> the uncaptured-revenue number. Multiply by $151 and you have the case in one breath.</div></div>
+        <div class="qitem"><div class="qtype">Capital</div><div class="qtext">"How do you typically finance equipment &mdash; capital, operating lease, or Section 179 tax-advantaged purchase?"</div><div class="qhint"><strong>Listening for:</strong> financing preference. Section 179 deduction + no-interest plans are often the unlock.</div></div>
+        <div class="qitem"><div class="qtype">Strategic</div><div class="qtext">"Are you planning to expand service lines or add satellite locations in the next 18 months?"</div><div class="qhint"><strong>Listening for:</strong> growth. MiniBox+ moves between exam rooms and locations. One unit, multiple sites.</div></div>
+        <div class="qitem"><div class="qtype">Decision</div><div class="qtext">"If the numbers work, what's your process to get from yes to purchase order?"</div><div class="qhint"><strong>Listening for:</strong> signature chain and blockers. Surface these in meeting one, not meeting three.</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-head">
+    <div class="section-icon icon-amber">&#129514;</div>
+    <div>
+      <div class="section-title">Practice-Size Sizing Calculator</div>
+      <div class="section-sub">Quick math to size a target account before you walk in</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 22px 26px;">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:18px;">
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-600); margin-bottom:6px;">Providers on staff</div>
+        <input type="number" id="size-providers" value="3" min="1" max="50" oninput="sizeCalc()" style="width:100%; padding:10px 12px; font-size:16px; border:1.5px solid var(--gray-300); border-radius:7px; font-family:'Inter',sans-serif; color:var(--blue-dark); outline:none;">
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-600); margin-bottom:6px;">Avg PFT-eligible pts/day/provider</div>
+        <input type="number" id="size-patients" value="3" min="1" max="20" step="0.5" oninput="sizeCalc()" style="width:100%; padding:10px 12px; font-size:16px; border:1.5px solid var(--gray-300); border-radius:7px; font-family:'Inter',sans-serif; color:var(--blue-dark); outline:none;">
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-600); margin-bottom:6px;">Working days per week</div>
+        <input type="number" id="size-days" value="5" min="1" max="7" oninput="sizeCalc()" style="width:100%; padding:10px 12px; font-size:16px; border:1.5px solid var(--gray-300); border-radius:7px; font-family:'Inter',sans-serif; color:var(--blue-dark); outline:none;">
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+      <div style="background:var(--gray-100); border-radius:8px; padding:14px; text-align:center;">
+        <div style="font-size:10px; font-weight:700; color:var(--gray-600); letter-spacing:0.08em; text-transform:uppercase;">PFTs / Week</div>
+        <div id="size-week" style="font-size:22px; font-weight:800; color:var(--blue-dark); margin-top:4px;">45</div>
+      </div>
+      <div style="background:var(--gray-100); border-radius:8px; padding:14px; text-align:center;">
+        <div style="font-size:10px; font-weight:700; color:var(--gray-600); letter-spacing:0.08em; text-transform:uppercase;">PFTs / Month</div>
+        <div id="size-month" style="font-size:22px; font-weight:800; color:var(--blue-dark); margin-top:4px;">180</div>
+      </div>
+      <div style="background:var(--green-light); border-radius:8px; padding:14px; text-align:center;">
+        <div style="font-size:10px; font-weight:700; color:#14532d; letter-spacing:0.08em; text-transform:uppercase;">Year 1 Revenue</div>
+        <div id="size-y1" style="font-size:22px; font-weight:800; color:#065f46; margin-top:4px;">$327K</div>
+      </div>
+      <div style="background:var(--blue-light); border-radius:8px; padding:14px; text-align:center;">
+        <div style="font-size:10px; font-weight:700; color:var(--blue-dark); letter-spacing:0.08em; text-transform:uppercase;">Breakeven</div>
+        <div id="size-be" style="font-size:22px; font-weight:800; color:var(--blue-dark); margin-top:4px;">~6 weeks</div>
+      </div>
+    </div>
+    <div style="margin-top:12px; font-size:11px; color:var(--gray-600); line-height:1.5;">Math: providers &times; patients/day &times; 5 days &times; $151.45 per complete PFT. Breakeven at $36,230 device cost. Validate &mdash; real world may vary by payer mix.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-head">
+    <div class="section-icon icon-red">&#127919;</div>
+    <div>
+      <div class="section-title">The Non-Negotiables</div>
+      <div class="section-sub">Walk in knowing these 3 things or reschedule</div>
+    </div>
+  </div>
+
+  <div class="card-grid grid-3">
+    <div class="card" style="border-left:4px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">1. Decision-maker confirmed</div>
+      <div class="card-body">The person with signature authority must be in the room, or at minimum have blocked 15 minutes on the calendar to join. If you're demoing to the MA, you're rehearsing &mdash; not selling.</div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">2. Volume anchor set</div>
+      <div class="card-body">Before you walk in, you must have a defensible patient-volume number in your head. "I'll figure it out in the meeting" costs you the ROI story.</div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">3. Specific objection anticipated</div>
+      <div class="card-body">Know their likely primary objection before they say it. "They already have a body box" or "they already quoted NDD" &mdash; plan the first 90 seconds of your response.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================== DEMO PLAYBOOK =========================== -->
+<div class="tab-panel" id="tab-demo">
+
+  <div class="section-head">
+    <div class="section-icon icon-purple">&#127916;</div>
+    <div>
+      <div class="section-title">In-Office Demo Playbook</div>
+      <div class="section-sub">Three scripted flows &mdash; 15-minute hallway, 30-minute exam-room, 60-minute lunch-and-learn</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-amber">
+    <div class="alert-icon">&#128161;</div>
+    <div><strong>The golden rule of a MiniBox+ demo: run the device on a real person within the first 7 minutes.</strong> Nothing else you say matters as much as the physician watching a 60-second tidal-breathing LVM complete in front of them.</div>
+  </div>
+
+  <!-- 15 MIN FLOW -->
+  <div class="section-head mt">
+    <div class="section-icon icon-blue">&#9200;</div>
+    <div>
+      <div class="section-title">The 15-Minute Hallway Demo</div>
+      <div class="section-sub">When you catch the doctor between patients &mdash; momentum over completeness</div>
+    </div>
+  </div>
+
+  <div class="demo-flow">
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">00:00 &ndash; 01:30</div>
+        <div><div class="demo-step-title">The Hook</div><div class="demo-step-sub">One sentence, one question, one permission ask</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Open device, power on, hand MA the HHU</li>
+            <li>State the one-line pitch</li>
+            <li>Ask a closed-ended yes/no question</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Doctor, this is the MiniBox+. Complete PFT &mdash; spirometry, lung volumes, DLCO &mdash; in 15 minutes, runs on your desk, no maintenance fees. Would you be willing to give me 14 more minutes to show you it work on a real patient?"</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">01:30 &ndash; 09:00</div>
+        <div><div class="demo-step-title">The Live Test</div><div class="demo-step-sub">FVC + LVM + DLCO on a volunteer (MA, front-desk, you)</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Run FVC first &mdash; 90 seconds</li>
+            <li>Run LVM (plethysmography, tidal breathing) &mdash; 60 seconds</li>
+            <li>Run DLCO &mdash; 90 seconds</li>
+            <li>Print report, hand to physician</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say During</div>
+          <div class="demo-script"><strong>"Watch how few buttons this takes. Watch the LVM &mdash; tidal breathing only, no panting. That's the piece that makes it runnable by any staff member. Sixty seconds of breathing and we have TLC."</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">09:00 &ndash; 12:00</div>
+        <div><div class="demo-step-title">The Revenue Moment</div><div class="demo-step-sub">Show the ROI page of the Master Toolkit on the iPad</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Open Master Toolkit &rarr; CPT &amp; Revenue tab</li>
+            <li>Dial to their estimated weekly volume</li>
+            <li>Tap "Present to Physician" for fullscreen mode</li>
+            <li>Let the number land in silence</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"At just 5 complete PFTs a day &mdash; which is conservative for a practice your size &mdash; this device pays for itself in about 6 working weeks. After that, it's pure revenue to your practice."</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">12:00 &ndash; 15:00</div>
+        <div><div class="demo-step-title">The Commitment Ask</div><div class="demo-step-sub">Leave-behind delivered, next meeting booked</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Email the 1-page physician summary to them right now</li>
+            <li>Ask for a 30-minute follow-up with the practice manager</li>
+            <li>Leave quote or proposal on the desk, not in email</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"I just emailed you a one-page summary you can share with your partner. What does Thursday look like for a 30-minute sit-down with whoever runs your billing &mdash; so we can walk through your specific numbers?"</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 30 MIN FLOW -->
+  <div class="section-head mt">
+    <div class="section-icon icon-teal">&#9201;</div>
+    <div>
+      <div class="section-title">The 30-Minute Exam-Room Demo</div>
+      <div class="section-sub">Your default flow &mdash; enough time for objection handling and commitment</div>
+    </div>
+  </div>
+
+  <div class="demo-flow">
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">00:00 &ndash; 03:00</div>
+        <div><div class="demo-step-title">Rapport &amp; Problem Framing</div><div class="demo-step-sub">Ask 1 Pre-Call discovery question. Listen. Mirror.</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Reference the hook you dug up (fellowship, publication, patient population)</li>
+            <li>Ask one open-ended clinical question</li>
+            <li>Shut up. Let them talk for 2 minutes.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Before I show you anything &mdash; I read you did your fellowship at Hopkins. When you see a new COPD patient today, what PFTs do you typically run before you finalize the treatment plan?"</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">03:00 &ndash; 06:00</div>
+        <div><div class="demo-step-title">The Setup Frame</div><div class="demo-step-sub">Position MiniBox+ before you demo it &mdash; context is everything</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>State the one-line pitch</li>
+            <li>Name the 3 things that make it different (speed, any-staff, zero maintenance)</li>
+            <li>Call out the CHEST 2021 validation &mdash; 700+ pts, 11 centers</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"The reason I came out personally is this device is the only one validated against the body box in a peer-reviewed study that doesn't require a PFT lab, a dedicated RT, or a $5K PM contract. I want to show you it run &mdash; and then walk you through what happens to your revenue."</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">06:00 &ndash; 16:00</div>
+        <div><div class="demo-step-title">The Live Test on Two Volunteers</div><div class="demo-step-sub">One healthy, one with known obstructive or restrictive pattern if possible</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>First patient: healthy control, full PFT, &lt; 8 min</li>
+            <li>Second patient: obese, elderly, wheelchair, or pediatric &mdash; show the range</li>
+            <li>Print both reports; walk through interpretation</li>
+            <li>Call out the 6-button simplicity throughout</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Watch the workflow &mdash; six buttons from start to report. No panting, no claustrophobic chamber. You can test a patient who can't tolerate a body box. And the report you're holding is the same set of parameters you'd get from a hospital PFT lab."</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">16:00 &ndash; 22:00</div>
+        <div><div class="demo-step-title">The Revenue Walkthrough</div><div class="demo-step-sub">Use the ROI calculator fullscreen mode on iPad</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Set volume to THEIR estimated number, not a generic 25</li>
+            <li>Show breakeven date &mdash; they understand dates better than payback months</li>
+            <li>Walk 5-year cumulative bar chart left to right slowly</li>
+            <li>Mention Section 179 &mdash; "I'll put you in touch with your accountant"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"At your patient volume, your breakeven is [specific date]. After that, every PFT you run is revenue that used to go out the door to the hospital. In year 5 you've banked [specific number]."</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">22:00 &ndash; 26:00</div>
+        <div><div class="demo-step-title">Handle the First Objection</div><div class="demo-step-sub">It will come. Be ready. Use the Objection Library tab.</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Let the objection land. Don't interrupt.</li>
+            <li>Acknowledge: "That's exactly what I'd be asking."</li>
+            <li>Respond using the scripted answer</li>
+            <li>Follow with a reconfirming question</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"That's the right question to ask. Here's what the numbers say &mdash; [scripted response]. Does that change how you're thinking about it?"</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">26:00 &ndash; 30:00</div>
+        <div><div class="demo-step-title">Trial Close &amp; Next Step</div><div class="demo-step-sub">Never leave without a committed next meeting</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Trial close: "If the numbers work, is this something you'd want in your practice?"</li>
+            <li>Email the 1-page physician leave-behind before leaving the parking lot</li>
+            <li>Book the follow-up on their calendar, not by email</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"If the numbers hold up when your billing office sees them, is this something you'd want in your practice? Let's put 30 minutes on the calendar next week so I can walk them through it. Does Tuesday at 10 or Thursday at 2 work better?"</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 60 MIN FLOW -->
+  <div class="section-head mt">
+    <div class="section-icon icon-amber">&#9202;</div>
+    <div>
+      <div class="section-title">The 60-Minute Lunch-and-Learn</div>
+      <div class="section-sub">For the whole practice &mdash; physician, admin, billing, MAs &mdash; at once</div>
+    </div>
+  </div>
+
+  <div class="demo-flow">
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">00 &ndash; 10</div>
+        <div><div class="demo-step-title">Room Intros &amp; Clinical Framing</div><div class="demo-step-sub">You don't own the conversation &mdash; you catalyze it</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Have every person in the room say their role and their #1 frustration with PFTs today</li>
+            <li>Take notes visibly &mdash; they see you listening</li>
+            <li>Reflect back the themes: "So it sounds like the three things are X, Y, and Z."</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Before I demo anything, I want to hear from each of you what you wish was different about how PFTs get done here. I promise I'll connect every feature I show back to what you just told me."</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">10 &ndash; 30</div>
+        <div><div class="demo-step-title">Live Testing &mdash; Multiple Volunteers</div><div class="demo-step-sub">MA runs the device, not you. This is the magic moment.</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Spend 5 minutes training the MA on the 6-button workflow</li>
+            <li>Let the MA run a full PFT on a volunteer with you narrating</li>
+            <li>Physician watches their own staff run the test unassisted</li>
+            <li>"They just learned this in 5 minutes. Imagine what 2 hours of training looks like."</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Sarah, I want you to run this one. I'll coach. Just press the button labeled 'New Patient'... perfect. Follow the prompts. And in a few minutes, the doctor's going to see you produce a full PFT report &mdash; the same thing a hospital RT produces in 45 minutes."</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">30 &ndash; 45</div>
+        <div><div class="demo-step-title">Financial Deep-Dive</div><div class="demo-step-sub">Practice manager + billing lead in the seat</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Open the PulmOne ROI Proposal Builder, customize to their practice</li>
+            <li>Show CPT codes side by side with their existing billing</li>
+            <li>Discuss Section 179, no-interest financing, lease vs buy</li>
+            <li>Print or email the customized proposal on the spot</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"I'm going to build a proposal with your numbers in it right now. You'll have a PDF you can walk into a partner meeting with before I leave."</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">45 &ndash; 55</div>
+        <div><div class="demo-step-title">Q&amp;A + Objection Round</div><div class="demo-step-sub">Go in order: clinical, operational, financial, timing</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Invite all questions openly</li>
+            <li>Never answer two at once &mdash; take them one at a time</li>
+            <li>Watch for group dynamics: who's on your side, who's skeptical</li>
+            <li>Thank the skeptic first when they push back</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Great question &mdash; that was the second thing I thought about too. Here's what the data says..."</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="demo-step-hdr">
+        <div class="demo-time">55 &ndash; 60</div>
+        <div><div class="demo-step-title">Three-Way Commitment Close</div><div class="demo-step-sub">Physician, admin, billing &mdash; each commits to one next step</div></div>
+      </div>
+      <div class="demo-step-body">
+        <div>
+          <div class="demo-col-title">What You Do</div>
+          <ul class="demo-actions">
+            <li>Doctor: agrees to sponsor the decision to the partner</li>
+            <li>Admin: agrees to pull the billing data for a real pro-forma</li>
+            <li>Billing: agrees to verify 94726 reimbursement history</li>
+            <li>Schedule follow-up before you leave the room</li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-col-title">What You Say</div>
+          <div class="demo-script"><strong>"Here's what I'd like to walk out with: Doctor &mdash; you take this to your partner. Linda &mdash; you pull the last 12 months of PFT-eligible encounters. Jose &mdash; you confirm 94726 has been paying in your top three payers. We reconvene next Thursday. Are we all in?"</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================== OBJECTIONS =========================== -->
+<div class="tab-panel" id="tab-objections">
+
+  <div class="section-head">
+    <div class="section-icon icon-red">&#9876;</div>
+    <div>
+      <div class="section-title">Objection Library</div>
+      <div class="section-sub">30 common objections, each with the scripted response and supporting proof point</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-blue">
+    <div class="alert-icon">&#9432;</div>
+    <div><strong>The 3-step frame:</strong> (1) Acknowledge without agreeing &mdash; "That's a great question." (2) Reframe the concern in terms of their desired outcome. (3) Answer with evidence, then check back: "Does that clear it up, or is there still something underneath it?"</div>
+  </div>
+
+  <!-- CLINICAL -->
+  <div class="obj-group">
+    <div class="obj-group-hdr">
+      <span class="obj-group-tag obj-tag-clinical">CLINICAL</span>
+      <div class="obj-group-title">Clinical &amp; Accuracy Objections</div>
+    </div>
+    <div class="obj-list">
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"I don't trust any lung volume measurement that isn't a body box."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"That's exactly how every pulmonologist I respect feels. That's why the MiniBox+ is the <strong>only</strong> device validated head-to-head against body plethysmography in a peer-reviewed, multi-center, 700+ patient study &mdash; published in <strong>CHEST in 2021</strong>. In 10 of 14 cases where the results diverged, the MiniBox+ was actually <strong>more</strong> clinically accurate than the body box. This isn't gas dilution or estimation &mdash; it's true plethysmography, just without the cabin."</div>
+          <div class="obj-proof">Proof: Berger K, Adam O, Kaminsky D, et al. CHEST Feb 2021. 266 pts across 5 global centers.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"DLCO in 15 minutes seems too fast &mdash; how accurate can it be?"</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Fair. Here's why it's fast &mdash; it's fully automated. The patient takes 4 tidal breaths, exhales, inhales to TLC, holds 8-10 seconds, exhales. Single-breath method, <strong>same protocol as the body box</strong>. Time savings come from automation, not skipping steps. You still wait 4 minutes between repeat tests for gas clearance."</div>
+          <div class="obj-proof">Proof: ATS/ERS 2017 single-breath DLCO standard; MiniBox+ test time 7.2 min vs body box 13.9 min (Verona 2021).</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"What about patients with severe obstruction &mdash; will this really measure their trapped air?"</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"<strong>That's exactly where MiniBox+ beats N&#8322; washout and helium dilution.</strong> Gas dilution methods systematically <strong>underestimate</strong> TLC in severe COPD because gas can't reach air trapped behind narrowed airways. MiniBox+ is true plethysmography &mdash; it measures <strong>all</strong> gas in the thorax, including what's trapped. Truer disease picture, and it bills the higher CPT 94726 instead of the lower 94727."</div>
+          <div class="obj-proof">Proof: ATS/ERS technical standard; published NSD comparison table (MiniBox+ 8.9% vs helium dilution 15.3%).</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"My pediatric patients won't cooperate &mdash; FVC in kids is hard enough."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"That's why MiniBox+ is a better pediatric tool than a body box. <strong>No claustrophobic chamber, no scary panting maneuver</strong>. LVM is tidal breathing only &mdash; kids already do that naturally. We've tested children from age 5 successfully. And the whole thing takes 15 minutes instead of 45 &mdash; huge for attention span."</div>
+          <div class="obj-proof">Proof: LVM requires only tidal breathing per validated protocol; published pediatric use cases on file.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"My obese patients can't fit in a body box &mdash; does this actually help them?"</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"MiniBox+ has <strong>no chamber at all</strong>. We've tested wheelchair-bound, bedridden, and obese patients with no adaptation required. The patient stands or sits in a normal chair, holds the handheld unit. That's one of the reasons this device opens up PFT access to patient populations the body box literally cannot accommodate."</div>
+          <div class="obj-proof">Proof: Cabinless design documented; HHU-only patient interface.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FINANCIAL -->
+  <div class="obj-group">
+    <div class="obj-group-hdr">
+      <span class="obj-group-tag obj-tag-financial">FINANCIAL</span>
+      <div class="obj-group-title">Price, ROI, Financing</div>
+    </div>
+    <div class="obj-list">
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"$36K is a lot of money to drop on one machine."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"I understand. Let me reframe &mdash; at just <strong>5 complete PFTs per day</strong>, this device <strong>pays for itself in roughly 6 working weeks</strong>. After that, every PFT is pure revenue. The real question isn't whether the device is expensive &mdash; it's whether you're comfortable with the revenue you're forfeiting every month you wait."</div>
+          <div class="obj-proof">Proof: $151.45/full PFT x 5/day x 5 days = $3,786/week; $36,230 / $3,786 &asymp; 9.5 weeks at 5/day, 6 weeks at 8/day.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"We just don't have the capital right now."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Completely reasonable &mdash; and you don't need to. We have <strong>no-interest payment plans</strong> and operating lease options that turn this into a small monthly number. On top of that, <strong>Section 179</strong> lets you deduct the full purchase price in year one. Would it help if I had our financing team put three options in front of you &mdash; buy, lease, and extended no-interest &mdash; so you can see which shape fits?"</div>
+          <div class="obj-proof">Proof: PulmOne USA no-interest financing available; Section 179 max deduction 2026: $1,250,000.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"How do I know I'll actually bill 94726 and get paid?"</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Two things. First: 94726 is a <strong>widely reimbursed code</strong> across Medicare, Medicaid, and most commercial plans &mdash; it's the same code the hospital bills when they do it for you. Second: our billing resource center gives your billing office coding best-practices, documentation templates, and a first-pass review of your initial claims. Reimbursement is always subject to specific health plan policy, but practices running this equipment are collecting."</div>
+          <div class="obj-proof">Proof: National average Medicare reimbursement 94726 = $55.72; reference practices available on request.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Our reimbursement is being cut every year &mdash; this is risky."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"You're right &mdash; fee-for-service is compressing. That's <strong>exactly</strong> why in-office ancillary services are more important, not less. Every PFT you capture in-house instead of referring out is revenue retained in your practice &mdash; independent of whether rates drop 3% next year. If rates drop, they drop equally for the hospital. The economics only tilt more in your favor."</div>
+          <div class="obj-proof">Proof: MiniBox+ pays back in weeks, not years &mdash; insulated from long-term rate erosion.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"NDD EasyOne Pro is cheaper."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"I hear that a lot. Here's the math that matters: the EasyOne Pro <strong>estimates</strong> TLC mathematically &mdash; no plethysmography, so <strong>you cannot bill 94726</strong>. That's $55 per patient you cannot collect. At 200 patients a year, you're leaving <strong>$165,000+</strong> on the table for a device that costs maybe $6K less up front. The question isn't which is cheaper &mdash; it's which one you can afford to own."</div>
+          <div class="obj-proof">Proof: NDD EasyOne Pro marketing materials confirm equation-based TLC; CPT 94726 requires actual plethysmographic measurement.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMPETITIVE -->
+  <div class="obj-group">
+    <div class="obj-group-hdr">
+      <span class="obj-group-tag obj-tag-competitive">COMPETITIVE</span>
+      <div class="obj-group-title">"We Already Have / Are Looking At..."</div>
+    </div>
+    <div class="obj-list">
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"We already have a body box."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Perfect &mdash; then you already believe in plethysmography. MiniBox+ isn't a replacement for your body box &mdash; it's a <strong>complement</strong>. Put it in a satellite office, in an exam room where a body box can't fit, in a second building, in the clinic where your RT isn't today. Same CPT codes, same reimbursement, any staff can run it. You turn one lab into many."</div>
+          <div class="obj-proof">Proof: Cabinless desktop footprint; HL7-compliant for EMR integration with existing PFT workflow.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Jaeger's Vyntus just gave us a quote."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Good &mdash; so you already know what a real body box costs. The Vyntus Body is likely $50&ndash;70K. It requires a dedicated room. It needs a specialist to run. Its annual PM is about $4,000. MiniBox+ delivers the same CPT codes at <strong>$36K</strong>, on a desktop, runnable by any staff member, with <strong>zero maintenance fees</strong>. Same reimbursement, half the capital, zero overhead. Do you want me to put the two proposals side by side so your partner can see it in one view?"</div>
+          <div class="obj-proof">Proof: Vyntus public pricing range; MiniBox+ list $36,230 + $0 annual PM.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"We send patients to the hospital for PFTs &mdash; that works fine."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"It works until it doesn't. National data says roughly <strong>40% of referred PFTs never get done</strong> &mdash; the patient doesn't schedule, doesn't show, or the result doesn't make it back. On top of that, every PFT you refer out is <strong>$151 of revenue you're handing to the hospital</strong> instead of keeping. Bringing it in-house fixes both problems."</div>
+          <div class="obj-proof">Proof: Industry no-show/no-scheduled rate 30-45% across ancillary referrals; $151.45 = max full-PFT reimbursement.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"MGC Platinum Elite has better EMR integration."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Let me get specific. MiniBox+ is <strong>HL7-compliant and integrates with every major EMR</strong> &mdash; Epic, Athena, Cerner, NextGen, eClinicalWorks, Allscripts. It's not weaker integration &mdash; it's the same standard-based integration. What MGC won't show you is the $4&ndash;6K annual maintenance contract, the dedicated room requirement, and the $20K+ capital premium. Which of those is worth the perceived integration edge?"</div>
+          <div class="obj-proof">Proof: HL7 2.x ADT, ORU, and ORM messaging supported; EMR integration checklist available.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OPERATIONAL -->
+  <div class="obj-group">
+    <div class="obj-group-hdr">
+      <span class="obj-group-tag obj-tag-operational">OPERATIONAL</span>
+      <div class="obj-group-title">Workflow, Staffing, Implementation</div>
+    </div>
+    <div class="obj-list">
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"My staff is already overloaded &mdash; they don't have time to learn new equipment."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"I hear that on every visit. Two things: <strong>training takes 2 hours</strong>, end-to-end, covered by PulmOne. And the workflow is <strong>6 buttons from start to report</strong> &mdash; it's shorter than checking someone in. Most practices find that adding MiniBox+ actually <strong>reduces</strong> total staff time because patients stop bouncing back for rescheduled referral tests."</div>
+          <div class="obj-proof">Proof: Documented 6-button interface; 2-hour on-site training standard.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Where would we even put it? We don't have a PFT room."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"That's the best part. MiniBox+ has the <strong>smallest plethysmography footprint on the market</strong> &mdash; it sits on a desktop or a small cart. It moves between exam rooms. It doesn't need a dedicated space at all. I can walk in with it today and you'll see it take up less room than your EKG cart."</div>
+          <div class="obj-proof">Proof: Desktop or mobile cart deployment; no structural, electrical, or HVAC requirements beyond standard outlet.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"What happens when it breaks? I don't want to be down for weeks."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Fair &mdash; let's address it head on. First, there are <strong>no consumable parts that wear out</strong>, so the typical body-box failure modes don't apply. Second, we have direct factory support and a national service bench. When an issue comes up, we <strong>ship a loaner while yours is repaired</strong> so you stay up. Would you like me to send you our standard service SLA in writing?"</div>
+          <div class="obj-proof">Proof: PulmOne service SLA document available; direct factory support.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Who does the calibration? We don't have a biomed team."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"You don't need one. The MiniBox+ <strong>self-calibrates before every test</strong>. Your staff does a <strong>daily 3-liter syringe check</strong> that takes under 60 seconds &mdash; the same check any PFT device requires. There's no annual calibration service to schedule."</div>
+          <div class="obj-proof">Proof: Built-in auto-calibration; 3L syringe check standard ATS/ERS quality control.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"How long does it take to get installed and running?"</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"From signed order to first patient is typically <strong>2 to 3 weeks</strong>. Week 1: ship and arrive. Week 2: on-site install + 2-hour staff training + first billing review with your biller. Week 3: you're running patients. If your EMR integration is in scope, add a week for IT. We handle every step."</div>
+          <div class="obj-proof">Proof: Standard implementation timeline document available.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STALL / NO-DECISION -->
+  <div class="obj-group">
+    <div class="obj-group-hdr">
+      <span class="obj-group-tag obj-tag-stall">STALL</span>
+      <div class="obj-group-title">Stalls, Delays, Political Objections</div>
+    </div>
+    <div class="obj-list">
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Let me think about it."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Of course &mdash; this is a real decision. Let me ask: when you say think about it, what are the specific questions still running through your head? Is it the money, the workflow, the clinical fit, or the timing? If I know which one it is, I can get you the answer tonight instead of in two weeks."</div>
+          <div class="obj-proof">Technique: Convert soft stall into specific objection. Then handle that objection.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"I need to talk to my partner."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Absolutely &mdash; and I want to make that conversation easy. <strong>Would it help if I came back for 20 minutes with both of you?</strong> I can walk your partner through the same demo and the numbers. That way you're not the one having to defend it on your own. What does next Tuesday or Wednesday look like?"</div>
+          <div class="obj-proof">Technique: Never let "talk to my partner" mean "go home and hope." Put the second meeting on the calendar now.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Send me some information and I'll get back to you."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Happy to. I'll send a one-page summary today &mdash; it's the sharpest view of the financials. <strong>So I'm not chasing you, let's block 15 minutes next Wednesday afternoon</strong> for me to hear your questions. Even if your answer is no, you'll have a real reason rather than it just going cold. Does 2 PM or 4 PM work better?"</div>
+          <div class="obj-proof">Technique: Accept the ask, but anchor the follow-up meeting before you leave.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"This isn't a priority for us right now."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Fair. Can I ask &mdash; what <strong>is</strong> the priority right now? Because if revenue capture isn't top of the list, one of two things is probably true: either your practice is already maxed out on all the in-office ancillaries it can run (which is rare), or the priority is about to move. I'd rather we have this conversation 6 months early than 6 months late."</div>
+          <div class="obj-proof">Technique: Reframe "not a priority" as "you may be about to need this." Stay present, not pushy.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"Call me back in 6 months."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"I'll do that &mdash; I'll put you on the calendar for October. <strong>But can I ask a quick question</strong>: if I come back in six months with exactly this same proposal, what's going to be different about your decision at that point? If the answer is 'nothing really,' then waiting costs you six months of forfeited revenue. If the answer is something specific &mdash; great, let's plan against it."</div>
+          <div class="obj-proof">Technique: Accept the delay, surface the real reason, quantify the cost of waiting.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"We need to wait until next year's budget."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Let's time this together &mdash; but here's a thought. Because this device <strong>self-funds from CPT revenue in roughly 6-10 weeks</strong>, waiting for a budget cycle actually costs more than starting now. A no-interest payment plan or an operating lease structures this as a monthly operating expense &mdash; no capital approval needed. Want me to pull numbers on that?"</div>
+          <div class="obj-proof">Technique: Reframe capital-vs-operating and point to financing.</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-objection">
+          <div class="obj-objection-lbl">Objection</div>
+          <div class="obj-objection-text">"I like it, but I need to run it by the hospital."</div>
+        </div>
+        <div class="obj-response">
+          <div class="obj-response-lbl">Response</div>
+          <div class="obj-response-text">"Totally reasonable if you're employed. Let me save you a step &mdash; I can provide a packet with clinical validation, HL7 integration spec, service terms, and standard contract language that your hospital supply chain usually asks for. We've been through the approval process at [reference health system]. Who on their side would you want me to copy so we keep the ball moving?"</div>
+          <div class="obj-proof">Technique: Offer to jump into the approval lane with them. Don't let the decision leave your hand.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================== PATIENT FIT =========================== -->
+<div class="tab-panel" id="tab-fit">
+
+  <div class="section-head">
+    <div class="section-icon icon-teal">&#129658;</div>
+    <div>
+      <div class="section-title">Patient-Fit Library</div>
+      <div class="section-sub">8 patient archetypes where running PFTs in-office changes the care pathway &mdash; use these to connect features to faces the doctor treats</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-green">
+    <div class="alert-icon">&#129504;</div>
+    <div><strong>Selling rule:</strong> physicians don't buy equipment, they buy <em>better outcomes for specific patients</em>. Before the ROI page, spend 3 minutes on one or two of these patient stories. Watch the doctor lean in when they recognize their own exam room.</div>
+  </div>
+
+  <div class="fit-grid">
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-1">&#127939;</div>
+        <div><div class="fit-title">The Undiagnosed COPD Smoker</div><div class="fit-subtitle">45+, smoker, exertional dyspnea, hasn't had PFT in 3+ years</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Doctor orders spirometry only (in-office). FEV1/FVC reduced. Can't confirm hyperinflation without TLC. Refers out for full PFT. <strong>40% never go.</strong> Treatment is empiric.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text">Full PFT same visit. TLC, RV, DLCO. Confirms emphysema vs chronic bronchitis phenotype. <strong>Staging-driven treatment starts today.</strong></div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> gas-dilution methods underestimate trapped air in obstruction. MiniBox+ plethysmography captures it correctly &mdash; and bills 94726.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-2">&#129781;</div>
+        <div><div class="fit-title">The Post-COVID Long-Hauler</div><div class="fit-subtitle">Persistent dyspnea 3+ months post-infection, normal imaging</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Normal CXR, maybe normal CT. Spirometry often normal. Doctor is stuck &mdash; symptoms real, tests ambiguous.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>DLCO reveals diffusion impairment</strong> even when volumes look preserved. Quantifies the invisible injury. Gives the patient a name for what they feel and a follow-up plan.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> DLCO is often the <em>only</em> abnormal PFT in post-COVID diffusion impairment. Validates clinician suspicion.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-3">&#128165;</div>
+        <div><div class="fit-title">The Suspected ILD Patient</div><div class="fit-subtitle">Dry cough, bibasilar crackles, fine reticulations on CT</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Referred to pulmonology or hospital lab for full PFT + DLCO. Weeks to schedule. Diagnosis delayed. Treatment delayed.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>Restrictive pattern + low DLCO same visit.</strong> Confirms interstitial lung disease pattern. Starts workup (HRCT, ANA panel, referral to pulmonology) immediately.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> ILD is time-sensitive. Reducing diagnostic delay from weeks to hours changes prognosis.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-4">&#128106;</div>
+        <div><div class="fit-title">The Pediatric Asthma Patient</div><div class="fit-subtitle">Age 5-15, frequent SABA use, school absences</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Handheld spirometer only &mdash; noisy, inconsistent, no volumes. Peak flow diary instead of objective testing. Control tracking is subjective.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>Full PFT from age 5.</strong> No panting chamber, no claustrophobia, tidal breathing LVM. Quantifies response to inhaler changes. Same-visit pre/post bronchodilator.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> body boxes are pediatric-unfriendly. Cabinless design unlocks pediatric PFT for practices that were skipping it.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-5">&#129704;</div>
+        <div><div class="fit-title">The Pre-Op Clearance Patient</div><div class="fit-subtitle">Upcoming thoracic, bariatric, or major abdominal surgery</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Referral to hospital PFT lab. Delays surgery by 2-4 weeks. Patient may get incomplete testing. Surgery proceeds with incomplete risk stratification.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>Full PFT during pre-op visit.</strong> FEV1, DLCO, and TLC drive ARISCAT / ACS-NSQIP risk score in real time. Surgery stays on schedule.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> pre-op PFT is often the rate-limiter. Bringing it in-house removes the scheduling bottleneck.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-6">&#128296;</div>
+        <div><div class="fit-title">The Occupational Lung Disease Patient</div><div class="fit-subtitle">Construction, agriculture, welding, first responder, mining</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Workers' comp or OSHA compliance &mdash; typically spirometry-only. Insufficient for many claims. Patient sent out for full PFT. Paperwork lags for months.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>Complete baseline PFT + surveillance tracking in-office.</strong> Meets most occupational medicine documentation requirements. Faster claims processing.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> occupational med clinics run high-volume screenings. Full-PFT billing + speed is a direct revenue play.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-7">&#129729;</div>
+        <div><div class="fit-title">The Severely Obese Patient</div><div class="fit-subtitle">BMI &gt; 40, OHS, OSA workup</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Many body boxes literally can't accommodate. Patient is told to "see if the hospital has a bariatric-rated unit." Test often never happens.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>No chamber at all.</strong> Patient sits in a regular chair, holds the HHU. Tidal breathing LVM is easier on reduced chest-wall compliance. Access becomes possible.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> this population is growing. Cabinless design is a differentiator no other plethysmograph can match.</div>
+      </div>
+    </div>
+
+    <div class="fit-card">
+      <div class="fit-hdr">
+        <div class="fit-icon fit-icon-8">&#127856;</div>
+        <div><div class="fit-title">The Allergy / Asthma Control Follow-Up</div><div class="fit-subtitle">Biologics candidate, step-up/down decisions</div></div>
+      </div>
+      <div class="fit-body">
+        <div class="fit-section">
+          <div class="fit-lbl">Typical workflow today</div>
+          <div class="fit-text">Quick in-office spirometry only. FEV1 trended. Lung volumes almost never measured. Dupixent/omalizumab candidacy decisions made on incomplete data.</div>
+        </div>
+        <div class="fit-section">
+          <div class="fit-lbl">With MiniBox+</div>
+          <div class="fit-text"><strong>Full PFT at every escalation visit.</strong> Objectively tracks response to biologics. Documents medical necessity for payor approval. Full-PFT billing every visit.</div>
+        </div>
+        <div class="fit-why"><strong>Why this patient:</strong> allergy/immunology is a perfect MiniBox+ fit &mdash; high follow-up volume, biologics economics, payor documentation needs.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================== LEAVE-BEHIND PACK =========================== -->
+<div class="tab-panel" id="tab-leavebehind">
+
+  <div class="section-head">
+    <div class="section-icon icon-green">&#128196;</div>
+    <div>
+      <div class="section-title">Physician Leave-Behind Pack</div>
+      <div class="section-sub">5 one-page physician-facing summaries &mdash; tap one, copy it as an email body, or print a clean PDF in one click</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-green">
+    <div class="alert-icon">&#128231;</div>
+    <div><strong>The 30-second follow-up rule:</strong> the moment you walk out of the exam room, send <em>one</em> of these to the physician before you hit the car. Email them on their phone while your demo is still in their head. This is what separates a 15% close rate from a 45% close rate.</div>
+  </div>
+
+  <div class="lb-grid">
+    <div class="lb-card" onclick="showLB('summary')">
+      <div class="lb-card-num">01 &middot; OVERVIEW</div>
+      <div class="lb-card-title">MiniBox+ at a Glance</div>
+      <div class="lb-card-desc">The 1-page executive summary. For the doctor who wants the whole story in 60 seconds before forwarding to their partner.</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+    <div class="lb-card" onclick="showLB('evidence')">
+      <div class="lb-card-num">02 &middot; CLINICAL</div>
+      <div class="lb-card-title">Clinical Evidence Summary</div>
+      <div class="lb-card-desc">CHEST 2021 + Verona + internal VA/MGH validation in one page. For the skeptic who asks "where's the data?"</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+    <div class="lb-card" onclick="showLB('roi')">
+      <div class="lb-card-num">03 &middot; FINANCIAL</div>
+      <div class="lb-card-title">Revenue &amp; Payback Snapshot</div>
+      <div class="lb-card-desc">CPT codes, example volumes, breakeven math, Section 179. The number the owning partner wants.</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+    <div class="lb-card" onclick="showLB('patients')">
+      <div class="lb-card-num">04 &middot; CLINICAL FIT</div>
+      <div class="lb-card-title">Which of Your Patients Benefits</div>
+      <div class="lb-card-desc">The 8 patient archetypes that change most with in-office full PFT. Doctor-to-doctor language.</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+    <div class="lb-card" onclick="showLB('timeline')">
+      <div class="lb-card-num">05 &middot; NEXT STEPS</div>
+      <div class="lb-card-title">Implementation Timeline</div>
+      <div class="lb-card-desc">From signed order to first billed patient in 2-3 weeks. Week-by-week playbook for the practice manager.</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+    <div class="lb-card" onclick="showLB('compare')">
+      <div class="lb-card-num">06 &middot; COMPETITIVE</div>
+      <div class="lb-card-title">MiniBox+ vs. Alternatives</div>
+      <div class="lb-card-desc">Clean side-by-side with body-box systems and ultrasound-only devices. For the physician shopping multiple vendors.</div>
+      <div class="lb-card-cta">OPEN &rarr;</div>
+    </div>
+  </div>
+
+  <!-- LB VIEWER -->
+  <div id="lb-viewer">
+    <div class="lb-viewer-bar no-print">
+      <div class="lb-viewer-title" id="lb-viewer-title">Leave-Behind Preview</div>
+      <div class="lb-viewer-btns">
+        <button class="lb-btn" onclick="copyLBAsText()">&#128203; Copy for Email</button>
+        <button class="lb-btn" onclick="copyLBAsHTML()">&#128196; Copy as HTML</button>
+        <button class="lb-btn lb-btn-primary" onclick="printLB()">&#128424; Print / Save PDF</button>
+        <button class="lb-btn" onclick="closeLB()">&#10005; Close</button>
+      </div>
+    </div>
+    <div id="lb-content" class="print-target"></div>
+  </div>
+
+</div>
+
+<!-- =========================== EMAIL LIBRARY =========================== -->
+<div class="tab-panel" id="tab-email">
+
+  <div class="section-head">
+    <div class="section-icon icon-amber">&#9993;</div>
+    <div>
+      <div class="section-title">Email Template Library</div>
+      <div class="section-sub">12 scripted emails from first touch to lost-deal revive &mdash; click one, copy it, done</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-amber">
+    <div class="alert-icon">&#128161;</div>
+    <div><strong>Merge fields</strong> are <span style="background:#fef3c7;padding:1px 5px;border-radius:3px;font-weight:600;color:#713f12;">{{highlighted}}</span> &mdash; replace them before you send. Every template has a specific purpose; don't mix them. For the email composer inside the Master Toolkit Daily Hub, use those 5 quick templates. For everything below, this library is deeper and more situational.</div>
+  </div>
+
+  <div class="email-grid">
+    <div class="email-list" id="email-list"></div>
+    <div class="email-preview" id="email-preview">
+      <div class="email-preview-bar">
+        <div class="email-preview-title" id="email-preview-title">Select a template to preview</div>
+        <div class="email-preview-btns lb-viewer-btns no-print">
+          <button class="lb-btn" onclick="copyEmailBody()">&#128203; Copy Body</button>
+          <button class="lb-btn" onclick="copyEmailAll()">&#128196; Copy Subject + Body</button>
+          <button class="lb-btn lb-btn-primary" onclick="openInMailClient()">&#9993; Open in Email</button>
+        </div>
+      </div>
+      <div class="email-preview-body" id="email-preview-body">
+        <div style="padding: 40px 20px; text-align: center; color: var(--gray-600);">
+          Choose a template from the list on the left.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================== CLOSE & COMMIT =========================== -->
+<div class="tab-panel" id="tab-close">
+
+  <div class="section-head">
+    <div class="section-icon icon-red">&#127919;</div>
+    <div>
+      <div class="section-title">Close &amp; Commit Playbook</div>
+      <div class="section-sub">Trial-close language, commitment questions, pilot structures, and how to recognize buying signals</div>
+    </div>
+  </div>
+
+  <div class="alert-box alert-red">
+    <div class="alert-icon">&#9888;</div>
+    <div><strong>The close starts at minute one, not minute 25.</strong> Every discovery question, every objection response, and every trial close is one piece of the same conversation. If you walk in planning to close, you will. If you walk in hoping the doctor closes themselves, you won't.</div>
+  </div>
+
+  <!-- TRIAL CLOSES -->
+  <div class="close-category">
+    <div class="close-cat-hdr">
+      <div>
+        <div class="close-cat-title">1. Trial Closes &mdash; Use Early &amp; Often</div>
+        <div class="close-cat-sub">Temperature checks. If the answer is no, you handle that objection now instead of at the end.</div>
+      </div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">After the live demo</div>
+      <div class="close-line">"Assuming the numbers hold up, is this the kind of thing you'd want in your practice?"</div>
+      <div class="close-note">Purpose: sort interested vs not-interested early. Any "yes" here is an implicit commitment you can reference at closing.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">After the ROI walkthrough</div>
+      <div class="close-line">"If your breakeven is really 6 weeks, what would stop you from doing this?"</div>
+      <div class="close-note">Purpose: flush out the real objection. Almost always one of: partner approval, capital timing, clinical skepticism, or competitor quote. You handle what surfaces.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">When they're nodding along</div>
+      <div class="close-line">"Picture this in your exam room next Tuesday. What patient do you run first?"</div>
+      <div class="close-note">Purpose: visualization close. Makes the future concrete. A doctor who names a specific patient has mentally bought.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Testing willingness to commit</div>
+      <div class="close-line">"If we could solve [their stated blocker], is there any other reason not to move forward?"</div>
+      <div class="close-note">Purpose: isolation close. Forces them to either commit conditionally or admit to another hidden objection.</div>
+    </div>
+  </div>
+
+  <!-- HARD CLOSES -->
+  <div class="close-category">
+    <div class="close-cat-hdr">
+      <div>
+        <div class="close-cat-title">2. Commitment Closes &mdash; Asking for the Order</div>
+        <div class="close-cat-sub">Use after at least one confirming trial close. Do not ask for the order prematurely.</div>
+      </div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Alternative choice</div>
+      <div class="close-line">"Do you want to start with one unit or pilot with two so the satellite location is covered too?"</div>
+      <div class="close-note">Purpose: removes the "buy or not" decision and replaces it with "which configuration." Classic.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Assumptive close</div>
+      <div class="close-line">"Let me walk Linda through the purchase paperwork while we're all in the room. Best way to make sure nothing gets held up."</div>
+      <div class="close-note">Purpose: assumes the decision is made; move straight to execution. Powerful with physicians who are decisive but busy.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Summary close</div>
+      <div class="close-line">"Here's where we landed: 8 PFTs a day, $36K device, breakeven in 9 weeks, same CPT codes as the hospital, zero maintenance. Sound right? &mdash; Good. Who signs the PO on your side?"</div>
+      <div class="close-note">Purpose: recap the deal, get the verbal yes, pivot to logistics.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Urgency without manipulation</div>
+      <div class="close-line">"Your next partner meeting is the 15th. If we get the paperwork started by Friday, we can have you up and running in time to bill July patients. Want me to get that going?"</div>
+      <div class="close-note">Purpose: ties close date to their own calendar, not a made-up "limited time offer." Respectful urgency.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Pilot structure close</div>
+      <div class="close-line">"What if we set this up as a 90-day in-practice pilot &mdash; you run the device, track the billing, and at the end of 90 days you either convert to a purchase or send it back? Would that take the decision pressure off?"</div>
+      <div class="close-note">Purpose: for practices that can't stomach a one-shot capital decision. Extremely effective with skeptical partners.</div>
+    </div>
+  </div>
+
+  <!-- BUYING SIGNALS -->
+  <div class="close-category">
+    <div class="close-cat-hdr">
+      <div>
+        <div class="close-cat-title">3. Buying Signals &mdash; Know When to Stop Selling</div>
+        <div class="close-cat-sub">The #1 rep error is continuing to pitch after the doctor is already bought.</div>
+      </div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Verbal signal</div>
+      <div class="close-line">"When could we get one?" &middot; "Who would train our staff?" &middot; "How fast can you ship?"</div>
+      <div class="close-note">Action: STOP selling. Move to logistics. "Great question &mdash; we can have the device here in 2-3 weeks once we get the paperwork signed. Let's get that started."</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Ownership language</div>
+      <div class="close-line">"We'd probably put it in the east exam room." &middot; "Sarah would be the one to run it."</div>
+      <div class="close-note">Action: they're visualizing ownership. Reinforce it. "That's a perfect room &mdash; Sarah is going to love how fast the workflow is."</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Objection intensity drops</div>
+      <div class="close-line">Earlier objections were sharp; now they're soft &mdash; "I mean, I get it" &middot; "Makes sense."</div>
+      <div class="close-note">Action: trial close immediately. The sale is ready; don't miss the window by launching into another feature.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Pulling in others</div>
+      <div class="close-line">"Let me grab Linda." &middot; "I want my partner to see this."</div>
+      <div class="close-note">Action: they've moved from evaluating to validating. Frame the second person's involvement as confirmation, not re-selling.</div>
+    </div>
+    <div class="close-item">
+      <div class="close-situation">Financial specifics</div>
+      <div class="close-line">"What's your exact lease rate?" &middot; "Does Section 179 apply if we buy before year-end?"</div>
+      <div class="close-note">Action: they're already mentally signed. Pivot to the paperwork path.</div>
+    </div>
+  </div>
+
+  <!-- NEVER DO -->
+  <div class="close-category">
+    <div class="close-cat-hdr" style="background: var(--red);">
+      <div>
+        <div class="close-cat-title">4. Never Do These</div>
+        <div class="close-cat-sub">Every one of these will cost you the deal, sometimes the relationship</div>
+      </div>
+    </div>
+    <div class="close-item" style="border-left: 4px solid var(--red);">
+      <div class="close-situation">Never #1</div>
+      <div class="close-line" style="font-style: normal;">Don't bad-mouth a competitor by name.</div>
+      <div class="close-note">Contrast facts, not character. "NDD Pro can't bill 94726" is a <em>fact</em>; "NDD reps are dishonest" is a <em>stain on you</em>.</div>
+    </div>
+    <div class="close-item" style="border-left: 4px solid var(--red);">
+      <div class="close-situation">Never #2</div>
+      <div class="close-line" style="font-style: normal;">Don't keep demoing after a buying signal.</div>
+      <div class="close-note">If they say "when can we get one," you've already closed. Showing them five more features is you robbing yourself of the order.</div>
+    </div>
+    <div class="close-item" style="border-left: 4px solid var(--red);">
+      <div class="close-situation">Never #3</div>
+      <div class="close-line" style="font-style: normal;">Don't leave without a specific next step on the calendar.</div>
+      <div class="close-note">"I'll follow up" = the deal went cold. "We're meeting Thursday at 2 PM" = the deal has a pulse.</div>
+    </div>
+    <div class="close-item" style="border-left: 4px solid var(--red);">
+      <div class="close-situation">Never #4</div>
+      <div class="close-line" style="font-style: normal;">Don't discount before the physician asks.</div>
+      <div class="close-note">Offering a discount before it's requested signals low value and trains them to expect more. Hold the price. Let them ask.</div>
+    </div>
+    <div class="close-item" style="border-left: 4px solid var(--red);">
+      <div class="close-situation">Never #5</div>
+      <div class="close-line" style="font-style: normal;">Don't overpromise on reimbursement.</div>
+      <div class="close-note">Every ROI slide ends with "subject to specific health plan policy." Stick to that line. A practice that feels misled about payment will never buy again &mdash; and they tell their peers.</div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+<!-- end content-wrap -->
+
+<div class="toolkit-footer">
+  <div class="footer-bar">
+    <div>
+      <div class="fl-label">US Support</div>
+      <div class="fl-val">1-844-PulmOne (785-6663)</div>
+    </div>
+    <div class="fdiv"></div>
+    <div>
+      <div class="fl-label">Email</div>
+      <div class="fl-val">USinfo@pulm-one.com</div>
+    </div>
+    <div class="fdiv"></div>
+    <div>
+      <div class="fl-label">Pairs With</div>
+      <div class="fl-val">MiniBox+ Master Toolkit v1.3 &middot; PulmOne ROI Builder v8</div>
+    </div>
+    <div class="fdiv"></div>
+    <div>
+      <div class="fl-label">Document</div>
+      <div class="fl-val">Field Sales Playbook v1.0</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Copied to clipboard</div>
+
+<script>
+/* =================== TAB NAVIGATION =================== */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function showTabByName(name) {
+  var btns = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    if (btns[i].getAttribute('onclick') && btns[i].getAttribute('onclick').indexOf("'" + name + "'") > -1) {
+      showTab(name, btns[i]);
+      return;
+    }
+  }
+}
+
+/* =================== TOAST =================== */
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg || 'Copied to clipboard';
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 1800);
+}
+
+/* =================== PREP CHECKLIST =================== */
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  var box = el.querySelector('.check-box');
+  box.classList.toggle('checked');
+  box.innerHTML = box.classList.contains('checked') ? '&#10003;' : '';
+}
+
+/* =================== PREP SIZER =================== */
+function sizeCalc() {
+  var providers = parseFloat(document.getElementById('size-providers').value) || 1;
+  var patients = parseFloat(document.getElementById('size-patients').value) || 1;
+  var days = parseFloat(document.getElementById('size-days').value) || 5;
+  var rate = 151.45;
+  var device = 36230;
+  var perWeek = providers * patients * days;
+  var perMonth = perWeek * 4.33;
+  var perYear = perWeek * 48;
+  var revY1 = perYear * rate;
+  var dailyRev = providers * patients * rate;
+  var bkDays = Math.ceil(device / dailyRev);
+  var bkWeeks = Math.max(1, Math.round(bkDays / 5));
+  document.getElementById('size-week').textContent = Math.round(perWeek);
+  document.getElementById('size-month').textContent = Math.round(perMonth);
+  document.getElementById('size-y1').textContent = '$' + Math.round(revY1 / 1000) + 'K';
+  document.getElementById('size-be').textContent = '~' + bkWeeks + ' week' + (bkWeeks === 1 ? '' : 's');
+}
+if (document.getElementById('size-providers')) sizeCalc();
+
+/* =================== LEAVE-BEHIND DOCUMENTS =================== */
+var LB_DOCS = {
+  summary: {
+    title: 'MiniBox+ at a Glance',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>MiniBox+&#8482; &mdash; Complete PFTs, in Your Practice, in 15 Minutes</h1>' +
+      '<div class="lb-sub">One-page executive summary for physician review &mdash; prepared by PulmOne Advanced Medical Devices.</div>' +
+      '<h2>What It Is</h2>' +
+      '<p>MiniBox+ is the only portable, cabinless pulmonary function testing device that delivers complete <strong>Spirometry, Lung Volumes (plethysmography), and DLCO</strong> &mdash; equivalent to a traditional body box &mdash; in approximately <strong>15 to 20 minutes</strong>, operable by any trained staff member, with <strong>zero maintenance fees.</strong></p>' +
+      '<div class="lb-kpi-row">' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">15 min</div><div class="lb-kpi-lbl">Complete PFT</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">6</div><div class="lb-kpi-lbl">Buttons end-to-end</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">$0</div><div class="lb-kpi-lbl">Annual maintenance</div></div>' +
+      '</div>' +
+      '<h2>Why It Matters For Your Practice</h2>' +
+      '<ul>' +
+      '<li><strong>Same billable CPT codes as the body box</strong> (94010, 94060, 94375, 94726, 94729).</li>' +
+      '<li><strong>Same reimbursement</strong> &mdash; up to $151.45 per complete PFT, based on National Medicare/Medicaid average.</li>' +
+      '<li><strong>No dedicated PFT room required</strong> &mdash; sits on a desktop, moves between exam rooms.</li>' +
+      '<li><strong>Any trained staff member can operate it</strong> &mdash; 2-hour training, 6-button workflow.</li>' +
+      '<li><strong>Published clinical validation</strong> against the body box in over 700 patients at 11 medical centers (CHEST, Feb 2021).</li>' +
+      '</ul>' +
+      '<h2>What Changes On Day One</h2>' +
+      '<p>Patients who today are referred out for full PFTs stay in your practice. You capture the CPT revenue, you see the results same-visit, and you start treatment without a 2-4 week diagnostic delay. In settings where a body box is out of reach &mdash; pediatrics, obese patients, wheelchair-bound &mdash; MiniBox+ opens access that did not previously exist.</p>' +
+      '<div class="lb-highlight"><strong>Typical payback:</strong> at 5 complete PFTs per day (conservative for a practice of most sizes), the device pays for itself in roughly 6 to 10 working weeks. After that, every test is net revenue to the practice.</div>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong> &middot; USinfo@pulm-one.com &middot; 1-844-PulmOne</div><div>For physician review &mdash; not promotional.</div></div>' +
+      '</div>'
+  },
+  evidence: {
+    title: 'Clinical Evidence Summary',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>Clinical Validation &mdash; MiniBox+ vs. Body Plethysmography</h1>' +
+      '<div class="lb-sub">Peer-reviewed evidence supporting in-office use of MiniBox+ as equivalent to traditional body-box lung volume measurement.</div>' +
+      '<h2>The Anchor Study &mdash; CHEST, February 2021</h2>' +
+      '<p><strong>Berger KI, Adam O, Kaminsky DA, Shiner RJ, Burgos F, de Jongh FHC, Cohen I, Fredberg JJ.</strong> Validation of a Novel Compact System for the Measurement of Lung Volumes. <em>CHEST</em> 2021;159(5):2033-2044.</p>' +
+      '<ul>' +
+      '<li><strong>266 participants</strong> across 5 global medical centers including NYU Langone, Harvard, and international sites.</li>' +
+      '<li>TLC measured by MiniBox+ was <strong>not statistically different</strong> from conventional body plethysmography across healthy, obstructive, and restrictive patients.</li>' +
+      '<li>In 10 of 14 discordant cases, <strong>MiniBox+ produced the more clinically accurate result</strong>.</li>' +
+      '</ul>' +
+      '<h2>Supporting Data</h2>' +
+      '<table>' +
+      '<tr><th>Study / Site</th><th>Patients</th><th>Key Finding</th></tr>' +
+      '<tr><td>Verona, Italy (Dal Negro 2021)</td><td>134</td><td>8.2% test failure rate vs 19.4% body box &middot; 7.2 min test time vs 13.9 min</td></tr>' +
+      '<tr><td>VA Medical Center, Cincinnati</td><td>50</td><td>CV 9.1% &middot; better than helium dilution (18.9%) and CT (15.6%)</td></tr>' +
+      '<tr><td>Massachusetts General Hospital</td><td>27</td><td>Adjusted R&sup2; = 0.85 vs Morgan body plethysmography</td></tr>' +
+      '</table>' +
+      '<h2>vs. Gas-Dilution Alternatives</h2>' +
+      '<p>Helium dilution and nitrogen washout <strong>systematically underestimate</strong> lung volumes in obstructive disease because the diluent gas cannot reach air trapped behind narrowed airways. MiniBox+ plethysmography measures all gas in the thorax &mdash; including trapped gas &mdash; reflecting the true disease picture and qualifying for CPT 94726 (plethysmographic TLC) vs the lower 94727.</p>' +
+      '<div class="lb-kpi-row">' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">8.9%</div><div class="lb-kpi-lbl">MiniBox+ NSD vs body box</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">15.3%</div><div class="lb-kpi-lbl">Helium dilution NSD</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">0</div><div class="lb-kpi-lbl">LVM test failures (Verona)</div></div>' +
+      '</div>' +
+      '<div class="lb-quote">"TLC measured by MiniBox+ is not significantly different from conventional body plethysmography across obstructive and restrictive disease." &mdash; Berger et al, CHEST 2021</div>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong> &middot; Full study citations on request</div><div>PubMed: 33539839 &middot; PMC8411450</div></div>' +
+      '</div>'
+  },
+  roi: {
+    title: 'Revenue & Payback Snapshot',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>MiniBox+ &mdash; Revenue Potential &amp; Payback</h1>' +
+      '<div class="lb-sub">At-a-glance financial summary for your partner, office administrator, or billing lead.</div>' +
+      '<h2>CPT Codes You Will Bill</h2>' +
+      '<table>' +
+      '<tr><th>CPT Code</th><th>Test</th><th>Medicare Average</th></tr>' +
+      '<tr><td>94010</td><td>Spirometry</td><td>$27.34</td></tr>' +
+      '<tr><td>94060</td><td>Pre &amp; post bronchodilator</td><td>$38.80</td></tr>' +
+      '<tr><td>94375</td><td>Flow volume loop</td><td>$39.11</td></tr>' +
+      '<tr><td>94726</td><td>Lung volumes (plethysmography)</td><td>$55.72</td></tr>' +
+      '<tr><td>94729</td><td>DLCO</td><td>$59.87</td></tr>' +
+      '<tr><td colspan="2"><strong>Complete PFT (94010 + 94726 + 94729)</strong></td><td><strong>$151.45</strong></td></tr>' +
+      '</table>' +
+      '<h2>Example Economics</h2>' +
+      '<div class="lb-kpi-row">' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">$3,786</div><div class="lb-kpi-lbl">Weekly rev at 5/day</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">~9 wks</div><div class="lb-kpi-lbl">Breakeven at 5/day</div></div>' +
+      '<div class="lb-kpi"><div class="lb-kpi-num">$181K+</div><div class="lb-kpi-lbl">Year 1 revenue</div></div>' +
+      '</div>' +
+      '<h2>Total Cost of Ownership (5 years)</h2>' +
+      '<ul>' +
+      '<li><strong>Acquisition:</strong> $36,230 list price. No-interest financing available. Eligible for Section 179 first-year depreciation.</li>' +
+      '<li><strong>Annual preventive maintenance:</strong> $0. No service contract required.</li>' +
+      '<li><strong>Disposables:</strong> approx $3.20 per complete PFT, all-in.</li>' +
+      '<li><strong>Dedicated PFT room:</strong> not required.</li>' +
+      '<li><strong>Dedicated RT:</strong> not required.</li>' +
+      '</ul>' +
+      '<div class="lb-highlight"><strong>Bottom line:</strong> at 5 complete PFTs per day, a MiniBox+ generates approximately $907,000 of 5-year CPT revenue against $36,230 of acquisition cost &mdash; a ratio that most capital equipment in a medical practice cannot match.</div>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong> &middot; USinfo@pulm-one.com</div><div>CPT coding should be based on medical necessity. Reimbursement subject to specific health plan policy. All figures are national averages.</div></div>' +
+      '</div>'
+  },
+  patients: {
+    title: 'Which of Your Patients Benefits',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>MiniBox+ &mdash; Clinical Fit By Patient Type</h1>' +
+      '<div class="lb-sub">Where bringing complete PFT in-house changes the patient\'s pathway, not just the billing.</div>' +
+      '<h2>Eight Archetypes That Change Most</h2>' +
+      '<table>' +
+      '<tr><th>Patient</th><th>What Changes With In-Office Full PFT</th></tr>' +
+      '<tr><td><strong>Undiagnosed COPD</strong></td><td>Confirms hyperinflation and trapped air same visit; stages disease before empiric Rx.</td></tr>' +
+      '<tr><td><strong>Post-COVID long-hauler</strong></td><td>DLCO reveals diffusion impairment when spirometry and imaging look normal.</td></tr>' +
+      '<tr><td><strong>Suspected ILD</strong></td><td>Restrictive pattern + low DLCO same visit triggers HRCT/rheum/pulm referral faster.</td></tr>' +
+      '<tr><td><strong>Pediatric asthma (age 5+)</strong></td><td>No claustrophobic chamber, no panting &mdash; tidal breathing only. Objective tracking replaces peak flow diaries.</td></tr>' +
+      '<tr><td><strong>Pre-op clearance</strong></td><td>ARISCAT / NSQIP risk stratification during the pre-op visit; surgery stays on schedule.</td></tr>' +
+      '<tr><td><strong>Occupational surveillance</strong></td><td>Full PFT meets most workers\' comp / OSHA documentation without external referral.</td></tr>' +
+      '<tr><td><strong>Severely obese (BMI &gt; 40)</strong></td><td>Cabinless design accommodates patients the body box physically cannot.</td></tr>' +
+      '<tr><td><strong>Biologics candidates</strong></td><td>Full PFT at every escalation visit; documents medical necessity for Dupixent / omalizumab / mepolizumab approval.</td></tr>' +
+      '</table>' +
+      '<h2>The Underlying Pattern</h2>' +
+      '<p>In each of these cases, the physician already knows the right test to order. The system breaks down at the <strong>referral step</strong>: scheduling delays, no-shows, incomplete testing, results lost to follow-up. Bringing complete PFT into the practice replaces a 2-4 week referral loop with a 15-minute same-visit result.</p>' +
+      '<div class="lb-highlight"><strong>National data:</strong> roughly <strong>30-45% of referred ancillary tests are never completed.</strong> Every one of those is a missed diagnosis, a missed treatment adjustment, and $151 of CPT revenue handed to another provider.</div>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong></div><div>Physician-to-physician &mdash; not patient-facing material.</div></div>' +
+      '</div>'
+  },
+  timeline: {
+    title: 'Implementation Timeline',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>From Signed Order to First Billed Patient</h1>' +
+      '<div class="lb-sub">Standard implementation path. PulmOne handles every step.</div>' +
+      '<h2>Week-by-Week</h2>' +
+      '<table>' +
+      '<tr><th>Week</th><th>Milestone</th></tr>' +
+      '<tr><td><strong>Week 0</strong></td><td>Signed purchase order or lease agreement received. ACH or invoice set up. Kickoff call scheduled.</td></tr>' +
+      '<tr><td><strong>Week 1</strong></td><td>Device built, QC-tested, shipped. DLCO gas cylinder coordination with regional supplier. Practice confirms install location.</td></tr>' +
+      '<tr><td><strong>Week 2</strong></td><td>On-site install (half day). 2-hour end-to-end staff training for MAs, RT, and practice manager. Initial billing review with biller.</td></tr>' +
+      '<tr><td><strong>Week 3</strong></td><td>First patients tested. First claims submitted. PulmOne billing support reviews the first 10 claims for documentation quality.</td></tr>' +
+      '<tr><td><strong>Week 4+</strong></td><td>Revenue flowing. Quarterly check-ins thereafter.</td></tr>' +
+      '</table>' +
+      '<h2>Optional Add-Ons</h2>' +
+      '<ul>' +
+      '<li><strong>EMR / HL7 integration:</strong> add 1-2 weeks depending on IT availability. Supports Epic, Athena, Cerner, NextGen, eClinicalWorks, Allscripts.</li>' +
+      '<li><strong>Mobile cart with DLCO cylinder:</strong> available for multi-room or multi-site practices.</li>' +
+      '<li><strong>Peer-practice reference call:</strong> PulmOne can arrange a call with a practice currently running MiniBox+ in a similar setting.</li>' +
+      '</ul>' +
+      '<h2>What the Practice Provides</h2>' +
+      '<ul>' +
+      '<li>Install location (desktop or cart, standard outlet).</li>' +
+      '<li>Staff availability for 2-hour training (MAs + biller recommended).</li>' +
+      '<li>IT contact if EMR integration is included.</li>' +
+      '<li>DLCO gas cylinder storage (provided by regional gas supplier, set up by PulmOne).</li>' +
+      '</ul>' +
+      '<div class="lb-highlight"><strong>Most practices are billing their first MiniBox+ PFT within 21 days of signed order.</strong> No dedicated project management on your side is required.</div>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong> &middot; USinfo@pulm-one.com &middot; 1-844-PulmOne</div><div>Implementation plan v1.0</div></div>' +
+      '</div>'
+  },
+  compare: {
+    title: 'MiniBox+ vs. Alternatives',
+    html:
+      '<div class="lb-doc">' +
+      '<h1>MiniBox+ vs. Traditional PFT Options</h1>' +
+      '<div class="lb-sub">How MiniBox+ compares to body-box systems and ultrasound-only devices on the four metrics that matter most.</div>' +
+      '<table>' +
+      '<tr><th>Metric</th><th>MiniBox+</th><th>Body Box (Jaeger / MGC / Morgan)</th><th>Ultrasound (NDD EasyOne Pro)</th></tr>' +
+      '<tr><td>Acquisition cost</td><td><strong>$36,230</strong></td><td>$50,000 - $70,000</td><td>~$28,000</td></tr>' +
+      '<tr><td>Annual PM / service</td><td><strong>$0</strong></td><td>$4,000 - $6,000</td><td>$750 + sensors</td></tr>' +
+      '<tr><td>True plethysmography TLC</td><td><strong>Yes</strong></td><td>Yes</td><td>No &mdash; equation-based estimate</td></tr>' +
+      '<tr><td>CPT 94726 billable</td><td><strong>Yes ($55.72)</strong></td><td>Yes</td><td><strong>No</strong></td></tr>' +
+      '<tr><td>Max reimbursement per complete PFT</td><td><strong>$151.45</strong></td><td>$151.45</td><td>~$86</td></tr>' +
+      '<tr><td>Dedicated PFT room required</td><td><strong>No &mdash; desktop</strong></td><td>Yes</td><td>No</td></tr>' +
+      '<tr><td>Specialist RT required to operate</td><td><strong>No &mdash; any trained staff</strong></td><td>Yes, typically</td><td>Moderate training</td></tr>' +
+      '<tr><td>Pediatric / obese / wheelchair</td><td><strong>Yes</strong></td><td>Limited by chamber size</td><td>Yes</td></tr>' +
+      '<tr><td>Published multi-center validation</td><td><strong>Yes &mdash; CHEST 2021, 700+ pts</strong></td><td>Legacy standard</td><td>Limited for TLC accuracy</td></tr>' +
+      '</table>' +
+      '<div class="lb-highlight"><strong>The key distinction:</strong> ultrasound devices (like NDD EasyOne Pro) are attractive on price but <strong>cannot bill CPT 94726</strong> because they estimate TLC mathematically rather than measuring it. Practices using ultrasound-only devices forfeit approximately <strong>$55 per patient</strong> &mdash; roughly $165,000 per year at 200 patients per month.</div>' +
+      '<h2>Where Body-Box Systems Still Fit</h2>' +
+      '<p>A traditional body box remains the right choice for dedicated hospital PFT labs where throughput, research-grade data, and pediatric respiratory testing with full chamber monitoring are required. MiniBox+ is designed for <strong>in-practice, in-exam-room, and satellite-clinic</strong> deployment &mdash; where the body box is either impossible to place or economically unjustifiable.</p>' +
+      '<div class="lb-footer"><div><strong>PulmOne Advanced Medical Devices</strong></div><div>Prices and specifications are approximations as of publication &mdash; verify current vendor quotes.</div></div>' +
+      '</div>'
+  }
+};
+
+var currentLB = null;
+function showLB(key) {
+  var doc = LB_DOCS[key];
+  if (!doc) return;
+  currentLB = key;
+  document.getElementById('lb-viewer-title').textContent = doc.title;
+  document.getElementById('lb-content').innerHTML = doc.html;
+  document.getElementById('lb-viewer').classList.add('open');
+  document.getElementById('lb-viewer').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+function closeLB() {
+  document.getElementById('lb-viewer').classList.remove('open');
+  currentLB = null;
+}
+function copyLBAsText() {
+  if (!currentLB) return;
+  var tmp = document.createElement('div');
+  tmp.innerHTML = LB_DOCS[currentLB].html;
+  // Extract text with basic structure
+  var text = '';
+  var heading = tmp.querySelector('h1');
+  if (heading) text += heading.textContent + '\n\n';
+  var sub = tmp.querySelector('.lb-sub');
+  if (sub) text += sub.textContent + '\n\n';
+  tmp.querySelectorAll('h2, p, li, td').forEach(function(el) {
+    if (el.tagName === 'H2') text += '\n' + el.textContent.toUpperCase() + '\n';
+    else if (el.tagName === 'LI') text += '  \u2022 ' + el.textContent + '\n';
+    else text += el.textContent + '\n';
+  });
+  copyToClipboard(text.replace(/\n{3,}/g, '\n\n').trim());
+  toast('Copied as plain text');
+}
+function copyLBAsHTML() {
+  if (!currentLB) return;
+  copyToClipboard(LB_DOCS[currentLB].html);
+  toast('Copied as HTML');
+}
+function printLB() {
+  if (!currentLB) return;
+  window.print();
+}
+
+/* =================== EMAIL TEMPLATES =================== */
+var EMAIL_TEMPLATES = [
+  {
+    id: 'pre-meeting', cat: 'Pre-Meeting', title: 'Pre-meeting teaser',
+    sub: '48 hours before the demo',
+    subject: 'Quick note before our {{DAY}} meeting, Dr. {{LAST_NAME}}',
+    body: 'Dr. {{LAST_NAME}},\n\nLooking forward to meeting you and the team on {{DAY}} at {{TIME}}.\n\nTo make sure I do not waste any of your time, two quick questions:\n\n1. Roughly how many PFT-eligible patients do you see per week today?\n2. Are there any specific clinical or financial questions you want me to be ready to answer?\n\nI will bring a MiniBox+ and we can run a live test on a volunteer. Fifteen to thirty minutes is typically enough for a first meeting.\n\nSee you {{DAY}}.\n\n{{YOUR_NAME}}\nPulmOne USA\n1-844-PulmOne',
+    note: 'Purpose: confirms the meeting, gets practical intel 48 hours in advance, sets expectation that the demo will be live.'
+  },
+  {
+    id: 'post-demo', cat: 'Post-Meeting', title: 'Same-day post-demo thank-you',
+    sub: 'Sent the same day, ideally within 2 hours',
+    subject: 'MiniBox+ recap &mdash; from this morning',
+    body: 'Dr. {{LAST_NAME}},\n\nThank you for the time this morning. I enjoyed the conversation about {{SPECIFIC_TOPIC}}.\n\nAs promised, attached is a one-page physician summary of what we covered. The short version:\n\n  \u2022 Complete PFT (spirometry, lung volumes, DLCO) in 15 minutes on a desktop device\n  \u2022 Same CPT codes as the hospital body box &mdash; up to $151.45 per complete PFT\n  \u2022 At {{PATIENTS_PER_DAY}} PFTs per day, payback in roughly {{PAYBACK_WEEKS}} weeks\n  \u2022 Published validation: CHEST 2021, 700+ patients, 11 medical centers\n\nNext step I suggested: a 30-minute follow-up with {{PM_NAME}} to walk through your specific billing history. Does {{PROPOSED_TIME_1}} or {{PROPOSED_TIME_2}} work on your side?\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: anchor the memory while the demo is still warm. Attach the Leave-Behind #1 (Executive Summary). Ask for the specific next meeting.'
+  },
+  {
+    id: 'roi-send', cat: 'Financial Follow-up', title: 'ROI / proposal send',
+    sub: 'After you promise the proposal',
+    subject: 'MiniBox+ proposal for {{PRACTICE_NAME}} &mdash; customized',
+    body: 'Dr. {{LAST_NAME}},\n\nAttached is the customized revenue and payback proposal we discussed, built using the patient-volume numbers {{PM_NAME}} shared.\n\nHeadline:\n  \u2022 Year-1 revenue projection: {{Y1_REV}}\n  \u2022 Device breakeven: approximately {{BREAKEVEN_DATE}}\n  \u2022 Year-5 cumulative: {{Y5_REV}}\n  \u2022 Financing options included on page 3 (no-interest, operating lease, and Section 179 purchase)\n\nTwo things to flag for you:\n\n1. All figures are based on the National Medicare/Medicaid average. Your actual payor mix may drive this higher or lower.\n2. Section 179 allows the full purchase price to be deducted in year one. If that applies to {{PRACTICE_NAME}}, your accountant will want to weigh in on timing.\n\nI would like to close the loop with a 20-minute call on {{PROPOSED_DATE}}. Fair?\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: deliver the customized ROI with decision-ready framing. Always propose the next call with a specific date; do not say "let me know."'
+  },
+  {
+    id: 'quiet-followup', cat: 'Reviving a Stall', title: 'Quiet-account gentle revive',
+    sub: '7-10 days after no response',
+    subject: 'Still here when you are, Dr. {{LAST_NAME}}',
+    body: 'Dr. {{LAST_NAME}},\n\nI know things move fast in clinic, so wanted to surface this gently.\n\nWe last spoke about bringing MiniBox+ into {{PRACTICE_NAME}} around {{LAST_MEETING}}. No pressure &mdash; just want to make sure the ball is still in my court, not stuck in yours.\n\nThree possible paths forward. Which sounds closest?\n\n  1. "I am still interested, just buried." &mdash; let me know a timeline and I will circle back then.\n  2. "I have specific questions that have not been answered." &mdash; tell me what they are and I will get you a written answer by end of week.\n  3. "We decided not to move forward." &mdash; completely fine. If you can share what tipped the decision, it helps me be better next time.\n\nWhichever it is, I will respect it.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: the "break-up email" that doesn\'t actually break up. Gives them three easy outs and makes answering low-friction. Usually pulls a response rate 3-4x higher than a standard follow-up.'
+  },
+  {
+    id: 'peer-ref', cat: 'Credibility Build', title: 'Peer reference introduction',
+    sub: 'When they say "we want to talk to a current user"',
+    subject: 'Introducing you to Dr. {{REF_DOCTOR}} &mdash; MiniBox+ user',
+    body: 'Dr. {{LAST_NAME}},\n\nAs requested, connecting you with Dr. {{REF_DOCTOR}} at {{REF_PRACTICE}} &mdash; one of the practices running MiniBox+ in a setting similar to yours.\n\nDr. {{REF_DOCTOR}} has agreed to take a 15-minute phone or video call. Good topics to cover:\n\n  \u2022 Workflow reality &mdash; how does it actually fit into a patient visit?\n  \u2022 Staff training and who runs it day-to-day\n  \u2022 Billing experience &mdash; which codes, any denial patterns\n  \u2022 Anything they wish they had known before buying\n\nCc\'d both of you. {{REF_DOCTOR}} &mdash; thank you again for being willing to help.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: nothing sells equipment like a peer. Have 2-3 reference physicians warmed up and agreed to these calls ahead of time. Never surprise a reference.'
+  },
+  {
+    id: 'closing-nudge', cat: 'Closing', title: 'Closing nudge &mdash; decision week',
+    sub: 'When a close date was promised and the day arrives',
+    subject: 'Partner meeting this week &mdash; anything I can help you with?',
+    body: 'Dr. {{LAST_NAME}},\n\n{{PM_NAME}} mentioned the partner meeting is {{DAY}}. Two quick offers:\n\n  1. If any clinical or financial question comes up, call or text me in the moment. I will get you an answer in minutes, not hours.\n  2. If it helps, I can be on standby to join by phone for the MiniBox+ portion. Five minutes, just so nobody has to re-explain the ROI.\n\nEither way, rooting for you. Let me know how it lands.\n\n{{YOUR_NAME}}\nPulmOne USA\n(direct) {{YOUR_MOBILE}}',
+    note: 'Purpose: be present at the decisive moment without being pushy. Offering to be on standby is often what separates the rep who wins from the one who waits.'
+  },
+  {
+    id: 'demo-confirm', cat: 'Logistics', title: 'Demo appointment confirmation',
+    sub: 'Day-before confirmation',
+    subject: 'Tomorrow at {{TIME}} &mdash; MiniBox+ demo confirmation',
+    body: 'Dr. {{LAST_NAME}},\n\nConfirming our meeting tomorrow, {{DATE}}, at {{TIME}} at {{LOCATION}}.\n\nWhat I will bring:\n  \u2022 MiniBox+ device, ready to run\n  \u2022 A 1-page summary for your records\n  \u2022 A short customized revenue projection based on the patient-volume range we discussed\n\nWhat I will ask you to provide:\n  \u2022 One volunteer (MA, front desk, yourself) for a live test demo &mdash; takes under 10 minutes\n  \u2022 15 minutes of your attention; 30 if you can spare it\n\nIf anything comes up on your side, my direct line is {{YOUR_MOBILE}}. See you tomorrow.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: reduce no-show rate. Confirm logistics. Reset expectations about what a demo actually involves so no one is surprised.'
+  },
+  {
+    id: 'post-install', cat: 'Post-Sale', title: 'Post-install 30-day check-in',
+    sub: 'One month after first billed patient',
+    subject: 'How is month one going with MiniBox+?',
+    body: 'Dr. {{LAST_NAME}},\n\nWe are at about 30 days since your first MiniBox+ patient. Quick check-in:\n\n  \u2022 How is the workflow landing with {{MA_NAME}} and the team?\n  \u2022 Any billing or reimbursement patterns we should look at together?\n  \u2022 Any patient types where you want a coaching refresher?\n  \u2022 Any features you have questions about that we did not cover in training?\n\nIf it would help, I can swing by for a 20-minute tune-up visit &mdash; no charge, just part of the program. Most practices find one hour in month two accelerates utilization significantly.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: early post-sale contact is the single biggest driver of referrals and second-unit purchases. Do not wait 90 days.'
+  },
+  {
+    id: 'referral-ask', cat: 'Post-Sale', title: 'Referral ask &mdash; happy customer',
+    sub: '60-90 days in, after a positive experience',
+    subject: 'A small ask, Dr. {{LAST_NAME}}',
+    body: 'Dr. {{LAST_NAME}},\n\nSince MiniBox+ went live at {{PRACTICE_NAME}} we have gone from zero to {{PFT_COUNT}} PFTs per month &mdash; fantastic work by your team.\n\nA small ask if you are willing. Are there any colleagues &mdash; former fellows, classmates, partners from prior practices &mdash; you think would benefit from a conversation?\n\nI am happy to take it from there; you do not need to do anything more than the intro. And if you would prefer not to &mdash; that is completely fine, no ask is worth the friction.\n\nThank you either way.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: turn a happy customer into pipeline. Always give them an easy out &mdash; never make the referral ask feel transactional.'
+  },
+  {
+    id: 'upgrade', cat: 'Existing Customer', title: 'Aging-device replacement conversation',
+    sub: 'When their current device is 7+ years old',
+    subject: 'A conversation about your {{DEVICE_TYPE}}, Dr. {{LAST_NAME}}',
+    body: 'Dr. {{LAST_NAME}},\n\nYour {{DEVICE_TYPE}} is in its {{AGE}}-year range. In my experience, devices in this window tend to shift from "everything is fine" to "something is intermittently wrong" fairly quickly.\n\nNot here to sell you anything yet &mdash; just to do a 30-minute walkthrough and talk about what a planned upgrade path looks like versus what an emergency replacement looks like.\n\nWould {{DATE_1}} or {{DATE_2}} work for that?\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: proactive upgrade conversation. Anchor to risk of unplanned downtime, not to new features. Use the Aging Devices tab in the Master Toolkit for structure.'
+  },
+  {
+    id: 'final-nudge', cat: 'Reviving a Stall', title: 'The final no-response email',
+    sub: 'After 3-4 unanswered follow-ups',
+    subject: 'Closing your file, Dr. {{LAST_NAME}}',
+    body: 'Dr. {{LAST_NAME}},\n\nThis is the last email I will send on this unless you want me to keep going.\n\nI am assuming timing just is not right. I am going to close the file and stop crowding your inbox. That is the right thing to do.\n\nIf anything changes &mdash; new location, new partner, a patient that really needs in-office PFT &mdash; my number is below. No hard feelings in either direction.\n\nGood luck with everything.\n\n{{YOUR_NAME}}\nPulmOne USA\n{{YOUR_MOBILE}}',
+    note: 'Purpose: the real final email. Often triggers a response from someone who genuinely got busy. Don\'t fake it &mdash; be willing to actually close the file if they ignore this one too.'
+  },
+  {
+    id: 'training-confirm', cat: 'Logistics', title: 'Training day confirmation',
+    sub: 'After PO signed, day before training',
+    subject: 'MiniBox+ training tomorrow at {{PRACTICE_NAME}}',
+    body: 'Hi {{PM_NAME}},\n\nTomorrow, {{DATE}} at {{TIME}}, we are set for the full MiniBox+ install and training at {{PRACTICE_NAME}}.\n\nPlan (approximately 2.5 hours total):\n\n  1. Install &amp; calibration (30 min)\n  2. 6-button workflow walkthrough with the staff running it (45 min)\n  3. Live patient practice &mdash; FVC, LVM, DLCO on volunteers (45 min)\n  4. Billing office 15-min briefing on CPT documentation\n  5. Q&amp;A, wrap\n\nRecommended attendees: {{MA_NAMES}}, {{RT_NAME}}, {{BILLER_NAME}}.\n\nNo prep required on your side. Let me know if the room, outlet, or gas cylinder location needs last-minute coordination.\n\n{{YOUR_NAME}}\nPulmOne USA',
+    note: 'Purpose: set the training day up for success. Over-communicate what will happen so the practice feels in control.'
+  }
+];
+
+function renderEmailList() {
+  var list = document.getElementById('email-list');
+  if (!list) return;
+  list.innerHTML = '';
+  EMAIL_TEMPLATES.forEach(function(t, idx) {
+    var el = document.createElement('div');
+    el.className = 'email-item';
+    el.onclick = function() { selectEmail(idx); };
+    el.innerHTML =
+      '<div class="email-item-cat">' + t.cat + '</div>' +
+      '<div class="email-item-title">' + t.title + '</div>' +
+      '<div class="email-item-sub">' + t.sub + '</div>';
+    list.appendChild(el);
+  });
+}
+
+var currentEmail = null;
+function selectEmail(idx) {
+  var t = EMAIL_TEMPLATES[idx];
+  if (!t) return;
+  currentEmail = t;
+  document.querySelectorAll('#email-list .email-item').forEach(function(el, i) {
+    el.classList.toggle('active', i === idx);
+  });
+  document.getElementById('email-preview-title').textContent = t.title;
+  var highlighted = function(s) {
+    return s.replace(/\{\{([A-Z_0-9]+)\}\}/g, '<span class="merge">{{$1}}</span>');
+  };
+  document.getElementById('email-preview-body').innerHTML =
+    '<div class="email-field"><div class="email-field-lbl">Subject line</div><div class="email-field-val">' + highlighted(t.subject) + '</div></div>' +
+    '<div class="email-field"><div class="email-field-lbl">Body</div><div class="email-body-wrap">' + highlighted(t.body) + '</div></div>' +
+    '<div class="email-note"><strong>When to use:</strong> ' + t.note + '</div>';
+}
+
+function copyEmailBody() {
+  if (!currentEmail) { toast('Select a template first'); return; }
+  copyToClipboard(currentEmail.body);
+  toast('Body copied &mdash; don\'t forget to fill merge fields');
+}
+function copyEmailAll() {
+  if (!currentEmail) { toast('Select a template first'); return; }
+  var full = 'Subject: ' + currentEmail.subject + '\n\n' + currentEmail.body;
+  copyToClipboard(full);
+  toast('Subject + body copied');
+}
+function openInMailClient() {
+  if (!currentEmail) { toast('Select a template first'); return; }
+  var s = encodeURIComponent(currentEmail.subject);
+  var b = encodeURIComponent(currentEmail.body);
+  window.location.href = 'mailto:?subject=' + s + '&body=' + b;
+}
+
+/* =================== CLIPBOARD HELPER =================== */
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(function() { legacyCopy(text); });
+  } else {
+    legacyCopy(text);
+  }
+}
+function legacyCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+/* =================== INIT =================== */
+(function init() {
+  renderEmailList();
+  selectEmail(0);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Quote Builder — MOCK v0.2</title>
+<style>
+  :root{
+    --blue-dark:#1b3a5b; --blue:#2f6fb0; --gray-100:#f4f6f9; --gray-200:#e6eaf0;
+    --gray-300:#d3dae4; --gray-600:#6b7785; --text:#1f2933; --green:#138a4a; --red:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Segoe UI',Arial,sans-serif; background:#eef1f5; color:var(--text);}
+
+  .toolbar{position:sticky; top:0; z-index:50; background:var(--blue-dark); color:#fff;
+    padding:12px 20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  .toolbar h1{font-size:15px; margin:0; font-weight:600; letter-spacing:.3px;}
+  .toolbar .tag{background:#ffffff22; padding:3px 9px; border-radius:20px; font-size:11px;}
+  .toolbar .spacer{flex:1;}
+  .btn{border:none; border-radius:7px; padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; transition:.15s;}
+  .btn-print{background:#fff; color:var(--blue-dark);}
+  .btn-print:hover{background:#e9eef5;}
+  .btn-ghost{background:#ffffff22; color:#fff;}
+  .btn-ghost:hover{background:#ffffff33;}
+  .btn-add{background:var(--blue); color:#fff;}
+  .btn-add:hover{background:#2a6199;}
+  .seg{display:inline-flex; border:1px solid #ffffff55; border-radius:7px; overflow:hidden;}
+  .seg-btn{background:transparent; color:#fff; border:none; padding:8px 13px; font-size:12.5px; cursor:pointer; transition:.12s;}
+  .seg-btn.active{background:#fff; color:var(--blue-dark); font-weight:700;}
+  .seg-note{font-size:10.5px; color:#cdd9e6;}
+
+  .hint{max-width:850px; margin:14px auto 0; padding:10px 16px; background:#fff8e1;
+    border:1px solid #f0d98a; border-radius:8px; font-size:12.5px; color:#7a5c10;}
+
+  .sheet{max-width:850px; margin:18px auto 60px; background:#fff; padding:46px 54px;
+    box-shadow:0 4px 24px rgba(0,0,0,.10); border-radius:4px;}
+
+  .q-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
+  .logo .pulm{font-size:30px; font-weight:300; color:#5a6470; letter-spacing:1px;}
+  .logo .pulm b{color:var(--blue); font-weight:600;}
+  .logo .tagline{font-size:11px; color:#9aa4b0; letter-spacing:3px; margin-top:-4px;}
+  .meta table{border-collapse:collapse; font-size:12.5px;}
+  .meta td{padding:2px 0;}
+  .meta td.lbl{color:var(--gray-600); padding-right:14px; white-space:nowrap;}
+  .addr-line{font-size:10.5px; color:var(--gray-600); border-bottom:1px solid var(--gray-200); padding-bottom:10px; margin-bottom:22px;}
+
+  .block{display:grid; grid-template-columns:1fr 1fr; gap:6px 40px; margin-bottom:22px;}
+  .field{display:flex; align-items:center; gap:10px; font-size:12.5px;}
+  .field label{color:var(--gray-600); width:118px; flex:none;}
+  .field.tall{align-items:flex-start;}
+  .field.tall label{padding-top:6px;}
+
+  input,textarea,select{font-family:inherit; font-size:12.5px; color:var(--text);
+    border:1px solid var(--gray-300); border-radius:5px; padding:6px 8px; width:100%; background:#fcfdfe; outline:none;}
+  input:focus,textarea:focus,select:focus{border-color:var(--blue);}
+  textarea{resize:vertical; min-height:48px; line-height:1.4;}
+
+  table.products{width:100%; border-collapse:collapse; margin:6px 0 4px;}
+  table.products thead th{background:#7a8694; color:#fff; font-size:12px; font-weight:600; text-align:left; padding:9px 10px;}
+  table.products thead th.num{text-align:right;}
+  table.products tbody td{border-bottom:1px solid var(--gray-200); padding:5px 8px; vertical-align:middle;}
+  table.products tbody tr:nth-child(even){background:#f7f9fb;}
+  table.products input{border:1px solid transparent; background:transparent; padding:5px 6px;}
+  table.products input:hover{border-color:var(--gray-300); background:#fff;}
+  table.products input:focus{border-color:var(--blue); background:#fff;}
+  .prod-name{font-weight:500;}
+  .prod-desc{font-size:10.5px; color:var(--gray-600); padding:0 6px 5px; border:none; width:100%;}
+  td.qty input,td.price input,td.total input{text-align:right;}
+  td.total input{font-weight:600; color:var(--blue-dark);}
+  .row-x{color:var(--red); cursor:pointer; font-weight:700; font-size:15px; text-align:center; user-select:none; opacity:.5;}
+  .row-x:hover{opacity:1;}
+  .empty-msg{color:var(--gray-600); font-size:12.5px; text-align:center; padding:18px;}
+  .row-actions{margin-top:10px; display:flex; gap:18px; justify-content:flex-end;}
+  .link-act{font-size:12.5px; color:var(--blue); cursor:pointer; font-weight:600;}
+  .link-act:hover{text-decoration:underline;}
+
+  .bottom{display:grid; grid-template-columns:1fr 330px; gap:30px; margin-top:26px;}
+  .terms-pay .field{margin-bottom:8px;}
+  .totals{font-size:13px;}
+  .totals .trow{display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--gray-200);}
+  .totals .trow.grand{border-bottom:none; border-top:2px solid var(--blue-dark); margin-top:4px; padding-top:10px;}
+  .totals .trow span.l{color:var(--gray-600);}
+  .totals .trow .v{font-weight:600; color:var(--blue-dark); width:130px; text-align:right;}
+  .totals .trow.grand .v{font-size:19px; font-weight:800; color:var(--green);}
+  .totals input{width:130px; text-align:right;}
+
+  .signs{display:grid; grid-template-columns:1fr 1fr; gap:50px; margin-top:46px; font-size:12.5px;}
+  .sign-line{border-top:1px solid #444; margin-top:34px; padding-top:5px; color:var(--gray-600);}
+
+  .tc{margin-top:40px; border-top:1px solid var(--gray-200); padding-top:18px;}
+  .tc h3{font-size:12px; letter-spacing:1px; color:var(--gray-600);}
+  .tc p{font-size:8.6px; line-height:1.45; color:#555; margin:6px 0;}
+  .tc-foot{font-size:10px; color:var(--gray-600); margin-top:18px; border-top:1px solid var(--gray-200); padding-top:8px;}
+
+  /* ---- Add Products modal ---- */
+  .modal-bg{display:none; position:fixed; inset:0; background:rgba(20,30,45,.55); z-index:100; align-items:center; justify-content:center;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff; width:min(900px,94vw); max-height:88vh; border-radius:10px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal-head{text-align:center; padding:18px; border-bottom:1px solid var(--gray-200); position:relative;}
+  .modal-head h2{margin:0; font-size:20px; font-weight:600; color:var(--text);}
+  .modal-head .pb{font-size:13px; color:var(--gray-600); margin-top:2px;}
+  .modal-x{position:absolute; right:16px; top:16px; cursor:pointer; font-size:22px; color:var(--gray-600);}
+  .modal-search{padding:14px 20px 8px;}
+  .modal-search input{height:42px; font-size:14px;}
+  .sel-count{padding:2px 22px 8px; font-size:13px; color:var(--gray-600); font-weight:600;}
+  .modal-body{overflow:auto; padding:0 8px;}
+  table.catalog{width:100%; border-collapse:collapse; font-size:13px;}
+  table.catalog th{position:sticky; top:0; background:#f0f3f7; text-align:left; padding:10px; font-weight:600; color:var(--gray-600); border-bottom:1px solid var(--gray-200);}
+  table.catalog td{padding:9px 10px; border-bottom:1px solid var(--gray-200);}
+  table.catalog tr:hover{background:#f4f9ff;}
+  table.catalog td.name{font-weight:500; color:var(--blue);}
+  table.catalog td.price{text-align:right; white-space:nowrap;}
+  table.catalog .chk{width:34px; text-align:center;}
+  table.catalog input[type=checkbox]{width:17px; height:17px; cursor:pointer;}
+  .cat-type{font-size:11px; color:#fff; padding:2px 8px; border-radius:20px; background:#9aa4b0;}
+  .cat-type.Device{background:#2f6fb0;} .cat-type.Warranty{background:#8a6d1f;}
+  .cat-type.Accessories{background:#138a4a;} .cat-type.Spare{background:#7a4ba8;}
+  .modal-foot{display:flex; justify-content:flex-end; gap:10px; padding:14px 20px; border-top:1px solid var(--gray-200);}
+  .btn-cancel{background:#fff; border:1px solid var(--gray-300); color:var(--text);}
+  .btn-cancel:hover{background:#f4f6f9;}
+
+  @media print{
+    body{background:#fff;}
+    .toolbar,.hint,.row-actions,.row-x,.modal-bg,.no-print{display:none !important;}
+    .sheet{box-shadow:none; margin:0; max-width:none; padding:0 8px;}
+    input,textarea,select{border:none !important; background:transparent !important; padding:2px 0 !important; -webkit-appearance:none; appearance:none;}
+    /* Non-itemized (default): only Product + Qty print, prices roll into the totals — matches the real PulmOne quote */
+    th.price,td.price,th.total,td.total{display:none !important;}
+    /* Itemized: show per-line Sales Price + Line Total on the printed quote */
+    body.itemized th.price, body.itemized td.price, body.itemized th.total, body.itemized td.total{display:table-cell !important;}
+    table.products thead th, table.products tbody tr:nth-child(even){-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .tc{page-break-before:always;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <h1>MiniBox+ Quote Builder</h1>
+  <span class="tag">MOCK v0.2 — for review</span>
+  <div class="seg" title="Choose how the printed quote shows pricing">
+    <button id="segItem" class="seg-btn" onclick="setMode('itemized')">Itemized</button>
+    <button id="segLump" class="seg-btn active" onclick="setMode('lump')">Non-itemized</button>
+  </div>
+  <span class="seg-note">↑ controls the printed PDF</span>
+  <span class="spacer"></span>
+  <button class="btn btn-add" onclick="openCatalog()">＋ Add Products</button>
+  <button class="btn btn-ghost" onclick="newNumber()">↻ New Quote #</button>
+  <button class="btn btn-ghost" onclick="resetSheet()">Clear</button>
+  <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<div class="hint no-print">
+  Click <b>＋ Add Products</b> to pick from the full USA PulmOne price book. List price fills in automatically —
+  just lower it to your real <b>sales price</b> and the totals update. Print shows only Product + Qty (like the real quote);
+  the money rolls into the totals at the bottom.
+</div>
+
+<div class="sheet">
+  <div class="q-head">
+    <div class="logo">
+      <div class="pulm">Pulm<b>O</b>ne</div>
+      <div class="tagline">PFT OUTSIDE THE BOX</div>
+    </div>
+    <div class="meta">
+      <table>
+        <tr><td class="lbl">Created Date</td><td><input id="createdDate" style="width:130px"></td></tr>
+        <tr><td class="lbl">Quote Number</td><td><input id="quoteNum" style="width:160px"></td></tr>
+        <tr><td class="lbl">Expiration Date</td><td><input id="expDate" style="width:130px"></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="addr-line">PulmOne Advanced Medical Devices, 444 Madison Avenue, 6th floor, NYC, NY 10022</div>
+
+  <div class="block">
+    <div class="field"><label>Account Name</label><input placeholder="e.g. NYU Langone Health"></div>
+    <div class="field"><label>Phone</label><input placeholder="(631) 555-0100"></div>
+    <div class="field"><label>Contact Name</label><input placeholder="e.g. Dr. Jane Smith"></div>
+    <div class="field"><label>Prepared By</label><input id="preparedBy" placeholder="Your name"></div>
+    <div class="field tall"><label>Billing Address</label><textarea placeholder="Street&#10;City, State ZIP"></textarea></div>
+    <div class="field tall"><label>Shipping Address</label><textarea placeholder="Street&#10;City, State ZIP"></textarea></div>
+    <div class="field"><label>Rep Email</label><input placeholder="you@pulm-one.com"></div>
+    <div class="field"><label>Rep Initials</label><input id="initials" maxlength="4" placeholder="EB" style="width:70px" oninput="newNumber()"></div>
+  </div>
+
+  <table class="products">
+    <thead>
+      <tr>
+        <th style="width:46%">Product</th>
+        <th class="num" style="width:12%">Qty</th>
+        <th class="num price" style="width:18%">Sales Price</th>
+        <th class="num total" style="width:18%">Line Total</th>
+        <th class="no-print" style="width:3%"></th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="row-actions no-print">
+    <span class="link-act" onclick="openCatalog()">＋ Add from price book</span>
+    <span class="link-act" onclick="addRow({name:'',price:''})">＋ Add blank / custom line</span>
+  </div>
+
+  <div class="bottom">
+    <div class="terms-pay">
+      <div class="field"><label>Payment Terms</label>
+        <select>
+          <option>Net 30 day</option><option>Net 45 day</option><option>Net 60 day</option>
+          <option>Due on receipt</option><option>50% deposit / 50% on install</option>
+          <option>Financed — see ACH schedule</option>
+        </select>
+      </div>
+      <div class="field"><label>Notes</label><textarea placeholder="Optional note to the customer..."></textarea></div>
+    </div>
+    <div class="totals">
+      <div class="trow"><span class="l">Total Price</span><span class="v" id="subTotal">$0.00</span></div>
+      <div class="trow"><span class="l">Deal Discount</span><input id="discount" value="0" oninput="calc()"></div>
+      <div class="trow"><span class="l">Deal Total</span><span class="v" id="dealTotal">$0.00</span></div>
+      <div class="trow grand"><span class="l">Grand Total</span><span class="v" id="grandTotal">$0.00</span></div>
+    </div>
+  </div>
+
+  <div class="signs">
+    <div><div class="sign-line">PulmOne Signature</div></div>
+    <div>
+      <div class="sign-line">Customer Signature</div>
+      <div class="sign-line" style="margin-top:26px;">Date</div>
+    </div>
+  </div>
+
+  <div class="tc">
+    <h3>TERMS &amp; CONDITIONS</h3>
+    <p><b>1. Acceptance of Terms:</b> PulmOne USA Inc. (“PulmOne”) agrees to sell to the person (“Customer”) named in the purchase order (the “Order”) those products and/or services referenced in the Order, on and subject to these terms and conditions. No Order shall be binding on PulmOne until accepted by PulmOne in writing.</p>
+    <p><b>2. Price and Taxes:</b> Prices in the Order do not include applicable value added, excise, sales, use, transfer, or other similar taxes which shall be borne solely by Customer.</p>
+    <p><b>3. Payment Terms; Default:</b> All amounts must be paid within the period referenced in the Order. Customer will pay default interest on outstanding amounts at 2.0% per month, compounded simply. Amounts delayed 30+ days may result in termination, return of the Product at Customer’s expense, a $1,500 handling fee, and costs of enforcement.</p>
+    <p><b>4. Title and Risk of Loss:</b> Title passes to Customer after full payment is received; risk of loss passes upon delivery.</p>
+    <p><b>5. Acceptance and Inspection:</b> Customer must examine Products upon receipt and notify PulmOne in writing within ten (10) days of discrepancies or defects.</p>
+    <p><b>6. Limited Warranty:</b> Products are warranted free of material defects for 12 months from delivery; sole remedy is replacement or credit at PulmOne’s discretion. THIS WARRANTY IS IN LIEU OF ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.</p>
+    <p><b>7. Intellectual Property Rights:</b> All IP rights in the Products remain the sole property of PulmOne. Customer must not reverse-engineer the Products.</p>
+    <p><b>8. Services and Support:</b> PulmOne provides standard maintenance, repairs, and support during the Warranty Period at no charge; thereafter at standard rates.</p>
+    <p><b>9. Limitations of Liability:</b> PulmOne’s total liability is limited to the purchase price paid. PulmOne is not liable for indirect, incidental, special, consequential, or punitive damages.</p>
+    <p><b>10. Governing Law:</b> Governed by the laws of the State of Israel; disputes subject to the exclusive jurisdiction of the competent courts in New York City, NY.</p>
+    <div class="tc-foot">PulmOne Advanced Medical Devices, 444 Madison Avenue, 6th floor, NYC, NY 10022</div>
+  </div>
+</div>
+
+<!-- ADD PRODUCTS MODAL -->
+<div class="modal-bg no-print" id="catalogModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add Products</h2>
+      <div class="pb">Price Book: USA PulmOne</div>
+      <span class="modal-x" onclick="closeCatalog()">&times;</span>
+    </div>
+    <div class="modal-search"><input id="catSearch" placeholder="Search products by name or code..." oninput="renderCatalog()"></div>
+    <div class="sel-count">Show Selected (<span id="selCount">0</span>)</div>
+    <div class="modal-body">
+      <table class="catalog">
+        <thead><tr><th class="chk"></th><th>Product Name</th><th>Product Code</th><th style="text-align:right">List Price</th><th>Type</th></tr></thead>
+        <tbody id="catRows"></tbody>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeCatalog()">Cancel</button>
+      <button class="btn btn-add" onclick="addSelected()">Add Selected</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== USA PulmOne price book =====
+  var CATALOG = [
+    {n:"MiniBox+™", c:"PUO-MINIBOX+SK", p:33500, t:"Device"},
+    {n:"MiniBox+ Cart", c:"PUO-CART0001", p:2680, t:"Accessories"},
+    {n:"MIP/MEP device", c:"PUO-MIP.MEP", p:3000, t:"Accessories"},
+    {n:"DLCO Gas Regulators", c:"PUO-USRegulator", p:450, t:"Accessories"},
+    {n:"Carry Case", c:"PUO-CARRYCASE", p:800, t:"Accessories", d:"Heavy duty carry case"},
+    {n:"3-Liter Calibration syringe", c:"PUO-AMS00007", p:350, t:"Accessories"},
+    {n:"25 Tests+Filters+Clips", c:"PUO-VPFA008", p:80, t:"Accessories"},
+    {n:"100 Tests+Filters+Clips", c:"PUO-VBFA0003", p:320, t:"Accessories"},
+    {n:"1-Year Extended Warranty", c:"PUO-EXW00018", p:3105, t:"Warranty"},
+    {n:"2-Year Extended Warranty", c:"PUO-EXW00019", p:6000, t:"Warranty"},
+    {n:"3-Year Extended Warranty", c:"PUO-EXW00020", p:8315, t:"Warranty"},
+    {n:"4-Year Extended Warranty", c:"PUO-EXW00021", p:9915, t:"Warranty"},
+    {n:"5-Year Extended Warranty", c:"PUO-EXW00022", p:10500, t:"Warranty"},
+    {n:"Extended warranty over the period of the subscription", c:"PUO-EXW00030", p:0, t:"Warranty"},
+    {n:"HL7 Configuration-1 Device", c:"PUO-HL7.CONFIG.1", p:10000, t:"Device"},
+    {n:"HL7 Configuration-2 Devices", c:"PUO-HL7.CONFIG.2", p:12000, t:"Device"},
+    {n:"HL7 Configuration-3 Devices", c:"PUO-HL7.CONFIG.3", p:14000, t:"Device"},
+    {n:"HL7 Configuration-4 Devices", c:"PUO-HL7.CONFIG.4", p:16000, t:"Device"},
+    {n:"HL7 Kit license", c:"PUO-HLK00017", p:4000, t:"Accessories"},
+    {n:"MiniBox+ Academy Annual Subscription", c:"PUO-Subscription", p:500, t:"Device"},
+    {n:"Additional Training Day", c:"PUO-TRAINING1", p:2500, t:"Device"},
+    {n:"Ongoing Advanced Clinical Education", c:"PUO-SUBSCRIPTION10", p:0, t:"Device"},
+    {n:"Platinum Protection Warranty Program", c:"PUO-SUBSCRIPTION20", p:0, t:"Device"},
+    {n:"PulmSuite - Monthly Subscription 1 Device", c:"PUO-PULMSUITE1", p:300, t:"Accessories"},
+    {n:"PulmSuite - Monthly Subscription 2 Devices", c:"PUO-PULMSUITE2", p:550, t:"Accessories"},
+    {n:"PulmSuite - Monthly Subscription 3 Devices", c:"PUO-PULMSUITE3", p:750, t:"Accessories"},
+    {n:"PulmSuite - Monthly Subscription 4 Devices", c:"PUO-PULMSUITE4", p:900, t:"Accessories"},
+    {n:"PulmSuite - Monthly Subscription 5 Devices or More", c:"PUO-PULMSUITE5", p:1000, t:"Accessories"},
+    {n:"Service/Flat Rate Shipping", c:"PUO-SERVICE1", p:300, t:"Accessories"},
+    {n:"Service/Investigation report", c:"PUO-SERVICE2", p:750, t:"Spare"},
+    {n:"Service/Labor-Hourly Charge", c:"PUO-SERVICE3", p:175, t:"Spare"}
+  ];
+
+  function money(n){ return "$" + (Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function num(v){ return parseFloat(String(v).replace(/[^0-9.\-]/g,"")) || 0; }
+  function fmtDate(d){ return (d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear(); }
+  function esc(s){ return (s||"").replace(/"/g,'&quot;'); }
+
+  // ===== Quote line items =====
+  function addRow(item){
+    var tb = document.getElementById("rows");
+    var name = item.name!==undefined ? item.name : (item.n||"");
+    var price = item.price!==undefined ? item.price : (item.p!==undefined ? item.p : "");
+    var desc = item.d || "";
+    var emptyEl = document.getElementById("emptyRow"); if(emptyEl) emptyEl.remove();
+    var tr = document.createElement("tr");
+    tr.className = "lineRow";
+    tr.innerHTML =
+      '<td>'+
+        '<input class="prod-name" value="'+ esc(name) +'" placeholder="Item or service">'+
+        '<input class="prod-desc" value="'+ esc(desc) +'" placeholder="Line description (optional)">'+
+      '</td>'+
+      '<td class="qty"><input value="1" oninput="calc()"></td>'+
+      '<td class="price"><input value="'+ (price===""?"":Number(price).toFixed(2)) +'" placeholder="0.00" oninput="calc()"></td>'+
+      '<td class="total"><input class="lineTotal" placeholder="0.00" readonly></td>'+
+      '<td class="no-print"><span class="row-x" onclick="this.closest(\'tr\').remove();calc()">×</span></td>';
+    tb.appendChild(tr);
+    calc();
+  }
+
+  function calc(){
+    var sub = 0, rows = document.querySelectorAll("#rows tr.lineRow");
+    rows.forEach(function(tr){
+      var q = num(tr.querySelector(".qty input").value);
+      var p = num(tr.querySelector(".price input").value);
+      var line = q*p;
+      tr.querySelector(".lineTotal").value = line ? money(line) : "";
+      sub += line;
+    });
+    var disc = num(document.getElementById("discount").value);
+    var deal = sub - disc;
+    document.getElementById("subTotal").textContent = money(sub);
+    document.getElementById("dealTotal").textContent = money(deal);
+    document.getElementById("grandTotal").textContent = money(deal);
+    // empty-state message — only shows when there are zero product lines
+    var empty = document.getElementById("emptyRow");
+    if(rows.length===0){
+      if(!empty){
+        var tr=document.createElement("tr"); tr.id="emptyRow";
+        tr.innerHTML='<td colspan="5" class="empty-msg">No products yet — click <b>＋ Add Products</b> to begin.</td>';
+        document.getElementById("rows").appendChild(tr);
+      }
+    } else if(empty){ empty.remove(); }
+  }
+
+  // ===== Add Products modal =====
+  function openCatalog(){ document.getElementById("catSearch").value=""; renderCatalog(); document.getElementById("catalogModal").classList.add("open"); }
+  function closeCatalog(){ document.getElementById("catalogModal").classList.remove("open"); }
+  function renderCatalog(){
+    var q = (document.getElementById("catSearch").value||"").toLowerCase();
+    var tb = document.getElementById("catRows"); tb.innerHTML="";
+    CATALOG.forEach(function(item, i){
+      if(q && (item.n.toLowerCase().indexOf(q)<0 && item.c.toLowerCase().indexOf(q)<0)) return;
+      var tr=document.createElement("tr");
+      tr.innerHTML =
+        '<td class="chk"><input type="checkbox" data-i="'+i+'" onchange="updSel()"></td>'+
+        '<td class="name">'+ item.n +'</td>'+
+        '<td>'+ item.c +'</td>'+
+        '<td class="price">'+ money(item.p) +'</td>'+
+        '<td><span class="cat-type '+item.t+'">'+ (item.t==="Spare"?"Spare Parts":item.t) +'</span></td>';
+      tb.appendChild(tr);
+    });
+    updSel();
+  }
+  function updSel(){ document.getElementById("selCount").textContent = document.querySelectorAll("#catRows input:checked").length; }
+  function addSelected(){
+    var checks = document.querySelectorAll("#catRows input:checked");
+    if(checks.length===0){ closeCatalog(); return; }
+    checks.forEach(function(ch){ addRow(CATALOG[+ch.getAttribute("data-i")]); });
+    closeCatalog();
+  }
+
+  // ===== Quote number + dates =====
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function newNumber(){
+    var d=new Date(); var mmdd=pad(d.getMonth()+1)+pad(d.getDate());
+    var ini=(document.getElementById("initials").value||"XX").toUpperCase();
+    document.getElementById("quoteNum").value="F-"+mmdd+"-"+ini+"-01";
+  }
+  function initDates(){
+    var today=new Date(); var exp=new Date(today.getTime()+45*24*60*60*1000);
+    document.getElementById("createdDate").value=fmtDate(today);
+    document.getElementById("expDate").value=fmtDate(exp);
+  }
+  function resetSheet(){
+    if(!confirm("Clear the whole quote and start fresh?")) return;
+    document.querySelectorAll(".sheet input, .sheet textarea").forEach(function(el){
+      if(el.id!=="initials" && el.id!=="preparedBy") el.value="";
+    });
+    document.getElementById("discount").value="0";
+    document.getElementById("rows").innerHTML="";
+    initDates(); newNumber(); calc();
+  }
+
+  // ===== Itemized vs Non-itemized printed quote =====
+  function setMode(m){
+    var itemized = (m==="itemized");
+    document.body.classList.toggle("itemized", itemized);
+    document.getElementById("segItem").classList.toggle("active", itemized);
+    document.getElementById("segLump").classList.toggle("active", !itemized);
+  }
+
+  // ===== boot =====
+  setMode("lump"); initDates(); newNumber(); calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocuSign Setup Playbook — MiniBox Forms</title>
+<style>
+  :root{ --blue:#0b3d66; --blue-dark:#072a47; --accent:#1a73e8; --gray:#5b6b7a; --line:#d8e0e8; --bg:#f4f7fa; }
+  *{box-sizing:border-box;}
+  body{ font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:#13202b; background:var(--bg); margin:0; padding:28px; line-height:1.5; }
+  .wrap{ max-width:840px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 4px 20px rgba(7,42,71,.08); }
+  .head{ background:linear-gradient(135deg,var(--blue),var(--blue-dark)); color:#fff; padding:26px 32px; }
+  .head h1{ margin:0; font-size:22px; letter-spacing:.2px; }
+  .head p{ margin:6px 0 0; color:#bcd4ea; font-size:13px; }
+  .body{ padding:8px 32px 32px; }
+  h2{ font-size:15px; color:var(--blue-dark); margin:26px 0 8px; padding-bottom:6px; border-bottom:2px solid var(--line); }
+  .lead{ background:#eef4fb; border-left:4px solid var(--accent); padding:12px 16px; border-radius:8px; font-size:13.5px; margin-top:18px; }
+  ol{ padding-left:20px; margin:8px 0; } ol li{ margin:7px 0; font-size:13.5px; }
+  table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:13px; }
+  th,td{ border:1px solid var(--line); padding:8px 10px; text-align:left; }
+  th{ background:var(--blue); color:#fff; font-weight:600; }
+  code{ background:#0b3d66; color:#9fe0ff; padding:2px 7px; border-radius:5px; font-family:Consolas,Menlo,monospace; font-size:12.5px; }
+  .pill{ display:inline-block; background:#e7f0fb; color:var(--blue-dark); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:.4px; text-transform:uppercase; }
+  .note{ font-size:12.5px; color:var(--gray); margin-top:6px; }
+  .foot{ text-align:center; font-size:11.5px; color:var(--gray); padding:18px; border-top:1px solid var(--line); }
+  .why{ background:#fff8ec; border-left:4px solid #e0a73a; padding:12px 16px; border-radius:8px; font-size:13px; margin:14px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>DocuSign Setup Playbook</h1>
+    <p>Make the ACH form &amp; Quote drop straight into DocuSign — set up once, reuse forever.</p>
+  </div>
+  <div class="body">
+
+    <div class="lead">
+      <strong>The idea in one line:</strong> the two forms now carry hidden anchor tokens. You build a DocuSign <em>Template</em> for each one time, point each field at its token, and from then on every send is <strong>New&nbsp;→&nbsp;Use a Template&nbsp;→&nbsp;pick form&nbsp;→&nbsp;enter customer email&nbsp;→&nbsp;send.</strong> No more dragging fields.
+    </div>
+
+    <div class="why">
+      <strong>Why anchors and not just a saved template?</strong> The ACH payment schedule grows or shrinks with the number of payments, which pushes the signature block up and down the page. A field pinned to a fixed spot would drift onto the wrong line. A field tied to an <em>anchor token</em> follows that token wherever it lands — so it's always correct.
+    </div>
+
+    <h2>The anchor tokens (already built into the forms)</h2>
+    <p class="note">These are printed in white, ~6px — invisible on screen and on paper, but DocuSign reads them in the PDF text layer.</p>
+    <table>
+      <tr><th>Form</th><th>Token</th><th>DocuSign field to attach</th></tr>
+      <tr><td rowspan="4"><strong>ACH</strong> (v1.7)</td><td><code>\s1\</code></td><td>Signature</td></tr>
+      <tr><td><code>\n1\</code></td><td>Name (printed)</td></tr>
+      <tr><td><code>\t1\</code></td><td>Text field — Title</td></tr>
+      <tr><td><code>\d1\</code></td><td>Date Signed</td></tr>
+      <tr><td rowspan="3"><strong>Quote</strong> (v1.2)</td><td><code>\s1\</code></td><td>Signature (customer)</td></tr>
+      <tr><td><code>\d1\</code></td><td>Date Signed (customer)</td></tr>
+      <tr><td><code>\s2\</code></td><td>Signature (PulmOne countersign — optional)</td></tr>
+    </table>
+
+    <h2><span class="pill">One time</span>&nbsp; Build the template (do this once per form)</h2>
+    <ol>
+      <li>Open the form in your browser, fill nothing, and <strong>Print → Save as PDF</strong> (or use the form's PDF/send button) to get a clean blank PDF.</li>
+      <li>In DocuSign: <strong>Templates → New Template → Upload</strong> that PDF. Name it "MiniBox ACH" (or "MiniBox Quote").</li>
+      <li>Add a recipient role called <strong>Customer Signer</strong> (leave the email blank — it's a role, filled in at send time).</li>
+      <li>Drag <strong>one</strong> field of each type onto the page (Signature, Name, Date Signed, Text). Exact spot doesn't matter yet.</li>
+      <li>Click each field → in its properties open <strong>Anchor / "Place automatically"</strong> → type the matching token from the table above (e.g. <code>\s1\</code>). Set the offset so it sits just above the line.</li>
+      <li><strong>Save</strong> the template. Done — forever.</li>
+    </ol>
+    <p class="note">Tip: in field properties, turn off "All instances" if a token ever appears more than once; for these forms each token is unique.</p>
+
+    <h2><span class="pill">Every time</span>&nbsp; Send a form (10 seconds)</h2>
+    <ol>
+      <li>Fill the form in the toolkit as usual, then save/print it to PDF.</li>
+      <li>DocuSign: <strong>Start → Use a Template → MiniBox ACH</strong> (or Quote).</li>
+      <li>Replace the template's blank PDF with your filled PDF if you filled it outside DocuSign — fields re-snap to the anchors automatically.</li>
+      <li>Enter the customer's email in the <strong>Customer Signer</strong> role → <strong>Send.</strong></li>
+    </ol>
+
+    <h2>When you version a form up</h2>
+    <p style="font-size:13.5px;">Keep the same tokens in the new version (they're in the signature block). Re-upload the new PDF into the existing template — the fields re-snap to the tokens with zero re-tagging. That's the whole point: templates never break when you iterate.</p>
+
+    <h2>Want it even faster later?</h2>
+    <p style="font-size:13.5px;">Two upgrades we can add next: (1) <strong>"Send via DocuSign" buttons</strong> right in the toolkit's Forms tab using DocuSign PowerForm links, and (2) <strong>full automation</strong> — connect your DocuSign account and have the envelope built and fired straight from the toolkit data. Say the word.</p>
+
+  </div>
+  <div class="foot">MiniBox Sales Toolkit · DocuSign Setup Playbook v1.0 · Pairs with ACH v1.7 &amp; Quote Builder v1.2</div>
+</div>
+</body>
+</html>

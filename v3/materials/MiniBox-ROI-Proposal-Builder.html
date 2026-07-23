@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulmOne ROI Proposal Builder</title>
+<!-- Fully offline: uses fonts already installed on Windows/Mac. No internet connection needed to open or fill out this file. -->
+<style>
+:root {
+  --navy:      #0f1c35;
+  --navy-mid:  #1e3558;
+  --blue:      #2563eb;
+  --blue-lt:   #eff6ff;
+  --green:     #059669;
+  --green-lt:  #f0fdf4;
+  --red:       #dc2626;
+  --amber:     #d97706;
+  --amber-lt:  #fffbeb;
+  --g50:       #f8fafc;
+  --g100:      #f1f5f9;
+  --g200:      #e2e8f0;
+  --g300:      #cbd5e1;
+  --g400:      #94a3b8;
+  --g500:      #64748b;
+  --g600:      #475569;
+  --g800:      #1e293b;
+  --white:     #ffffff;
+  --ff-sans:   -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --ff-mono:   'SF Mono',Consolas,Menlo,'Roboto Mono','Courier New',monospace;
+  --r:         5px;
+  --sh:        0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff-sans);background:var(--g100);color:var(--navy);font-size:13px;line-height:1.5}
+
+/* ── HEADER ───────────────────────────────────────── */
+.header{background:var(--navy);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
+.hbrand{display:flex;align-items:center;gap:12px}
+.hlogo{width:36px;height:36px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hlogo span{color:white;font-size:8px;font-weight:700;text-align:center;line-height:1.3;letter-spacing:.02em}
+.htitle{color:white;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.hsub{color:rgba(255,255,255,.45);font-size:10px;margin-top:1px;font-weight:500}
+.hbtns{display:flex;gap:7px;flex-wrap:wrap}
+.hbtn{padding:7px 13px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--ff-sans);border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:white;transition:all .15s;letter-spacing:.01em}
+.hbtn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.38)}
+.hbtn-fill{background:white;color:var(--navy);border-color:white}
+.hbtn-fill:hover{background:var(--g100)}
+
+/* ── PAGE ─────────────────────────────────────────── */
+.page{padding:14px 20px;max-width:1040px;margin:0 auto}
+
+/* ── PROPOSAL PREVIEW ─────────────────────────────── */
+.preview{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);padding:16px 20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;box-shadow:var(--sh)}
+.prev-logo{background:var(--navy);border-radius:6px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prev-logo span{color:white;font-size:10px;font-weight:700;text-align:center;line-height:1.3}
+.prev-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:4px}
+.prev-name{font-size:21px;font-weight:700;color:var(--navy);margin-bottom:2px;letter-spacing:-.02em}
+.prev-doc{font-size:13px;color:var(--g600);margin-bottom:1px;font-weight:500}
+.prev-addr{font-size:11px;color:var(--g400)}
+.prev-meta{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--g400);margin-top:8px}
+
+/* ── SECTION LABELS ───────────────────────────────── */
+.sec-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin:16px 0 8px}
+
+/* ── ACCORDION ────────────────────────────────────── */
+.accordion{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.acc-head{padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .1s}
+.acc-head:hover{background:var(--g50)}
+.acc-title{font-size:12px;font-weight:700;color:var(--navy)}
+.acc-sub{font-size:10px;color:var(--g400);margin-top:1px}
+.acc-summary{font-size:11px;color:var(--blue);font-weight:600;margin-top:2px}
+.acc-chev{font-size:12px;color:var(--g400);transition:transform .2s;flex-shrink:0}
+.acc-chev.open{transform:rotate(180deg)}
+.acc-body{border-top:1px solid var(--g200);padding:16px;display:none}
+.acc-body.open{display:block}
+
+/* ── CARD ─────────────────────────────────────────── */
+.card{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.card-title{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.card-sub{font-size:10px;color:var(--g400);margin-bottom:12px}
+
+/* ── KPI BAR ──────────────────────────────────────── */
+.kpi-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);padding:12px 8px;text-align:center;box-shadow:var(--sh)}
+.kpi.hl{background:var(--navy);border-color:var(--navy)}
+.kpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g400);margin-bottom:5px}
+.kpi.hl .kpi-lbl{color:rgba(255,255,255,.5)}
+.kpi-val{font-size:20px;font-weight:700;line-height:1;color:var(--navy);font-family:var(--ff-mono);letter-spacing:-.02em}
+.kpi.hl .kpi-val{color:white}
+.kpi-sub{font-size:8px;color:var(--g400);margin-top:3px;font-weight:500}
+.kpi.hl .kpi-sub{color:rgba(255,255,255,.4)}
+
+/* ── GRIDS ────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.gcol2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+
+/* ── FIELD ────────────────────────────────────────── */
+.field{margin-bottom:8px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:4px}
+.inp-wrap{position:relative}
+.inp-wrap .pre{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:12px;pointer-events:none;font-weight:600}
+.inp-wrap .suf{position:absolute;right:9px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:12px;pointer-events:none;font-weight:600}
+input[type=number],input[type=text],select{width:100%;padding:8px 8px 8px 24px;background:var(--g50);border:1.5px solid var(--g200);border-radius:4px;font-size:13px;color:var(--navy);font-family:var(--ff-sans);outline:none;-moz-appearance:textfield;transition:border-color .15s,background .15s;font-weight:500}
+input[type=text]{padding-left:9px}
+input.nopre{padding-left:9px}
+input.hassuf{padding-right:24px}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+select{padding-left:9px;cursor:pointer}
+
+/* ── TOGGLE ───────────────────────────────────────── */
+.toggle{display:flex;border:1.5px solid var(--g200);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.toggle button{flex:1;padding:8px;border:none;cursor:pointer;font-family:var(--ff-sans);font-size:12px;font-weight:600;background:var(--white);color:var(--g400);border-right:1.5px solid var(--g200);transition:all .15s}
+.toggle button:last-child{border-right:none}
+.toggle button.on{background:var(--navy);color:white}
+
+/* ── WARRANTY BADGE ───────────────────────────────── */
+.warr-badge{border:1.5px solid var(--g200);border-radius:4px;padding:8px 10px;font-size:10px;color:var(--g600);font-weight:600;display:flex;align-items:center;gap:6px;margin-top:10px;background:var(--g50)}
+
+/* ── WARRANTY BOX ─────────────────────────────────── */
+.w-box{margin-top:10px;border:1.5px solid var(--g200);border-radius:4px;overflow:hidden}
+.w-head{background:var(--g50);padding:7px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--g200)}
+.w-head span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g400)}
+.w-head strong{font-size:11px;font-weight:700;color:var(--navy)}
+.w-row{display:flex;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--g200);font-size:12px}
+.w-row:last-child{border-bottom:none}
+.w-row .wk{color:var(--g600)}
+.w-row .wv{font-weight:700;color:var(--navy);font-family:var(--ff-mono)}
+.w-row.w-save{background:var(--green-lt)}
+.w-row.w-save .wk{color:var(--green);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.w-row.w-save .wv{color:var(--green);font-size:16px;font-weight:700}
+
+/* ── BREAKDOWN ────────────────────────────────────── */
+.bk{border:1.5px solid var(--g200);border-radius:4px;overflow:hidden}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--g200)}
+.brow:last-child{border-bottom:none}
+.bk-lbl{font-size:12px;color:var(--g600);font-weight:500}
+.bk-val{font-size:13px;font-weight:700;color:var(--navy);font-family:var(--ff-mono)}
+.brow.tot{background:var(--g50)}
+.brow.tot .bk-lbl{font-size:12px;font-weight:700;color:var(--navy)}
+.brow.tot .bk-val{font-size:15px;font-weight:700}
+.brow.savings .bk-lbl{color:var(--green);font-weight:600}
+.brow.savings .bk-val{color:var(--green);font-weight:700}
+.brow.nettot{background:var(--navy)}
+.brow.nettot .bk-lbl{font-size:12px;font-weight:700;color:white}
+.brow.nettot .bk-val{font-size:16px;font-weight:700;color:white}
+
+/* ── ROI BAR ──────────────────────────────────────── */
+.roi-row{display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin:10px 0 4px;font-weight:600}
+.roi-bg{background:var(--g200);border-radius:3px;height:6px;overflow:hidden}
+.roi-fill{height:100%;background:var(--navy);border-radius:3px;transition:width .4s ease}
+
+/* ── 5-YEAR PROJECTION ────────────────────────────── */
+.proj-card{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.proj-inner{display:block}
+
+/* chart-first layout */
+.proj-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:12px}
+.lg{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--g600)}
+.lg i{width:11px;height:11px;border-radius:2px;display:inline-block;flex:none}
+.lg i.dash{width:16px;height:0;border-top:2px dashed var(--red);border-radius:0}
+.proj-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.pchip{background:var(--g50);border:1.5px solid var(--g200);border-radius:4px;padding:9px 11px;text-align:center}
+.pchip .pk{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g400);margin-bottom:3px}
+.pchip .pv{font-size:16px;font-weight:700;color:var(--navy);font-family:var(--ff-mono)}
+.pchip.win{background:#ecfdf5;border-color:#a7f3d0}
+.pchip.win .pv{color:var(--green)}
+.pchip.loss{background:#fef2f2;border-color:#fecaca}
+.pchip.loss .pv{color:var(--red)}
+.tbl-toggle{display:block;margin:12px auto 0;background:none;border:none;color:var(--g400);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;font-family:var(--ff-sans);padding:4px 8px}
+.tbl-toggle:hover{color:var(--navy)}
+.proj-tblwrap{display:none;margin-top:10px}
+.proj-tblwrap.open{display:block}
+.proj-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.proj-tbl th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g400);text-align:right;padding:0 10px 8px;border-bottom:2px solid var(--g200)}
+.proj-tbl th:first-child{text-align:left}
+.proj-tbl td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--g200);font-weight:600;color:var(--navy);font-family:var(--ff-mono);font-size:11px}
+.proj-tbl td:first-child{font-family:var(--ff-sans);font-weight:700;text-align:left;font-size:12px;color:var(--g600)}
+.proj-tbl tr:last-child td{border-bottom:none}
+.proj-tbl tr.pb-row td{background:var(--amber-lt)}
+.proj-tbl tr.pb-row td:first-child{color:var(--amber)}
+.proj-tbl td.pos{color:var(--green)}
+.proj-tbl td.neg{color:var(--red)}
+.pb-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:8px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:6px;text-transform:uppercase;letter-spacing:.06em;font-family:var(--ff-sans);vertical-align:middle}
+
+/* ── CHART ────────────────────────────────────────── */
+.chart-title{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g400);margin-bottom:10px;text-align:center}
+#proj-chart svg{width:100%;display:block}
+
+/* ── PER-DEVICE BADGE ─────────────────────────────── */
+.dev-badge{background:var(--g50);border:1.5px solid var(--g200);border-radius:4px;padding:7px 10px;font-size:11px;color:var(--navy);margin-top:6px;font-weight:500}
+.dev-badge span{color:var(--g400)}
+
+/* ── FINAL PACKAGE BOX ────────────────────────────── */
+.pkg-box{margin-top:12px;border:1.5px solid var(--navy);border-radius:4px;overflow:hidden}
+.pkg-hd{background:var(--navy);padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
+.pkg-hd span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:white}
+.pkg-hd em{font-size:10px;color:rgba(255,255,255,.45);font-style:normal;font-weight:500}
+
+/* ── SECTION 179 ──────────────────────────────────── */
+.s179{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.s179-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.s179-badge{background:var(--navy);color:white;font-weight:700;font-size:9px;padding:3px 8px;border-radius:3px;letter-spacing:.04em}
+.s179-title{color:var(--navy);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.s179-sub{color:var(--g400);font-size:10px;margin-top:1px}
+.s179-layout{display:grid;grid-template-columns:170px 1fr;gap:14px}
+.s179-field label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:4px}
+.s179-field{position:relative}
+.s179-field input{width:100%;padding:8px 28px 8px 9px;background:var(--g50);border:1.5px solid var(--g200);border-radius:4px;font-size:13px;color:var(--navy);font-family:var(--ff-sans);outline:none;-moz-appearance:textfield;font-weight:500}
+.s179-field input::-webkit-inner-spin-button,.s179-field input::-webkit-outer-spin-button{-webkit-appearance:none}
+.s179-field input:focus{border-color:var(--blue)}
+.s179-pct{position:absolute;right:9px;top:calc(50% + 12px);transform:translateY(-50%);color:var(--g400);font-size:12px;font-weight:600}
+.s179-res{border:1.5px solid var(--g200);border-radius:4px;overflow:hidden}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--g200)}
+.srow:last-child{border-bottom:none}
+.srow .sk{font-size:12px;color:var(--g600);font-weight:500}
+.srow .sv{font-size:13px;font-weight:700;color:var(--navy);font-family:var(--ff-mono)}
+.srow.hl{background:var(--g50)}
+.srow.hl .sk{color:var(--navy);font-weight:700}
+.srow.hl .sv{font-size:14px;font-weight:700}
+.srow.big{background:var(--navy)}
+.srow.big .sk{color:white;font-weight:700;font-size:12px}
+.srow.big .sv{color:white;font-size:18px;font-weight:700}
+.s179-note{font-size:9px;color:var(--g400);margin-top:10px;line-height:1.7}
+
+/* ── FOOTER BUTTONS ───────────────────────────────── */
+.print-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.print-btn{display:block;width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--ff-sans);letter-spacing:.01em;transition:background .15s}
+.print-btn:hover{background:var(--navy-mid)}
+.print-btn.outline{background:white;color:var(--navy);border:1.5px solid var(--navy)}
+.print-btn.outline:hover{background:var(--g50)}
+.disclaimer{font-size:9px;color:var(--g400);text-align:center;margin-bottom:14px;line-height:1.7}
+
+/* ── TOAST ────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:10px 22px;border-radius:4px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:760px){
+  .kpi-bar{grid-template-columns:repeat(3,1fr)}
+  .kpi-bar .kpi:nth-child(4),.kpi-bar .kpi:nth-child(5){grid-column:span 1}
+  .gcol2{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr 1fr}
+  .s179-layout{grid-template-columns:1fr}
+  .proj-inner{grid-template-columns:1fr}
+  .print-btns{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .kpi-bar{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr}
+  .hbtns{flex-wrap:wrap}
+  .page{padding:10px 12px}
+}
+
+/* ── PRINT ────────────────────────────────────────── */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:white!important;font-size:11px}
+  .header{background:var(--navy)!important;position:static!important;padding:10px 16px}
+  .hbtns,.print-btns{display:none!important}
+  .page{padding:6px 8px}
+
+  /* Accordion is data-entry only — preview header has all the info.
+     Hide the ENTIRE accordion card in print. */
+  .accordion{display:none!important}
+
+  /* Force-show any element flagged by expandForPrint() */
+  .print-force{display:block!important}
+
+  /* Layout preservation */
+  .kpi-bar{grid-template-columns:repeat(5,1fr)!important}
+  .gcol2{grid-template-columns:1fr 1fr!important}
+  .proj-inner{display:block!important}
+  .tbl-toggle{display:none!important}
+  .s179-layout{grid-template-columns:170px 1fr!important}
+  .card,.preview,.proj-card,.s179,.kpi{box-shadow:none!important;break-inside:avoid}
+  .brow.nettot,.srow.big,.pkg-hd,.header,.prev-logo{background:var(--navy)!important}
+  #proj-chart svg{max-width:100%}
+  @page{margin:.4in .45in;size:letter portrait}
+  .accordion{margin-bottom:6px!important}
+  .kpi{padding:8px 4px!important}
+  .kpi-val{font-size:16px!important}
+  .preview{padding:10px 14px!important;margin-bottom:8px!important}
+}
+
+.hlogo-img{height:36px;width:auto;display:block;background:#fff;padding:5px 8px;border-radius:6px;flex-shrink:0}
+@media print{.hlogo-img{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff !important}}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────── -->
+<div class="header">
+  <div class="hbrand">
+    <img class="hlogo-img" src="data:image/jpeg;base64,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" alt="PulmOne">
+    <div>
+      <div class="htitle">PulmOne — ROI Proposal Builder</div>
+      <div class="hsub">Live ROI · 5-Year Projection · Printable Proposal</div>
+    </div>
+  </div>
+  <div class="hbtns">
+    <button class="hbtn hbtn-fill" onclick="downloadHTML()" title="Saves a copy of this proposal with everything you typed baked in. Then attach that saved file to any email.">💾 Save Filled-In Copy</button>
+    <button class="hbtn" style="background:var(--green);border-color:var(--green);color:#fff" onclick="emailAsEml()" title="Makes an email with the filled-in proposal already attached. Best if you use the Outlook desktop app.">📨 Email It (auto-attaches)</button>
+    <button class="hbtn" onclick="emailViaOutlookWeb()" title="Opens a new email in Outlook on the web. The proposal saves to your Downloads folder — attach it with the paperclip before sending.">📧 Outlook Web</button>
+    <button class="hbtn" onclick="printAll()">🖨 Print / PDF</button>
+    <button class="hbtn" onclick="copyLink()">🔗 Copy Link</button>
+  </div>
+  <div style="font-size:11px; color:rgba(255,255,255,0.82); padding:6px 14px 0; line-height:1.6;">
+    <strong style="color:#fff;">💾 Save Filled-In Copy</strong> = the easy way. Saves your entries to a file in your Downloads folder; attach that file to any email, like any other attachment. &nbsp;|&nbsp;
+    <strong style="color:#fff;">📨 Email It</strong> = attaches it for you automatically, if you use the Outlook desktop app.
+  </div>
+</div>
+
+<div class="page">
+<div style="margin-top:4px"></div>
+
+<!-- ── PROPOSAL PREVIEW ────────────────────────────── -->
+<div class="preview">
+  <div class="prev-logo"><span>Pulm<br>One</span></div>
+  <div>
+    <div class="prev-tag">ROI Proposal</div>
+    <div class="prev-name" id="prev-practice">Practice Name</div>
+    <div class="prev-doc" id="prev-doctor">Doctor Name</div>
+    <div class="prev-addr" id="prev-address"></div>
+    <div class="prev-meta">PREPARED BY: <span id="prev-prepby">—</span> &nbsp;·&nbsp; GENERATED: <span id="prev-date"></span></div>
+  </div>
+</div>
+
+<!-- ── PROPOSAL DETAILS ACCORDION ─────────────────── -->
+<div class="accordion">
+  <div class="acc-head" onclick="toggleAcc()">
+    <div>
+      <div class="acc-title">📋 Proposal Details</div>
+      <div class="acc-sub">Practice name, doctor, contact info</div>
+      <div class="acc-summary" id="acc-sum" style="display:none"></div>
+    </div>
+    <div class="acc-chev open" id="acc-chev">▾</div>
+  </div>
+  <div class="acc-body open" id="acc-body">
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field"><label>Practice Name</label><input type="text" id="practiceName" placeholder="" oninput="calc()"></div>
+      <div class="field"><label>Doctor Name</label><input type="text" id="doctorName" placeholder="" oninput="calc()"></div>
+      <div class="field"><label>Prepared By</label><input type="text" id="preparedBy" placeholder="" oninput="calc()"></div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field"><label>Phone</label><input type="text" id="phone" placeholder=""></div>
+      <div class="field"><label>Email</label><input type="text" id="email" placeholder=""></div>
+      <div class="field"><label>Address Line 1</label><input type="text" id="addr1" placeholder="" oninput="calc()"></div>
+    </div>
+    <div class="g3">
+      <div class="field"><label>Address Line 2</label><input type="text" id="addr2" placeholder="" oninput="calc()"></div>
+      <div class="field"><label>City</label><input type="text" id="city" placeholder="" oninput="calc()"></div>
+      <div class="g2">
+        <div class="field"><label>State</label><input type="text" id="state" value="" oninput="calc()"></div>
+        <div class="field"><label>ZIP</label><input type="text" id="zip" placeholder=""></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DEVICE & PER-PATIENT ─────────────────────────── -->
+<div class="gcol2">
+
+  <!-- LEFT: Device & Purchase -->
+  <div class="card">
+    <div class="card-title">Device &amp; Purchase</div>
+    <div class="card-sub">Total purchase amount and payment method.</div>
+
+    <div class="field">
+      <label>Total Purchase Amount (all devices)</label>
+      <div class="inp-wrap"><span class="pre">$</span><input type="number" id="totalPurchase" value="" step="1000" oninput="calc()"></div>
+    </div>
+
+    <div class="field" style="margin-top:6px">
+      <label>Number of Devices</label>
+      <div class="inp-wrap"><input type="number" id="numDevices" value="" min="1" class="nopre" oninput="calc()"></div>
+    </div>
+
+    <div id="dev-badge" style="display:none" class="dev-badge">
+      <span>Price per device: </span><strong id="dev-price"></strong>
+    </div>
+
+    <div class="field" style="margin-top:8px"><label>Purchase Method</label></div>
+    <div class="toggle">
+      <button class="on" id="btn-out" onclick="setMode('outright')">Buy Outright</button>
+      <button id="btn-fin" onclick="setMode('finance')">Finance</button>
+    </div>
+
+    <div id="fin-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div class="field"><label>Down $</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="downAmt" value="" step="100" oninput="syncDownAmt()"></div></div>
+        <div class="field"><label>Down %</label><div class="inp-wrap"><input type="number" id="downPct" value="" step="1" class="nopre hassuf" oninput="syncDownPct()"><span class="suf">%</span></div></div>
+        <div class="field"><label>APR</label><div class="inp-wrap"><input type="number" id="intRate" value="" step="0.1" class="nopre hassuf" oninput="calc()"><span class="suf">%</span></div></div>
+        <div class="field"><label>Months</label><div class="inp-wrap"><input type="number" id="loanTerm" value="" class="nopre" oninput="calc()"></div></div>
+      </div>
+      <div class="bk" id="fin-detail"></div>
+    </div>
+
+    <div class="warr-badge">✓ Includes 1-year manufacturer warranty</div>
+
+    <!-- Extended Warranty -->
+    <div class="g2" style="margin-top:12px;align-items:end">
+      <div class="field">
+        <label>Extended Warranty (per device)</label>
+        <select id="warrantyYrs" onchange="calc()">
+          <option value="0">No Extended Warranty</option>
+          <option value="1">+1 Yr Extended (2 Yrs Total)</option>
+          <option value="2">+2 Yrs Extended (3 Yrs Total)</option>
+          <option value="3">+3 Yrs Extended (4 Yrs Total)</option>
+          <option value="4">+4 Yrs Extended (5 Yrs Total)</option>
+          <option value="5">+5 Yrs Extended (6 Yrs Total)</option>
+        </select>
+      </div>
+      <div class="field" id="warr-count-wrap" style="display:none">
+        <label>Devices on Warranty</label>
+        <div class="inp-wrap"><input type="number" id="warrantyCount" value="" min="0" class="nopre" oninput="calc()"></div>
+      </div>
+    </div>
+
+    <div class="w-box" id="w-box" style="display:none">
+      <div class="w-head"><span>Warranty Detail</span><strong id="w-label"></strong></div>
+      <div class="w-row"><span class="wk" style="font-weight:600;color:var(--navy)">Your Warranty Cost</span><span class="wv" id="w-total" style="font-size:15px"></span></div>
+      <div class="w-row"><span class="wk">Retail Value (<span id="w-yr-label"></span> × $3,200/yr)</span><span class="wv" id="w-separate" style="text-decoration:line-through;color:var(--g300)"></span></div>
+      <div class="w-row w-save" id="w-save-row"><span class="wk">YOU SAVE ON WARRANTY</span><span class="wv" id="w-save" style="font-size:16px"></span></div>
+      <!-- hidden fields kept for internal calc -->
+      <div style="display:none"><span id="w-price"></span><span id="w-dev-count"></span><span id="w-per-yr"></span></div>
+    </div>
+
+    <!-- Value story callout -->
+    <div id="w-story" style="display:none;margin-top:10px;border:2px solid var(--navy);border-radius:4px;padding:10px 12px 18px;background:var(--white)"></div>
+  </div>
+
+  <!-- RIGHT: Per-Patient Revenue -->
+  <div class="card">
+    <div class="card-title">Per-Patient Costs &amp; Revenue</div>
+    <div class="card-sub">Consumables, reimbursement, and patient volume.</div>
+
+    <div class="sec-lbl" style="margin-top:0">Consumables (Cost)</div>
+    <div class="g2">
+      <div class="field"><label>Mouthpiece / Patient</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="mouth" value="" step="0.01" oninput="calc()"></div></div>
+      <div class="field"><label>DLCO Gas / Patient</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="dlcogas" value="" step="0.01" oninput="calc()"></div></div>
+    </div>
+
+    <div class="sec-lbl">Reimbursement (Revenue)</div>
+    <div class="g3">
+      <div class="field"><label>FVC (CPT 94010)</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="fvc" value="" step="1" oninput="calc()"></div></div>
+      <div class="field"><label>LVM (CPT 94726)</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="lvm" value="" step="1" oninput="calc()"></div></div>
+      <div class="field"><label>DLCO (CPT 94729)</label><div class="inp-wrap"><span class="pre">$</span><input type="number" id="dlco" value="" step="1" oninput="calc()"></div></div>
+    </div>
+
+    <div class="sec-lbl">Volume</div>
+    <div class="g2">
+      <div class="field"><label>Patients / Week</label><div class="inp-wrap"><input type="number" id="ptWk" value="" class="nopre" oninput="calc()"></div></div>
+      <div class="field"><label>Working Weeks / Year</label><div class="inp-wrap"><input type="number" id="wkYr" value="" class="nopre" oninput="calc()"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── KPI BAR ──────────────────────────────────────── -->
+<div class="kpi-bar">
+  <div class="kpi"><div class="kpi-lbl">Total Investment</div><div class="kpi-val" id="r-invest">—</div><div class="kpi-sub" id="r-sub">purchase price</div></div>
+  <div class="kpi"><div class="kpi-lbl">Net Revenue / Year</div><div class="kpi-val" id="r-rev">—</div><div class="kpi-sub">after consumables</div></div>
+  <div class="kpi hl"><div class="kpi-lbl">5-Year Net Profit</div><div class="kpi-val" id="r-profit">—</div><div class="kpi-sub">revenue minus costs</div></div>
+  <div class="kpi"><div class="kpi-lbl">After-Tax Cost</div><div class="kpi-val" id="r-aftertax">—</div><div class="kpi-sub">with Sec. 179</div></div>
+  <div class="kpi"><div class="kpi-lbl">Payback Period</div><div class="kpi-val" id="r-payback">—</div><div class="kpi-sub">months to break even</div></div>
+</div>
+
+<!-- ── 5-YEAR PROJECTION ────────────────────────────── -->
+<div class="sec-lbl">5-Year Projection</div>
+<div class="proj-card">
+  <div class="proj-inner">
+    <div>
+      <div class="chart-title">Cumulative Revenue vs. Investment</div>
+      <div id="proj-chart"></div>
+      <div class="proj-legend">
+        <span class="lg"><i style="background:#94a3b8"></i>Paying back the investment</span>
+        <span class="lg"><i style="background:#10b981"></i>Profit</span>
+        <span class="lg"><i class="dash"></i>Total investment</span>
+      </div>
+      <div class="proj-chips">
+        <div class="pchip"><div class="pk">Break Even</div><div class="pv" id="p-be">—</div></div>
+        <div class="pchip"><div class="pk">5-Yr Revenue</div><div class="pv" id="p-rev">—</div></div>
+        <div class="pchip win"><div class="pk">5-Yr Net Profit</div><div class="pv" id="p-net">—</div></div>
+      </div>
+      <div id="payback-note" style="margin-top:10px;font-size:10px;color:var(--g400);font-weight:500;text-align:center"></div>
+      <button type="button" class="tbl-toggle" id="tbl-toggle" onclick="toggleProjTable()">Show the numbers</button>
+      <div class="proj-tblwrap" id="proj-tblwrap">
+      <table class="proj-tbl">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Net Rev / Yr</th>
+            <th>Cumul. Revenue</th>
+            <th>Net P&amp;L (Cumul.)</th>
+          </tr>
+        </thead>
+        <tbody id="proj-tbody"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BREAKDOWN ───────────────────────────────────── -->
+<div class="sec-lbl">Breakdown</div>
+<div class="gcol2">
+  <div class="card">
+    <div class="card-title">Cost Breakdown</div>
+    <div class="card-sub">Total investment summary</div>
+    <div class="bk" id="cost-bd"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Revenue Breakdown</div>
+    <div class="card-sub">Annual patient revenue &amp; ROI</div>
+    <div class="bk" id="rev-bd"></div>
+    <div class="roi-row"><span>5-Year ROI</span><span id="roi-pct" style="font-weight:700;font-family:var(--ff-mono)"></span></div>
+    <div class="roi-bg"><div class="roi-fill" id="roi-bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ── SECTION 179 ──────────────────────────────────── -->
+<div class="sec-lbl">Section 179 Tax Deduction</div>
+<div class="s179">
+  <div class="s179-hd">
+    <div class="s179-badge">IRS § 179</div>
+    <div>
+      <div class="s179-title">Deduct Qualifying Equipment in Year 1</div>
+      <div class="s179-sub">Estimates only. Consult a qualified tax professional.</div>
+    </div>
+  </div>
+  <div class="s179-layout">
+    <div>
+      <div class="s179-field" style="margin-bottom:10px">
+        <label>Customer Tax Rate</label>
+        <input type="number" id="taxRate" value="" step="0.5" oninput="calc()">
+        <span class="s179-pct">%</span>
+      </div>
+      <div class="s179-note">* The MiniBox qualifies as Section 179 eligible equipment. Full purchase price deductible in year one. Modeling tool only — not tax advice.<br><a href="https://www.irs.gov/publications/p946" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700;text-decoration:underline">Read the official IRS Section 179 rules →</a></div>
+    </div>
+    <div class="s179-res" id="s179-res"></div>
+  </div>
+</div>
+
+<div class="disclaimer">* Modeling tool only. Not a guarantee of revenue or tax outcome. Consult qualified advisors.</div>
+
+<div class="print-btns">
+  <button class="print-btn outline" onclick="printCurrent()">🖨 Print Current View</button>
+  <button class="print-btn" onclick="printAll()">📄 Print Full Proposal (Expand All)</button>
+</div>
+
+</div><!-- end page -->
+<div class="toast" id="toast">✅ Link copied!</div>
+
+<script>
+var mode = 'outright';
+var accOpen = true;
+var autoCollapsed = false;
+var W_PRICES = [0, 3200, 6400, 9600, 12800, 3229]; // yrs 1-4: retail $3,200/yr; yr 5: bundle deal ($36,429 - $33,200)
+var lastDownEdit = 'pct'; // tracks whether $ or % was last entered by user
+
+// Set today's date
+document.getElementById('prev-date').textContent = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+/* ── PRINT FUNCTIONS ────────────────────────────────── */
+
+// Print Current View: respects open/closed state exactly
+function printCurrent() {
+  // Temporarily close accordion for clean print output
+  var wasOpen = accOpen;
+  if (wasOpen) {
+    document.getElementById('acc-body').classList.remove('open');
+    document.getElementById('acc-chev').classList.remove('open');
+  }
+  setTimeout(function() {
+    window.print();
+    setTimeout(function() {
+      if (wasOpen) {
+        document.getElementById('acc-body').classList.add('open');
+        document.getElementById('acc-chev').classList.add('open');
+      }
+    }, 500);
+  }, 50);
+}
+
+// Print Full Proposal: temporarily expands everything relevant
+function printAll() {
+  // Accordion always hidden in print — no need to expand
+  var wasAccOpen = accOpen;
+  // Ensure accordion is closed for print
+  if (accOpen) {
+    document.getElementById('acc-body').classList.remove('open');
+    document.getElementById('acc-chev').classList.remove('open');
+  }
+
+  // Flag inline-hidden elements to show (only relevant ones)
+  var toRestore = [];
+  function forceShow(id) {
+    var el = document.getElementById(id);
+    if (el && el.style.display === 'none') {
+      el.classList.add('print-force');
+      toRestore.push(el);
+    }
+  }
+
+  if (mode === 'finance') forceShow('fin-fields');
+  var wYrs = parseInt(document.getElementById('warrantyYrs').value) || 0;
+  if (wYrs > 0) {
+    forceShow('w-box');
+    forceShow('warr-count-wrap');
+  }
+
+  // Give DOM a tick to update then print
+  setTimeout(function() {
+    window.print();
+    // Restore after print dialog closes
+    setTimeout(function() {
+      toRestore.forEach(function(el){ el.classList.remove('print-force'); });
+      // Restore accordion to its prior state
+      if (wasAccOpen) {
+        accOpen = true;
+        document.getElementById('acc-body').classList.add('open');
+        document.getElementById('acc-chev').classList.add('open');
+      }
+    }, 500);
+  }, 80);
+}
+
+/* ── ACCORDION ────────────────────────────────────── */
+function toggleAcc() {
+  accOpen = !accOpen;
+  document.getElementById('acc-body').classList.toggle('open', accOpen);
+  document.getElementById('acc-chev').classList.toggle('open', accOpen);
+}
+
+/* ── MODE ─────────────────────────────────────────── */
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-out').className = m === 'outright' ? 'on' : '';
+  document.getElementById('btn-fin').className = m === 'finance' ? 'on' : '';
+  document.getElementById('fin-fields').style.display = m === 'finance' ? 'block' : 'none';
+  calc();
+}
+
+/* ── DOWN PAYMENT SYNC ───────────────────────────── */
+function syncDownPct() {
+  lastDownEdit = 'pct';
+  var total = parseFloat(document.getElementById('totalPurchase').value) || 0;
+  var pct   = parseFloat(document.getElementById('downPct').value)      || 0;
+  var amtEl = document.getElementById('downAmt');
+  if (amtEl) amtEl.value = Math.round(total * pct / 100);
+  calc();
+}
+
+function syncDownAmt() {
+  lastDownEdit = 'amt';
+  var total = parseFloat(document.getElementById('totalPurchase').value) || 0;
+  var amt   = parseFloat(document.getElementById('downAmt').value)       || 0;
+  var pctEl = document.getElementById('downPct');
+  if (pctEl) pctEl.value = total > 0 ? (amt / total * 100).toFixed(2) : '0';
+  calc();
+}
+
+/* ── HELPERS ──────────────────────────────────────── */
+function v(id){ var el=document.getElementById(id); return el ? parseFloat(el.value)||0 : 0; }
+function tx(id){ var el=document.getElementById(id); return el ? (el.value||'').trim() : ''; }
+function mf(n){
+  var neg=n<0, a=Math.abs(n);
+  return (neg?'-$':'$')+a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function ms(n){
+  var neg=n<0, a=Math.abs(n);
+  if(a>=1000000) return (neg?'-':'')+'$'+(a/1000000).toFixed(2)+'M';
+  if(a>=1000) return (neg?'-$':'$')+Math.round(a).toLocaleString();
+  return (neg?'-$':'$')+a.toFixed(0);
+}
+function brow(k,val,cls){
+  return '<div class="brow '+(cls||'')+'"><span class="bk-lbl">'+k+'</span><span class="bk-val">'+val+'</span></div>';
+}
+
+/* ── LINK / DOWNLOAD ──────────────────────────────── */
+function copyLink(){
+  var url=window.location.href;
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      navigator.clipboard.writeText(url).then(showToast).catch(function(){prompt('Copy this link:',url);});
+    } else { prompt('Copy this link:',url); }
+  }catch(e){prompt('Copy this link:',url);}
+}
+
+/* v1.1: bake current input values into the HTML attributes so the downloaded file opens fully pre-filled */
+function bakeFormValues(){
+  document.querySelectorAll('input').forEach(function(el){
+    if(el.type==='checkbox'||el.type==='radio'){
+      if(el.checked) el.setAttribute('checked','checked');
+      else el.removeAttribute('checked');
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+  document.querySelectorAll('select').forEach(function(sel){
+    Array.prototype.slice.call(sel.options).forEach(function(opt){
+      if(opt.selected) opt.setAttribute('selected','selected');
+      else opt.removeAttribute('selected');
+    });
+  });
+  document.querySelectorAll('textarea').forEach(function(ta){ ta.textContent = ta.value; });
+}
+
+function buildProposalFilename(){
+  var prac = (document.getElementById('practiceName')||{}).value || '';
+  var clean = prac.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'-').slice(0,40);
+  return 'PulmOne-ROI-Proposal' + (clean ? '-' + clean : '') + '.html';
+}
+
+function downloadHTML(){
+  try{
+    bakeFormValues();
+    var html='<!DOCTYPE html>'+document.documentElement.outerHTML;
+    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download=buildProposalFilename(); a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  }catch(e){
+    alert('To save: use the 3-dot menu → Share → Save Page.');
+  }
+}
+
+/* v1.2: Email helpers — supports both Outlook Web (preferred for @pulm-one.com) and default mailto */
+function parseLastName(full){
+  if(!full) return '';
+  var clean = full.replace(/^(Dr\.?\s*|Doctor\s+)/i,'').replace(/,.*$/,'').trim();
+  if(!clean) return '';
+  var parts = clean.split(/\s+/);
+  return parts[parts.length - 1];
+}
+
+function buildEmailParts(){
+  var docName  = (document.getElementById('doctorName')||{}).value || '';
+  var docEmail = (document.getElementById('email')||{}).value || '';
+  var prac     = (document.getElementById('practiceName')||{}).value || '';
+  var prepBy   = (document.getElementById('preparedBy')||{}).value || '';
+  var lastName = parseLastName(docName);
+  var greeting = lastName ? ('Dr. ' + lastName) : (docName || 'Doctor');
+  var subject  = 'MiniBox+ ROI Proposal' + (prac ? ' — ' + prac : '');
+  var sigBlock = prepBy ? ('— ' + prepBy) : '— PulmOne USA';
+  var body     = greeting + ', attached is the proposal we discussed.\n\n' + sigBlock;
+  return { to: docEmail, subject: subject, body: body };
+}
+
+function downloadProposalHtml(){
+  var html='<!DOCTYPE html>'+document.documentElement.outerHTML;
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download=buildProposalFilename(); a.style.display='none';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+}
+
+/* PRIMARY: Outlook Web — composes from whichever account is signed into outlook.office.com */
+function emailViaOutlookWeb(){
+  try{
+    bakeFormValues();
+    downloadProposalHtml();
+    var p = buildEmailParts();
+    var url = 'https://outlook.office.com/mail/deeplink/compose' +
+              '?to='      + encodeURIComponent(p.to) +
+              '&subject=' + encodeURIComponent(p.subject) +
+              '&body='    + encodeURIComponent(p.body);
+    setTimeout(function(){ window.open(url, '_blank'); }, 450);
+    showToast();
+  }catch(e){
+    console.error('emailViaOutlookWeb error:', e);
+    alert('Could not open Outlook on the Web. The proposal HTML still downloaded — attach it manually to a new email.');
+  }
+}
+
+/* SECONDARY: Default mail client (mailto:) — for users without Outlook Web access */
+function emailViaMailto(){
+  try{
+    bakeFormValues();
+    downloadProposalHtml();
+    var p = buildEmailParts();
+    var mailto = 'mailto:' + encodeURIComponent(p.to) +
+                 '?subject=' + encodeURIComponent(p.subject) +
+                 '&body='   + encodeURIComponent(p.body);
+    setTimeout(function(){ window.location.href = mailto; }, 450);
+    showToast();
+  }catch(e){
+    console.error('emailViaMailto error:', e);
+    alert('Could not open default mail client. The proposal HTML still downloaded — attach it manually to a new email.');
+  }
+}
+
+/* v1.3: Generate .eml file with HTML proposal attachment included. Double-click the file to open in Outlook desktop with email + attachment ready. */
+function _b64ChunkLines(b64) {
+  // RFC 2045: lines must be max 76 chars in base64 transfer encoding
+  var out = '';
+  for (var i = 0; i < b64.length; i += 76) out += b64.substring(i, i + 76) + '\r\n';
+  return out;
+}
+
+function _utf8ToBase64(str) {
+  // Encode UTF-8 string to base64 safely (handles non-ASCII characters)
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+function emailAsEml(){
+  try{
+    bakeFormValues();
+    var html = '<!DOCTYPE html>' + document.documentElement.outerHTML;
+    var p = buildEmailParts();
+    var attachName = buildProposalFilename();
+
+    var boundary = '----=_MINIBOX_' + Date.now() + '_' + Math.random().toString(36).slice(2,10);
+    var bodyB64 = _b64ChunkLines(_utf8ToBase64(html));
+
+    // Build the .eml content (RFC 5322 + multipart/mixed)
+    var eml = '';
+    eml += 'MIME-Version: 1.0\r\n';
+    eml += 'X-Unsent: 1\r\n';                              // tells Outlook to open as a DRAFT, not as a received msg
+    eml += 'To: ' + (p.to || '') + '\r\n';
+    eml += 'Subject: ' + p.subject + '\r\n';
+    eml += 'Content-Type: multipart/mixed; boundary="' + boundary + '"\r\n';
+    eml += '\r\n';
+    // -- text body part
+    eml += '--' + boundary + '\r\n';
+    eml += 'Content-Type: text/plain; charset=utf-8\r\n';
+    eml += 'Content-Transfer-Encoding: 7bit\r\n';
+    eml += '\r\n';
+    eml += p.body + '\r\n';
+    eml += '\r\n';
+    // -- attachment part (HTML proposal)
+    eml += '--' + boundary + '\r\n';
+    eml += 'Content-Type: text/html; charset=utf-8; name="' + attachName + '"\r\n';
+    eml += 'Content-Transfer-Encoding: base64\r\n';
+    eml += 'Content-Disposition: attachment; filename="' + attachName + '"\r\n';
+    eml += '\r\n';
+    eml += bodyB64 + '\r\n';
+    eml += '--' + boundary + '--\r\n';
+
+    var emlName = (attachName || 'PulmOne-ROI-Proposal').replace(/\.html?$/i, '') + '.eml';
+    var blob = new Blob([eml], {type: 'message/rfc822'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = emlName; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+
+    showToast();
+  }catch(e){
+    console.error('emailAsEml error:', e);
+    alert('Could not generate .eml file. Try the "Email via Outlook Web" button instead and attach the downloaded HTML manually.');
+  }
+}
+
+/* Backwards-compat alias */
+function emailToDoctor(){ emailAsEml(); }
+
+function showToast(){
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+/* ── PROJECTION TABLE & CHART ─────────────────────── */
+function updateProjection(netRev, totalInv) {
+  var rows = '';
+  var max5 = netRev * 5;
+  var payMo = netRev > 0 ? (totalInv / netRev) * 12 : Infinity;
+  var payYr = Math.ceil(payMo / 12);
+
+  for (var yr = 1; yr <= 5; yr++) {
+    var cumRev = netRev * yr;
+    var pnl = cumRev - totalInv;
+    var isPayback = (yr === payYr) && isFinite(payMo);
+    rows += '<tr'+(isPayback?' class="pb-row"':'')+'>';
+    rows += '<td>Year '+yr+(isPayback?'<span class="pb-badge">Break Even</span>':'')+'</td>';
+    rows += '<td>'+mf(netRev)+'</td>';
+    rows += '<td>'+mf(cumRev)+'</td>';
+    rows += '<td class="'+(pnl>=0?'pos':'neg')+'">'+(pnl>=0?'+':'')+mf(pnl)+'</td>';
+    rows += '</tr>';
+  }
+  document.getElementById('proj-tbody').innerHTML = rows;
+
+  var note = '';
+  if (isFinite(payMo) && netRev > 0) {
+    if (payMo < 1) note = 'Payback in under 1 month.';
+    else note = 'Payback in approximately ' + payMo.toFixed(1) + ' months (' + (payMo/12).toFixed(1) + ' years).';
+  } else {
+    note = '';
+  }
+  document.getElementById('payback-note').textContent = note;
+
+  // Headline chips — the three numbers that actually matter
+  var net5 = (netRev * 5) - totalInv;
+  var beTxt = '—';
+  if (isFinite(payMo) && netRev > 0) {
+    if (payMo < 1)       beTxt = '<1 mo';
+    else if (payMo > 60) beTxt = '5 yrs+';
+    else                 beTxt = Math.round(payMo) + ' mo';
+  }
+  document.getElementById('p-be').textContent  = beTxt;
+  document.getElementById('p-rev').textContent = mf(netRev * 5);
+  document.getElementById('p-net').textContent = (net5 >= 0 ? '+' : '') + mf(net5);
+  // Only wear the green "win" styling when it actually is one
+  document.getElementById('p-net').parentNode.className = 'pchip ' + (net5 >= 0 ? 'win' : 'loss');
+
+  // SVG chart
+  updateChart(netRev, totalInv, max5);
+}
+
+function toggleProjTable() {
+  var w = document.getElementById('proj-tblwrap');
+  var b = document.getElementById('tbl-toggle');
+  var open = w.classList.toggle('open');
+  b.textContent = open ? 'Hide the numbers' : 'Show the numbers';
+}
+
+function updateChart(netRev, totalInv, max5) {
+  var SANS = 'Segoe UI,Helvetica,Arial,sans-serif';
+  var MONO = 'Consolas,Menlo,monospace';
+  var W = 700, H = 300, padB = 40, padT = 26, padL = 56, padR = 14;
+  var chartH = H - padB - padT;
+  var plotW = W - padL - padR;
+  var n = 5;
+  var gap = 22;
+  var barW = (plotW - (n-1)*gap) / n;
+
+  // Scale must hold both the 5-year revenue and the investment line
+  var top = Math.max(max5, totalInv) * 1.1 || 1;
+  var yOf = function(val){ return padT + chartH - (val / top) * chartH; };
+
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">';
+
+  // Horizontal gridlines + money axis
+  for (var g = 0; g <= 4; g++) {
+    var gv = top * (g/4), gy = yOf(gv);
+    svg += '<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#e2e8f0" stroke-width="1"/>';
+    svg += '<text x="'+(padL-8)+'" y="'+(gy+3.5)+'" text-anchor="end" font-size="9" font-family="'+MONO+'" fill="#94a3b8">'+ms(gv)+'</text>';
+  }
+
+  var payMo = netRev > 0 ? (totalInv / netRev) * 12 : Infinity;
+  var payYr = Math.ceil(payMo / 12);
+
+  for (var yr = 1; yr <= 5; yr++) {
+    var cumRev = netRev * yr;
+    var x = padL + (yr-1) * (barW + gap);
+    var yTop = yOf(cumRev);
+    var barH = Math.max(padT + chartH - yTop, 1);
+
+    // Split the bar: gray = still paying back, green = profit
+    var costPart = Math.min(cumRev, totalInv);
+    var profPart = Math.max(cumRev - totalInv, 0);
+    var costH = (costPart / top) * chartH;
+    var profH = (profPart / top) * chartH;
+
+    if (costH > 0) {
+      svg += '<rect x="'+x+'" y="'+(padT+chartH-costH)+'" width="'+barW+'" height="'+costH+'" fill="#94a3b8" rx="3"/>';
+    }
+    if (profH > 0) {
+      svg += '<rect x="'+x+'" y="'+yTop+'" width="'+barW+'" height="'+profH+'" fill="#10b981" rx="3"/>';
+      if (profH > 20) {
+        svg += '<text x="'+(x+barW/2)+'" y="'+(yTop+profH/2+4)+'" text-anchor="middle" font-size="11" font-family="'+MONO+'" font-weight="700" fill="#ffffff">+'+ms(profPart)+'</text>';
+      }
+    }
+
+    // Cumulative revenue above the bar
+    svg += '<text x="'+(x+barW/2)+'" y="'+(yTop-8)+'" text-anchor="middle" font-size="12" font-family="'+MONO+'" font-weight="700" fill="#0f1c35">'+ms(cumRev)+'</text>';
+
+    // Year label
+    var isPB = (yr === payYr) && isFinite(payMo);
+    svg += '<text x="'+(x+barW/2)+'" y="'+(H-22)+'" text-anchor="middle" font-size="12" font-family="'+SANS+'" font-weight="700" fill="'+(isPB?'#0f1c35':'#94a3b8')+'">Year '+yr+'</text>';
+    if (isPB) {
+      svg += '<text x="'+(x+barW/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="9" font-family="'+SANS+'" font-weight="700" fill="#b45309" letter-spacing="0.06em">BREAK EVEN</text>';
+    }
+  }
+
+  // Investment line
+  if (totalInv > 0) {
+    var lineY = yOf(totalInv);
+    svg += '<line x1="'+padL+'" y1="'+lineY+'" x2="'+(W-padR)+'" y2="'+lineY+'" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,4"/>';
+    svg += '<text x="'+(W-padR)+'" y="'+(lineY-6)+'" text-anchor="end" font-size="10" font-family="'+SANS+'" font-weight="700" fill="#ef4444">Investment '+ms(totalInv)+'</text>';
+  }
+
+  svg += '</svg>';
+  document.getElementById('proj-chart').innerHTML = svg;
+}
+
+/* ── MAIN CALC ────────────────────────────────────── */
+function calc() {
+  try {
+    // Preview
+    var prac = tx('practiceName'), doc = tx('doctorName'), prep = tx('preparedBy');
+    var a1=tx('addr1'),a2=tx('addr2'),city=tx('city'),state=tx('state'),zip=tx('zip');
+    document.getElementById('prev-practice').textContent = prac||'Practice Name';
+    document.getElementById('prev-doctor').textContent = doc||'Doctor Name';
+    var addr=[a1,a2,[city,state,zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    document.getElementById('prev-address').textContent = addr||'';
+    document.getElementById('prev-prepby').textContent = prep||'—';
+
+    // Auto-collapse when practice + doctor filled
+    if (!autoCollapsed && prac && doc) {
+      autoCollapsed = true;
+      accOpen = false;
+      document.getElementById('acc-body').classList.remove('open');
+      document.getElementById('acc-chev').classList.remove('open');
+    }
+    var sumEl = document.getElementById('acc-sum');
+    if (prac||doc) { sumEl.style.display='block'; sumEl.textContent=[prac,doc].filter(Boolean).join(' · '); }
+    else { sumEl.style.display='none'; }
+
+    // Core values
+    var numDev = Math.max(1, parseInt(document.getElementById('numDevices').value)||1);
+    var totalEquip = v('totalPurchase');
+
+    // Warranty
+    var wYrs = parseInt(document.getElementById('warrantyYrs').value)||0;
+    var wPrice = W_PRICES[wYrs]||0; // kept for reference; display uses effective cost
+
+    var warrWrap = document.getElementById('warr-count-wrap');
+    warrWrap.style.display = wYrs > 0 ? 'block' : 'none';
+
+    var numWarrDev = wYrs > 0 ? Math.min(Math.max(0, parseInt(document.getElementById('warrantyCount').value)||0), numDev) : 0;
+    // Effective warranty cost = what customer pays above machine list price
+    var MACHINE_BASE = 33200;
+    var totalWarrCost = (wYrs > 0 && numWarrDev > 0) ? Math.max(0, totalEquip - (MACHINE_BASE * numDev)) : 0;
+    var totalEquipOnly = totalEquip - totalWarrCost; // always = MACHINE_BASE * numDev when warranty selected
+    var pricePerDev = numDev > 0 ? totalEquipOnly / numDev : 0;
+
+    // Per-device badge
+    var badge = document.getElementById('dev-badge');
+    if (numDev > 1) {
+      badge.style.display = 'block';
+      document.getElementById('dev-price').textContent = mf(pricePerDev) + ' / device (equipment only)';
+    } else { badge.style.display = 'none'; }
+
+    // Finance
+    var down=0, loan=0, moPay=0, totInt=0, totFin=0;
+    if (mode === 'finance') {
+      // Sync the linked Down $ / Down % fields
+      var amtEl = document.getElementById('downAmt');
+      var pctEl = document.getElementById('downPct');
+      if (lastDownEdit === 'amt') {
+        down = v('downAmt');
+        if (pctEl && totalEquip > 0) pctEl.value = (down / totalEquip * 100).toFixed(2);
+      } else {
+        down = totalEquip * (v('downPct') / 100);
+        if (amtEl) amtEl.value = Math.round(down);
+      }
+      loan = totalEquip - down;
+      var ar = v('intRate')/100, tm = v('loanTerm');
+      if (ar > 0 && tm > 0) {
+        var r = ar/12;
+        moPay = loan * (r * Math.pow(1+r,tm)) / (Math.pow(1+r,tm)-1);
+        totFin = moPay * tm;
+        totInt = totFin - loan;
+      } else { totFin = loan; }
+      document.getElementById('fin-detail').innerHTML =
+        brow('Down Payment', mf(down)) +
+        brow('Loan Amount', mf(loan)) +
+        brow('Monthly Payment', mf(moPay)) +
+        brow('Total Financed', mf(totFin)) +
+        brow('Total Interest', mf(totInt), 'tot');
+    }
+
+    // Warranty box
+    var wBox = document.getElementById('w-box');
+    if (wYrs > 0) {
+      wBox.style.display = 'block';
+      var perDevPerYr = wPrice / wYrs;
+      var separateTotal = wYrs * 3200 * numWarrDev;
+      var wSaveTotal = separateTotal - totalWarrCost;
+      document.getElementById('w-label').textContent = '+'+wYrs+' Yrs Extended (' + (wYrs+1) + ' Yrs Total)';
+      document.getElementById('w-price').textContent = mf(wPrice)+' / device';
+      document.getElementById('w-dev-count').textContent = numWarrDev+(numWarrDev===1?' device':' devices');
+      document.getElementById('w-per-yr').textContent = '';
+
+      // Effective warranty cost = what they pay above machine list price
+      var MACHINE_BASE = 33200;
+      var effectiveWarrCost = totalEquip - (MACHINE_BASE * numWarrDev);
+      effectiveWarrCost = Math.max(0, effectiveWarrCost);
+      var retailWarrVal   = wYrs * 3200 * numWarrDev;
+      var warrantySavings = retailWarrVal - effectiveWarrCost;
+
+      document.getElementById('w-total').textContent = mf(effectiveWarrCost);
+      document.getElementById('w-yr-label').textContent = wYrs + ' yr' + (wYrs > 1 ? 's' : '');
+      document.getElementById('w-separate').textContent = mf(retailWarrVal);
+
+      // Show/hide savings row
+      var saveRow = document.getElementById('w-save-row');
+      if (warrantySavings > 0) {
+        saveRow.style.display = 'flex';
+        document.getElementById('w-save').textContent = mf(warrantySavings);
+      } else {
+        saveRow.style.display = 'none';
+      }
+
+      // Value story callout
+      var storyEl = document.getElementById('w-story');
+      if (storyEl) {
+        var machineBase = 33200;
+        var effectiveWC  = Math.max(0, totalEquip - machineBase * numWarrDev);
+        var retailVal    = wYrs * 3200 * numWarrDev;
+        var storyNet     = retailVal - effectiveWC;
+        if (storyNet > 0) {
+          storyEl.style.display = 'block';
+          storyEl.innerHTML =
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g400);margin-bottom:8px">The Value Story — '+(wYrs+1)+' Yrs Total Coverage (1 yr free + '+wYrs+' extended)</div>'+
+            '<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:var(--g600)">Machine list price</span><span style="font-family:var(--ff-mono);font-weight:700;font-size:11px">'+mf(machineBase * numWarrDev)+'</span></div>'+
+            '<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:var(--g600)">Total package price (machine + warranty)</span><span style="font-family:var(--ff-mono);font-weight:700;font-size:11px">'+mf(totalEquip)+'</span></div>'+
+            '<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:var(--blue);font-weight:600">Your effective warranty cost</span><span style="font-family:var(--ff-mono);font-weight:700;font-size:13px;color:var(--blue)">'+mf(effectiveWC)+'</span></div>'+
+            '<div style="display:flex;justify-content:space-between;margin-bottom:0"><span style="font-size:11px;color:var(--g400);text-decoration:line-through">Retail warranty value ('+wYrs+' yr × $3,200/yr)</span><span style="font-family:var(--ff-mono);font-weight:700;font-size:11px;color:var(--g400);text-decoration:line-through">'+mf(retailVal)+'</span></div>'+
+            '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--navy);margin:10px -12px -18px;padding:10px 14px;border-radius:0 0 4px 4px">'+
+            '<span style="font-size:12px;font-weight:700;color:white;letter-spacing:.02em">WARRANTY VALUE FREE ('+wYrs+' additional yrs)</span>'+
+            '<span style="font-family:var(--ff-mono);font-weight:700;font-size:22px;color:#4ade80">'+mf(storyNet)+'</span></div>';
+        } else {
+          storyEl.style.display = 'none';
+        }
+      }
+    } else {
+      wBox.style.display = 'none';
+      var storyEl = document.getElementById('w-story');
+      if (storyEl) storyEl.style.display = 'none';
+    }
+
+    // Totals
+    var deviceCost = mode === 'finance' ? (down + totFin) : totalEquip;
+    var totalInv = deviceCost;
+
+    var mouth=v('mouth'), dlcogas=v('dlcogas');
+    var fvc=v('fvc'), lvm=v('lvm'), dlco=v('dlco');
+    var ptWk=v('ptWk'), wkYr=v('wkYr');
+    var ptYr = ptWk * wkYr;
+    var reimbPt = fvc + lvm + dlco;
+    var consumpPt = mouth + dlcogas;
+    var grossRev = ptYr * reimbPt;
+    var consAnn = ptYr * consumpPt;
+    var netRev = grossRev - consAnn;
+    var payMo = netRev > 0 ? (totalInv / netRev) * 12 : Infinity;
+    var profit5 = (netRev * 5) - totalInv;
+
+    // Sec. 179 (equipment only, not warranty)
+    var equipElig = totalEquipOnly;
+    var tr = v('taxRate') / 100;
+    var tsav = equipElig * tr;
+    var netAT = totalInv - tsav;
+
+    // ── KPI BAR
+    document.getElementById('r-invest').textContent = ms(totalInv);
+    document.getElementById('r-sub').textContent = wYrs > 0 ? 'incl. warranty' : 'purchase price';
+    document.getElementById('r-rev').textContent = ms(netRev);
+    document.getElementById('r-profit').textContent = ms(profit5);
+    document.getElementById('r-aftertax').textContent = ms(netAT);
+    document.getElementById('r-payback').textContent = payMo===Infinity ? '∞' : payMo.toFixed(1)+' mo';
+
+    // ── 5-YEAR PROJECTION
+    updateProjection(netRev, totalInv);
+
+    // ── COST BREAKDOWN
+    var devLbl = numDev+(numDev>1?' devices':' device');
+    var cb = brow('Equipment ('+devLbl+')', mf(totalEquipOnly));
+    if (wYrs > 0 && numWarrDev > 0) {
+      cb += brow(wYrs+'-Yr Warranty × '+numWarrDev+(numWarrDev===1?' device':' devices'), mf(totalWarrCost));
+    }
+    if (mode === 'finance') cb += brow('Total Interest', mf(totInt));
+    cb += brow('Total Investment', mf(totalInv), 'tot');
+    cb += brow('Sec. 179 Tax Savings ('+Math.round(v('taxRate'))+'%)', '− '+mf(tsav), 'savings');
+    cb += brow('Net Cost After Tax', mf(netAT), 'nettot');
+
+    // Final package price box
+    var effPerDev = numWarrDev > 0 ? totalWarrCost / numWarrDev : 0;
+    var wSaveAmt = wYrs > 0 ? (wYrs * 3200) - effPerDev : 0;
+    var fp = '<div class="pkg-box">';
+    fp += '<div class="pkg-hd"><span>Final Package Price</span><em>'+devLbl+'</em></div>';
+    fp += '<div class="brow"><span class="bk-lbl">Equipment ('+devLbl+')</span><span class="bk-val">'+mf(totalEquipOnly)+'</span></div>';
+    if (numDev > 1) fp += '<div class="brow"><span class="bk-lbl" style="color:var(--g400)">Per device</span><span class="bk-val" style="color:var(--g400)">'+mf(pricePerDev)+'</span></div>';
+    if (wYrs > 0 && numWarrDev > 0) {
+      fp += '<div class="brow"><span class="bk-lbl">'+wYrs+'-Yr Warranty × '+numWarrDev+(numWarrDev>1?' devices':' device')+' ('+mf(effPerDev)+' ea.)</span><span class="bk-val">'+mf(totalWarrCost)+'</span></div>';
+      if (wSaveAmt > 0) fp += '<div class="brow savings"><span class="bk-lbl">Warranty Bundle Savings</span><span class="bk-val">− '+mf(wSaveAmt * numWarrDev)+'</span></div>';
+    }
+    fp += '<div class="brow nettot"><span class="bk-lbl">Total Package Price</span><span class="bk-val">'+mf(totalEquip)+'</span></div>';
+    fp += '</div>';
+    document.getElementById('cost-bd').innerHTML = cb + fp;
+
+    // ── REVENUE BREAKDOWN
+    var rb = brow('Patients / Week', ptWk.toLocaleString());
+    rb += brow('Patients / Year', ptYr.toLocaleString());
+    rb += brow('Reimbursement / Patient', mf(reimbPt));
+    rb += brow('Gross Revenue / Year', mf(grossRev));
+    rb += brow('Consumables / Year', '− '+mf(consAnn));
+    rb += brow('Net Revenue / Year', mf(netRev), 'tot');
+    document.getElementById('rev-bd').innerHTML = rb;
+
+    var roi = totalInv > 0 ? Math.min(100, Math.max(0, (profit5/totalInv)*100)) : 0;
+    document.getElementById('roi-bar').style.width = roi+'%';
+    document.getElementById('roi-pct').textContent = roi.toFixed(0)+'%';
+
+    // ── SECTION 179
+    document.getElementById('s179-res').innerHTML =
+      '<div class="srow"><span class="sk">Equipment — Sec. 179 Eligible ('+devLbl+')</span><span class="sv">'+mf(equipElig)+'</span></div>'+
+      '<div class="srow"><span class="sk" style="color:var(--g400);font-size:11px">Extended Warranty (not Sec. 179 eligible)</span><span class="sv" style="color:var(--g400);font-size:11px">'+(wYrs>0&&numWarrDev>0?mf(totalWarrCost):'N/A')+'</span></div>'+
+      '<div class="srow hl"><span class="sk">Year-1 Tax Deduction</span><span class="sv">'+mf(equipElig)+'</span></div>'+
+      '<div class="srow hl"><span class="sk">Estimated Tax Savings</span><span class="sv">'+mf(tsav)+'</span></div>'+
+      '<div class="srow big"><span class="sk">Real Cost After Tax Savings</span><span class="sv">'+mf(netAT)+'</span></div>';
+
+  } catch(e) { console.error('calc error:', e); }
+}
+
+calc();
+
+/* --- mbx-autoheight: report our real content height to the parent so the
+   embedding page can grow the iframe. iOS Safari can't scroll inside a fixed-
+   height iframe, so the whole builder must be visible and the PAGE scrolls. --- */
+(function(){
+  if (window.parent === window) return; // not embedded
+  var last = 0;
+  function report(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    if (h && Math.abs(h - last) > 2) {
+      last = h;
+      try { window.parent.postMessage({ mbxRoiHeight: h }, '*'); } catch(e){}
+    }
+  }
+  window.addEventListener('load', report);
+  window.addEventListener('resize', report);
+  document.addEventListener('input', function(){ setTimeout(report, 30); }, true);
+  document.addEventListener('change', function(){ setTimeout(report, 30); }, true);
+  document.addEventListener('click', function(){ setTimeout(report, 60); }, true);
+  if (window.ResizeObserver && document.body) {
+    try { new ResizeObserver(report).observe(document.body); } catch(e){}
+  }
+  // Also poll briefly after load in case fonts/layout settle late.
+  var ticks = 0, iv = setInterval(function(){ report(); if(++ticks > 20) clearInterval(iv); }, 250);
+  report();
+})();
+</script>
+</body>
+</html>

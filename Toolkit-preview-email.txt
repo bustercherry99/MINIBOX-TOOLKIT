@@ -1,0 +1,18 @@
+Subject: MiniBox+ Toolkit, the direction I'm leaning, want your read
+
+Hi,
+
+I want to show you where I'm leaning on this and get your advice before I go further.
+
+This is the MiniBox+ Toolkit, my attempt at combining three things into one place: the teaching, the learning, and the actual materials a rep needs in the field to help close the deal. The idea is you open it on a tablet in the office, in front of the doctor, teach off it live, and forward whatever they ask about to them right there before you walk out.
+
+https://deploytoolkit.vercel.app/?k=minibox2026&only=rheum
+
+All you're seeing right now is Rheumatology. Everything else is built. I've just got it closed off while I work out a format that actually works. No sense in me formatting every section the same wrong way five times over.
+
+So take a look at Rheumatology and tell me how it lands. Does this hold up in front of a doctor? Is it laid out the way a rep would actually move through it? What's missing, and what would you never touch?
+
+That's really what I need from you, how we want this to end up landing for the reps.
+
+Best,
+Erik

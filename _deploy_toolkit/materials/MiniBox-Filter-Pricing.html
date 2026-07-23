@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Filter &amp; Mouthpiece Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f1c35; --blue:#2563eb; --green:#059669; --red:#dc2626; --amber:#b45309;
+  --g50:#f8fafc; --g100:#f1f5f9; --g200:#e2e8f0; --g300:#cbd5e1;
+  --g400:#94a3b8; --g500:#64748b; --g600:#475569; --g800:#1e293b; --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--g100);color:var(--navy);font-size:13px;line-height:1.5}
+
+/* ── APP CHROME ── */
+.appbar{background:var(--navy);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
+.appbar .brand{display:flex;align-items:center;gap:11px}
+.appbar .logo{width:34px;height:34px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.appbar .t1{color:#fff;font-size:14.5px;font-weight:700;letter-spacing:.2px}
+.appbar .t2{color:rgba(255,255,255,.62);font-size:11px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.abtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.26);color:#fff;border-radius:6px;padding:7px 13px;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.abtn:hover{background:rgba(255,255,255,.2)}
+.abtn.fill{background:var(--red);border-color:var(--red)}
+
+.wrap{display:grid;grid-template-columns:400px 1fr;gap:0;align-items:start}
+@media(max-width:960px){.wrap{grid-template-columns:1fr}}
+
+/* ── EDITOR ── */
+.editor{background:var(--white);border-right:1px solid var(--g200);padding:16px;min-height:100vh}
+.grp{border:1px solid var(--g200);border-radius:9px;margin-bottom:14px;overflow:hidden}
+.grp-h{background:var(--g50);border-bottom:1px solid var(--g200);padding:8px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g600)}
+.grp-b{padding:12px}
+.fld{margin-bottom:10px}
+.fld:last-child{margin-bottom:0}
+label{display:block;font-size:11px;font-weight:600;color:var(--g600);margin-bottom:4px}
+input,textarea,select{width:100%;border:1px solid var(--g300);border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;color:var(--navy);background:#fff}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:10.5px;color:var(--g500);margin-top:6px;line-height:1.45}
+
+/* the parking-lot answer */
+.cheat{background:linear-gradient(135deg,#0f1c35,#1e3a8a);border-radius:10px;padding:14px;margin-bottom:14px;color:#fff}
+.cheat .ch-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:9px}
+.cheat .ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ch-cell{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:8px 10px}
+.ch-num{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.ch-sub{font-size:10px;color:rgba(255,255,255,.66);margin-top:1px}
+
+/* box stepper */
+.stepper{display:flex;align-items:stretch;gap:8px}
+.stepper button{width:42px;border:1px solid var(--g300);background:var(--g50);border-radius:6px;font-size:19px;font-weight:600;color:var(--navy);cursor:pointer;line-height:1}
+.stepper button:hover{background:var(--g200)}
+.stepper input{text-align:center;font-size:19px;font-weight:700;padding:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--g300);background:#fff;border-radius:99px;padding:5px 12px;font-size:11.5px;font-weight:600;color:var(--g600);cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+.calcline{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--g200);font-size:12.5px}
+.calcline:last-child{border-bottom:0}
+.calcline span{color:var(--g600)}
+.calcline b{font-variant-numeric:tabular-nums}
+.calcline.big{border-bottom:0;border-top:2px solid var(--navy);margin-top:6px;padding-top:9px}
+.calcline.big b{font-size:19px;color:var(--navy)}
+.calcline.good b{color:var(--green)}
+.warnbox{background:#fef3c7;border:1px solid #fcd34d;color:#78350f;border-radius:7px;padding:9px 11px;font-size:11.5px;margin-top:10px;display:none}
+.warnbox.show{display:block}
+.repnote{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:7px;padding:9px 11px;font-size:11px;line-height:1.5;margin-top:10px}
+
+/* ── PAPER ── */
+.stage{padding:22px;display:flex;justify-content:center;background:var(--g100)}
+.paper{background:#fff;width:8.5in;max-width:100%;min-height:11in;padding:.55in .6in;box-shadow:0 10px 30px rgba(15,28,53,.14);border-radius:2px}
+.q-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:16px;gap:16px}
+.q-co{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.02em}
+.q-title{font-size:21px;font-weight:700;color:var(--navy);letter-spacing:-.3px;margin-top:2px}
+.q-logo img{height:44px;display:block}
+.q-line{display:flex;gap:8px;margin-bottom:5px;font-size:12.5px}
+.q-line .qk{font-weight:700;color:var(--navy);min-width:104px}
+.q-line .qv{color:var(--g800)}
+.q-line .qv.empty{color:var(--g400);font-style:italic}
+.q-intro{font-size:12px;color:var(--g600);margin:14px 0 12px}
+
+table.tiers{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px}
+table.tiers th{background:var(--navy);color:#fff;padding:8px 9px;text-align:right;font-weight:600;font-size:11px}
+table.tiers th:first-child{text-align:left}
+table.tiers td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--g200);font-variant-numeric:tabular-nums}
+table.tiers td:first-child{text-align:left;font-weight:600}
+table.tiers tr:nth-child(even) td{background:var(--g50)}
+table.tiers tr.sel td{background:#dbeafe !important;border-top:2px solid var(--blue);border-bottom:2px solid var(--blue);font-weight:700;color:var(--navy)}
+table.tiers tr.sel td:first-child::after{content:" \25C0 your order";font-size:9.5px;font-weight:700;color:var(--blue);letter-spacing:.04em}
+
+.yourorder{border:2px solid var(--navy);border-radius:8px;overflow:hidden;margin-bottom:16px}
+.yo-h{background:var(--navy);color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.yo-b{padding:10px 12px}
+.yo-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-bottom:1px dashed var(--g200)}
+.yo-row:last-child{border-bottom:0}
+.yo-row b{font-variant-numeric:tabular-nums}
+.yo-row.total{border-top:2px solid var(--navy);border-bottom:0;margin-top:5px;padding-top:8px;font-size:15px;font-weight:700}
+.yo-row.total b{font-size:19px;color:var(--navy)}
+
+.q-notes{font-size:11.5px;color:var(--g600);line-height:1.65}
+.q-notes h4{font-size:12px;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.q-notes li{margin-left:16px;margin-bottom:4px}
+.q-custom{background:var(--g50);border-left:3px solid var(--blue);padding:9px 12px;font-size:12px;color:var(--g800);margin:14px 0;white-space:pre-line}
+.q-foot{margin-top:22px;padding-top:10px;border-top:1px solid var(--g200);font-size:10.5px;color:var(--g500);text-align:center;font-style:italic}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff}
+  .appbar,.editor{display:none !important}
+  .wrap{display:block}
+  .stage{display:block;padding:0;background:#fff}
+  .paper{box-shadow:none;width:8.5in;min-height:11in;margin:0;padding:.5in}
+}
+</style>
+</head>
+<body>
+
+<div class="appbar">
+  <div class="brand">
+    <div class="logo">&#129516;</div>
+    <div>
+      <div class="t1">MiniBox+ Filter &amp; Mouthpiece Pricing</div>
+      <div class="t2">2026 price sheet &middot; live quote &middot; usage planner &mdash; v1.0</div>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="abtn" id="repbtn" onclick="toggleRepView()" style="display:none">&#128373; Rep view</button>
+    <button class="abtn" onclick="resetAll()">&#8635; Reset</button>
+    <button class="abtn fill" onclick="window.print()">&#128424; Print / Save PDF</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- ============ EDITOR ============ -->
+  <div class="editor">
+
+    <div class="cheat">
+      <div class="ch-lbl">The answer, if they ask you in the hallway</div>
+      <div class="ch-grid">
+        <div class="ch-cell"><div class="ch-num">$3.50</div><div class="ch-sub">per filter, list</div></div>
+        <div class="ch-cell"><div class="ch-num">$350</div><div class="ch-sub">per box of 100</div></div>
+        <div class="ch-cell"><div class="ch-num">$45</div><div class="ch-sub">S&amp;H per box</div></div>
+        <div class="ch-cell"><div class="ch-num">2 boxes</div><div class="ch-sub">minimum order</div></div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-h">How many boxes?</div>
+      <div class="grp-b">
+        <div class="stepper">
+          <button type="button" onclick="bump(-1)">&minus;</button>
+          <input id="f_boxes" type="text" inputmode="numeric" value="10">
+          <button type="button" onclick="bump(1)">+</button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="hint">Each box = 100 filters with nose clips, and the USB key that loads 100 sessions onto the MiniBox+.</div>
+        <div class="warnbox" id="minwarn">&#9888; Minimum order is <b>2 boxes</b>. The 1-box price is reference only.</div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-h">What it comes to</div>
+      <div class="grp-b">
+        <div class="calcline"><span>Volume discount</span><b id="c_disc">&mdash;</b></div>
+        <div class="calcline"><span>Unit price (per box of 100)</span><b id="c_unit">$350.00</b></div>
+        <div class="calcline"><span>Filters subtotal</span><b id="c_sub">$0.00</b></div>
+        <div class="calcline"><span>Shipping &amp; handling ($45/box)</span><b id="c_sh">$0.00</b></div>
+        <div class="calcline big"><span>Total, delivered</span><b id="c_total">$0.00</b></div>
+        <div class="calcline good" style="margin-top:8px;"><span>Cost per test, delivered</span><b id="c_pertest">$3.95</b></div>
+        <div class="calcline"><span>Cost per test, filter only</span><b id="c_perfilter">$3.50</b></div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-h">How long will it last?</div>
+      <div class="grp-b">
+        <div class="row2">
+          <div class="fld"><label>PFTs per week</label><input id="f_pftweek" type="text" inputmode="numeric" value="20"></div>
+          <div class="fld"><label>Weeks open per year</label><input id="f_weeks" type="text" inputmode="numeric" value="50"></div>
+        </div>
+        <div class="calcline"><span>Tests per year</span><b id="c_peryear">1,000</b></div>
+        <div class="calcline"><span>This order lasts</span><b id="c_lasts">50 weeks</b></div>
+        <div class="calcline"><span>Boxes needed per year</span><b id="c_boxyear">10</b></div>
+        <div class="calcline big"><span>Annual disposable spend</span><b id="c_annual">$0.00</b></div>
+        <div class="hint">One filter per patient test session &mdash; it covers the whole PFT (spirometry, lung volumes and DLCO), not one disposable per maneuver.</div>
+      </div>
+    </div>
+
+    <div class="grp" id="repgrp">
+      <div class="grp-h">The cost story &mdash; internal, never printed</div>
+      <div class="grp-b">
+        <div class="calcline"><span>Full PFT reimbursement</span><b>$155.06</b></div>
+        <div class="calcline"><span>Your disposable cost</span><b id="c_ds">$3.95</b></div>
+        <div class="calcline good"><span>Disposable as % of the visit</span><b id="c_pct">2.5%</b></div>
+        <div class="calcline" style="margin-top:8px;"><span>NDD Pro&nbsp;Lab per test</span><b style="color:var(--red)">~$9.00+</b></div>
+        <div class="calcline"><span>Jaeger Vyntus per test</span><b style="color:var(--red)">$3.00+</b></div>
+        <div class="calcline"><span>MGC / Morgan per test</span><b style="color:var(--amber)">$2.50+</b></div>
+        <div class="repnote">
+          <b>Say it this way:</b> one disposable covers the entire PFT. The competitors stack a mouthpiece, a DLCO barrier and an FRC barrier on every full study, then add a service contract and a sensor on top. Our per-test number is one line, and there is no annual PM bill behind it.
+        </div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-h">Put a name on it</div>
+      <div class="grp-b">
+        <div class="fld"><label>Prepared for (account / health system)</label><input id="f_account" type="text" placeholder="Account name"></div>
+        <div class="fld"><label>Prepared by</label><input id="f_rep" type="text" placeholder="Your name, title"></div>
+        <div class="row2">
+          <div class="fld"><label>Date</label><input id="f_date" type="text" placeholder="7/22/2026"></div>
+          <div class="fld"><label>Quote valid</label><input id="f_valid" type="text" value="30 days"></div>
+        </div>
+        <div class="fld"><label>Notes on the quote (optional)</label><textarea id="f_notes" placeholder="Standing order every quarter, PO number, ship-to contact, anything the customer should see&hellip;"></textarea></div>
+        <div class="hint">Leave notes blank to hide that block on the printed page.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ PAPER ============ -->
+  <div class="stage">
+    <div class="paper" id="paper">
+      <div class="q-top">
+        <div>
+          <div class="q-co">PulmOne USA Inc.</div>
+          <div class="q-title">2026 MiniBox+ Disposable Filter / Nose Clip Pricing</div>
+        </div>
+      </div>
+
+      <div class="q-line"><div class="qk">Prepared for:</div><div class="qv empty" id="p_account">[ Account / Health System Name ]</div></div>
+      <div class="q-line"><div class="qk">Prepared by:</div><div class="qv empty" id="p_rep">[ Name, Title ]</div></div>
+      <div class="q-line"><div class="qk">Date:</div><div class="qv" id="p_date"></div></div>
+
+      <div class="q-intro">Pricing includes the USB session key and Shipping &amp; Handling (S&amp;H).</div>
+
+      <table class="tiers">
+        <thead>
+          <tr>
+            <th>Quantity (Boxes)</th>
+            <th>Volume Discount</th>
+            <th>Unit Price (per 100)</th>
+            <th>S&amp;H ($45 per box)</th>
+            <th>Total (Incl. S&amp;H)</th>
+          </tr>
+        </thead>
+        <tbody id="p_tiers"></tbody>
+      </table>
+
+      <div class="yourorder" id="p_yo">
+        <div class="yo-h">Your order</div>
+        <div class="yo-b">
+          <div class="yo-row"><span id="p_yo_qty">10 boxes &mdash; 1,000 filters with nose clips</span><b id="p_yo_unit"></b></div>
+          <div class="yo-row"><span>Filters subtotal</span><b id="p_yo_sub"></b></div>
+          <div class="yo-row"><span>Shipping &amp; handling</span><b id="p_yo_sh"></b></div>
+          <div class="yo-row total"><span>Total, delivered</span><b id="p_yo_total"></b></div>
+          <div class="yo-row" style="margin-top:6px;"><span>Cost per patient test, delivered</span><b id="p_yo_pertest"></b></div>
+        </div>
+      </div>
+
+      <div class="q-custom" id="p_notes_wrap" style="display:none"><span id="p_notes"></span></div>
+
+      <div class="q-notes">
+        <h4>Notes</h4>
+        <ul>
+          <li>These disposables are proprietary and include a USB key that loads the corresponding number of sessions onto the MiniBox+.</li>
+          <li>Shipping &amp; Handling is $45 per box, charged by a third-party fulfillment center.</li>
+          <li>Minimum order is two (2) boxes. The 1-box price is shown for reference only.</li>
+          <li>Pricing is based on a list price of $3.50 per filter ($350.00 per box of 100).</li>
+          <li>One filter covers the complete PFT session &mdash; spirometry, lung volumes and DLCO.</li>
+          <li>The MiniBox+ is validated to require no internal sanitization only when the PulmOne viral-bacterial filter is used. Use without a PulmOne filter may void the warranty.</li>
+        </ul>
+      </div>
+
+      <div class="q-foot" id="p_foot">Quotation valid for 30 days from the date above. Questions may be directed to your PulmOne representative.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== the 2026 price sheet — single source of truth ===== */
+var LIST_PER_BOX = 350.00;   /* $3.50 per filter x 100 */
+var SH_PER_BOX   = 45.00;
+var MIN_BOXES    = 2;
+var TIERS = [            /* threshold boxes, discount */
+  { min: 1,  disc: 0.00 },
+  { min: 10, disc: 0.05 },
+  { min: 15, disc: 0.08 },
+  { min: 20, disc: 0.10 }
+];
+var QUICK = [2, 5, 10, 15, 20, 30];
+
+function $(id){ return document.getElementById(id); }
+function money(n){ n = isNaN(n) ? 0 : n; return "$" + n.toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function int(n){ n = isNaN(n) ? 0 : n; return n.toLocaleString("en-US"); }
+function num(v){ if(v==null) return 0; var x = parseFloat(String(v).replace(/[^0-9.\-]/g,"")); return isNaN(x) ? 0 : x; }
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtDate(d){ return (d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear(); }
+
+/* the tier that applies at a given box count */
+function tierFor(boxes){
+  var t = TIERS[0];
+  for (var i=0;i<TIERS.length;i++){ if (boxes >= TIERS[i].min) t = TIERS[i]; }
+  return t;
+}
+function unitFor(boxes){ return LIST_PER_BOX * (1 - tierFor(boxes).disc); }
+
+function bump(d){
+  var b = Math.max(1, Math.round(num($("f_boxes").value)) + d);
+  $("f_boxes").value = b;
+  update();
+}
+function setBoxes(b){ $("f_boxes").value = b; update(); }
+
+function buildChips(){
+  $("chips").innerHTML = QUICK.map(function(q){
+    return '<button type="button" class="chip" data-q="'+q+'" onclick="setBoxes('+q+')">'+q+' boxes</button>';
+  }).join("");
+}
+
+function update(){
+  var boxes = Math.max(1, Math.round(num($("f_boxes").value)) || 1);
+  var tier  = tierFor(boxes);
+  var unit  = unitFor(boxes);
+  var sub   = unit * boxes;
+  var sh    = SH_PER_BOX * boxes;
+  var total = sub + sh;
+  var filters = boxes * 100;
+  var perTest = total / filters;
+  var perFilter = unit / 100;
+
+  /* ---- editor ---- */
+  $("c_disc").textContent   = tier.disc ? (tier.disc*100).toFixed(0) + "%" : "—";
+  $("c_unit").textContent   = money(unit);
+  $("c_sub").textContent    = money(sub);
+  $("c_sh").textContent     = money(sh);
+  $("c_total").textContent  = money(total);
+  $("c_pertest").textContent   = "$" + perTest.toFixed(2);
+  $("c_perfilter").textContent = "$" + perFilter.toFixed(2);
+  $("minwarn").className = "warnbox" + (boxes < MIN_BOXES ? " show" : "");
+
+  Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(c){
+    c.className = "chip" + (+c.dataset.q === boxes ? " on" : "");
+  });
+
+  /* ---- usage planner ---- */
+  var perWeek = num($("f_pftweek").value);
+  var weeks   = num($("f_weeks").value) || 50;
+  var perYear = perWeek * weeks;
+  $("c_peryear").textContent = int(Math.round(perYear));
+  $("c_lasts").textContent   = perWeek > 0
+    ? (filters / perWeek < 1.5
+        ? (filters / perWeek * 7).toFixed(0) + " days"
+        : (filters / perWeek).toFixed(filters/perWeek < 10 ? 1 : 0) + " weeks")
+    : "—";
+  var boxesYear = perYear > 0 ? Math.ceil(perYear / 100) : 0;
+  $("c_boxyear").textContent = boxesYear ? int(boxesYear) : "—";
+  var annual = boxesYear ? (unitFor(boxesYear) * boxesYear) + (SH_PER_BOX * boxesYear) : 0;
+  $("c_annual").textContent  = money(annual);
+
+  /* ---- cost story ---- */
+  $("c_ds").textContent  = "$" + perTest.toFixed(2);
+  $("c_pct").textContent = (perTest / 155.06 * 100).toFixed(1) + "%";
+
+  /* ---- paper ---- */
+  var acct = $("f_account").value.trim();
+  var rep  = $("f_rep").value.trim();
+  $("p_account").textContent = acct || "[ Account / Health System Name ]";
+  $("p_account").className   = "qv" + (acct ? "" : " empty");
+  $("p_rep").textContent     = rep || "[ Name, Title ]";
+  $("p_rep").className       = "qv" + (rep ? "" : " empty");
+  $("p_date").textContent    = $("f_date").value;
+
+  /* tier table — always show the published rows, plus the rep's row if it is off-tier */
+  var rows = [1, 10, 15, 20];
+  if (rows.indexOf(boxes) === -1) { rows.push(boxes); rows.sort(function(a,b){ return a-b; }); }
+  $("p_tiers").innerHTML = rows.map(function(b){
+    var t = tierFor(b), u = unitFor(b), s = SH_PER_BOX * b, tot = u*b + s;
+    var star = (b === 1) ? "*" : "";
+    return '<tr class="' + (b === boxes ? "sel" : "") + '">' +
+      '<td>' + b + star + '</td>' +
+      '<td>' + (t.disc ? (t.disc*100).toFixed(0) + "%" : "—") + '</td>' +
+      '<td>' + money(u) + '</td>' +
+      '<td>' + money(s) + '</td>' +
+      '<td>' + money(tot) + star + '</td>' +
+    '</tr>';
+  }).join("");
+
+  $("p_yo_qty").textContent   = boxes + (boxes === 1 ? " box" : " boxes") + " — " + int(filters) + " filters with nose clips";
+  $("p_yo_unit").textContent  = money(unit) + " / box";
+  $("p_yo_sub").textContent   = money(sub);
+  $("p_yo_sh").textContent    = money(sh);
+  $("p_yo_total").textContent = money(total);
+  $("p_yo_pertest").textContent = "$" + perTest.toFixed(2);
+
+  var notes = $("f_notes").value.trim();
+  $("p_notes").textContent = notes;
+  $("p_notes_wrap").style.display = notes ? "" : "none";
+
+  var valid = $("f_valid").value.trim() || "30 days";
+  $("p_foot").textContent = "Quotation valid for " + valid + " from the date above. Questions may be directed to your PulmOne representative.";
+
+  save();
+}
+
+/* ---- persistence: keep the rep's own settings, never a stale account name ---- */
+function save(){
+  try{
+    localStorage.setItem("mbx_filterpricing", JSON.stringify({
+      boxes: $("f_boxes").value, pftweek: $("f_pftweek").value, weeks: $("f_weeks").value
+    }));
+  }catch(e){}
+}
+
+function resetAll(){
+  $("f_boxes").value = 10;
+  $("f_pftweek").value = 20;
+  $("f_weeks").value = 50;
+  $("f_account").value = "";
+  $("f_notes").value = "";
+  $("f_valid").value = "30 days";
+  update();
+}
+
+/* The competitor numbers and the coaching line are OURS, not the customer's.
+   Inside the toolkit this page runs in an iframe, so we show them. Opened on its
+   own — which is what happens when a rep emails the file to a practice — it opens
+   as a clean customer pricing page. A rep who opens it standalone can flip it back
+   on with the Rep view button (or ?rep=1). */
+function repViewAllowed(){
+  try { if (window.self !== window.top) return true; } catch(e) { return true; }
+  return /(^|[?&])rep=1/.test(location.search);
+}
+function toggleRepView(){
+  var g = $("repgrp");
+  g.style.display = (g.style.display === "none") ? "" : "none";
+}
+function applyRepView(){
+  if (repViewAllowed()) return;
+  $("repgrp").style.display = "none";
+  $("repbtn").style.display = "";
+}
+
+function init(){
+  buildChips();
+  $("f_date").value = fmtDate(new Date());
+  applyRepView();
+
+  /* rep identity comes from the signed-in profile — never hardcode a rep */
+  var repName = "";
+  try{
+    var rp = JSON.parse(localStorage.getItem("pulmone_rep_profile"));
+    if (rp) repName = [rp.name, rp.title].filter(Boolean).join(", ");
+  }catch(e){}
+  $("f_rep").value = repName;
+
+  /* remembered volume settings only — the account always opens blank */
+  try{
+    var d = JSON.parse(localStorage.getItem("mbx_filterpricing"));
+    if (d){
+      if (d.boxes)   $("f_boxes").value   = d.boxes;
+      if (d.pftweek) $("f_pftweek").value = d.pftweek;
+      if (d.weeks)   $("f_weeks").value   = d.weeks;
+    }
+  }catch(e){}
+
+  ["f_boxes","f_pftweek","f_weeks","f_account","f_rep","f_date","f_valid","f_notes"].forEach(function(id){
+    $(id).addEventListener("input", update);
+  });
+
+  update();
+}
+init();
+</script>
+</body>
+</html>

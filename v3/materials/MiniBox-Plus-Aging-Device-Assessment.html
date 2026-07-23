@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Aging Device Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f3ef;
+    --card: #ffffff;
+    --border: #e2e0d8;
+    --navy: #1a2742;
+    --blue: #2a5298;
+    --blue-light: #e8eef8;
+    --red: #c0392b;
+    --red-light: #fdf0ef;
+    --amber: #d4820a;
+    --amber-light: #fef6e4;
+    --green: #1e7e5e;
+    --green-light: #eaf4f0;
+    --text: #1e1e1e;
+    --muted: #6b6861;
+    --tag-bg: #f0ede6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+
+  .page-header {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .logo-block {
+    width: 52px;
+    height: 52px;
+    background: var(--navy);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-block svg { fill: white; }
+
+  .header-text h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.3px;
+  }
+
+  .header-text p {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .lifetime-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--amber-light);
+    border: 1px solid #f0c87a;
+    color: var(--amber);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--border);
+    padding: 4px;
+    border-radius: 10px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab.active {
+    background: white;
+    color: var(--navy);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* FORM SECTION */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .section-header:hover { background: #faf9f7; }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 17px;
+  }
+
+  .icon-red { background: var(--red-light); }
+  .icon-amber { background: var(--amber-light); }
+  .icon-blue { background: var(--blue-light); }
+  .icon-green { background: var(--green-light); }
+
+  .section-title { font-size: 14.5px; font-weight: 600; color: var(--navy); }
+  .section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .section-chevron {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+
+  .section.open .section-chevron { transform: rotate(180deg); }
+
+  .section-body {
+    display: none;
+    padding: 16px 20px 20px;
+  }
+
+  .section.open .section-body { display: block; }
+
+  .badge-count {
+    background: var(--red);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 6px;
+    display: none;
+  }
+
+  .badge-count.show { display: inline; }
+
+  /* SYMPTOM ITEMS */
+  .symptom-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0ede6;
+  }
+
+  .symptom-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .symptom-item:first-child { padding-top: 0; }
+
+  .symptom-check {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .symptom-text { flex: 1; }
+
+  .symptom-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .symptom-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  .symptom-severity {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sev-high { background: var(--red-light); color: var(--red); }
+  .sev-med { background: var(--amber-light); color: var(--amber); }
+  .sev-low { background: var(--green-light); color: var(--green); }
+
+  /* ACCOUNT INFO */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .form-row.full { grid-template-columns: 1fr; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    background: #faf9f7;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    background: white;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* RESULTS SUMMARY */
+  .results-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .results-bar.show { display: block; }
+
+  .results-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .result-stat {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .result-stat .num {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .result-stat .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .urgency-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .urgency-replace { background: var(--red-light); color: var(--red); }
+  .urgency-watch { background: var(--amber-light); color: var(--amber); }
+  .urgency-ok { background: var(--green-light); color: var(--green); }
+
+  /* ACTION BUTTONS */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+    flex: 1;
+  }
+
+  .btn-primary:hover { background: #253554; }
+
+  .btn-secondary {
+    background: var(--card);
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: var(--bg); }
+
+  /* EMAIL PANEL */
+  .email-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .email-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #faf9f7;
+  }
+
+  .email-toolbar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .email-actions { display: flex; gap: 8px; }
+
+  .email-btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .email-btn:hover { background: var(--bg); }
+  .email-btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+  .email-btn.primary:hover { background: #253554; }
+
+  .email-fields {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: 8px;
+  }
+
+  .email-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .email-field span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 60px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .email-field input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    font-size: 13.5px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .email-field input:focus {
+    border-bottom-color: var(--blue);
+    background: transparent;
+  }
+
+  .email-body {
+    padding: 24px 28px;
+    min-height: 320px;
+  }
+
+  .email-body textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+    min-height: 400px;
+    padding: 0;
+  }
+
+  .email-body textarea:focus { outline: none; border: none; }
+
+  .template-selector {
+    padding: 16px 20px;
+    background: #faf9f7;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .template-pill {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--navy);
+    transition: all 0.15s;
+  }
+
+  .template-pill:hover, .template-pill.active {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+  }
+
+  .template-label {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+  }
+
+  /* COPIED TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+    z-index: 999;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* PROGRESS INDICATOR */
+  .progress-wrap {
+    background: var(--border);
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr 1fr; }
+    .actions { flex-direction: column; }
+    .email-body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo-block">
+    <svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+  </div>
+  <div class="header-text">
+    <h1>MiniBox+ Aging Device Assessment</h1>
+    <p>Document device condition, identify failure patterns, and generate a customer outreach email.</p>
+    <div class="lifetime-badge">⏱ Device Expected Lifetime: 10 Years</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('assessment')">Device Assessment</button>
+    <button class="tab" onclick="switchTab('email')">Customer Email</button>
+  </div>
+
+  <!-- ASSESSMENT PANEL -->
+  <div class="panel active" id="panel-assessment">
+
+    <!-- Account Info -->
+    <div class="section open">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-blue">📋</div>
+        <div>
+          <div class="section-title">Account Information</div>
+          <div class="section-sub">Practice and device details</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="form-row">
+          <div>
+            <label>Practice Name</label>
+            <input type="text" id="practiceName" placeholder="e.g. Dr. Bruno's Pulmonology" oninput="syncEmail()">
+          </div>
+          <div>
+            <label>Physician / Contact</label>
+            <input type="text" id="physicianName" placeholder="e.g. Dr. Bruno" oninput="syncEmail()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Device Serial Number</label>
+            <input type="text" id="serialNum" placeholder="e.g. MB-2017-XXXX">
+          </div>
+          <div>
+            <label>Approximate Device Age</label>
+            <select id="deviceAge" onchange="updateSummary(); syncEmail()">
+              <option value="">Select age...</option>
+              <option value="5-6">5 to 6 years</option>
+              <option value="7-8">7 to 8 years</option>
+              <option value="8-9">8 to 9 years</option>
+              <option value="9-10">9 to 10 years (at rated lifetime)</option>
+              <option value="10+">10+ years (end of life)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Device Type</label>
+            <select id="deviceType">
+              <option value="minibox-plus">MiniBox+ (with DLCO)</option>
+              <option value="minibox">MiniBox (spirometry only)</option>
+            </select>
+          </div>
+          <div>
+            <label>Date of Assessment</label>
+            <input type="date" id="assessDate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Bar -->
+    <div class="results-bar" id="resultsBar">
+      <div class="results-title">Assessment Summary</div>
+      <div class="results-grid">
+        <div class="result-stat">
+          <div class="num" id="issueCount">0</div>
+          <div class="lbl">Issues Flagged</div>
+        </div>
+        <div class="result-stat">
+          <div class="num" id="critCount">0</div>
+          <div class="lbl">High Severity</div>
+        </div>
+        <div class="result-stat">
+          <div class="num" id="pctAge">—</div>
+          <div class="lbl">% Device Lifetime</div>
+        </div>
+      </div>
+      <div class="urgency-tag" id="urgencyTag">—</div>
+    </div>
+
+    <!-- DLCO / Gas System -->
+    <div class="section" id="sec-dlco">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-red">⚗️</div>
+        <div>
+          <div class="section-title">DLCO Gas System <span class="badge-count" id="badge-dlco">0</span></div>
+          <div class="section-sub">Gas analyzer, regulator, valve, tank</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="dlco" onchange="updateSummary(); syncEmail()" id="s1">
+          <div class="symptom-text">
+            <div class="symptom-name">DLCO measurements unavailable / Gas Analyzer error</div>
+            <div class="symptom-desc">Device displays "Gas Analyzer error" or hangs on "Preparing for new DLCO measurement." CO or CH4 analyzer failure. Manual confirms this requires PulmOne support or device replacement.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="dlco" onchange="updateSummary(); syncEmail()" id="s2">
+          <div class="symptom-text">
+            <div class="symptom-name">Rapid DLCO gas tank depletion</div>
+            <div class="symptom-desc">E-tank runs out in days or within a week. Prior valve replacement did not resolve. Suspected internal manifold or regulator leak. Chronic in devices 7+ years old.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="dlco" onchange="updateSummary(); syncEmail()" id="s3">
+          <div class="symptom-text">
+            <div class="symptom-name">DLCO calibration failing repeatedly</div>
+            <div class="symptom-desc">Weekly DLCO calibration check with 3L syringe failing to return values within 0 ± 1 mL/min/mmHg. Indicates gas analyzer drift or partial valve issue.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="dlco" onchange="updateSummary(); syncEmail()" id="s4">
+          <div class="symptom-text">
+            <div class="symptom-name">CO / CH4 low concentration readings</div>
+            <div class="symptom-desc">DLCO CO and CH4 show abnormally low values despite confirmed gas supply connection and adequate pressure (4 to 5 bar secondary). Gas analyzer degradation likely.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Occluder Valve / Interrupter -->
+    <div class="section" id="sec-valve">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-amber">🔧</div>
+        <div>
+          <div class="section-title">Occluder Valve / Interrupter <span class="badge-count" id="badge-valve">0</span></div>
+          <div class="section-sub">Fast interrupter valve, LVM shutter, flow interruption</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="valve" onchange="updateSummary(); syncEmail()" id="s5">
+          <div class="symptom-text">
+            <div class="symptom-name">Valve stuck in closed or open position</div>
+            <div class="symptom-desc">No test results displayed. Manual specifically lists this as a failure mode requiring device replacement via PulmOne support. Valve is the core fast interrupter mechanism for LVM and LVC tests.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="valve" onchange="updateSummary(); syncEmail()" id="s6">
+          <div class="symptom-text">
+            <div class="symptom-name">Valve not opening fast enough (slow actuation)</div>
+            <div class="symptom-desc">LVM test completes with repeated alerts: "not enough qualified valve closure events." Patients report feeling resistance or delay at breath interruption. Valve actuator is degrading.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="valve" onchange="updateSummary(); syncEmail()" id="s7">
+          <div class="symptom-text">
+            <div class="symptom-name">LVM tests failing repeatedly / inconsistent results</div>
+            <div class="symptom-desc">Acceptable LVM maneuvers cannot be obtained across multiple patients. May indicate partial valve degradation before full failure. Staff reports device "never used to do this."</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tablet / Control Unit -->
+    <div class="section" id="sec-tablet">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-blue">💻</div>
+        <div>
+          <div class="section-title">Tablet / Control Unit <span class="badge-count" id="badge-tablet">0</span></div>
+          <div class="section-sub">Battery, screen, software, OS compatibility</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="tablet" onchange="updateSummary(); syncEmail()" id="s8">
+          <div class="symptom-text">
+            <div class="symptom-name">Battery degradation / physical case damage</div>
+            <div class="symptom-desc">Battery swelling, gas expansion within the battery causing the tablet case cover to separate. Immediate safety issue. Device must be replaced. Seen in units 5+ years old under heavy daily use.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="tablet" onchange="updateSummary(); syncEmail()" id="s9">
+          <div class="symptom-text">
+            <div class="symptom-name">Tablet losing charge rapidly / not holding power</div>
+            <div class="symptom-desc">Device requires near-constant wall connection. Tablet no longer holds charge between patients. Battery cycle life exhausted. Replacement tablet available from PulmOne.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="tablet" onchange="updateSummary(); syncEmail()" id="s10">
+          <div class="symptom-text">
+            <div class="symptom-name">Software update no longer supported on current OS</div>
+            <div class="symptom-desc">MiniBox software cannot be updated. Older Dell tablets may be locked out of Windows updates required for current MiniBox software versions. Leads to compliance and performance gaps.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="low" data-group="tablet" onchange="updateSummary(); syncEmail()" id="s11">
+          <div class="symptom-text">
+            <div class="symptom-name">Touchscreen unresponsive or sluggish</div>
+            <div class="symptom-desc">Staff uses keyboard or mouse to navigate because touch is unreliable. Normal wear on aging Surface/Dell units. Impacts daily workflow and testing speed.</div>
+          </div>
+          <div class="symptom-severity sev-low">Low</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CPU Cable / Connectivity -->
+    <div class="section" id="sec-cable">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-amber">🔌</div>
+        <div>
+          <div class="section-title">CPU Cable / Connectivity <span class="badge-count" id="badge-cable">0</span></div>
+          <div class="section-sub">USB data cable, HHU connection, communication</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="cable" onchange="updateSummary(); syncEmail()" id="s12">
+          <div class="symptom-text">
+            <div class="symptom-name">CPU cable causing DLCO / communication errors</div>
+            <div class="symptom-desc">"Communication with device has been lost" or Gas Analyzer error triggered by bending or flexing the main USB CPU cable. Cable outer coating cracking or brittle. Full DLCO failure results from cable flex.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="cable" onchange="updateSummary(); syncEmail()" id="s13">
+          <div class="symptom-text">
+            <div class="symptom-name">HHU disconnects during testing</div>
+            <div class="symptom-desc">Handheld unit loses connection intermittently. Sessions interrupted mid-test. Cable from HHU to main unit shows wear, cracking, or poor seating at connector panel.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="low" data-group="cable" onchange="updateSummary(); syncEmail()" id="s14">
+          <div class="symptom-text">
+            <div class="symptom-name">USB ports not recognizing peripherals</div>
+            <div class="symptom-desc">Flash drives for database export, printers, or keyboards not recognized consistently. Internal USB port degradation over years of daily use.</div>
+          </div>
+          <div class="symptom-severity sev-low">Low</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow Sensor / Calibration -->
+    <div class="section" id="sec-flow">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-green">📊</div>
+        <div>
+          <div class="section-title">Flow Sensor / Calibration <span class="badge-count" id="badge-flow">0</span></div>
+          <div class="section-sub">Bidirectional flow sensor, pressure, accuracy</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="flow" onchange="updateSummary(); syncEmail()" id="s15">
+          <div class="symptom-text">
+            <div class="symptom-name">Daily calibration check failing repeatedly</div>
+            <div class="symptom-desc">Calibration check with 3L syringe fails despite proper technique. Manual states if multiple consecutive calibrations fail after thorough procedure, the PulmOne representative must be contacted. Results may already be clinically inaccurate.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="flow" onchange="updateSummary(); syncEmail()" id="s16">
+          <div class="symptom-text">
+            <div class="symptom-name">FVC values drifting from expected / outlier results</div>
+            <div class="symptom-desc">Returning patients showing unexpected drops in FVC or FEV1 not explained clinically. Sensor drift in aging bidirectional flow sensors can produce clinically misleading results before outright failure.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="low" data-group="flow" onchange="updateSummary(); syncEmail()" id="s17">
+          <div class="symptom-text">
+            <div class="symptom-name">Warm-up time increasing or inconsistent</div>
+            <div class="symptom-desc">Device taking longer than 10 minutes to reach thermal stability or requiring more frequent restarts for zeroing. Temperature sensor degradation over time.</div>
+          </div>
+          <div class="symptom-severity sev-low">Low</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HHU / Hardware Body -->
+    <div class="section" id="sec-hhu">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-red">🫁</div>
+        <div>
+          <div class="section-title">Handheld Unit (HHU) / Main Body <span class="badge-count" id="badge-hhu">0</span></div>
+          <div class="section-sub">Physical unit, locking pin, chassis, power system</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="high" data-group="hhu" onchange="updateSummary(); syncEmail()" id="s18">
+          <div class="symptom-text">
+            <div class="symptom-name">HHU not seating / locking properly</div>
+            <div class="symptom-desc">Handheld unit no longer locks securely to the main device. Locking pin or groove shows wear. Unit wobbles or disengages during docked DLCO testing. Creates test quality and safety issues.</div>
+          </div>
+          <div class="symptom-severity sev-high">High</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="med" data-group="hhu" onchange="updateSummary(); syncEmail()" id="s19">
+          <div class="symptom-text">
+            <div class="symptom-name">Blue power light flickering or off despite power connected</div>
+            <div class="symptom-desc">Blue indicator light around HHU connection unreliable. May indicate fuse issue or internal power supply degradation. Manual lists fuses as a cause of device not working.</div>
+          </div>
+          <div class="symptom-severity sev-med">Medium</div>
+        </div>
+        <div class="symptom-item">
+          <input type="checkbox" class="symptom-check" data-sev="low" data-group="hhu" onchange="updateSummary(); syncEmail()" id="s20">
+          <div class="symptom-text">
+            <div class="symptom-name">ON/OFF switch stiff or unreliable</div>
+            <div class="symptom-desc">Main power switch becoming difficult to operate or not switching cleanly. Manual specifically lists switch stuck in ON or OFF as known failure mode. Functional but a leading indicator.</div>
+          </div>
+          <div class="symptom-severity sev-low">Low</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="section open">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-icon icon-green">📝</div>
+        <div>
+          <div class="section-title">Field Notes</div>
+          <div class="section-sub">Additional observations not covered above</div>
+        </div>
+        <div class="section-chevron">▼</div>
+      </div>
+      <div class="section-body">
+        <div class="form-row full">
+          <div>
+            <label>Additional Notes</label>
+            <textarea id="fieldNotes" placeholder="Enter any observations, error codes seen, staff feedback, or context about this device's history..." oninput="syncEmail()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+      <button class="btn btn-primary" onclick="goToEmail()">Generate Email →</button>
+    </div>
+
+  </div>
+
+  <!-- EMAIL PANEL -->
+  <div class="panel" id="panel-email">
+
+    <div class="email-card">
+      <div class="template-selector">
+        <span class="template-label">Template:</span>
+        <button class="template-pill active" onclick="loadTemplate('proactive', this)">Proactive Checkup</button>
+        <button class="template-pill" onclick="loadTemplate('issues', this)">Known Issues</button>
+        <button class="template-pill" onclick="loadTemplate('eol', this)">End of Life</button>
+      </div>
+      <div class="email-toolbar">
+        <div class="email-toolbar-title">Draft Email</div>
+        <div class="email-actions">
+          <button class="email-btn" onclick="copyEmail()">Copy</button>
+          <button class="email-btn primary" onclick="openMail()">Open in Mail</button>
+        </div>
+      </div>
+      <div class="email-fields">
+        <div class="email-field">
+          <span>To</span>
+          <input type="text" id="emailTo" placeholder="physician@practice.com">
+        </div>
+        <div class="email-field">
+          <span>Subject</span>
+          <input type="text" id="emailSubject" value="Your MiniBox+ Device — A Quick Check-In">
+        </div>
+      </div>
+      <div class="email-body">
+        <textarea id="emailBody" spellcheck="true"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+  // Set today's date
+  document.getElementById('assessDate').valueAsDate = new Date();
+
+  // Tab switching
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'email') syncEmail();
+  }
+
+  // Section collapse
+  function toggleSection(header) {
+    const sec = header.closest('.section');
+    sec.classList.toggle('open');
+  }
+
+  // Update summary counts
+  function updateSummary() {
+    const checked = document.querySelectorAll('.symptom-check:checked');
+    const total = checked.length;
+    const high = [...checked].filter(c => c.dataset.sev === 'high').length;
+
+    document.getElementById('issueCount').textContent = total;
+    document.getElementById('critCount').textContent = high;
+
+    const ageEl = document.getElementById('deviceAge');
+    const ageVal = ageEl.value;
+    let pct = '—';
+    const ageMap = {'5-6': '55%', '7-8': '75%', '8-9': '85%', '9-10': '95%', '10+': '100%+'};
+    if (ageVal) pct = ageMap[ageVal];
+    document.getElementById('pctAge').textContent = pct;
+
+    // Group badges
+    const groups = ['dlco', 'valve', 'tablet', 'cable', 'flow', 'hhu'];
+    groups.forEach(g => {
+      const count = [...document.querySelectorAll(`.symptom-check:checked[data-group="${g}"]`)].length;
+      const badge = document.getElementById('badge-' + g);
+      badge.textContent = count;
+      badge.classList.toggle('show', count > 0);
+    });
+
+    // Urgency
+    const bar = document.getElementById('resultsBar');
+    const tag = document.getElementById('urgencyTag');
+
+    if (total === 0 && !ageVal) {
+      bar.classList.remove('show');
+      return;
+    }
+
+    bar.classList.add('show');
+
+    if (high >= 2 || ageVal === '10+' || (ageVal === '9-10' && high >= 1)) {
+      tag.className = 'urgency-tag urgency-replace';
+      tag.textContent = '⚠ Recommend Device Replacement';
+    } else if (high >= 1 || total >= 3 || ageVal === '9-10') {
+      tag.className = 'urgency-tag urgency-watch';
+      tag.textContent = '⏰ Monitor Closely — Plan Replacement';
+    } else {
+      tag.className = 'urgency-tag urgency-ok';
+      tag.textContent = '✓ Manageable — Schedule Preventive Review';
+    }
+  }
+
+  // Templates
+  const templates = {
+    proactive: {
+      subject: 'Your MiniBox+ — A Quick Check-In',
+      body: `Dear [PHYSICIAN],
+
+I wanted to reach out regarding your MiniBox+ at [PRACTICE]. Based on our records, your device is now [AGE], and I always like to connect with practices around this point to make sure everything is running the way it should be.
+
+Devices at this stage can start showing signs of wear in a few key areas: the DLCO gas system, the occluder valve, the tablet battery, and the CPU cable. None of these are problems yet, but they are worth getting ahead of before they become ones.
+
+I would like to schedule a quick in-person check to walk through the device together. If there are things that need attention, we can address them now rather than on a day when your schedule is full and the device goes down.
+
+I will be in your area and happy to find a time that works. Would [DAY/TIME OPTION] work for a short visit?
+
+Thank you,
+
+Erik Bernard
+Territory Sales Representative
+PulmOne Advanced Medical Devices
+(Your direct number)`
+    },
+    issues: {
+      subject: 'Following Up on Your MiniBox+ Device Concerns',
+      body: `Dear [PHYSICIAN],
+
+Thank you for bringing your device concerns to my attention. I wanted to follow up and make sure we have a clear path forward.
+
+Based on what I have observed with your MiniBox+ at [PRACTICE], there are a few things worth discussing:
+
+[ISSUES NOTED DURING VISIT]
+
+Devices at [AGE] are not unusual to show these patterns. The expected lifetime of the MiniBox+ is 10 years, and in my experience, these issues tend to become more frequent as a device approaches that range.
+
+I want to make sure you are never in a position where a device issue affects your ability to see patients or bill accurately. That is why I am reaching out now rather than waiting.
+
+I would like to come back in and walk through your options together. There is no pressure, and this is not a sales call. It is a conversation about protecting your practice.
+
+Can we find 20 minutes this week or next?
+
+Thank you,
+
+Erik Bernard
+Territory Sales Representative
+PulmOne Advanced Medical Devices
+(Your direct number)`
+    },
+    eol: {
+      subject: 'Planning Ahead: Your MiniBox+ Device',
+      body: `Dear [PHYSICIAN],
+
+I hope you are doing well. I am reaching out because I like to be proactive with the practices I work with, and your MiniBox+ at [PRACTICE] is getting to the age where planning ahead makes a real difference.
+
+Your device is approaching or at the 10-year expected lifetime established by the manufacturer. In my territory, I see devices at this stage begin to experience component wear in areas like the DLCO analyzer, the fast interrupter valve, and the tablet system. When these go, they rarely give much warning, and the downtime costs practices more than the replacement would have.
+
+I am not suggesting you need to act immediately. But I do think it is worth sitting down and looking at what a planned upgrade path would look like for your practice. We can look at trade-in value on the existing device, new device pricing, and whether there is a timing that works best around your billing cycle or fiscal year.
+
+The last thing I want is for your device to go down on a Monday morning with a full schedule of pulmonary patients. Let's get ahead of it.
+
+Would you have time for a short conversation in the next few weeks?
+
+Thank you,
+
+Erik Bernard
+Territory Sales Representative
+PulmOne Advanced Medical Devices
+(Your direct number)`
+    }
+  };
+
+  let currentTemplate = 'proactive';
+
+  function loadTemplate(name, el) {
+    currentTemplate = name;
+    document.querySelectorAll('.template-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    syncEmail();
+  }
+
+  function syncEmail() {
+    const practice = document.getElementById('practiceName').value || '[PRACTICE]';
+    const physician = document.getElementById('physicianName').value || '[PHYSICIAN]';
+    const age = document.getElementById('deviceAge').value;
+    const ageLabel = {'5-6': '5 to 6 years', '7-8': '7 to 8 years', '8-9': '8 to 9 years', '9-10': '9 to 10 years', '10+': 'over 10 years'}[age] || '[AGE]';
+    const notes = document.getElementById('fieldNotes').value;
+
+    const tpl = templates[currentTemplate];
+    document.getElementById('emailSubject').value = tpl.subject;
+
+    // Build issues list from checked symptoms
+    const checked = [...document.querySelectorAll('.symptom-check:checked')];
+    let issuesList = '';
+    if (checked.length > 0) {
+      const items = checked.map(c => {
+        const name = c.closest('.symptom-item').querySelector('.symptom-name').textContent.trim();
+        return '  - ' + name;
+      });
+      issuesList = items.join('\n');
+    } else {
+      issuesList = '  (no specific issues logged yet)';
+    }
+
+    let body = tpl.body
+      .replace(/\[PHYSICIAN\]/g, physician)
+      .replace(/\[PRACTICE\]/g, practice)
+      .replace(/\[AGE\]/g, ageLabel)
+      .replace('[ISSUES NOTED DURING VISIT]', issuesList);
+
+    document.getElementById('emailBody').value = body;
+  }
+
+  function goToEmail() {
+    syncEmail();
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById('panel-email').classList.add('active');
+  }
+
+  function copyEmail() {
+    const subject = document.getElementById('emailSubject').value;
+    const body = document.getElementById('emailBody').value;
+    const full = 'Subject: ' + subject + '\n\n' + body;
+    navigator.clipboard.writeText(full).then(() => showToast('Copied to clipboard'));
+  }
+
+  function openMail() {
+    const to = document.getElementById('emailTo').value;
+    const subject = encodeURIComponent(document.getElementById('emailSubject').value);
+    const body = encodeURIComponent(document.getElementById('emailBody').value);
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  }
+
+  function clearForm() {
+    document.querySelectorAll('.symptom-check').forEach(c => c.checked = false);
+    document.getElementById('practiceName').value = '';
+    document.getElementById('physicianName').value = '';
+    document.getElementById('serialNum').value = '';
+    document.getElementById('deviceAge').value = '';
+    document.getElementById('fieldNotes').value = '';
+    updateSummary();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Init email
+  syncEmail();
+
+  // Open first section by default
+  document.querySelectorAll('.section')[0].classList.add('open');
+</script>
+</body>
+</html>

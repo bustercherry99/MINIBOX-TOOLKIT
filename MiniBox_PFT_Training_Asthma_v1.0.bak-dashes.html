@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MiniBox PFT Training — Asthma Pattern</title>
+<style>
+  :root{
+    --ink:#1a2230; --mut:#5b6774; --line:#d7dde5; --bg:#eef1f5;
+    --brand:#0e7c54; --brandsoft:#e5f4ec; --accent:#c62828; --accentsoft:#fdecec;
+    --good:#0e7c54; --goodsoft:#e5f4ec; --warn:#b26a00; --warnsoft:#fdf3e3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.4;padding:24px 14px 60px}
+  .sheet{max-width:900px;margin:0 auto;background:#fff;border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(20,30,50,.08)}
+
+  /* teaching banner */
+  .teach{background:linear-gradient(135deg,#0e7c54,#0a5f41);color:#fff;padding:16px 20px}
+  .teach .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+  .teach h1{margin:2px 0 4px;font-size:22px}
+  .teach p{margin:0;font-size:13.5px;opacity:.92;max-width:70ch}
+
+  /* report header */
+  .rhead{display:flex;justify-content:space-between;align-items:flex-start;
+    padding:14px 20px;border-bottom:2px solid var(--brand)}
+  .rhead .co{font-weight:800;font-size:18px;color:var(--brand);letter-spacing:.02em}
+  .rhead .co small{display:block;font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.02em}
+  .rhead .rt{text-align:right;font-size:12px;color:var(--mut)}
+  .rhead .rt b{color:var(--ink);font-size:13px}
+
+  section{padding:8px 20px 4px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--brand);
+    margin:16px 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px 26px;font-size:13px}
+  .grid2 div{padding:2px 0}
+  .grid2 span{color:var(--mut)}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:right;padding:5px 8px;border-bottom:1px solid #eef1f4}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--mut);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;
+    border-bottom:1.5px solid var(--line)}
+  tbody tr:hover{background:#fafbfc}
+  .u{color:var(--mut);font-size:11px}         /* units */
+  .flag-low{color:var(--accent);font-weight:800}
+  .flag-ok{color:var(--good);font-weight:800}
+  .rowkey{background:var(--brandsoft)}
+  .rowkey td{font-weight:700}
+
+  .pill{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;
+    vertical-align:middle;margin-left:6px}
+  .pill.low{background:var(--accentsoft);color:var(--accent)}
+  .pill.ok{background:var(--goodsoft);color:var(--good)}
+  .pill.hi{background:var(--warnsoft);color:var(--warn)}
+
+  /* reversibility callout */
+  .rev{margin:10px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .rev .rh{background:#f5f8fb;padding:8px 12px;font-weight:800;font-size:12.5px;color:var(--ink)}
+  .rev table{font-size:12.5px}
+  .rev .big{font-size:15px;font-weight:800;color:var(--good)}
+
+  /* interpretation chart */
+  .interp{background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:14px;margin:8px 0 4px}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px}
+  .node{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-weight:600}
+  .node.on{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 3px 10px rgba(14,124,84,.3)}
+  .node.dim{opacity:.45}
+  .arrow{color:var(--mut);font-weight:800}
+  .verdict{margin-top:10px;font-size:14px}
+  .verdict b{color:var(--brand)}
+
+  /* plain-english coaching */
+  .coach{background:var(--brandsoft);border:1px solid #bfe3d1;border-radius:12px;padding:14px 16px;margin:12px 0}
+  .coach h3{margin:0 0 6px;font-size:13px;color:var(--brand);text-transform:uppercase;letter-spacing:.08em}
+  .coach ul{margin:6px 0 0;padding-left:18px;font-size:13px}
+  .coach li{margin:4px 0}
+
+  .foot{padding:12px 20px 20px;font-size:11px;color:var(--mut);border-top:1px solid var(--line)}
+  .disc{background:#fff8e6;border:1px solid #f0dca0;color:#7a5b00;border-radius:10px;
+    padding:10px 12px;font-size:11.5px;margin:0 20px 16px}
+
+  /* tap/hover glossary terms */
+  .term{border-bottom:1px dashed #9aa6b4;cursor:help;transition:background .12s}
+  .term:hover{background:var(--brandsoft)}
+  /* hoverable number cells (auto-wired) */
+  td.num{cursor:help;text-decoration:underline dotted #c2ccd6;text-underline-offset:3px;text-decoration-thickness:1px}
+  td.num:hover{background:var(--brandsoft);text-decoration-color:var(--brand)}
+  @media print{td.num{text-decoration:none}}
+  #gloss{position:fixed;z-index:60;display:none;border:1px solid #d7dde5;max-width:290px;background:#ffffff;color:#1a2230;
+    border-radius:12px;padding:11px 13px 12px;box-shadow:0 10px 30px rgba(20,30,50,.20);font-size:12.5px;line-height:1.5}
+  #gloss .gt{font-weight:800;font-size:12.5px;color:#0e7c54;margin:0 0 5px;display:block}
+  #gloss .gb{margin:0}
+  #gloss .gx{position:absolute;top:6px;right:9px;color:#5b6774;cursor:pointer;font-weight:800;font-size:15px}
+  #gloss .gln{margin:8px 0 0;padding-top:8px;border-top:1px solid #d7dde5;font-size:12px;color:#5b6774}
+  #gloss .gref{display:block;margin:7px 0 0;padding:6px 8px;background:var(--brandsoft);border-radius:7px;font-size:11.5px;color:#0a5f41;line-height:1.45}
+
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.rhead{flex-direction:column;gap:6px}.rhead .rt{text-align:left}}
+  @media print{body{background:#fff;padding:0}.sheet{box-shadow:none;border:none}.term{border-bottom:none}}
+</style>
+</head>
+<body>
+<div id="gloss" role="dialog" aria-label="Definition"></div>
+<div class="sheet">
+
+  <!-- TEACHING BANNER -->
+  <div class="teach">
+    <span class="tag">MiniBox Pattern Library · Training Sample</span>
+    <h1>What Asthma looks like on a MiniBox report</h1>
+    <p>Same demo patient and same predicted values as the ILD sample — only the <b>measured</b> numbers changed.
+       This is the classic <b>reversible obstruction</b> pattern. Compare it side-by-side with the ILD report to see
+       exactly which numbers move.</p>
+    <p style="margin:10px 0 0;font-size:12.5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+       border-radius:8px;padding:7px 11px"><b>Tip:</b> tap any <span class="term" data-g="lln" style="border-bottom-color:#bfe3d1">underlined word</span> —
+       a flag like <i>air trapping</i> or a parameter like <i>DLCO</i> — — or any <b>number</b> in the tables — for a plain-English definition of what it means.</p>
+  </div>
+
+  <!-- REPORT HEADER -->
+  <div class="rhead">
+    <div class="co">PulmOne <small>Service (US) · DFW, Texas · 844-785-6663 · service@pulm-one.com</small></div>
+    <div class="rt"><b>Pulmonary Function Test Report</b><br>PFT Outside The Box</div>
+  </div>
+
+  <!-- PATIENT -->
+  <section>
+    <h2>Patient Details</h2>
+    <div class="grid2">
+      <div><span>Name:</span> Will PulmOne &nbsp; <span>ID:</span> Test</div>
+      <div><span>Session Date:</span> Feb 27, 2023</div>
+      <div><span>Age:</span> 23.9 &nbsp; <span>Gender:</span> Male</div>
+      <div><span>Height:</span> 5&#39;11&quot; &nbsp; <span>Weight:</span> 300 lbs</div>
+      <div><span>Smoker:</span> No &nbsp; <span>Pack Years:</span> 0</div>
+      <div><span>Ethnicity:</span> Caucasian &nbsp; <span>LLN:</span> 70%</div>
+    </div>
+  </section>
+
+  <!-- SPIROMETRY -->
+  <section>
+    <h2>Spirometry — how much air, and how fast</h2>
+    <table>
+      <thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>% Pred.</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr class="rowkey"><td><span class="term" data-g="ratio">FEV1/FVC</span> <span class="u">(the ratio that defines obstruction)</span></td><td class="u">%</td><td>84.28</td><td>58.5</td><td>—</td><td><span class="term" data-g="lln"><span class="flag-low">↓ below LLN</span></span></td></tr>
+        <tr><td><span class="term" data-g="fvc">FVC</span></td><td class="u">L</td><td>5.74</td><td>5.30</td><td>92%</td><td><span class="term" data-g="normal"><span class="flag-ok">normal</span></span></td></tr>
+        <tr><td><span class="term" data-g="fev1">FEV1</span></td><td class="u">L</td><td>4.80</td><td>3.10</td><td>65%</td><td><span class="term" data-g="reduced"><span class="flag-low">↓ reduced</span></span></td></tr>
+        <tr><td><span class="term" data-g="fef">FEF 25–75</span> <span class="u">(small airways)</span></td><td class="u">L/sec</td><td>5.03</td><td>2.06</td><td>41%</td><td><span class="term" data-g="reduced"><span class="flag-low">↓ reduced</span></span></td></tr>
+        <tr><td><span class="term" data-g="pef">PEF</span></td><td class="u">L/sec</td><td>10.17</td><td>7.02</td><td>69%</td><td><span class="term" data-g="reduced"><span class="flag-low">↓ reduced</span></span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--mut);margin:8px 0 0">Air moves out <b>slowly</b> (low FEV1, low ratio) but the
+      lungs still <b>empty fully</b> (FVC preserved). That combination = an <b>obstructive</b> pattern.</p>
+  </section>
+
+  <!-- REVERSIBILITY -->
+  <section>
+    <h2>Post-Bronchodilator — the asthma tell</h2>
+    <div class="rev">
+      <div class="rh">Repeat after an inhaler (albuterol)</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Pre</th><th>Post</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>FEV1 (L)</td><td>3.10</td><td class="big">3.66</td><td class="flag-ok">+0.56 L &nbsp; (+18%)</td></tr>
+          <tr><td>FVC (L)</td><td>5.30</td><td>5.58</td><td class="flag-ok">+0.28 L &nbsp; (+5%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--mut);margin:6px 0 0"><span class="term" data-g="reversibility"><b>Significant reversibility</b></span> = FEV1 improves ≥12% <i>and</i> ≥200 mL.
+      Here it jumps <b>+18% / +560 mL</b>. Airways that open right up with an inhaler point to <b>asthma</b> — this is the single
+      biggest thing separating asthma from fixed COPD.</p>
+  </section>
+
+  <!-- LUNG VOLUMES -->
+  <section>
+    <h2>Lung Volumes — how big are the lungs</h2>
+    <table>
+      <thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>% Pred.</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term" data-g="tlc">TLC</span> <span class="u">(total lung capacity)</span></td><td class="u">L</td><td>7.20</td><td>7.16</td><td>99%</td><td><span class="term" data-g="normal"><span class="flag-ok">normal</span></span></td></tr>
+        <tr><td><span class="term" data-g="rv">RV</span> <span class="u">(trapped air)</span></td><td class="u">L</td><td>1.52</td><td>2.31</td><td>152%</td><td><span class="term" data-g="airtrap"><span class="pill hi">↑ air trapping</span></span></td></tr>
+        <tr><td><span class="term" data-g="rvtlc">RV/TLC</span></td><td class="u">%</td><td>21.21</td><td>32.3</td><td>152%</td><td><span class="term" data-g="elevated"><span class="pill hi">↑ elevated</span></span></td></tr>
+        <tr><td><span class="term" data-g="vc">VC</span></td><td class="u">L</td><td>5.58</td><td>5.30</td><td>95%</td><td><span class="term" data-g="normal"><span class="flag-ok">normal</span></span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--mut);margin:8px 0 0">Lungs are <b>normal-sized</b> (TLC 99%) — not shrunken like ILD.
+      The only quirk is a little <b>trapped air</b> (high RV), which is common in asthma.</p>
+  </section>
+
+  <!-- DLCO -->
+  <section>
+    <h2>Diffusion (DLCO) — the divider</h2>
+    <table>
+      <thead><tr><th>Parameter</th><th>Unit</th><th>Pred.</th><th>Best</th><th>% Pred.</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr class="rowkey"><td><span class="term" data-g="dlco">DLCO</span></td><td class="u">mL/min/mmHg</td><td>34.34</td><td>33.05</td><td>96%</td><td><span class="term" data-g="normal"><span class="flag-ok">NORMAL</span></span></td></tr>
+        <tr><td><span class="term" data-g="va">VA</span></td><td class="u">L</td><td>6.71</td><td>6.55</td><td>98%</td><td><span class="term" data-g="normal"><span class="flag-ok">normal</span></span></td></tr>
+        <tr><td><span class="term" data-g="kco">DLCO/VA (KCO)</span></td><td class="u">mL/min/mmHg/L</td><td>5.14</td><td>5.05</td><td>98%</td><td><span class="term" data-g="normal"><span class="flag-ok">normal</span></span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--mut);margin:8px 0 0"><b>This is the money number.</b> In asthma the gas exchange is
+      <b>normal</b> — the airways are twitchy, but the lung tissue is healthy. A <b>low</b> DLCO here would point to emphysema
+      instead. DLCO is what only a full box like the MiniBox can measure — a plain spirometer can't.</p>
+  </section>
+
+  <!-- INTERPRETATION CHART -->
+  <section>
+    <h2>Interpretation Chart (ATS/ERS)</h2>
+    <div class="interp">
+      <div class="flow">
+        <span class="node on">FEV1/VC &lt; LLN?</span><span class="arrow">→ YES →</span>
+        <span class="node on">Obstruction</span><span class="arrow">→</span>
+        <span class="node on">DLCO ≥ LLN?</span><span class="arrow">→ YES →</span>
+        <span class="node on">Asthma / CB</span>
+      </div>
+      <div class="flow" style="margin-top:8px;opacity:.6">
+        <span class="node dim">Emphysema</span>
+        <span class="node dim">Restriction</span>
+        <span class="node dim">ILD Pneumonitis</span>
+        <span class="node dim">PV disorders</span>
+        <span class="node dim">CW / NM disorders</span>
+        <span class="node dim">Mixed defect</span>
+        <span class="node dim">Normal</span>
+      </div>
+      <div class="verdict">Interpretation: <b>Obstruction — Asthma (reversible)</b> · Severity: <b>Moderate</b></div>
+    </div>
+    <div class="disc" style="margin:10px 0 0">This is a computer-generated interpretation chart. A review by a physician is required.</div>
+  </section>
+
+  <!-- COACHING -->
+  <section>
+    <div class="coach">
+      <h3>How a rep reads this in 10 seconds</h3>
+      <ul>
+        <li><b>Low ratio, full lungs</b> → obstruction (air comes out slow, but it all comes out).</li>
+        <li><b>Numbers jump after the inhaler</b> → reversible → asthma, not fixed COPD.</li>
+        <li><b>DLCO normal</b> → healthy lung tissue → rules out emphysema.</li>
+        <li>One 90-second MiniBox test captured all three — spirometry <i>and</i> volumes <i>and</i> diffusion — that a plain spirometer would miss.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="disc">
+    <b>Training sample — not a real patient.</b> The numbers are illustrative of the classic asthma pattern, chosen to teach
+    pattern recognition, and are <b>pending a clinical once-over</b>. They are not a diagnostic reference range and must not be
+    used to interpret any real test.
+  </div>
+
+  <div class="foot">
+    PulmOne · PFT Outside The Box · MiniBox Pattern Library v1.0 — Asthma &nbsp;|&nbsp; Built for the rep.
+  </div>
+
+</div>
+
+<script>
+const GLOSS = {
+  ratio:{t:"FEV1/FVC ratio", d:"The share of your air you can blow out in the first second. It's the most important spirometry number — a <b>low ratio is the definition of obstruction</b> (narrowed or blocked airways)."},
+  lln:{t:"LLN — Lower Limit of Normal", d:"The cutoff below which a value counts as abnormal. It is <b>not one fixed number</b> — a real report calculates it for each person from their <b>age, height, sex and ethnicity</b>, because a tall 25-year-old and a small 70-year-old have very different 'normal' lungs.", ln:"This teaching sample uses a simple fixed cutoff. A per-person LLN calculator is the planned next step."},
+  reduced:{t:"Reduced / low", d:"This value came in <b>lower than expected</b> for this person. On its own it just means 'below normal' — it's the <b>pattern</b> of which numbers are low that points to a cause."},
+  normal:{t:"Normal", d:"This value sits in the <b>expected range</b> for this person — nothing to flag here."},
+  fvc:{t:"FVC — Forced Vital Capacity", d:"The <b>total air you can blow out</b> in one big breath. Think 'how big is the tank.'"},
+  fev1:{t:"FEV1 — air in the first second", d:"How much you blow out in the <b>first ONE second</b>. Think 'how fast can you empty.' A low FEV1 with a normal-size tank = a flow problem = obstruction."},
+  fef:{t:"FEF 25–75", d:"How fast air moves in the <b>middle</b> of the breath. Reflects the <b>small airways</b> — often the first thing to dip."},
+  pef:{t:"PEF — Peak Expiratory Flow", d:"The single <b>fastest burst</b> of air, right at the start — like the top speed of your exhale."},
+  tlc:{t:"TLC — Total Lung Capacity", d:"Every bit of air the lungs hold when <b>completely full</b>. Small TLC = restriction (stiff/small lungs); large TLC = hyperinflation (air stuck in)."},
+  rv:{t:"RV — Residual Volume", d:"Air <b>left behind</b> that you can't blow out. When it climbs, air is getting trapped."},
+  rvtlc:{t:"RV/TLC", d:"What fraction of the lungs is <b>dead-end trapped air</b>. A high ratio is another sign air is getting stuck."},
+  vc:{t:"VC — Vital Capacity", d:"The usable air from a full breath down to empty. A close cousin of FVC."},
+  dlco:{t:"DLCO — gas exchange", d:"How well <b>oxygen crosses from the lungs into the blood</b>. Only a full box like the MiniBox measures it — a plain spirometer can't. It's what separates <b>asthma (normal)</b> from <b>emphysema (low)</b>."},
+  va:{t:"VA — Alveolar Volume", d:"The lung volume the DLCO test actually reached — used to put DLCO in context."},
+  kco:{t:"KCO (DLCO/VA)", d:"Gas exchange <b>per unit of lung reached</b>. Helps tell 'the tissue is damaged' from 'there was simply less lung to test.'"},
+  airtrap:{t:"Air trapping", d:"Air that <b>can't get back out</b>, so it stacks up behind narrowed airways. Shows up as a high RV. Common in asthma and COPD."},
+  elevated:{t:"Elevated", d:"This value is <b>higher than expected</b> — here it points to trapped air, not anything good."},
+  reversibility:{t:"Reversibility (post-inhaler)", d:"After an inhaler, the test is repeated. A big jump (<b>≥12% AND ≥200 mL</b> in FEV1) = 'reversible' = points to <b>asthma</b>. Little change = 'fixed' = more like <b>COPD</b>."}
+};
+const glossEl=document.getElementById('gloss');
+// --- number-column coaching (auto-wired) ---
+function _bottles(v){ const n=v/2; return n.toFixed(1).replace(/\.0$/,''); }
+function _sizeLine(unit,valStr){ if(!/^L$/i.test((unit||'').trim())) return ''; const v=parseFloat(valStr); if(!isFinite(v)) return ''; return `≈ ${_bottles(v)} two‑liter soda bottles of air`; }
+const NUMDEF = {
+  pred:{ t:'Predicted — the healthy target',
+    d:(c)=>{ const s=_sizeLine(c.unit,c.val);
+      return `<b>Predicted ${c.param} = ${c.val}${c.unit?' '+c.unit:''}.</b> What a <b>healthy</b> person matching this patient (age, height, sex, ethnicity) would be expected to hit — the bar this row is measured against.`
+        + (s?`<span class="gref">Real-world size: ${s}. A healthy adult empties about 5–6 L — roughly three soda bottles — in one full breath.</span>`:''); } },
+  best:{ t:'Best — what they actually blew',
+    d:(c)=>{ const s=_sizeLine(c.unit,c.val), ps=_sizeLine(c.unit,c.pred);
+      const pRef = c.pred ? ` A healthy match would be expected around <b>${c.pred}${c.unit?' '+c.unit:''}</b>${ps?` (${ps})`:''}.` : '';
+      return `<b>${c.param} best = ${c.val}${c.unit?' '+c.unit:''}.</b> The patient's <b>own best real effort</b> on this test.${pRef}`
+        + (s?`<span class="gref">Real-world size: ${s} in one breath.</span>`:''); } },
+  pct:{ t:'% of Predicted — how far off',
+    d:(c)=>`<b>${c.val} of predicted.</b> The best effort shown as a <b>share of the healthy target</b> — the fastest "how far off" read. Roughly <b>80% and up is the usual normal zone</b>; the lower it falls, the more this measure is underperforming.` }
+};
+function wireNumbers(){
+  document.querySelectorAll('table').forEach(tbl=>{
+    if(!tbl.tHead||!tbl.tHead.rows.length) return;
+    const heads=[...tbl.tHead.rows[0].cells].map(c=>c.textContent.trim().toLowerCase());
+    const unitIdx=heads.findIndex(h=>h.includes('unit'));
+    const predIdx=heads.findIndex(h=>!h.includes('%')&&h.includes('pred'));
+    const colType=heads.map(h=> h.includes('%')?'pct' : h.includes('pred')?'pred' : h.includes('best')?'best' : null);
+    [...tbl.tBodies].forEach(tb=>[...tb.rows].forEach(row=>{
+      const p0=row.cells[0]; if(!p0) return;
+      const param=((p0.querySelector('.term')?.textContent)||p0.textContent).trim().replace(/\s+/g,' ');
+      const unit=(unitIdx>-1&&row.cells[unitIdx])?row.cells[unitIdx].textContent.trim():'';
+      const predVal=(predIdx>-1&&row.cells[predIdx])?row.cells[predIdx].textContent.trim():'';
+      [...row.cells].forEach((cell,i)=>{
+        const ct=colType[i]; if(!ct) return;
+        if(cell.querySelector('.term')) return;
+        const val=cell.textContent.trim();
+        if(!val||val==='—'||val==='-') return;
+        cell.classList.add('num');
+        cell._num={col:ct,param,unit,val,pred:predVal};
+      });
+    }));
+  });
+}
+function defFor(el){
+  if(el.classList.contains('num')&&el._num){ const n=el._num, b=NUMDEF[n.col]; if(b) return {t:b.t, d:b.d(n)}; }
+  const g=GLOSS[el.dataset.g]; if(g) return {t:g.t, d:g.d, ln:g.ln};
+  return null;
+}
+wireNumbers();
+let glossPinned=false;
+function showGloss(el){
+  const g=defFor(el); if(!g) return;
+  glossEl.innerHTML=`<span class="gx" data-close>&times;</span><span class="gt">${g.t}</span><p class="gb">${g.d}</p>${g.ln?`<p class="gln">${g.ln}</p>`:''}`;
+  glossEl.style.display='block';
+  const r=el.getBoundingClientRect();
+  const gw=glossEl.offsetWidth, gh=glossEl.offsetHeight;
+  let left=r.left; if(left+gw>window.innerWidth-10) left=window.innerWidth-10-gw;
+  let top=r.bottom+8; if(top+gh>window.innerHeight-10) top=Math.max(10,r.top-gh-8);
+  glossEl.style.left=Math.max(10,left)+'px'; glossEl.style.top=top+'px';
+}
+function hideGloss(){ glossEl.style.display='none'; glossPinned=false; }
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-close]')){ hideGloss(); return; }
+  const t=e.target.closest('.term,.num');
+  if(t){ glossPinned=true; showGloss(t); e.stopPropagation(); return; }
+  if(!e.target.closest('#gloss')) hideGloss();
+});
+document.addEventListener('mouseover',e=>{ const t=e.target.closest('.term,.num'); if(t&&!glossPinned) showGloss(t); });
+document.addEventListener('mouseout', e=>{ const t=e.target.closest('.term,.num'); if(t&&!glossPinned) hideGloss(); });
+window.addEventListener('scroll',()=>{ if(!glossPinned) hideGloss(); },true);
+</script>
+</body>
+</html>

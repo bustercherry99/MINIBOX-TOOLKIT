@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0f1720" />
+<title>MiniBox Field</title>
+<style>
+  :root {
+    --bg: #0b1118;
+    --surface: #141d28;
+    --surface-2: #1b2735;
+    --header: #0f1720;
+    --text: #f2f5f8;
+    --muted: #8a99ab;
+    --line: #243140;
+    --accent: #19c3c9;
+    --accent-soft: rgba(25, 195, 201, 0.14);
+    --active: #1f9bff;
+    --green: #36c98a;
+    --amber: #f2b13c;
+    --violet: #b06bff;
+    --slate: #6c7d92;
+    --shadow: 0 6px 20px rgba(0,0,0,0.35);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  .app {
+    max-width: 520px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+
+  /* Header */
+  header.topbar {
+    background: var(--header);
+    padding: calc(env(safe-area-inset-top) + 14px) 18px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .brandrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand .logo {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--active));
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 15px; color: #04171a;
+  }
+  .brand h1 {
+    font-size: 18px;
+    margin: 0;
+    letter-spacing: 0.3px;
+    font-weight: 700;
+  }
+  .brand h1 span { color: var(--accent); }
+  .owner {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Search */
+  .searchwrap {
+    margin-top: 14px;
+    position: relative;
+  }
+  .searchwrap input {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 12px 14px 12px 40px;
+    font-size: 15px;
+    outline: none;
+  }
+  .searchwrap input::placeholder { color: var(--muted); }
+  .searchwrap .ico {
+    position: absolute;
+    left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* Filter chips */
+  .filters {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 14px 18px 4px;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .chip.on {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .chip .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Count strip */
+  .countstrip {
+    padding: 12px 18px 2px;
+    color: var(--muted);
+    font-size: 12.5px;
+    letter-spacing: 0.2px;
+  }
+
+  /* List */
+  .list {
+    flex: 1;
+    padding: 10px 18px calc(env(safe-area-inset-bottom) + 96px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 16px 14px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+  .card:active { transform: scale(0.99); }
+  .card .accentbar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--slate);
+  }
+  .card.arrived {
+    border-color: var(--active);
+    box-shadow: 0 0 0 1px var(--active), 0 8px 24px rgba(31,155,255,0.25);
+  }
+  .card.arrived .accentbar { background: var(--active); }
+
+  .card .toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .practice {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-top: 4px;
+  }
+  .sub .title { color: #aab8c8; }
+
+  .statuspill {
+    flex: 0 0 auto;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .metarow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .metarow .item { display: flex; align-items: center; gap: 6px; }
+  .metarow .k { color: #94a4b6; }
+  .metarow .v { color: var(--text); }
+
+  .stage {
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .stage .label {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .stage .val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .arrivedflag {
+    display: none;
+    margin-top: 12px;
+    background: rgba(31,155,255,0.12);
+    border: 1px solid rgba(31,155,255,0.4);
+    color: #9ed0ff;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .card.arrived .arrivedflag { display: block; }
+
+  /* Bottom nav */
+  nav.tabbar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    max-width: 520px;
+    margin: 0 auto;
+    background: var(--header);
+    border-top: 1px solid var(--line);
+    display: flex;
+    padding: 8px 6px calc(env(safe-area-inset-bottom) + 8px);
+    z-index: 60;
+  }
+  nav.tabbar button {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+    letter-spacing: 0.2px;
+  }
+  nav.tabbar button .glyph { font-size: 19px; line-height: 1; }
+  nav.tabbar button.on { color: var(--accent); }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 60px 24px;
+    font-size: 14px;
+  }
+
+  /* simulate arrival button (dev aid for Step 1) */
+  .simbar {
+    padding: 0 18px 4px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .simbar button {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brandrow">
+      <div class="brand">
+        <div class="logo">M</div>
+        <h1>MiniBox <span>Field</span></h1>
+      </div>
+      <div class="owner">Rep view</div>
+    </div>
+    <div class="searchwrap">
+      <span class="ico">&#9906;</span>
+      <input id="search" type="search" placeholder="Search accounts, contacts, towns" autocomplete="off" />
+    </div>
+  </header>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="simbar">
+    <button id="simBtn" type="button">Simulate arrival at a stop</button>
+  </div>
+
+  <div class="countstrip" id="countstrip"></div>
+
+  <main class="list" id="list"></main>
+
+  <nav class="tabbar">
+    <button class="on" data-tab="accounts"><span class="glyph">&#9776;</span>Accounts</button>
+    <button data-tab="map"><span class="glyph">&#9678;</span>Map</button>
+    <button data-tab="plan"><span class="glyph">&#9633;</span>Day plan</button>
+    <button data-tab="log"><span class="glyph">&#9998;</span>Log</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   MiniBox Field  v1.0
+   Step 1  Account list with seeded data and LocalStorage
+   Copy rules  no hyphen  no exclamation  no bullets in output
+   ============================================================ */
+
+const STORAGE_KEY = "minibox_field_accounts_v1";
+
+/* Status model
+   active        device installed and running
+   needsservice  installed device needs attention
+   demo          demo unit placed
+   prospect      no device yet  open opportunity
+*/
+const STATUS = {
+  active:       { label: "Active",        color: "#36c98a" },
+  needsservice: { label: "Needs service", color: "#f2b13c" },
+  demo:         { label: "Demo unit",     color: "#b06bff" },
+  prospect:     { label: "Prospect",      color: "#6c7d92" }
+};
+
+/* Seed data  named accounts from the build brief */
+const SEED = [
+  {
+    id: "peoples-pulmonary",
+    practice: "People's Pulmonary",
+    contact: "Dr. Kaur",
+    contactTitle: "Pulmonologist",
+    phone: "860 555 0142",
+    address: "Manchester, CT",
+    status: "active",
+    stage: "Installed account",
+    nextStep: "Confirm service interval and supply reorder",
+    lastVisit: "2026-06-09",
+    lastNotes: "Walked through the MiniBox workflow with the front desk. Unit running well. Dr. Kaur asked about a second probe.",
+    openItems: "Send supply reorder form",
+    geofence: 150
+  },
+  {
+    id: "ny-pulmonary-consultants",
+    practice: "New York Pulmonary Consultants",
+    contact: "Dr. Gellman and Dr. Libby",
+    contactTitle: "Pulmonology group",
+    phone: "212 555 0190",
+    address: "New York, NY",
+    status: "needsservice",
+    stage: "Installed account",
+    nextStep: "Schedule service visit and recalibration",
+    lastVisit: "2026-06-15",
+    lastNotes: "Dr. Libby reported a flow reading that drifts. Logged a service request. Dr. Gellman wants a refresher for two new techs.",
+    openItems: "Book service visit and tech refresher",
+    geofence: 150
+  },
+  {
+    id: "mid-island-allergy-a",
+    practice: "Mid Island Allergy  Location One",
+    contact: "Deborah",
+    contactTitle: "Office manager",
+    phone: "631 555 0166",
+    address: "Long Island, NY",
+    status: "active",
+    stage: "Installed account",
+    nextStep: "Review billing helper with Deborah",
+    lastVisit: "2026-06-11",
+    lastNotes: "Deborah is the day to day contact. Volume is steady. She asked for a quick reference on the PFT billing codes.",
+    openItems: "Drop off billing reference",
+    geofence: 150
+  },
+  {
+    id: "mid-island-allergy-b",
+    practice: "Mid Island Allergy  Location Two",
+    contact: "Dr. Girillo",
+    contactTitle: "Allergist",
+    phone: "631 555 0177",
+    address: "Long Island, NY",
+    status: "demo",
+    stage: "Demo placed",
+    nextStep: "Collect demo feedback and propose purchase",
+    lastVisit: "2026-06-11",
+    lastNotes: "Demo unit placed at the second location. Dr. Girillo wants two weeks with it before deciding. Staff trained on basic spirometry.",
+    openItems: "Follow up on demo at two week mark",
+    geofence: 150
+  },
+  {
+    id: "dr-mintz",
+    practice: "Dr. Mintz",
+    contact: "Dr. Mintz",
+    contactTitle: "Physician",
+    phone: "",
+    address: "Location to be confirmed",
+    status: "prospect",
+    stage: "Early discovery",
+    nextStep: "Confirm office address and book intro meeting",
+    lastVisit: "",
+    lastNotes: "Referred lead. No visit yet. Need to confirm the practice address before routing.",
+    openItems: "Confirm address",
+    geofence: 150
+  },
+  {
+    id: "dr-kamelhar",
+    practice: "Dr. Kamelhar",
+    contact: "Dr. Kamelhar",
+    contactTitle: "Pulmonologist",
+    phone: "",
+    address: "Location to be confirmed",
+    status: "prospect",
+    stage: "Early discovery",
+    nextStep: "Confirm office address and qualify interest",
+    lastVisit: "",
+    lastNotes: "Prospect added from network referral. Address pending. No device on site.",
+    openItems: "Confirm address",
+    geofence: 150
+  },
+  {
+    id: "northwell",
+    practice: "Northwell",
+    contact: "Dr. Newmark",
+    contactTitle: "Health system contact",
+    phone: "516 555 0123",
+    address: "New Hyde Park, NY",
+    status: "prospect",
+    stage: "Opportunity in progress",
+    nextStep: "Build the value case for a system wide rollout",
+    lastVisit: "2026-05-29",
+    lastNotes: "Dr. Newmark is the champion inside Northwell. Large footprint. Interested in a multi site evaluation. Needs an ROI summary for committee review.",
+    openItems: "Prepare ROI summary for committee",
+    geofence: 150
+  }
+];
+
+/* ---------- State ---------- */
+let accounts = loadAccounts();
+let activeFilter = "all";
+let searchTerm = "";
+
+function loadAccounts() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch (e) { /* fall through to seed */ }
+  saveAccounts(SEED);
+  return JSON.parse(JSON.stringify(SEED));
+}
+
+function saveAccounts(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+  catch (e) { /* storage unavailable, run in memory */ }
+}
+
+/* ---------- Helpers ---------- */
+function fmtDate(iso) {
+  if (!iso) return "No visit yet";
+  const d = new Date(iso + "T00:00:00");
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function statusMeta(key) {
+  return STATUS[key] || STATUS.prospect;
+}
+
+/* ---------- Filters ---------- */
+function buildFilters() {
+  const wrap = document.getElementById("filters");
+  const counts = countByStatus();
+  const defs = [
+    { key: "all",          label: "All accounts", color: "var(--accent)" },
+    { key: "active",       label: "Active",        color: STATUS.active.color },
+    { key: "needsservice", label: "Needs service", color: STATUS.needsservice.color },
+    { key: "demo",         label: "Demo unit",     color: STATUS.demo.color },
+    { key: "prospect",     label: "Prospect",      color: STATUS.prospect.color }
+  ];
+  wrap.innerHTML = "";
+  defs.forEach(d => {
+    const n = d.key === "all" ? accounts.length : (counts[d.key] || 0);
+    const b = document.createElement("button");
+    b.className = "chip" + (activeFilter === d.key ? " on" : "");
+    b.innerHTML = (d.key === "all" ? "" :
+      '<span class="dot" style="background:' + d.color + '"></span>') +
+      d.label + " " + n;
+    b.onclick = () => { activeFilter = d.key; render(); };
+    wrap.appendChild(b);
+  });
+}
+
+function countByStatus() {
+  const c = {};
+  accounts.forEach(a => { c[a.status] = (c[a.status] || 0) + 1; });
+  return c;
+}
+
+/* ---------- Render list ---------- */
+function visibleAccounts() {
+  const t = searchTerm.trim().toLowerCase();
+  return accounts.filter(a => {
+    const passFilter = activeFilter === "all" || a.status === activeFilter;
+    if (!passFilter) return false;
+    if (!t) return true;
+    const hay = [a.practice, a.contact, a.contactTitle, a.address].join(" ").toLowerCase();
+    return hay.indexOf(t) !== -1;
+  });
+}
+
+function render() {
+  buildFilters();
+  const list = document.getElementById("list");
+  const items = visibleAccounts();
+
+  const strip = document.getElementById("countstrip");
+  strip.textContent = items.length + " of " + accounts.length + " accounts shown";
+
+  list.innerHTML = "";
+  if (!items.length) {
+    const e = document.createElement("div");
+    e.className = "empty";
+    e.textContent = "No accounts match this view. Adjust the search or filter.";
+    list.appendChild(e);
+    return;
+  }
+
+  items.forEach(a => list.appendChild(renderCard(a)));
+}
+
+function renderCard(a) {
+  const sm = statusMeta(a.status);
+  const card = document.createElement("article");
+  card.className = "card" + (a.arrived ? " arrived" : "");
+  card.dataset.id = a.id;
+
+  const phoneLine = a.phone ? a.phone : "Phone to be confirmed";
+
+  card.innerHTML =
+    '<span class="accentbar" style="background:' + sm.color + '"></span>' +
+    '<div class="toprow">' +
+      '<div>' +
+        '<h2 class="practice">' + a.practice + '</h2>' +
+        '<div class="sub">' + a.contact + ' <span class="title">' + a.contactTitle + '</span></div>' +
+      '</div>' +
+      '<span class="statuspill" style="background:' + hexToSoft(sm.color) + ';color:' + sm.color + '">' + sm.label + '</span>' +
+    '</div>' +
+    '<div class="metarow">' +
+      '<span class="item">&#9742; <span class="v">' + phoneLine + '</span></span>' +
+      '<span class="item">&#9906; <span class="v">' + a.address + '</span></span>' +
+    '</div>' +
+    '<div class="metarow">' +
+      '<span class="item"><span class="k">Last visit</span> <span class="v">' + fmtDate(a.lastVisit) + '</span></span>' +
+      '<span class="item"><span class="k">Open</span> <span class="v">' + (a.openItems || "None") + '</span></span>' +
+    '</div>' +
+    '<div class="stage">' +
+      '<span class="label">' + a.stage + '</span>' +
+      '<span class="val">' + a.nextStep + '</span>' +
+    '</div>' +
+    '<div class="arrivedflag">You arrived here. Tap to open and log today’s visit.</div>';
+
+  card.onclick = () => openAccount(a.id);
+  return card;
+}
+
+function hexToSoft(hex) {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0,2),16);
+  const g = parseInt(h.substring(2,4),16);
+  const b = parseInt(h.substring(4,6),16);
+  return "rgba(" + r + "," + g + "," + b + ",0.16)";
+}
+
+/* ---------- Placeholder navigation for later steps ---------- */
+function openAccount(id) {
+  const a = accounts.find(x => x.id === id);
+  if (!a) return;
+  /* Step 4 will render the full detail page. For now confirm selection. */
+  console.log("Open account detail", a.practice);
+}
+
+/* ---------- Simulated arrival  stands in for Step 6 geofencing ---------- */
+function simulateArrival() {
+  const candidates = accounts.filter(a => a.address.indexOf("confirmed") === -1);
+  if (!candidates.length) return;
+  accounts.forEach(a => a.arrived = false);
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  pick.arrived = true;
+  /* float the arrived account to the top of the view */
+  accounts.sort((x, y) => (y.arrived ? 1 : 0) - (x.arrived ? 1 : 0));
+  activeFilter = "all";
+  searchTerm = "";
+  document.getElementById("search").value = "";
+  render();
+  const el = document.querySelector('.card[data-id="' + pick.id + '"]');
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* ---------- Bottom tabs  active tab only for Step 1 ---------- */
+function wireTabs() {
+  document.querySelectorAll("nav.tabbar button").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("on"));
+      btn.classList.add("on");
+      const tab = btn.dataset.tab;
+      if (tab !== "accounts") {
+        alert("The " + btn.textContent.trim() + " view arrives in a later step.");
+        document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("on"));
+        document.querySelector('nav.tabbar button[data-tab="accounts"]').classList.add("on");
+      }
+    };
+  });
+}
+
+/* ---------- Init ---------- */
+document.getElementById("search").addEventListener("input", e => {
+  searchTerm = e.target.value;
+  render();
+});
+document.getElementById("simBtn").addEventListener("click", simulateArrival);
+wireTabs();
+render();
+</script>
+</body>
+</html>

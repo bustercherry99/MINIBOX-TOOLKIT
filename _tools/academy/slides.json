@@ -1,0 +1,1949 @@
+{
+  "Clinical PFT Overview": [
+    {
+      "slide": 1,
+      "text": [
+        "PFT Overview"
+      ],
+      "images": []
+    },
+    {
+      "slide": 2,
+      "text": [
+        "What is Pulmonary Function testing?",
+        "Pulmonary function tests (PFTs), also known as lung function tests, are a group of noninvasive breathing tests that measure how well your lungs work:",
+        "Spirometry: Measures how much air you can exhale and how fast you can empty your lungs",
+        "Lung volume test: Measures how much air your lungs can hold and how much is left after you exhale",
+        "Lung diffusion capacity test: Measures how easily oxygen enters your bloodstream",
+        "https://youtu.be/EXJ279tpcQ4?si=p5qKvhKLvUM4etz8"
+      ],
+      "images": []
+    },
+    {
+      "slide": 3,
+      "text": [
+        "Static lung volumes and capacities"
+      ],
+      "images": [
+        "image3.png"
+      ]
+    },
+    {
+      "slide": 4,
+      "text": [
+        "Respiratory pattern in common diseases"
+      ],
+      "images": [
+        "image4.jpeg"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "Volumes and Diseases"
+      ],
+      "images": [
+        "image5.png"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Examples"
+      ],
+      "images": [
+        "image6.emf",
+        "image7.emf"
+      ]
+    },
+    {
+      "slide": 7,
+      "text": [
+        "Obstructive vs Restrictive",
+        "Here you can see the air trapping on the obstructive patient. With Emphysema there is air trapping and alveolar destruction which causes a low DLCO most of the time.",
+        "With restrictive patients the lungs are not able to expand properly and move the air in and out. This usually causes all parameters for every test to be under LLN"
+      ],
+      "images": [
+        "image8.jpeg",
+        "image9.jpeg"
+      ]
+    },
+    {
+      "slide": 8,
+      "text": [
+        "PFT Guidelines",
+        "Preparation",
+        "Avoid bronchodilator medication and smoking for four hours before the test, and don't eat a heavy meal. Avoid wearing tight clothing.",
+        "Test length",
+        "A complete PFT can take around one and a half hours. Other PFTs can take less time, such as 15 minutes for adults and 15 to 30 minutes for children.",
+        "Test procedures",
+        "During a PFT, you might be given a mouthpiece to attach to a spirometer and inhale and exhale in different ways. You might also exercise on a treadmill or stationary bike while your heart rate, breathing, blood pressure, and oxygen saturation are monitored.",
+        "Interpretation",
+        "When interpreting PFT results, consider the patient's medical history, symptoms, and social circumstances. For example, biological sex is generally more accurate than gender identity for predicting lung function.",
+        "Reporting",
+        "Barometric pressure should be measured and reported, corrected to a standard pressure of 760 mm Hg.",
+        "Laboratory management",
+        "Laboratory medical directors should develop written policies and procedures for the laboratory, including infection control policies. Laboratory supervisors should have a bachelor's degree or higher in a related field, and at least four years of experience in pulmonary function testing."
+      ],
+      "images": []
+    },
+    {
+      "slide": 9,
+      "text": [
+        "PFT Guidelines Cont.",
+        "Ask your healthcare provider: Each PFT testing site has different instructions, so ask your healthcare provider for specific instructions.",
+        "Stop taking certain medications: Your healthcare provider may ask you to stop taking certain medications, such as breathing medications, before the test.",
+        "Avoid smoking: Don't smoke for at least one hour before the test.",
+        "Avoid heavy meals: Don't eat a large meal within two hours of the test.",
+        "Avoid heavy exercise: Don't exercise heavily within 30 minutes of the test.",
+        "Wear loose clothing: Wear comfortable, loose clothing that doesn't squeeze your chest.",
+        "Arrive early: Arrive at least 15 minutes before your appointment to register.",
+        "Postpone the test if you're sick: Postpone the test if you have a fever, flu, diarrhea, or severe headache.",
+        "A PFT can include tests such as spirometry, lung volume testing, gas diffusion tests, exercise stress tests, and arterial blood gas tests."
+      ],
+      "images": []
+    },
+    {
+      "slide": 10,
+      "text": [
+        "Revelant Institutions"
+      ],
+      "images": [
+        "image10.png",
+        "image11.png",
+        "image12.png"
+      ]
+    },
+    {
+      "slide": 11,
+      "text": [
+        "GLI, which stands for \"Global Lung Function Initiative,\" is currently the recommended standard for interpreting Pulmonary Function Tests (PFTs) because it provides a set of race-neutral reference equations based on a large, diverse global population, allowing for more accurate and unbiased analysis of lung function across different ethnicities and demographics.",
+        "Key points about GLI and PFTs:",
+        "Accurate interpretation:",
+        "By using GLI reference equations, clinicians can compare a patient's lung function to a broader, more representative population, reducing potential bias associated with race-specific reference values.",
+        "Wide adoption:",
+        "Major respiratory societies like the American Thoracic Society (ATS) and European Respiratory Society (ERS) endorse the use of GLI equations for PFT interpretation.",
+        "Race-neutral approach:",
+        "GLI equations do not require the input of race or ethnicity, promoting a more equitable approach to lung function assessment.",
+        "Predicted Equations"
+      ],
+      "images": [
+        "image13.png",
+        "image14.png"
+      ]
+    },
+    {
+      "slide": 12,
+      "text": [
+        "Predicted Equations Cont."
+      ],
+      "images": [
+        "image15.png"
+      ]
+    }
+  ],
+  "Minibox- SPIROMETRY Training": [
+    {
+      "slide": 1,
+      "text": [
+        "Spirometry"
+      ],
+      "images": [
+        "image1.png"
+      ]
+    },
+    {
+      "slide": 2,
+      "text": [
+        "MINIBOX- SPIROMETRY",
+        "HOW TO PERFORM",
+        "ASSESSING SPIROMETRY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "Why are we measuring this",
+        "Important Parameters",
+        "SPIROMETRY SETTINGS",
+        "Program Settings",
+        "WHAT ARE WE MEASURING",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "Operator Role in Quality",
+        "Agenda"
+      ],
+      "images": []
+    },
+    {
+      "slide": 3,
+      "text": [
+        "What Are We Measuring?",
+        "Spirometry is the pulmonary function test most often performed because it has many indications",
+        "Spirometry measures the maximum volume of gas inhaled after a maximum volume of gas exhaled",
+        "The maneuver can be done slow or forced",
+        "The maneuver can be performed after the delivery of a bronchodilator"
+      ],
+      "images": [
+        "image2.jpg"
+      ]
+    },
+    {
+      "slide": 4,
+      "text": [
+        "Most relevant measurements",
+        "FVC – total volume of air that can be “forced” out",
+        "FEV1 – volume of FVC “forced” out in first second",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.” American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, doi:10.1164/rccm.201908-1590st.",
+        "FVC",
+        "“How Much”",
+        "FEV1",
+        "“How Fast”",
+        "75-80%",
+        "Normal",
+        "What’s Important?"
+      ],
+      "images": [
+        "image3.png",
+        "image4.png",
+        "image5.jpg"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "Flow Volume Loop",
+        "What’s Important? (continued)"
+      ],
+      "images": [
+        "image6.jpg"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Lungs",
+        "Heart",
+        "Systemic Vasculature",
+        "Control of Respiratory Centers",
+        "IF 1 OR MORE OF THE 4 ARE IMPAIRED, OR FAIL, THIS OFTEN RESULTS IN SHORTNESS OF BREATH",
+        "Normal Ventilation and Respiration"
+      ],
+      "images": []
+    },
+    {
+      "slide": 7,
+      "text": [
+        "HOW FAST (FLOW)",
+        "HOW MUCH (VOLUME)",
+        "Parenchyma: alveoli, alveolar ducts, respiratory bronchioles (involved in gas exΔ)",
+        "Impairment typically correlated with",
+        "restrictive lung disease",
+        "Pathologies are nearly limitless",
+        "Airways; trachea-bronchioles",
+        "Impairment typically correlated with expiratory airflow obstruction",
+        "CBABE: COPD, bronchitis, asthma, bronchiectasis, emphysema",
+        "When properly coached and performed, tests show high degree of repeatability and reliability, even in the very sickest patients",
+        "Like a fingerprint of the lungs",
+        "Measuring Lung Health Using Volume and Flow"
+      ],
+      "images": [
+        "image7.png",
+        "image8.jpg"
+      ]
+    },
+    {
+      "slide": 8,
+      "text": [
+        "Why Do We Perform Spirometry Testing?",
+        "To diagnose the presence or absence of lung disease",
+        "To quantify the extent of a known lung disease",
+        "To measure the effects of occupational exposure",
+        "To determine the effects of therapy",
+        "To access the risk of surgical procedures",
+        "To evaluate disability or impairment"
+      ],
+      "images": [
+        "image9.jpg"
+      ]
+    },
+    {
+      "slide": 9,
+      "text": [
+        "Pre-Testing Considerations",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.”",
+        "American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, pp. 1–19., doi:10.1164/rccm.201908-1590st.",
+        "2019 ATS - Activities That Should Be Avoided before Lung Function Testing"
+      ],
+      "images": [
+        "image10.jpg"
+      ]
+    },
+    {
+      "slide": 10,
+      "text": [
+        "Spirometry Settings",
+        "Minibox settings come loaded and system ready for testing",
+        "Table configured to display 8 trials per level (Pre/post)"
+      ],
+      "images": [
+        "image11.jpg"
+      ]
+    },
+    {
+      "slide": 11,
+      "text": [
+        "Questions Before We Move On?…"
+      ],
+      "images": [
+        "image12.jpg"
+      ]
+    },
+    {
+      "slide": 12,
+      "text": [
+        "MINIBOX - SPIROMETRY",
+        "HOW TO PERFORM",
+        "ASSESSING SPIROMETRY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "Why are we measuring this",
+        "Important Parameters",
+        "SPIROMETRY SETTINGS",
+        "Program Settings",
+        "WHAT ARE WE MEASURING",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "Operator Role in Quality",
+        "Agenda"
+      ],
+      "images": []
+    },
+    {
+      "slide": 13,
+      "text": [
+        "FVC: Forced Spirometry (Vital Capacity)"
+      ],
+      "images": [
+        "image11.jpg",
+        "image13.png"
+      ]
+    },
+    {
+      "slide": 14,
+      "text": [
+        "Preparing for Spirometry",
+        "The patient is in an upright sitting position in stationary chair",
+        "Legs not crossed, feet on floor",
+        "Head is straight or slightly extended",
+        "Nose clip is on the lower half of the nose",
+        "Patient should slightly bite on the mouthpiece",
+        "Patient seals lips firmly around the mouthpiece",
+        "Patient’s tongue should be below the mouthpiece"
+      ],
+      "images": [
+        "image14.jpg"
+      ]
+    },
+    {
+      "slide": 15,
+      "text": [
+        "Big Breath In",
+        "BLAST",
+        "Keep Going",
+        "… Normal breathing, then…",
+        "1 - Inhale completely and rapidly with a pause of less than 2 sec at TLC",
+        "1",
+        "Note: Reduced PEF & FEV can occur when inspiration is slow and/or long pause before blast",
+        "2 - Expire with maximal effort until no more air can be expelled while maintaining an upright posture",
+        "Subject should be coached to “blast” not just “blow”",
+        "3 - Continued complete expiration for a maximum of 15 seconds",
+        "4 - And then… inspiration at maximal flow back to maximum lung volume",
+        "Standard Approach for FVC (ATS/ERS 2019)"
+      ],
+      "images": []
+    },
+    {
+      "slide": 16,
+      "text": [
+        "According to ATS/ERS 2019:",
+        "Quality results begins with a quality Operator.",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.” American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, pp. 1–19., doi:10.1164/rccm.201908-1590st.",
+        "Quality Testing – Operator Role"
+      ],
+      "images": [
+        "image15.jpg",
+        "image16.jpg",
+        "image17.jpg",
+        "image18.jpg"
+      ]
+    },
+    {
+      "slide": 17,
+      "text": [
+        "Coaching Guide – Forced Spirometry"
+      ],
+      "images": [
+        "image19.jpg",
+        "image20.jpg"
+      ]
+    },
+    {
+      "slide": 18,
+      "text": [
+        "LET’S TAKE A CLOSER LOOK",
+        "… Forced Spirometry"
+      ],
+      "images": [
+        "image12.jpg"
+      ]
+    },
+    {
+      "slide": 19,
+      "text": [
+        "ERV maneuver  starting with an exhalation",
+        "normal breathing (VT, BF and breathing level FRC)",
+        "complete exhalation (ERV)",
+        "complete inhalation (VCIN, IC)",
+        "followed by normal breathing",
+        "(VCIN and ERV are measured, IC is calculated)",
+        "VCIN",
+        " 3.95 L",
+        "IC  2.70 L",
+        "ERV  1.25 L",
+        "SVC: Slow Spirometry"
+      ],
+      "images": [
+        "image21.png",
+        "image22.jpg",
+        "image23.jpg",
+        "image24.jpg",
+        "image25.png",
+        "image26.jpg",
+        "image27.png"
+      ]
+    },
+    {
+      "slide": 20,
+      "text": [
+        "IC maneuver  starting with an inhalation",
+        "normal breathing (VT, BF and breathing level FRC)",
+        "complete inhalation (IC)",
+        "complete exhalation (VCEX, ERV)",
+        "followed by normal breathing",
+        "VCEX",
+        " 3.95 L",
+        "IC  2.70 L",
+        "ERV  1.25 L",
+        "(VCEX and IC are measured, ERV is calculated)",
+        "SVC : Slow Spirometry (continued)"
+      ],
+      "images": [
+        "image28.jpg",
+        "image21.png",
+        "image22.jpg",
+        "image29.jpg",
+        "image30.png",
+        "image31.jpg",
+        "image32.jpg",
+        "image33.png",
+        "image34.png",
+        "image35.jpg"
+      ]
+    },
+    {
+      "slide": 21,
+      "text": [
+        "MVV: Maximal Voluntary Ventilation",
+        "Maximum volume of air (in L/min) a subject can breathe over a specified period of time (12 s for normal subjects)",
+        "To estimate the maximum minute ventilation (MVV in L/min)",
+        "Can be used to estimate the predicted max Ventilation (CPET)",
+        "Coach the patient to achieve an ideal rate of 90-110 breaths/min"
+      ],
+      "images": [
+        "image36.png",
+        "image37.png",
+        "image38.jpg",
+        "image39.png"
+      ]
+    },
+    {
+      "slide": 22,
+      "text": [
+        "LET’S TAKE A CLOSER LOOK",
+        "...Slow Spirometry"
+      ],
+      "images": [
+        "image12.jpg"
+      ]
+    },
+    {
+      "slide": 23,
+      "text": [
+        "We start again in 5 min"
+      ],
+      "images": [
+        "image40.jpg",
+        "image41.png"
+      ]
+    },
+    {
+      "slide": 24,
+      "text": [
+        "MINIBOX- SPIROMETRY",
+        "HOW TO PERFORM",
+        "ASSESSING SPIROMETRY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "Why are we measuring this",
+        "Important Parameters",
+        "SPIROMETRY SETTINGS",
+        "Program Settings",
+        "WHAT ARE WE MEASURING",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "Operator Role in Quality",
+        "Agenda"
+      ],
+      "images": []
+    },
+    {
+      "slide": 25,
+      "text": [
+        "2019 ATS/ERS Criteria: Acceptability & Repeatability",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.”",
+        "American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, pp. 1–19., doi:10.1164/rccm.201908-1590st."
+      ],
+      "images": [
+        "image42.jpg",
+        "image43.jpg",
+        "image44.png",
+        "image45.jpg",
+        "image46.png",
+        "image47.jpg",
+        "image48.png",
+        "image49.jpg",
+        "image50.png",
+        "image51.jpg",
+        "image52.png",
+        "image53.jpg",
+        "image54.png",
+        "image55.jpg",
+        "image56.png",
+        "image57.jpg",
+        "image58.png",
+        "image59.jpg",
+        "image60.png",
+        "image61.jpg",
+        "image62.png"
+      ]
+    },
+    {
+      "slide": 26,
+      "text": [
+        "Between Maneuver Criteria: Repeatability",
+        "QualityGrade:",
+        "Quality Check:",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.”",
+        "American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, pp. 1–19., doi:10.1164/rccm.201908-1590st."
+      ],
+      "images": [
+        "image63.jpg",
+        "image64.png",
+        "image65.jpg"
+      ]
+    },
+    {
+      "slide": 27,
+      "text": [
+        "*1 Literature: Eur Respir J 2005; 26:pag. 324-326",
+        "Graham, Brian L., et al. “Standardization of Spirometry 2019 Update. An Official American Thoracic Society and European Respiratory Society Technical Statement.”",
+        "American Journal of Respiratory and Critical Care Medicine, vol. 200, no. 8, 2019, pp. 1–19., doi:10.1164/rccm.201908-1590st.",
+        "Best Selection"
+      ],
+      "images": [
+        "image66.png",
+        "image67.jpg",
+        "image68.jpg"
+      ]
+    },
+    {
+      "slide": 28,
+      "text": [
+        "LET’S TAKE A CLOSER LOOK",
+        "… Spirometry Quality"
+      ],
+      "images": [
+        "image12.jpg"
+      ]
+    },
+    {
+      "slide": 29,
+      "text": [
+        "Questions?…"
+      ],
+      "images": [
+        "image12.jpg"
+      ]
+    }
+  ],
+  "Lung Volumes- Pleth": [
+    {
+      "slide": 1,
+      "text": [
+        "Plethysmography-Minibox"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 2,
+      "text": [
+        "ASSESSING PLETHYSMOGRAPHY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "PLETHYSMOGRAPHY SETTINGS",
+        "Program Settings",
+        "Parameter Table Configuration",
+        "HOW TO PERFORM",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "What is Plethysmography?",
+        "Body plethysmography (pronounced “pleh-thiz-mah-graf-ee”) is a noninvasive type of lung function testing known as a pulmonary function test. It can help determine how much air is in your lungs after you take a deep breath in (inhale). It also helps determine how much air remains in your lungs after you take a deep breath out (exhale).",
+        "Body plethysmography measures the following:",
+        "Total lung capacity (TLC): TLC is the volume of air in your lungs after taking the biggest breath you can.",
+        "Functional residual capacity (FRC): FRC is the volume of air that remains in your lungs after breathing out normally.",
+        "Residual Volume (RV): RV is the volume of air that stays in your lungs after breathing out as much as possible."
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 3,
+      "text": [
+        "ASSESSING PLETHYSMOGRAPHY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "PLETHYSMOGRAPHY SETTINGS",
+        "Program Settings",
+        "Parameter Table Configuration",
+        "HOW TO PERFORM",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "Lung Volume – PLETHYSMOGRAPHY",
+        "How does body plethysmography work?",
+        "Body plethysmography takes place in an enclosed, airtight, see-through plastic box. As you breathe into a mouthpiece, a sensor inside the box measures any changes to the air pressure. The mouthpiece also has a sensor that measures your airflow and pressure in your mouth.",
+        "As your chest expands and contracts while you breathe, the sensor inside the box registers changes in the amount of air and air pressure in the box. The sensor in the mouthpiece also registers changes in pressure."
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 4,
+      "text": [
+        "ASSESSING PLETHYSMOGRAPHY QUALITY",
+        "Quality Features",
+        "Quality: Acceptability, Repeatability & ATS",
+        "PLETHYSMOGRAPHY SETTINGS",
+        "Program Settings",
+        "Parameter Table Configuration",
+        "HOW TO PERFORM",
+        "Functionality & Text Guidance",
+        "ATS Guidelines",
+        "What is Body PLETHYSMOGRAPHY?",
+        "Boyle's law, also referred to as the Boyle–Mariotte law or Mariotte's law(especially in France), is an empirical gas law that describes the relationship between pressure and volume of a confined gas. Boyle's law has been stated as:",
+        "The absolute pressure exerted by a given mass of an ideal gas is inversely proportional to the volume it occupies if the temperature and amount of gas remain unchanged within a closed system."
+      ],
+      "images": [
+        "image1.jpg",
+        "image2.jpeg"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "Body Plethysmography",
+        "https://www.youtube.com/watch?v=3eIw7JhB7rQ"
+      ],
+      "images": [
+        "image1.jpg",
+        "image3.jpeg"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Shutter closed",
+        "X-axis: Volume shift (ml)",
+        "Thoracic Gas Volume (TGV)",
+        "Y-axis: Mouth pressure (kPa)",
+        "(Control Unit)",
+        "Volume Shift = Amount of alveolar air (ml) compressed during “exhalation” and decompressed during “inhalation”",
+        "TGV Measurement",
+        "In body plethysmography, TGV (Thoracic Gas Volume) is measured by having the subject breathe inside a sealed chamber while their airway is briefly occluded, allowing the pressure changes within the chamber to be detected and used to calculate the volume of gas within the thorax based on Boyle's Law; essentially, the change in pressure within the chamber directly reflects the change in thoracic gas volume during the occlusion, enabling the calculation of TGV.",
+        "(TGV) is the amount of gas in the lungs at any given time and at any level of alveolar pressure. It can be measured using a variety of techniques, including:"
+      ],
+      "images": [
+        "image4.png",
+        "image5.jpg",
+        "image6.png",
+        "image7.jpg",
+        "image8.jpg",
+        "image9.jpg",
+        "image10.jpg",
+        "image11.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 7,
+      "text": [
+        "Situation 2",
+        "“Inhale” against shutter Decompression alveolar air",
+        "+Vlung  -Vbox",
+        "TGV =",
+        "Volume shift (Pbox) x Pb-PH2O",
+        "Pm",
+        "TGV =",
+        "Vlung",
+        "P",
+        "alv",
+        "x Pb-PH2O",
+        " Alveolar pressure   Mouth pressure (Closed glottis  no flow  Palv  Pm)",
+        "-PAlv  -Pm",
+        "+Vbox",
+        "-Pm",
+        "Pm",
+        "Volume shift",
+        "(Pbox)",
+        "+V",
+        "-P",
+        "TGV Measurement - Boyle’s Law (continued)"
+      ],
+      "images": [
+        "image12.jpg",
+        "image13.png",
+        "image14.png",
+        "image15.png",
+        "image16.png",
+        "image17.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 8,
+      "text": [
+        "General Note ERS/ATS 2005 Standards of Lung Volumes",
+        "General Note ERS/ATS 2005 Standards of Lung Volumes",
+        "Difficult to reach consensus for only one method of ERV/IVC or IC/VC",
+        "Eur Respir J 2005; 26; Standardisation of the measurement of lung volume;",
+        "J. Wanger et. Al., PAGE 512-513",
+        "Calculating Absolute Lung Volumes"
+      ],
+      "images": [
+        "image18.jpg",
+        "image19.jpg",
+        "image20.jpg",
+        "image21.png",
+        "image22.jpg",
+        "image23.jpg",
+        "image24.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 9,
+      "text": [
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "NOTE: “Linked” = FRCPL must be followed by VC without the patient coming off the mouthpiece",
+        "Eur Respir J 2005; 26; Standardisation of the measurement of lung volume; J. Wanger et. Al., PAGE 513",
+        "Calculating Absolute Lung Volumes (continued)"
+      ],
+      "images": [
+        "image25.jpg",
+        "image26.jpg",
+        "image27.jpg",
+        "image28.jpg",
+        "image29.jpg",
+        "image30.jpg",
+        "image31.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 10,
+      "text": [
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "For each trial, TLC and RV are calculated as follows:",
+        "TLC trial = RV + IVC",
+        "RV trial = FRCpl – ERV",
+        "RV",
+        "RV",
+        "IVC",
+        "ERV",
+        "FRC",
+        "TLC",
+        "ERV = Expiratory Reserve Volume",
+        "IVC = Inspiratory Vital Capacity (slow)",
+        "Calculation Absolute Lung Volumes (continued)"
+      ],
+      "images": [
+        "image27.jpg",
+        "image28.jpg",
+        "image29.jpg",
+        "image30.jpg",
+        "image31.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 11,
+      "text": [
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "First Preferred Method: ERV+IVC After FRC Acquisition",
+        "For the best column, the following is needed:",
+        "TLCbest = RVbest + largest IVC",
+        "RVbest = mean FRCpl – mean ERV",
+        "Reported FRCpl value  mean FRCpl",
+        "5.80",
+        "3.19 3.20 3.15 3.22",
+        "1.72",
+        "1.47 1.46 1.44 1.51",
+        "Best",
+        "Tr 1",
+        "Tr 2",
+        "Tr 3",
+        "TLC",
+        "5.76",
+        "5.69",
+        "5.79",
+        "FRC",
+        "RV",
+        "1.74",
+        "1.71",
+        "1.71",
+        "ERV",
+        "VC",
+        "4.08",
+        "4.02",
+        "3.98",
+        "4.08",
+        "Eur Respir J 2005; 26; Standardisation of the measurement of lung volume; J. Wanger et. Al., PAGE 513",
+        "Calculating Absolute Lung Volumes (continued)"
+      ],
+      "images": [
+        "image32.jpg",
+        "image33.jpg",
+        "image34.jpg",
+        "image35.jpg",
+        "image36.jpg",
+        "image37.jpg",
+        "image38.jpg",
+        "image39.jpg",
+        "image40.jpg",
+        "image41.jpg",
+        "image42.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 12,
+      "text": [
+        "2nd Recommended Method: IC (+EVC) After FRC Acquisition",
+        "2nd Recommended Method: IC (+EVC) After FRC Acquisition",
+        "FRC is followed by IC and then expiratory VC (still linked to FRC maneuver; patient may come off the mouthpiece between trials).",
+        "Eur Respir J 2005; 26; Standardisation of the measurement of lung volume; J. Wanger et. Al., PAGE 513",
+        "Calculating Absolute Lung Volumes (continued)"
+      ],
+      "images": [
+        "image43.jpg",
+        "image44.jpg",
+        "image28.jpg",
+        "image29.jpg",
+        "image30.jpg",
+        "image45.jpg",
+        "image46.jpg",
+        "image47.jpg",
+        "image48.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 13,
+      "text": [
+        "5",
+        "Time (sec)",
+        "Volume (L)",
+        "sRaw (shutter open)",
+        "Vtg (shutter closed)",
+        "VC = Vital Capacity",
+        "TLC = Total Lung Capacity RV = Residual Volume",
+        "Vtg = Thoracic Gas Volume",
+        "sRaw = Specific Airways Resistance",
+        "Linked VC (shutter open)",
+        "TLC",
+        "RV",
+        "Measurement Procedure sRaw + TLCPL"
+      ],
+      "images": [
+        "image49.png",
+        "image50.png",
+        "image9.jpg",
+        "image10.jpg",
+        "image51.png",
+        "image52.jpg",
+        "image53.jpg",
+        "image54.jpg",
+        "image55.jpg",
+        "image56.jpg",
+        "image57.jpg",
+        "image58.jpg",
+        "image59.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 14,
+      "text": [
+        "Shutter closed",
+        "Subject continues to breathe steadily at BF = 25-30",
+        "Shutter will open automatically after occlusion time... or",
+        "if enabled, click \"F1\" again to open shutter after desired number of TGV loops are collected",
+        "2-Performing Vtg (TLCPL) Measurement"
+      ],
+      "images": [
+        "image60.jpg",
+        "image61.jpg",
+        "image1.jpg",
+        "image62.jpeg"
+      ]
+    },
+    {
+      "slide": 15,
+      "text": [
+        "Definition of ATS/ERS Task Force:",
+        "\"With regards to repeatability, at least three FRCpleth values that agree within 5% should be obtained and the mean value reported.\"",
+        "Eur Respir J 2005; 26: 511–522 Standardisation of the measurement of lung volumes",
+        "TLC",
+        "RV",
+        "5",
+        "Time (sec)",
+        "Volume (L)",
+        "sRaw (shutter open)",
+        "TGV (shutter closed)",
+        "Linked VC (shutter open)",
+        "Plethysmography – ATS"
+      ],
+      "images": [
+        "image50.png",
+        "image59.png",
+        "image9.jpg",
+        "image10.jpg",
+        "image51.png",
+        "image52.jpg",
+        "image53.jpg",
+        "image63.png",
+        "image64.png",
+        "image57.jpg",
+        "image65.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 16,
+      "text": [
+        "Box Calibration performed daily",
+        "A validation of accuracy using a known volume should be performed periodically",
+        "Biological controls should be performed monthly",
+        "Wanger J, Clausen JL, Coates A, Pedersen OF, Brusasco V, Burgos F,",
+        "et al. Standardisation of the measurement of lung volumes. Eur Respir J 2005;26:511–522.",
+        "Plethysmography Calibration"
+      ],
+      "images": [
+        "image66.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 17,
+      "text": [
+        "5",
+        "Shutter open",
+        "sRaw Measurement & Gaw",
+        "X-axis: Volume shift (ml)",
+        "RaW: Airway resistance refers to the opposition to airflow within the respiratory system, essentially measuring the pressure difference needed to move a certain amount of air through the airways of the lungs",
+        "In other words, The change in pressure required to produce a unit flow of gas through the airways",
+        "GaW: airway conductance\" is the ease with which air flows through the airways",
+        "Both are measured by comparing the pressure difference across the airways to the airflow rate, with resistance calculated as pressure divided by flow, and conductance as the reciprocal of resistance (flow divided by pressure)."
+      ],
+      "images": [
+        "image55.jpg",
+        "image56.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 18,
+      "text": [
+        "5",
+        "Shutter open",
+        "sRaw Measurement & Gaw",
+        "X-axis: Volume shift (ml)",
+        "Factors affecting airway resistance:",
+        "Airway diameter: Narrower airways create more resistance to airflow.",
+        "Lung volume: As lung volume increases, airways tend to expand, decreasing resistance.",
+        "Mucus secretions: Thick mucus can obstruct airways, increasing resistance.",
+        "Bronchospasm: Contraction of airway smooth muscle (bronchospasm) narrows airways, increasing resistance."
+      ],
+      "images": [
+        "image55.jpg",
+        "image56.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 19,
+      "text": [
+        "Very small volume shift (± 10 ml in healthy)",
+        "Increased airway resistance  (de)compressed of alveolar air ",
+        "to let the air go in and out of the lungs",
+        "Flow [L.s-1]",
+        "sReff",
+        "Fraction of Raw",
+        "8 ml",
+        "Volume Shift - Influence of Raw",
+        "Raw",
+        "+ PA",
+        "+",
+        "8 ml",
+        "Volume shift",
+        "Vth = Thorax movement Volume shift [ml]",
+        "2 L/s",
+        "Flow",
+        "Volume shift (Pbox)",
+        "Vth",
+        "Compression/ decompression"
+      ],
+      "images": [
+        "image67.jpg",
+        "image68.png",
+        "image69.png",
+        "image70.png",
+        "image71.png",
+        "image72.png",
+        "image73.png",
+        "image74.png",
+        "image75.png",
+        "image76.png",
+        "image77.png",
+        "image78.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 20,
+      "text": [
+        "Volume Shift - With Increased Raw",
+        "Raw",
+        "Vth",
+        "+ PA",
+        "+",
+        "23 ml",
+        "Volume shift ",
+        "Compression/ decompression",
+        "Vth = Thorax movement",
+        "2 L/s",
+        "Volume shift increases  proportional to Raw",
+        "Volume shift increases  proportional to Raw",
+        "sReff",
+        "sReff",
+        "Fraction of Raw",
+        "23 ml",
+        "Flow [L.s-1]",
+        "Volume shift [ml]",
+        "Flow",
+        "Volume shift (Pbox)"
+      ],
+      "images": [
+        "image79.png",
+        "image80.png",
+        "image81.png",
+        "image82.png",
+        "image78.png",
+        "image83.png",
+        "image84.png",
+        "image77.png",
+        "image85.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 21,
+      "text": [
+        "Volume shift increases further  proportional to TGV",
+        "Flow [L.s-1]",
+        "sReff",
+        "Fractions Raw TGV",
+        "Volume shift [ml]",
+        ">>",
+        "Volume Shift - Influence of Volume (continued)",
+        "+ PA",
+        "+",
+        "Raw",
+        "TGV",
+        "Vth",
+        "2 L/s",
+        "Flow",
+        ">>40 ml",
+        "Volume shift",
+        "Volume shift",
+        "",
+        "Compression/ decompression"
+      ],
+      "images": [
+        "image86.jpg",
+        "image87.png",
+        "image88.png",
+        "image89.png",
+        "image90.png",
+        "image91.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 22,
+      "text": [
+        "VTG = ???",
+        "Pmouth",
+        "Pbox",
+        "Box leak is too large",
+        "Thermal instability (drift)",
+        "Improper panting technique",
+        "Plethysmography Troubleshooting"
+      ],
+      "images": [
+        "image92.jpg",
+        "image93.png",
+        "image94.png",
+        "image95.jpg",
+        "image96.jpg",
+        "image1.jpg"
+      ]
+    }
+  ],
+  "Minibox DLCO": [
+    {
+      "slide": 1,
+      "text": [
+        "DLCO"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 2,
+      "text": [
+        "ASSESSING DIFFUSION QUALITY",
+        "SeS Quality Features",
+        "Quality: Acceptability, Repeatability & ATS/ERS",
+        "SeS DIFFUSION SETTINGS",
+        "Program Settings",
+        "Parameter Table Configuration",
+        "WHAT ARE WE MEASURING",
+        "Why are we measuring this",
+        "Important Parameters",
+        "HOW TO PERFORM",
+        "Functionality & Text Guidance",
+        "ATS/ERS Guidelines",
+        "Agenda",
+        "SeS Measurement Application - DIFFUSION"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 3,
+      "text": [
+        "What is Diffusion?",
+        "https://www.youtube.com/watch?v=fQOk84DHAis"
+      ],
+      "images": [
+        "image1.jpg",
+        "image2.jpeg"
+      ]
+    },
+    {
+      "slide": 4,
+      "text": [
+        "Alveolar-capillary",
+        "diffusion",
+        "Ventilation",
+        "Metabolic",
+        "Perfusion",
+        "Main function respiratory system:",
+        "Gas exchange between body tissues and the surrounding air",
+        ".",
+        "VO2",
+        ".",
+        "VCO2",
+        "What is Diffusion?",
+        "DLCO = Diffusing capacity of the Lungs for carbon monoxide (CO)"
+      ],
+      "images": [
+        "image3.jpg",
+        "image4.jpg",
+        "image5.jpg",
+        "image6.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "How Do We Measure Diffusion?",
+        "Goal is to evaluate the gas exchange capability of the lungs of O2 & CO2 specifically at the alveolar/capillary (a/c) membrane.",
+        "How?",
+        "By measuring the transfer of CO across the a/c membrane after the patient inspires a known concentration of CO (0.3%), an inert tracer",
+        "gas CH4 (0.3%), O2 (21%) & a balance % of N2.",
+        "Mottram, C.D., Ruppel’s Manual of Pulmonary Function Testing, 11th Ed., Elsevier Inc., 2018. p.81"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Movement of O2 and CO2 across the alveolar–capillary membrane (ACM) from a region of a higher pressure (PAO2) to one of lower pressure (PcO2).",
+        "End capillary",
+        "Alveolus",
+        "ACM",
+        "Start capillary",
+        "Gas Exchange Alveoli - Capillary"
+      ],
+      "images": [
+        "image7.jpg",
+        "image8.jpg",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 7,
+      "text": [
+        "Why is DLCO Important?",
+        "To facilitate in the diagnosis of various lung diseases",
+        "To facilitate the proper management of diagnosed lung disease",
+        "To evaluate disease progression",
+        "To evaluate pulmonary involvement of other systemic disease states",
+        "Mottram, C.D., Ruppel’s Manual of Pulmonary Function Testing, 11th Ed., Elsevier Inc., 2018. p.8"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 8,
+      "text": [
+        "DLCO_SB",
+        "VA",
+        "BHT",
+        "DL/VA",
+        "KCO_SB",
+        "Important Parameter",
+        "DLCO_sb: Diffusing capacity for the lungs measured during a single breath maneuver using carbon monoxide",
+        "DLCO_c: The \"DLCO c\" parameter, also known as the \"corrected DLCO\", is used to account for the individual's alveolar volume when interpreting a DLCO (diffusing capacity of the lung for carbon monoxide) test, allowing for a more accurate assessment of gas exchange efficiency in the lungs, especially when comparing results between patients with different lung sizes; essentially, it normalizes the DLCO value based on the individual's lung capacity.",
+        "VA: Alveolar volume- the volume of air within the alveoli that is accessible for gas exchange, essentially representing the lung tissue actively participating in gas transfer, and is typically measured using a single-breath helium dilution technique during a breath hold; it is a crucial factor in calculating the DLCO as it indicates the surface area available for gas diffusion across the alveolar-capillary membrane. (Compare this to TLC in LVM)",
+        "BHT- Breath hold time (seconds)",
+        "DL/VA: Diffusing capacity for carbon monoxide per unit of alveolar volume (same as KCO) representing the efficiency of carbon monoxide uptake per unit of alveolar volume in the lung",
+        "KCO_sb: Transfer coefficient of the lung- dividing DLCO by VA gives a \"transfer coefficient\" (KCO) which represents the rate of gas transfer per unit alveolar volume, providing a better understanding of the intrinsic gas exchange function of the lung, especially when comparing patients with different lung sizes."
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 9,
+      "text": [
+        "Refrain from smoking on day of testing",
+        "Refrain from drinking alcohol on day of testing",
+        "Do not exercise immediately prior to testing",
+        "Patient should sit for 5 minutes prior to DLCO testing",
+        "Patients on supplemental O2 should be on room air for 10 minutes prior to testing",
+        "Extracted from MacIntyre, N.M., Crapo R. O., Viegi, G., et al. (2005). Standardisation of the single-breath determination of carbon monoxide uptake in the lung. European Respiratory Journal, 26, 720-735; Graham, B. L., Brusasco, V., Burgos, F., Cooper, B.G., Jensen, R., Kendrick, A., MacIntyre, N.R., Thompson, B.R., Wanger, J. (2017). 2016 ERS/ATS Standardisation of the single-breath carbon monoxide uptake in the lung. European Respiratory Journal, In Press.",
+        "Pre-Testing Considerations"
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 10,
+      "text": [],
+      "images": [
+        "image9.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 11,
+      "text": [],
+      "images": [
+        "image10.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 12,
+      "text": [],
+      "images": [
+        "image11.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 13,
+      "text": [],
+      "images": [
+        "image12.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 14,
+      "text": [],
+      "images": [
+        "image13.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 15,
+      "text": [],
+      "images": [
+        "image14.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 16,
+      "text": [],
+      "images": [
+        "image15.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 17,
+      "text": [],
+      "images": [
+        "image16.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 18,
+      "text": [],
+      "images": [
+        "image17.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 19,
+      "text": [],
+      "images": [
+        "image18.png",
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 20,
+      "text": [
+        "The \"Punjabi method\" for calculating Total Lung Capacity (TLC) in a DLCO test refers to a technique that utilizes a single-breath measurement of lung volume, often used to estimate TLC quickly and efficiently, particularly in situations where a full multi-breath lung volume measurement is not feasible;this method is based on research conducted by Dr. Manjit S. Punjabi, where the alveolar volume at full inspiration is considered a good approximation of TLC, especially in individuals with normal airway function.",
+        "The Punjabi Method"
+      ],
+      "images": [
+        "image1.jpg",
+        "image19.png"
+      ]
+    },
+    {
+      "slide": 21,
+      "text": [
+        "Key points about the Punjabi method:",
+        "Single breath measurement:",
+        "Unlike traditional multi-breath methods, the Punjabi method uses a single breath to measure lung volume at total lung capacity.",
+        "Helium dilution:",
+        "During the single breath, a small amount of helium is mixed with the inhaled gas, and the dilution of helium in the exhaled breath is used to calculate the alveolar volume.",
+        "Assumption of alveolar volume as TLC:",
+        "The measured alveolar volume is then considered to be a close approximation of the total lung capacity.",
+        "Benefits of the Punjabi method:",
+        "Faster procedure: Compared to traditional multi-breath methods, the single-breath measurement is quicker and easier to perform for the patient.",
+        "Cost-effective: May require less equipment and time to conduct the test.",
+        "Limitations of the Punjabi method:",
+        "Airway obstruction:",
+        "May not be accurate in individuals with significant airway obstruction, as the single breath measurement might not fully represent the entire lung volume.",
+        "Not suitable for all populations:",
+        "May not be reliable in patients with certain lung diseases where lung volumes are significantly altered."
+      ],
+      "images": [
+        "image1.jpg"
+      ]
+    },
+    {
+      "slide": 22,
+      "text": [],
+      "images": [
+        "image20.jpg"
+      ]
+    }
+  ],
+  "Additional Testing": [
+    {
+      "slide": 1,
+      "text": [
+        "Additional PFT related testing:",
+        "RAW/GAW",
+        "FeNo",
+        "FOT",
+        "MIP/MEP",
+        "Bronchoprovocation",
+        "CPET"
+      ],
+      "images": []
+    },
+    {
+      "slide": 2,
+      "text": [
+        "Airway Resistance & Airway Conductance (RAW/GAW)",
+        "Airway resistance (Raw) is the resistance of the respiratory tract to airflow during inhalation and exhalation12. It can be measured directly by plethysmography or estimated by formulas based on pressure and flow1234. One common formula is Raw = (Peak Inspiratory Pressure – Plateau pressure) / Flow13. Another formula is Raw = (8 x L x )/ r4, where L is the length,  is the viscosity, and r is the radius of the airway5"
+      ],
+      "images": [
+        "image3.jpeg",
+        "image4.jpeg"
+      ]
+    },
+    {
+      "slide": 3,
+      "text": [
+        "RAW/GAW",
+        "RAW/GAW- Is it important? Why or why not…….",
+        "Airway resistance (RAW) is the amount of pressure required to generate a given flow rate and is reported in cm H2O/L/Sec. A number of physiologists quickly found that the reciprocal of RAW, conductance (GAW), which is expressed as the flow rate for a given driving pressure (L/sec/cm H2O), was also a useful way to describe the pressure-flow relationship of the airways.",
+        "When measuring airway resistance, we measure the pressure in the upper airway and Bronchi.",
+        "One factor that affects the accuracy of measured RAW values may be the panting frequency."
+      ],
+      "images": [
+        "image5.jpeg"
+      ]
+    },
+    {
+      "slide": 4,
+      "text": [
+        "RAW/GAW",
+        "It is also assumed that inspiratory and expiratory resistance in the range it is measured (i.e. at FRC and ±0.5 L/sec) are the same. This is true for patients without airways disease but is not the case when significant airway obstruction is present.",
+        "-Patient has to pant properly",
+        "-Obstructive patients have an open Expiratory loop making it difficult to calculate RAW properly.",
+        "- There is no way to verify the accuracy of RAW/GAW. We use Spiro, Lung volumes and DLCO can be verified using simulators."
+      ],
+      "images": [
+        "image6.png"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "Fractional Exhaled Nitric oxide (FeNo)",
+        "What Is Nitric Oxide?Nitric oxide is a gas produced by cells involved in the inflammation associated with allergic or eosinophilic asthma.How Is Nitric Oxide Measured?The FeNO test, which stands for the fractional concentration of exhaled nitric oxide, is performed using a portable device that measures the level of nitric oxide in parts per billion (PPB) in the air you slowly exhale out of your lungs. The exhaled nitric oxide test is different from most lung function tests in that you need to blow slowly and steadily, not hard and fast, to get an accurate measurement."
+      ],
+      "images": [
+        "image7.png"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Performing FeNo",
+        "In clinical practice, a normal FeNO test is any number less than 25 parts per billion (ppb) in adults. For children, anything less than 20 ppb is considered normal."
+      ],
+      "images": [
+        "image8.jpeg",
+        "media1.mp4",
+        "image9.png"
+      ]
+    },
+    {
+      "slide": 7,
+      "text": [
+        "Frequency Oscillation testing (FOT)",
+        "This is a modern and relatively unique method of looking at airway narrowing. It capitalizes on the fact that different sound wave frequencies (low pitch to slightly higher pitch sounds) travel different distances along the airway. The lowest of these travels the furthest. When this test is carried out multiple low variable sound wave frequencies are sent down the airways and the time to travel down and reflect back are measured. This then provides information on what is happening along the full length of the airway.",
+        "Usually 2 Frequencies are used. R5 for the full length of the airway and R20 for the larger airways"
+      ],
+      "images": [
+        "image10.jpeg",
+        "image11.png"
+      ]
+    },
+    {
+      "slide": 8,
+      "text": [
+        "Performing FOT",
+        "(276) How To Use The Resmon PRO System for FOT Testing - YouTube"
+      ],
+      "images": [
+        "image12.jpeg"
+      ]
+    },
+    {
+      "slide": 9,
+      "text": [
+        "PulmOne Advanced Medical Devices",
+        "www.pulm-one.com",
+        "Maximum Inspiratory Pressure (MIP) Maximum Expiratory pressure (MEP)",
+        "MIP is the pressure generated during maximal inspiratory effort against a closed system. It is usually measured at residual volume (RV) because inspiratory muscle strength is inversely related to lung volume (in a curvilinear fashion).",
+        "MEP is measured during a similar maneuver at total lung capacity (TLC) because expiratory muscle strength is directly related to lung volume (again in a curvilinear fashion). The information available from these maneuvers is nonspecific, however, and cannot distinguish between insufficient effort, muscle weakness, and a neurologic disorder."
+      ],
+      "images": [
+        "image1.png",
+        "image13.jpeg",
+        "image14.jpeg"
+      ]
+    },
+    {
+      "slide": 10,
+      "text": [
+        "Performing MIP/MEP",
+        "(276) A demonstration if using the MicroRPM for respiratory muscle testing - YouTube"
+      ],
+      "images": []
+    },
+    {
+      "slide": 11,
+      "text": [
+        "Bronchoprovocation testing: Methacholine or EIB (Exercise induced)",
+        "Some patients do not show any sign of airway obstruction in spirometry testing, but a doctor may still suspect they may have activity or medicine induced asthma.",
+        "Methacholine testing: The test starts with a baseline breathing test (spirometry) to check how well your lungs are working, including a Forced Expiratory Volume (FEV1). Progressively larger doses of inhaled methacholine are given by a nebulizer. Spirometry will be performed before and after every dose of inhaled methacholine to measure the amount of airway narrowing",
+        "There are recommended ATS/ERS recommended dosages"
+      ],
+      "images": [
+        "image15.png"
+      ]
+    },
+    {
+      "slide": 12,
+      "text": [
+        "Methacholine objective",
+        "The object of this test is to administer 5 or 10 increased dosages of this medication until the patient has a drop in FEV1 of 20% or more.",
+        "PC20 or PD20. We use a specialized nebulizer to deliver the medication where we know the output or particle size of the nebulizer."
+      ],
+      "images": [
+        "image16.jpeg"
+      ]
+    },
+    {
+      "slide": 13,
+      "text": [
+        "EIB- Exercise induced Bronchoprovocation",
+        "Treadmill protocol. Treadmill speed and grade are chosen to produce 4–6 min of exercise at near-maximum targets with a total duration of exercise of 6–8 min. For children less than 12 yr of age, the time is usually 6 min; for older children and adults the time is usually 8 min. Starting at a low speed and grade, both are progressively advanced during the first 2–3 min of exercise until the heart rate is 80–90% of the predicted maximum (calculated as 220 − age in years) (203, 210, 215– 217).",
+        "Unlike Medication, for this test we look for a drop of 15% in FEV1."
+      ],
+      "images": [
+        "image17.jpeg"
+      ]
+    },
+    {
+      "slide": 14,
+      "text": [
+        "CPET- Cardio-pulmonary Exercise Test",
+        "Cardiopulmonary exercise testing (CPET) is a dynamic, non-invasive assessment of the cardiopulmonary system at rest and during exercise.",
+        "Deficiencies in the CPET-derived variables anaerobic threshold, peak oxygen consumption, and ventilatory efficiency for carbon dioxide are associated with poor postoperative outcomes.",
+        "The normal physiological response to exercise is a characteristic increase in heart rate, stroke volume, tidal volume, and ventilatory frequency.",
+        "Using a systematic approach, the nine-panel plot can be used to identify limitations in cardiac and respiratory capacity.",
+        "CPET aids risk assessment, identification of comorbidities that may be optimised, and perioperative planning."
+      ],
+      "images": [
+        "image18.jpeg"
+      ]
+    },
+    {
+      "slide": 15,
+      "text": [
+        "6mwt- 6 Minute walk test",
+        "A \"6 minute walk test\" (6MWT) is a clinical assessment where a patient walks as far as they can in a designated area for six minutes, with the primary measurement being the total distance covered, used to evaluate their functional exercise capacity, particularly in individuals with conditions affecting the heart or lungs like COPD or heart failure; essentially, it measures how far someone can walk at their own pace within a set time frame to assess their overall fitness level.",
+        "Key points about the 6 minute walk test:",
+        "Purpose:",
+        "To assess a person's functional capacity, particularly in individuals with cardiopulmonary issues, by measuring how far they can walk in six minutes.",
+        "Procedure:",
+        "The patient walks at their own pace along a marked course (usually a corridor) for six minutes, while their heart rate, oxygen saturation, and perceived exertion may be monitored.",
+        "Measurement:",
+        "The primary outcome is the total distance walked in six minutes, which is recorded and compared to normative data based on age, gender, and other factors.",
+        "Clinical applications:",
+        "Used to monitor the progression of conditions like COPD, heart failure, pulmonary fibrosis, and to evaluate the effectiveness of treatments like pulmonary rehabilitation or oxygen therapy."
+      ],
+      "images": []
+    },
+    {
+      "slide": 16,
+      "text": [
+        "6mwt- 6 Minute walk test",
+        "Key objective is to measure patients SpO2 level every minute for 6 minutes. If the O2 drops below 88% you will start the patient on 1L O2. Increase until they are steady over 90%",
+        "https://www.youtube.com/watch?v=g9Lt9DI81OE"
+      ],
+      "images": []
+    },
+    {
+      "slide": 17,
+      "text": [],
+      "images": [
+        "image19.png"
+      ]
+    }
+  ],
+  "Respiratory disease care": [
+    {
+      "slide": 1,
+      "text": [
+        "Pulmonary Function Testing"
+      ],
+      "images": []
+    },
+    {
+      "slide": 2,
+      "text": [
+        "Pulmonary function tests (PFTs)/respiratory function tests reflect the physiological properties of the lungs (e.g. airflow mechanics, volumes and gas transfer).",
+        "These tests have been used for decades to help diagnose lung disease, explain dyspnea, and monitor disease progression and treatment response."
+      ],
+      "images": []
+    },
+    {
+      "slide": 3,
+      "text": [
+        "Definition",
+        "FVC – Forced Vital Capacity",
+        "Volume of air exhaled after a maximal inspiration to total lung capacity. This volume is expressed in Liters",
+        "FEV1 – Forced Expiratory Volume in 1 second",
+        "Volume of air exhaled in the first second of expiration.",
+        "This volume is expressed in Liters",
+        "FEF 25-75%",
+        "Mean expiratory flow during the middle half of the FVC maneuver; reflects flow through later emptying airways, not necessarily the small airways",
+        "FEV1/FVC – Ratio (%)",
+        "Volume of air expired in the first second, expressed as a percent of FVC"
+      ],
+      "images": []
+    },
+    {
+      "slide": 4,
+      "text": [
+        "Volume-Time Plot"
+      ],
+      "images": [
+        "image1.jpeg"
+      ]
+    },
+    {
+      "slide": 5,
+      "text": [
+        "Evaluating Volume-Time Curves",
+        "Volume-time curve showing (A) normal plateau of the volume of air expired at one or two seconds (total expiration lasts at least six seconds), and (B) no plateau; the volume continues to increase throughout expiration (this spirometry result should be interpreted with caution)."
+      ],
+      "images": [
+        "image2.gif"
+      ]
+    },
+    {
+      "slide": 6,
+      "text": [
+        "Forced Vital Capacity Maneuver",
+        "Airflow, L/sec",
+        "Lung volume"
+      ],
+      "images": [
+        "image3.png"
+      ]
+    },
+    {
+      "slide": 7,
+      "text": [
+        "ATS Acceptable CriteriaWithin Maneuver",
+        "Free from artifacts, such as",
+        "Cough during the first second of exhalation",
+        "Glottis closure that influences the measurement",
+        "Early termination or cut-off",
+        "Effort that is not maximal throughout",
+        "Leak",
+        "Obstructed mouthpiece",
+        "Good starts",
+        "Extrapolated volume < 5% of FVC or 0.15 L, whichever is greater",
+        "Satisfactory exhalation",
+        "Duration of ≥ 6 s (3 s for children < 10) or a plateau in the volume–time curve or",
+        "If the subject cannot or should not continue to exhale"
+      ],
+      "images": []
+    },
+    {
+      "slide": 8,
+      "text": [
+        "ATS Acceptable CriteriaWithin Maneuver",
+        "After three acceptable spirograms have been obtained, apply the following tests",
+        "The two largest values of FVC must be within 0.150 L of each other",
+        "The two largest values of FEV1 must be within 0.150 L of each other",
+        "If both of these criteria are met, the test session may be concluded",
+        "If both of these criteria are not met, continue testing until",
+        "Both of the criteria are met with analysis of additional acceptable spirograms",
+        "or",
+        "A total of eight tests have been performed (optional) or",
+        "The patient/subject cannot or should not continue",
+        "Save, as a minimum, the three satisfactory maneuvers"
+      ],
+      "images": []
+    },
+    {
+      "slide": 9,
+      "text": [
+        "Spirometry Interpretation: So what constitutes normal?",
+        "Normal values vary and depend on:",
+        "Height",
+        "Age",
+        "Gender",
+        "Ethnicity,",
+        "> 80% FEV1, FVC, TLC, DLCO"
+      ],
+      "images": []
+    },
+    {
+      "slide": 10,
+      "text": [
+        "Functional classification of common impairments assessed by conventional pulmonary function tests and their pathophysiological determinants",
+        "Obstructive ventilatory impairments",
+        "Narrowing of the airways in the lung by physical obstruction or by dynamic airway collapsing. More proximal airway properties determine airflow resistance at large lung volumes and drive the FEV1/FVC measurement; more distal airway properties determine airflow resistance at small lung volumes and drive flow measurements later in a maximal exhalation. Because airway obstruction impairs lung emptying, it is often accompanied by air trapping and hyperinflation that may reduce the FVC but is more directly assessed by the RV measurement.",
+        "Restrictive ventilatory impairments",
+        "Reduction in the size of the lung. This may reflect lung parenchymal or an inability to fully inhale due to extrapulmonary factors (e.g. weakness, chest wall abnormalities and obesity). Lung restriction reduces FEV1, FVC (but not the FEV1/FVC ratio) and TLC.",
+        "Gas transfer impairments",
+        "Reduction in transport of gas (carbon monoxide transfer as a surrogate for oxygen) between the alveolar spaces and alveolar capillary blood. This may be due to a reduction in alveolar surface area, abnormal alveolar–capillary membrane properties or reduced pulmonary capillary blood (hemoglobin) volume. Impaired gas transfer is generally assessed by analysis of carbon monoxide uptake during a breath-hold (DLCO). Some conditions can lead to an increase in gas transfer."
+      ],
+      "images": []
+    },
+    {
+      "slide": 11,
+      "text": [
+        "Spirometry Interpretation: Obstructive vs. Restrictive Defect",
+        "Obstructive Disorders",
+        "Characterized by a limitation of expiratory airflow so that airways cannot empty as rapidly compared to normal (such as through narrowed airways from bronchospasm, inflammation, etc.)",
+        "Examples:",
+        "Asthma",
+        "Emphysema",
+        "Cystic Fibrosis"
+      ],
+      "images": []
+    },
+    {
+      "slide": 12,
+      "text": [
+        "Spirometry Interpretation: Obstructive vs. Restrictive Defect",
+        "Restrictive Disorders",
+        "Characterized by reduced lung volumes/decreased lung compliance",
+        "Examples:",
+        "Interstitial Fibrosis",
+        "Scoliosis",
+        "Obesity",
+        "Lung Resection",
+        "Neuromuscular diseases",
+        "Cystic Fibrosis"
+      ],
+      "images": []
+    },
+    {
+      "slide": 13,
+      "text": [],
+      "images": [
+        "image4.gif"
+      ]
+    },
+    {
+      "slide": 14,
+      "text": [
+        "Spirometry Interpretation: Obstructive vs. Restrictive Defect",
+        "Obstructive Disorders",
+        "FVC nl or↓",
+        "FEV1 ↓",
+        "FEF25-75% ↓",
+        "FEV1/FVC ↓",
+        "TLC nl or ↑",
+        "Restrictive Disorders",
+        "FVC ↓",
+        "FEV1 ↓",
+        "FEF 25-75% nl to ↓",
+        "FEV1/FVC nl to ↑",
+        "TLC ↓"
+      ],
+      "images": []
+    },
+    {
+      "slide": 15,
+      "text": [
+        "GOLD VS ATS",
+        "A large cohort study found that using the GOLD criteria (FEV1/FVC less than 70%) for diagnosis of chronic obstructive pulmonary disease (COPD) in U.S. adults 65 years and older was more sensitive for COPD-related obstructive lung disease than using the ATS criteria (FEV1/FVC less than the LLN).",
+        "Another cohort study looking at adults 65 years and older found that, compared with the ATS criteria, the GOLD criteria had higher clinical agreement with an expert panel diagnosis for COPD and better identified patients with clinically relevant events (e.g., COPD exacerbation, hospitalization, mortality).",
+        "Physicians should use the GOLD criteria to diagnose obstructive lung disease in patients 65 years and older with respiratory symptoms who are at risk of COPD (i.e., current or previous smoker).",
+        "GOLD criteria can miss up to 50% of young adults with obstructive lung disease and leads to overdiagnosis in healthy non-smokers. Based on these studies, physicians should use the ATS criteria to diagnose obstructive lung disease in patients younger than 65 years regardless of smoking status, and in nonsmokers who are 65 years and older."
+      ],
+      "images": []
+    },
+    {
+      "slide": 16,
+      "text": [
+        "GOLD Guidelines for COPD"
+      ],
+      "images": [
+        "image5.gif"
+      ]
+    },
+    {
+      "slide": 17,
+      "text": [],
+      "images": [
+        "image6.png"
+      ]
+    },
+    {
+      "slide": 18,
+      "text": [
+        "FEF 25-75%",
+        "What is it?",
+        "Mean expiratory flow during middle half of FVC maneuver",
+        "What does it measure?",
+        "Flow from airways that empty in the middle half of FVC maneuver",
+        "Is it a measure of small airways?",
+        "Maybe in normals",
+        "In asthma, or obstructive disease, it measures flow from more obstructed airways which could be small or larger with more obstruction"
+      ],
+      "images": []
+    },
+    {
+      "slide": 19,
+      "text": [
+        "Bronchodilator response",
+        ">12% and 200 ml"
+      ],
+      "images": [
+        "image7.gif"
+      ]
+    },
+    {
+      "slide": 20,
+      "text": [
+        "Examples of typical flow–volume loop configurations for",
+        "normal,",
+        "mild–moderate obstruction,",
+        "severe obstruction,",
+        "variable extrathoracic obstruction,",
+        "fixed large/central airway obstruction,",
+        "unilateral mainstem bronchial obstruction ,",
+        "restriction",
+        "mixed disorder."
+      ],
+      "images": [
+        "image8.jpeg"
+      ]
+    },
+    {
+      "slide": 21,
+      "text": [
+        "Lung function indices capable of differentiating extrathoracic from intrathoracic obstruction in adults",
+        "PEF: peak expiratory flow; FIF50%: forced inspiratory flow at 50% FVC; FEF50%: forced expiratory flow at 50% FVC; FVC: forced vital capacity.",
+        "Extrathoracic obstruction",
+        "Intrathoracic obstruction",
+        "Fixed",
+        "Variable",
+        "PEF",
+        "Decreased",
+        "Normal or decreased",
+        "Decreased",
+        "FIF50%",
+        "Decreased",
+        "Decreased",
+        "Normal or decreased",
+        "FIF50%/FEF50%",
+        "∼1",
+        "<1",
+        ">1"
+      ],
+      "images": []
+    },
+    {
+      "slide": 22,
+      "text": [
+        "Examples – obstruction",
+        "Fixed obstruction – Tracheal stenosis, Tumor trachea",
+        "Extrathoracic obstruction – Vocal cord paralysis , Thyromegaly",
+        "Intrathoracic airway obstruction - Tracheobronchomalacia , Relapsing polychondritis"
+      ],
+      "images": []
+    },
+    {
+      "slide": 23,
+      "text": [
+        "Classification of ventilatory impairments defined by spirometry (reduced or elevated results are defined by the lower and upper limits of normal, respectively)",
+        "FEV1: forced expiratory volume in 1 s; FVC: forced vital capacity; TLC: total lung capacity; Raw: airway resistance; PEF: peak expiratory flow.",
+        "FEV1",
+        "FVC",
+        "FEV1/FVC",
+        "Comments",
+        "Obstructive impairments",
+        "Normal/↓",
+        "Normal",
+        "↓",
+        "Restrictive impairments",
+        "↓",
+        "↓",
+        "Normal/↑",
+        "TLC reduced to confirm",
+        "Non-specific pattern [121]",
+        "↓",
+        "↓",
+        "Normal",
+        "TLC normal (additional testing may be helpful, e.g. bronchodilator response, Raw); when TLC is not available, this pattern has been described in population-based studies as preserved ratio impaired spirometry (PRISm) in current and former smokers [122]",
+        "Muscle weakness",
+        "↓",
+        "↓",
+        "Normal",
+        "Lack of sharp PEF",
+        "Suboptimal effort",
+        "↓",
+        "↓",
+        "Normal",
+        "Lack of sharp PEF",
+        "Mixed disorder",
+        "↓",
+        "↓",
+        "↓",
+        "Need lung volumes to confirm"
+      ],
+      "images": []
+    },
+    {
+      "slide": 24,
+      "text": [
+        "Restrictive lung disease severity",
+        "TLC < 80% = Restrictive disease",
+        "70-80 % predicted: mild restrictive disease",
+        "60-70% predicted: moderate restrictive disease",
+        "50-60% predicted: moderately severe restrictive disease",
+        "< 50% predicted: severe restrictive disease"
+      ],
+      "images": []
+    },
+    {
+      "slide": 25,
+      "text": [
+        "Rationale for z-scores",
+        "z-scores express how far an observed lung function value is from the predicted value after accounting for sex, age, height and ancestral grouping, expressed in standard deviations. This is the method recommended for determining the limit of normality and for stating the degree of lung function impairment.",
+        "A three-level system to assess the severity of lung function impairment using z-score values should be used; z-scores > −1.645 are normal, z-scores between −1.65 and −2.5 are mild, z-scores between −2.51 and −4 are moderate, and z-scores < −4.1 are severe."
+      ],
+      "images": []
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+{
+  "system_orientation": {
+    "minutes": 9,
+    "intro": "In a real office you will spend more time answering questions about consumables and cleaning than about physics. Staff want to know three things: what do we touch, what do we throw away, and what are we allowed to wipe. This module walks the machine from the outside in, so you can point at any part and say what it does, and so you never let a tech destroy a flow sensor with a disinfectant wipe.",
+    "sections": [
+      {
+        "h": "What the MiniBox is",
+        "p": "Three pieces and that is it. A white oval cabinet with the PulmOne badge on the front, a tablet mounted on top that runs the software and opens on the Patients List, and a handle on the right with a flow tube and a white mouthpiece cone on the end. Everything else in the room is a cable, a consumable, or the gas.",
+        "visual": {
+          "t": "img",
+          "src": "minibox-front",
+          "cap": "Straight on view. Notice the tablet sitting on the Patients List screen and the handle parked on the right with its flow tube and mouthpiece cone already attached."
+        },
+        "key": "Cabinet, tablet, handle. Name those three and you can walk any room."
+      },
+      {
+        "h": "Everything on the cart",
+        "p": "The full system rides on a rolling cart, which is how a practice turns one machine into a pulmonary function service that moves between rooms. In this photo the tablet is sitting on a Summary of Results screen, the handle is stowed, and the gas cylinder travels with the cart instead of living in a closet somewhere.",
+        "list": [
+          "Tablet on the mount, running the session",
+          "Handle stowed in its dock on the cabinet",
+          "Pull out armrest so the patient has somewhere to rest",
+          "Wire basket of disposable mouthpieces within reach",
+          "Printer on a shelf for the report",
+          "DLCO gas cylinder in its cradle with a two gauge regulator"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "minibox-cart",
+          "cap": "The whole service on one cart. The armrest, the mouthpiece basket and the printer are the details that tell a practice this was designed for a real exam room."
+        }
+      },
+      {
+        "h": "The handle and flow tube",
+        "p": "The handle is a pistol grip. A hand wraps it at the trigger, the flow tube sticks out the front, and a white flared mouthpiece adapter goes on the end. That flare is what the patient's lips seal around. Every curve the software draws comes from what happens inside that tube, so the handle is the part you should hand a physician when you want them to feel the product.",
+        "visual": {
+          "t": "img",
+          "src": "minibox-handle",
+          "cap": "Held at the trigger, flow tube forward, white flared mouthpiece adapter on the end. This is the only part of the system the patient actually touches."
+        }
+      },
+      {
+        "h": "How it reads a breath",
+        "p": "Inside the bore of the flow tube sits a bundle of tiny capillary tubes running across the airway. The breath has to pass through that bundle, and pushing air through it creates a very small pressure drop. A differential pressure transducer is tapped in below and compares the pressure on one side of the bundle to the other. That difference is the flow. The arrows point both ways because it reads air going out and air coming back in, which is how you get a full loop instead of half a story.",
+        "visual": {
+          "t": "img",
+          "src": "pneumotach",
+          "cap": "Cross section of the pneumotach. Follow the arrows through the capillary bundle and down to the differential pressure transducer. Pressure difference in, flow out."
+        },
+        "key": "The measurement is a pressure difference across a mesh. Change the mesh and you change the number."
+      },
+      {
+        "h": "Inside the flow head",
+        "p": "Take the flow head apart in your hand and it makes sense from the patient inward. The patient's lips are on the disposable mouthpiece. Behind that sits the blue disposable in line filter. Behind that is the wire mesh inside the cone, the surface the breath is measured across. Plastic pressure tubing carries that pressure back to the transducer box, which is the part that turns air into a number.",
+        "list": [
+          "Disposable mouthpiece, closest to the patient",
+          "Blue disposable in line filter behind it",
+          "Wire mesh screen inside the cone",
+          "Plastic pressure tubing to the transducer",
+          "Transducer box, the electronics end"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "consumables-stack",
+          "cap": "The flow head labelled part by part. Trace the path from the mouthpiece through the filter and the mesh to the pressure tubing and the transducer box."
+        }
+      },
+      {
+        "h": "What is disposable",
+        "p": "This is the question every office manager asks, so answer it before they do. The barrier between one patient and the next is a fresh consumable, not a cleaning ritual. Two parts get thrown away and the rest stays with the machine.",
+        "visual": {
+          "t": "vs",
+          "a": {
+            "h": "Single use, new for every patient",
+            "items": [
+              "The disposable mouthpiece the lips seal around",
+              "The blue in line bacterial and viral filter behind it"
+            ]
+          },
+          "b": {
+            "h": "Reusable, stays with the machine",
+            "items": [
+              "The flow tube and the mesh screen inside it",
+              "The transducer box and its pressure tubing",
+              "The handle, the cabinet, the tablet and the cart"
+            ]
+          }
+        }
+      },
+      {
+        "h": "Never wipe inside the tube",
+        "p": "Look straight down the barrel of the flow tube and you can see the three spoke mesh screen sitting in the bore. That surface is the front door of the sensor. Somebody with a wipe and good intentions will eventually try to clean it, and that is how sensors get damaged. The scary part is that a damaged sensor does not stop working, it just starts giving numbers that look believable and are wrong. Teach this rule out loud on install day and again at the follow up visit.",
+        "visual": {
+          "t": "img",
+          "src": "flow-tube-mesh",
+          "cap": "Down the barrel of the flow tube. That three spoke mesh screen is the measuring surface, and it is the one place a cloth must never go."
+        },
+        "key": "Never wipe inside the flow tube. Wiping the mesh damages the sensors."
+      },
+      {
+        "h": "Cleaning between patients",
+        "p": "The PulmOne recommended Spiroguard filters do the infection control work, which is why they require no high level disinfection. They are in line bacterial and viral filters rated 99.999 percent down to 0.02 microns. If a practice buys a cheaper filter off a catalogue, that performance is not guaranteed, and that is a real conversation to have with a purchasing manager who is trying to save a few cents per test.",
+        "list": [
+          "New filter and new mouthpiece for every patient",
+          "Wipe the exterior between patients with Super Sani-Cloth or Oxivir",
+          "No high level disinfection needed when the recommended filters are used",
+          "Filters that are not the recommended ones are not guaranteed",
+          "Never wipe inside the flow tube"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "cleaning-recs",
+          "cap": "The manufacturer cleaning recommendations as they appear in the training deck. Two rules carry the whole slide: wipe the outside, never the inside."
+        }
+      },
+      {
+        "h": "The DLCO test gas",
+        "p": "The diffusion test needs a specific gas mixture, and it arrives in an aluminium cylinder with a brass valve that rides on the cart. Read the label with the customer the first time so nobody guesses later. DLCO stands for the diffusing capacity of the lung for carbon monoxide, which is why there is carbon monoxide in the mix at all. Storage matters too, since the cylinder is meant to be stored and used at room temperature.",
+        "visual": {
+          "t": "img",
+          "src": "dlco-cylinder",
+          "cap": "The label is the lesson: 0.3 percent CO, 0.3 percent CH4, 21 percent O2, balance N2, 475 litres at 1833 psig, stored and used at room temperature."
+        },
+        "key": "0.3 percent CO, 0.3 percent CH4, 21 percent O2, balance N2. Room temperature, always."
+      }
+    ],
+    "angle": "Infection control and cleaning burden kill more device deals than specifications do. You can answer the whole thing in one breath: a new mouthpiece and a new in line filter for every patient, a wipe of the exterior with Super Sani-Cloth or Oxivir, and no high level disinfection because the recommended Spiroguard filter is rated 99.999 percent down to 0.02 microns. Then add the one rule that protects their investment, which is that nothing ever goes inside the flow tube."
+  },
+  "minibox_setup": {
+    "minutes": 11,
+    "intro": "Install day is the only day the whole practice watches you work. If the box opens cleanly, the gas seals, the blue ring lights and the first report comes off the printer with their name at the top, you have bought yourself a year of credibility. This module runs the install in order: the physical build, then the software configuration, then a first patient from an empty screen to a printed report.",
+    "sections": [
+      {
+        "h": "Only PulmOne opens the carton",
+        "p": "The carton shows up sealed, printed with Hello MiniBox and covered in tamper evident seals, and there is a label on it stating that only a PulmOne representative is authorised to open it. That label is doing real work. It protects a delicate sensor from a receiving clerk with a box cutter, and it guarantees that the first time anyone sees this device working, you are standing next to it. If you arrive and the seals are already broken, say so out loud before you touch anything else.",
+        "visual": {
+          "t": "img",
+          "src": "unbox-carton",
+          "cap": "Sealed carton with tamper evident seals and the authorisation label. Check the seals before you cut anything, because that is your record of how it arrived."
+        },
+        "key": "The seal is part of the install. Nobody but a PulmOne rep breaks it."
+      },
+      {
+        "h": "What ships in the box",
+        "p": "The body sits down in a foam insert with the handle in its own side cutout and the accessory kits bagged around it. Lift everything out and lay it in a line on a clean surface before you connect a single thing, so a missing cable turns up now rather than twenty minutes into the build. Keep the foam. It is the only safe way this thing ever moves again.",
+        "list": [
+          "Tablet in a rugged case",
+          "Disposable mouthpiece and filter cones",
+          "An adapter",
+          "Coiled gas tubing",
+          "Power cord",
+          "Data cables",
+          "The handle with its flow tube"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "unbox-contents",
+          "cap": "Everything that ships, laid out. Do this on every install so you are counting parts on a table instead of hunting for them behind a cart."
+        }
+      },
+      {
+        "h": "The back panel",
+        "p": "Everything connects at the rear. There is a power rocker switch and a power inlet, and then a recessed plate that holds the DLCO gas input fitting marked 4 to 5 bar, three USB ports, the CU port, and a cable clamp. The CU port is the one that matters most, because that is where the data cable belongs, and the clamp exists so a cleaner with a mop never pulls it back out again.",
+        "list": [
+          "Power rocker switch and power inlet",
+          "DLCO gas input fitting, marked 4 to 5 bar",
+          "Three USB ports",
+          "CU port for the data cable",
+          "Cable clamp to strain relieve the run"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "rear-panel",
+          "cap": "The recessed connector plate. Read the marking on the gas fitting, 4 to 5 bar, because that number tells you what to set the regulator to."
+        },
+        "key": "Data cable in the CU port, gas line on the 4 to 5 bar fitting, then clamp the cable down."
+      },
+      {
+        "h": "Gas from cylinder to machine",
+        "p": "The two gauge regulator threads onto the brass valve of the cylinder, and the cylinder mounts horizontally in its bracket under the cart so it is out of the patient's way and cannot be tipped over. The clear supply line runs from the regulator up to the gas input fitting on the back panel and screws on there. Take your time on this part, because a slow leak is invisible and expensive.",
+        "list": [
+          "Thread the regulator onto the cylinder valve and tighten it",
+          "Mount the cylinder horizontally in the bracket under the cart",
+          "Run the clear supply tubing from the regulator to the gas input fitting",
+          "Screw the line onto the fitting and seat the data cable in the clamp",
+          "Set delivery with the adjusting knob to what the inlet is marked for, 4 to 5 bar"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "regulator-on-cylinder",
+          "cap": "Regulator threaded onto the brass cylinder valve. One gauge reads what is left in the cylinder, the other reads what is being delivered to the machine."
+        }
+      },
+      {
+        "h": "Tablet on, handle docked",
+        "p": "The cased tablet slides down onto the mounting bracket on top of the cabinet and takes two cables, a right angle USB-C plug for data and a flat magnetic connector for power. Then take the handle and line the nose of the flow tube up with the docking port on the face of the cabinet. The port glows blue. Seat the handle and the LED ring lights, and that lit ring is your confirmation that the handle is home and the machine is alive.",
+        "list": [
+          "Slide the cased tablet down onto the bracket on top of the cabinet",
+          "Right angle USB-C plug for data, flat magnetic connector for power",
+          "Align the flow tube nose with the blue illuminated docking port",
+          "Seat it and watch for the blue LED ring"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "handle-seated",
+          "cap": "Handle seated with the blue LED ring lit. Teach the staff this light, because it is the fastest is it on check in the room."
+        },
+        "key": "Blue ring lit means the handle is home."
+      },
+      {
+        "h": "Prove it measures right",
+        "p": "A calibration check is how you show a practice that the number on the screen can be trusted. A 3 litre calibration syringe couples onto the handle through an adapter so the flow axis runs straight through both, and then you push and pull a known volume through the sensor. On screen, the Calibration Check Measurement stacks the flow volume loops against acceptance limit lines, and loops that stay inside those lines pass. Diffusion has its own version, the DLCO Calibration Check, which shows a volume against time trace with the gas concentration traces underneath and reports back that the test completed successfully.",
+        "visual": {
+          "t": "img",
+          "src": "cal-syringe-assembly",
+          "cap": "The 3 litre syringe coupled to the handle through the adapter. Note the flow axis running straight through both, which is why the alignment in this diagram matters."
+        },
+        "key": "A known volume in, the same volume read back. That is the whole idea of a calibration check."
+      },
+      {
+        "h": "Services and Device Data",
+        "p": "This screen is the one you will be asked about on the phone six months from now, so open it on install day and walk the office through it. It carries the software and firmware versions, the serial numbers, a sessions counter showing how many tests this device has run, the date of the last calibration check, and the sessions remaining balance. It is also where Update Software Version and Copy to USB Flash Drive live.",
+        "list": [
+          "Software and firmware versions plus serial numbers",
+          "Sessions counter, how many tests this device has run",
+          "Last calibration check",
+          "Sessions remaining balance",
+          "Update Software Version",
+          "Copy to USB Flash Drive"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "sw-device-data",
+          "cap": "Services and Device Data. Point at the sessions balance when you show this, because that is the number that generates the support call."
+        }
+      },
+      {
+        "h": "The settings screens",
+        "p": "Configuration is not busywork, it is the part of the install that makes the report look like it belongs to this practice. Go through these screens with somebody from the office sitting next to you, because every switch here decides what they see on screen and what reaches the physician on paper.",
+        "visual": {
+          "t": "table",
+          "head": ["Screen", "What you set there"],
+          "rows": [
+            ["General Settings", "Institute name, department, address and phone for the report header, an Add Logo tile, plus units, time format, report export to printer or USB, and single or multi office."],
+            ["Clinical Settings", "Parameters Preset, Trends Preset and Provocation Preset, and which prediction group applies to children 3 to 12, adolescents 13 to 17 and adults 18 to 150."],
+            ["Prediction Values Settings", "A grid of parameters against reference equation authors including GLI, NHANES III, ECSC 1993 and Knudson, with checkmarks showing the active set."],
+            ["Test Parameters Settings", "Which parameters are reportable under FVC, SVC, LVM and Summary, with display checkmarks and arrows to reorder them."],
+            ["Report Settings", "The summary report template, plus show or hide toggles for ethnicity, interpretations, the flow chart interpretation, diagnosis and conclusion, test warnings and calibration data."],
+            ["Preferences", "Which tests appear in a session, DLCO correction options, altitude correction, and a Rename TGV as FRC option."]
+          ],
+          "note": "Anything you switch off here never reaches their report, so confirm each choice with the practice rather than guessing for them."
+        }
+      },
+      {
+        "h": "Patient data drives predictions",
+        "p": "Page one of Add Patient asks for date of birth, height, weight, gender and ethnicity, and which set of predicted values to use. Those entries choose the predicted numbers that every result is then compared against, so a height typed in wrong makes a perfectly accurate machine look broken. Page two adds the medical condition field, a smoking calculator that works out pack years, a box for reimbursement codes, and the Start Session button.",
+        "visual": {
+          "t": "img",
+          "src": "sw-add-patient",
+          "cap": "Add Patient page one. Every field on this page feeds the predicted values, which is why this screen deserves more care than it usually gets."
+        },
+        "key": "A wrong height is a wrong percent predicted on every line of the report."
+      },
+      {
+        "h": "Run the first session",
+        "p": "Do not leave the office without running a full session end to end, ideally on a willing volunteer from the staff. It turns your install from a delivery into a demo, and it means the first time this practice runs a real patient, they have already watched the whole path once.",
+        "visual": {
+          "t": "steps",
+          "items": [
+            {
+              "h": "Start at the Patients List",
+              "p": "New Patient for somebody new, or New Session on an existing row."
+            },
+            {
+              "h": "Fill both Add Patient pages",
+              "p": "Demographics and predicted set on page one, then condition, pack years and reimbursement codes on page two, then Start Session."
+            },
+            {
+              "h": "Name the technician and physician",
+              "p": "The Session Begin dialog asks for both before the axes go live on the Forced Vital Capacity Measurement screen."
+            },
+            {
+              "h": "Work down the test rail",
+              "p": "The left rail runs the sequence FVC, SVC, MVV, LVM and Summary, so the technician always knows what is next."
+            },
+            {
+              "h": "Read the FVC results",
+              "p": "A parameter table of predicted, best and percent predicted sits next to the flow volume loop and the volume time curve, with a post bronchodilator toggle."
+            },
+            {
+              "h": "Land on Summary",
+              "p": "FVC, SVC and LVM come together in one pre and post table with percent predicted and percent change, plus an Add Diagnosis button."
+            },
+            {
+              "h": "Print it",
+              "p": "The printed report carries the patient and session blocks, the FVC section with the multiple efforts overlaid and a colour legend, and the pre and post bronchodilator table with percent change."
+            },
+            {
+              "h": "Show them the history",
+              "p": "Back on the Patients List, expand the patient row and the previous sessions appear, each dated and tagged with the tests it contains."
+            }
+          ]
+        }
+      }
+    ],
+    "angle": "Install day is your best demo, so run it like one. You are not just bolting a machine to a cart, you are putting their institute name and their logo in the report header, choosing the reference equations their physicians already trust, and handing back a printed report with a patient's curves on it before you leave. Reps who finish the install with a printed report in a physician's hand rarely get asked whether the practice made the right call."
+  },
+  "intro_mbp": {
+    "minutes": 8,
+    "intro": "The hardware gets the meeting, but the software wins it. Almost everything a physician judges you on happens on that tablet: how fast you find a patient, how a session runs, and what comes out on paper at the end. This module is the tour. Learn the shape of the software, learn how one session flows, and learn the interpretation flowchart well enough to walk a doctor through their own result.",
+    "sections": [
+      {
+        "h": "The software in one screen",
+        "p": "Start on General Settings, because the left hand navigation on this screen is the map of the entire product. It lists General and Clinical Settings, Prediction Preset, Parameters Preset, Trends Preset, Report Settings and Preferences. On the screen itself, the report headers sit on the left, which is the information that prints at the top of every report, and the system settings sit on the right, which is how the software behaves day to day.",
+        "visual": {
+          "t": "img",
+          "src": "sw-general-settings",
+          "cap": "General Settings. Read the left nav first. Those few names are the whole software, and knowing them is the difference between demoing and hunting."
+        },
+        "key": "Learn the left nav and you can find anything in the product in one click."
+      },
+      {
+        "h": "Patients List is home base",
+        "p": "Every test in this system starts and ends on the Patients List. There is a search bar at the top and a row per patient showing the last visit, the date of birth and a badge counting how many sessions that patient has. The buttons across it are New Patient, Delete Patient, Delete Session and New Session. Expand a row and the previous sessions unfold underneath, each one dated and tagged with the tests it contains, which is how a physician looks back at what changed since last year.",
+        "list": [
+          "Search bar to find a patient fast",
+          "Rows show last visit, date of birth and a session count badge",
+          "New Patient and New Session are the two buttons you will use every day",
+          "Expanding a row reveals that patient's session history"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "sw-patients-list",
+          "cap": "The Patients List. The session count badge is the quiet sales point, because it means every visit stacks up into a history rather than a loose sheet of paper."
+        }
+      },
+      {
+        "h": "How a session flows",
+        "p": "A session is a single visit, and it always runs the same way. If you can narrate these five moves without looking at the screen, you can run a demo in a hallway with a physician who has four minutes.",
+        "visual": {
+          "t": "steps",
+          "items": [
+            {
+              "h": "Find or add the patient",
+              "p": "From the Patients List, either New Patient or New Session on somebody already in the system."
+            },
+            {
+              "h": "Open the session",
+              "p": "The software asks who the technician and the physician are before the first test begins."
+            },
+            {
+              "h": "Work the test list",
+              "p": "The tests run in order down the left rail, FVC first, then SVC, MVV and LVM, with Summary waiting at the end."
+            },
+            {
+              "h": "Read the results",
+              "p": "Each test gives a parameter table of predicted, best and percent predicted alongside its curves, with a post bronchodilator toggle so the before and after can be compared."
+            },
+            {
+              "h": "Summarise and print",
+              "p": "Summary pulls FVC, SVC and LVM into one pre and post table with percent change, Add Diagnosis captures the read, and the report prints."
+            }
+          ]
+        }
+      },
+      {
+        "h": "What prints on the report",
+        "p": "Report Settings is where a practice decides what the physician actually receives, and it is worth walking through slowly because different practices want very different pages. There is a summary report template to choose, and then a set of show or hide toggles.",
+        "visual": {
+          "t": "table",
+          "head": ["Toggle", "Why a practice cares"],
+          "rows": [
+            ["Ethnicity", "It feeds the predicted values, and some practices want that visible on the page for anyone reading the result later."],
+            ["Interpretations", "Prints the software's read alongside the numbers instead of leaving the page as raw data."],
+            ["Flow chart interpretation", "Prints the interpretation decision tree itself, so the reasoning is on the report next to the result."],
+            ["Diagnosis and conclusion", "Carries the physician's own wording, captured through Add Diagnosis on the Summary screen."],
+            ["Test warnings", "Shows where effort or quality was questionable, which protects the physician from over reading a poor effort."],
+            ["Calibration data", "Documents that the device was checked, which is the line an auditor tends to ask about."]
+          ]
+        }
+      },
+      {
+        "h": "The interpretation tree",
+        "p": "This is the ATS and ERS decision tree, and it is the single most useful thing in the deck for a rep. It starts with one ratio, FEV1 over VC, compared against the lower limit of normal, which is the bottom edge of the normal range for somebody of that age, height, gender and ethnicity. From there it branches through VC and TLC and lands on one of four answers: normal, restriction, obstruction, or a mixed defect. Then every one of those four splits again on DLCO against its own lower limit of normal. That second split is what turns a pattern into a short list of causes, and the chart names things like pulmonary vascular disorders, chest wall and neuromuscular disorders, ILD and pneumonitis, asthma and chronic bronchitis, and emphysema.",
+        "visual": {
+          "t": "img",
+          "src": "interp-tree-ats",
+          "cap": "The ATS and ERS tree. Notice that DLCO appears at the bottom of every branch, not just one, which is why a machine that does spirometry alone can only get a physician halfway down this chart."
+        },
+        "key": "Three questions in order: the ratio, then the volumes, then DLCO."
+      },
+      {
+        "h": "The flowchart on the report",
+        "p": "The bigger chart is the same logic in three parts. A spirometry branch, a lung volume branch that works from TLC, which is all the air the lungs hold when completely full, and RV over TLC, which is the share of that full lung made up of air the patient cannot blow out. Then a diffusion branch built on DLCO together with VA, the alveolar volume the test gas actually reached, and KCO, the diffusion result expressed per unit of that volume. The part that matters commercially is that the software can print this flowchart on the report. The physician does not just get a verdict, they get the path that led to it.",
+        "visual": {
+          "t": "img",
+          "src": "interp-flowchart-full",
+          "cap": "All three branches on one page: spirometry, lung volumes with TLC and RV over TLC, and diffusion with DLCO, VA and KCO. This is the picture to point at when a physician asks how the software reaches a conclusion."
+        },
+        "key": "The software can print the interpretation flowchart on the report. Walk a physician down it."
+      }
+    ],
+    "angle": "Any rep can list features. The one who can put a finger on the interpretation flowchart and walk a physician down it, ratio first, then volumes, then DLCO, is having a completely different conversation. Use it two ways: to show that the MiniBox prints the reasoning and not just the numbers, and to make the case that spirometry alone stops halfway down the chart, because on this tree it is DLCO that turns each pattern into a short list of causes."
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "additional_testing": {
+    "minutes": 10,
+    "intro": "You are going to walk into pulmonology and allergy offices that already run tests you do not sell. Someone will say FeNO, or oscillometry, or ask whether your box does airway resistance. None of these replace spirometry, lung volumes and DLCO, they sit around them. Know what each one is trying to answer and you stay in the conversation instead of nodding and losing the room.",
+    "sections": [
+      {
+        "h": "What else the lab runs",
+        "p": "Start with a map. These are the PFT related tests the training deck covers, and each one exists because it answers a question the standard three tests cannot. Learn the question first and the test name sticks by itself.",
+        "visual": {
+          "t": "table",
+          "head": ["Test", "The question it is trying to answer"],
+          "rows": [
+            ["RAW / GAW", "How much pressure does it take to move air through the airways?"],
+            ["FeNO", "Is there allergic or eosinophilic asthma inflammation going on right now?"],
+            ["FOT", "Where along the airway is the narrowing, measured while the patient just breathes?"],
+            ["MIP / MEP", "How strong are the breathing muscles?"],
+            ["Bronchoprovocation", "Can we provoke the asthma that spirometry did not catch?"],
+            ["CPET", "How does the heart and lung system behave under an exercise load?"],
+            ["6MWT", "How far can this patient walk in six minutes, and what does their oxygen do?"]
+          ]
+        },
+        "key": "Every test on this list is an add on around spirometry, lung volumes and DLCO, not a replacement for them."
+      },
+      {
+        "h": "Resistance and conductance",
+        "p": "Airway resistance (RAW) is the resistance of the respiratory tract to airflow during inhaling and exhaling. Put plainly, it is the amount of pressure it takes to generate a given flow rate, and it is reported in cm H2O per liter per second. It can be measured directly by plethysmography, or estimated from formulas built on pressure and flow. Physiologists found the flipped version just as useful, so conductance (GAW) is simply the reciprocal, the flow you get for a given driving pressure, reported in L per second per cm H2O.",
+        "visual": {
+          "t": "img",
+          "src": "airway-tree",
+          "cap": "When we measure airway resistance we are measuring pressure in the upper airway and the bronchi, the big labelled tubes here, not the tiny acinus blown up in the inset. That inset is DLCO territory."
+        },
+        "key": "RAW is pressure needed for a given flow. GAW is the same relationship turned upside down."
+      },
+      {
+        "h": "Why RAW is shaky",
+        "p": "Ask the question the deck asks: RAW and GAW, is it important, why or why not. The measurement leans on assumptions that quietly fall apart in the exact patient you care about. It assumes inspiratory and expiratory resistance are the same in the range where it is measured, at FRC and plus or minus 0.5 liters per second. That holds for patients without airways disease. It does not hold once significant airway obstruction is present. Panting frequency also moves the number, so the patient has to pant properly for the result to mean anything.",
+        "list": [
+          "The patient has to pant correctly, and panting frequency is one factor that affects how accurate the measured RAW value is.",
+          "Obstructive patients have an open expiratory loop, which makes RAW difficult to calculate properly.",
+          "There is more than one way to compute specific airway resistance, including sRawTOT, sRaw0.5, sRawVmax and sRawmid, and each one reads a different part of the loop.",
+          "There is no way to verify the accuracy of RAW and GAW. Spirometry, lung volumes and DLCO can all be verified with simulators."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "sraw-loops",
+          "cap": "Three airway resistance loops, A through C. Notice what happens as resistance rises: the narrow near vertical loop opens up and the expiratory side bulges out. That widening shape is exactly what makes the number hard to pin down in an obstructed patient."
+        },
+        "key": "The patient RAW is most often ordered for is the patient RAW measures worst."
+      },
+      {
+        "h": "FeNO, inflammation as a number",
+        "p": "Nitric oxide is a gas produced by cells involved in the inflammation that comes with allergic or eosinophilic asthma. FeNO stands for the fractional concentration of exhaled nitric oxide, and the test uses a portable device to measure how much of that gas is in the air the patient slowly breathes out, reported in parts per billion (ppb). It is not a mechanics test like spirometry. It is a look at whether the airway is inflamed right now, which is why allergy offices care about it.",
+        "visual": {
+          "t": "img",
+          "src": "feno-device",
+          "cap": "A tabletop FeNO analyser with a handpiece and patient breathing tube. The patient exhales through the handpiece and the unit reports one number in parts per billion."
+        },
+        "key": "In clinical practice a normal FeNO is under 25 ppb in adults and under 20 ppb in children."
+      },
+      {
+        "h": "Coaching the FeNO blow",
+        "p": "This is the one that trips up staff who have been coaching spirometry for years. Every instinct they have is blast it out hard and fast. FeNO is the opposite. The exhaled nitric oxide test is different from most lung function tests in that the patient needs to blow <b>slowly and steadily</b> to get an accurate measurement. The device does the coaching for you if the patient watches the screen.",
+        "list": [
+          "Exhale slowly and steadily, never hard and fast.",
+          "The screen shows a flow rate guidance bar with a target zone.",
+          "The patient holds that bar inside the target zone for the whole exhalation.",
+          "If your office coach is yelling blast, blast, blast, they are coaching the wrong test."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "feno-technique",
+          "cap": "Correct FeNO technique. Watch the guidance bar on the device screen, not the patient. Steady inside the target zone for the full breath out is the whole game."
+        }
+      },
+      {
+        "h": "Oscillometry, the FOT test",
+        "p": "Forced oscillation technique is a modern and fairly unique way of looking at airway narrowing. It uses the fact that different sound wave frequencies travel different distances along the airway, and the lowest frequency travels the furthest. The device sends multiple low variable sound wave frequencies down the airways and measures the time they take to travel down and reflect back, which tells you what is happening along the full length of the airway. Two frequencies usually do the work: <b>R5</b> for the full length of the airway and <b>R20</b> for the larger airways. The selling point for a clinic is effort. The patient just breathes.",
+        "list": [
+          "R5 reads the full length of the airway.",
+          "R20 reads the larger airways.",
+          "A good test looks like quiet tidal breathing with a nose clip for 30 seconds.",
+          "Cheeks supported, so the mouth is not absorbing the oscillations.",
+          "A 20 to 30 second recording, and 3 to 5 tests."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "fot-principle",
+          "cap": "A loudspeaker at the mouth pushes pressure oscillations into the airway. The device measures the airflow those oscillations create and the pressure change at the mouth, and turns the two into impedance."
+        },
+        "key": "FOT is the test that runs during normal quiet breathing, with no maximal effort from the patient."
+      },
+      {
+        "h": "MIP and MEP",
+        "p": "These two measure breathing muscle strength rather than airflow. MIP is the pressure generated during a maximal inspiratory effort against a closed system, and it is usually measured at residual volume (RV, the air left in the lungs after blowing out everything you can) because inspiratory muscle strength is inversely related to lung volume. MEP is measured during a similar maneuver at total lung capacity (TLC, lungs completely full) because expiratory muscle strength is directly related to lung volume. Know the limit as well as the test: the information from these maneuvers is nonspecific and cannot distinguish between insufficient effort, muscle weakness, and a neurologic disorder.",
+        "list": [
+          "MIP, breathe in as hard as possible against a closed system, measured at RV.",
+          "MEP, blow out as hard as possible, measured at TLC.",
+          "A poor result does not tell the physician why it is poor.",
+          "Some meters also run SNIP through a nasal plug instead of a mouthpiece."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "mip-mep-device",
+          "cap": "Two respiratory pressure meters. The one with the flanged mouthpiece runs MIP and MEP, the one with the nasal plug runs SNIP. Small handheld devices, not a lab system."
+        },
+        "key": "MIP and MEP say the muscles are weak. They cannot say whether it is effort, muscle or nerve."
+      },
+      {
+        "h": "The methacholine challenge",
+        "p": "Some patients show no sign of airway obstruction on spirometry, but the physician still suspects activity induced or medicine induced asthma. So you provoke it. The test starts with a baseline spirometry to see how the lungs are working, including FEV1. Then progressively larger doses of inhaled methacholine go in through a nebulizer, and spirometry is repeated before and after every single dose to measure how much the airway narrows. There are ATS and ERS recommended dosages, and the nebulizer is a specialized one where the output and particle size are known.",
+        "visual": {
+          "t": "steps",
+          "items": [
+            { "h": "Baseline spirometry", "p": "Establish how the lungs are working today, FEV1 included. Everything after this is measured against it." },
+            { "h": "Dose one", "p": "Inhaled methacholine through a specialized nebulizer with known output and particle size." },
+            { "h": "Spirometry again", "p": "Spirometry runs before and after every dose. This test is mostly spirometry, over and over." },
+            { "h": "Escalate", "p": "5 or 10 increasing dosages, following ATS and ERS recommended dosing." },
+            { "h": "Stop at 20 percent", "p": "The objective is a drop in FEV1 of 20 percent or more. The concentration where that happens is the PC20, the dose version is the PD20." }
+          ]
+        },
+        "key": "A methacholine test is a spirometer running all afternoon. The quality of the spirometry is the quality of the test."
+      },
+      {
+        "h": "The exercise challenge, EIB",
+        "p": "Exercise induced bronchoprovocation asks the same question as methacholine but uses a treadmill instead of a drug. Speed and grade are chosen to produce 4 to 6 minutes of exercise at near maximum targets, with total exercise lasting 6 to 8 minutes. For children under 12 years old it is usually 6 minutes, for older children and adults usually 8 minutes. You start at a low speed and grade and advance both during the first 2 to 3 minutes until heart rate reaches 80 to 90 percent of the predicted maximum, calculated as 220 minus age in years. The threshold that counts as positive is different from methacholine, and mixing the two up in front of a physician is an easy way to lose credibility.",
+        "visual": {
+          "t": "table",
+          "head": ["", "Methacholine", "Exercise (EIB)"],
+          "rows": [
+            ["Driven by", "5 or 10 increasing inhaled doses", "Treadmill speed and grade"],
+            ["Duration", "Spirometry before and after every dose", "6 to 8 minutes of exercise total"],
+            ["Target", "ATS and ERS recommended dosages", "Heart rate 80 to 90 percent of 220 minus age"],
+            ["Positive when FEV1 falls", "20 percent or more", "15 percent"]
+          ]
+        },
+        "key": "Methacholine is a 20 percent drop. Exercise is a 15 percent drop. Do not swap them."
+      },
+      {
+        "h": "CPET and the 6MWT",
+        "p": "These two look at function under load rather than at the airway itself. CPET, the cardiopulmonary exercise test, is a dynamic non invasive assessment of the cardiopulmonary system at rest and during exercise. The normal response to exercise is a characteristic rise in heart rate, stroke volume, tidal volume and ventilatory frequency, and a systematic read of the nine panel plot is used to identify limits in cardiac and respiratory capacity. It helps with risk assessment, spotting comorbidities that can be optimised, and perioperative planning, because deficiencies in anaerobic threshold, peak oxygen consumption and ventilatory efficiency for carbon dioxide are associated with poor postoperative outcomes. The six minute walk test is the humble cousin: the patient walks as far as they can at their own pace along a marked course, usually a corridor, for six minutes, and the distance is compared to normative data for age and gender.",
+        "list": [
+          "6MWT is used to follow COPD, heart failure and pulmonary fibrosis, and to judge whether pulmonary rehab or oxygen therapy is working.",
+          "The key objective during the walk is measuring SpO2 every minute for six minutes.",
+          "If oxygen drops below 88 percent, the patient is started on 1 liter of oxygen.",
+          "Increase the oxygen until they are holding steady above 90 percent."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "cpet",
+          "cap": "A full CPET: cycle ergometer, breath by breath gas exchange mask and ECG electrodes. This is a staffed, equipment heavy afternoon, which is why the six minute walk exists as the simpler functional check."
+        },
+        "key": "CPET needs a lab. The 6MWT needs a hallway, a timer and a pulse oximeter."
+      }
+    ],
+    "angle": "None of these tests replace what the MiniBox+ does, and that is the point. When a physician brings up RAW, oscillometry or FeNO, you can talk about it accurately and then bring the conversation back to the three tests that carry the visit, spirometry, lung volumes and DLCO. You also have one honest technical point worth remembering: RAW and GAW have no way to verify their accuracy, while spirometry, lung volumes and DLCO can all be checked against a simulator. That is a credibility line, not a slam."
+  },
+  "competitive": {
+    "minutes": 9,
+    "intro": "You will almost never be the first PFT device in the room. The office either owns a walk-in body box, runs nitrogen washout on a cart, or has a handheld spirometer and sends anything harder down the street. This module is the field guide to who else is in the room and the two one-page sheets PulmOne built to answer the only two questions that ever really come up: how do you compare to the box, and how do you compare to washout.",
+    "sections": [
+      {
+        "h": "Who you are up against",
+        "p": "The competitive set splits cleanly in two. On one side are walk-in cabins, a glass booth the patient sits inside with a separate monitor cart parked next to it. On the other side are rolling carts, tabletops and handhelds that do spirometry and sometimes DLCO, but never body box lung volumes. Knowing which side of that line an account is on tells you the whole conversation before you open your mouth.",
+        "visual": {
+          "t": "vs",
+          "a": {
+            "h": "Walk-in cabins",
+            "items": [
+              "Vyaire Vyntus BODY",
+              "MGC Diagnostics Platinum Elite",
+              "Ganshorn PowerCube Body+",
+              "COSMED Q-Box",
+              "Geratherm Respiratory body plethysmograph",
+              "Pattern: glass cabin plus a separate wheeled cart"
+            ]
+          },
+          "b": {
+            "h": "Carts, tabletops and handhelds",
+            "items": [
+              "Vyaire Vyntus ONE rolling PFT and stress cart",
+              "Vyaire Vyntus CPX metabolic cart",
+              "MGC Ultima series PFT cart",
+              "MGC CPFS/D USB spirometer",
+              "ndd Medical EasyOne family",
+              "Pattern: portable, but no plethysmography"
+            ]
+          }
+        },
+        "key": "Cabin accounts are a workflow conversation. Cart and handheld accounts are a capability conversation."
+      },
+      {
+        "h": "What a walk-in cabin is",
+        "p": "Look at the picture before you talk about it. A body box is a room inside a room. The patient is seated inside a sealed cabin while a technician stands outside operating a separate cart, which means the test needs a dedicated floor plan and a person watching from the outside. Vendors sell the cabin on exactly the things you would expect: COSMED markets the Q-Box on gold standard static lung volumes and airway resistance, a large cabin volume and walls that are easy to disinfect. Ganshorn sells the PowerCube Body+ on a puristic design, most PFT parameters at one workstation, and four icon claims of configurability, accuracy, robust hardware and lowest measurement costs. MGC sells the Platinum Elite on comprehensive body plethysmography, compact design and unlimited weight capacity. Those are their words, and they are worth knowing because they are the words your prospect has already read.",
+        "visual": {
+          "t": "img",
+          "src": "cosmed-qbox",
+          "cap": "The seated patient is inside the cabin and the technician runs the test from the cart outside. Notice what the picture is actually showing you: dedicated floor space, a sealed enclosure around the patient, and a second person in the workflow."
+        },
+        "key": "Never argue with the cabin's accuracy. Argue with the floor space, the training and the calendar."
+      },
+      {
+        "h": "Vyaire and the Vyntus line",
+        "p": "Vyaire sells a Vyntus family rather than a single device, which matters because you may be quoted against different products in the same building. Vyntus BODY is the walk-in glass plethysmograph booth. Vyntus ONE is a rolling cart that does pulmonary function plus cardiopulmonary stress. Vyntus CPX is a metabolic cart. If a prospect says they are looking at Vyntus, your first question is which one, because BODY and CPX solve completely different problems and only one of them is actually in your lane.",
+        "visual": {
+          "t": "img",
+          "src": "vyntus-lineup",
+          "cap": "Three products, one family name. BODY is the walk-in booth, ONE is a rolling PFT and stress cart, CPX is a metabolic cart. Ask which one before you position anything."
+        }
+      },
+      {
+        "h": "MGC Diagnostics",
+        "p": "MGC covers both ends of the range. At the top is the Platinum Elite walk-in booth, sold on comprehensive body plethysmography, a compact design and unlimited weight capacity. At the bottom is the CPFS/D, a USB spirometer sold as small, portable and USB compatible. Their Ultima series PFT cart tells you something useful about the day to day, because it is photographed with two gas cylinders strapped to its base alongside a monitor, an articulated sensor arm and a keyboard tray. Gas logistics are part of what an office signs up for, and that becomes the whole point of the nitrogen washout comparison later in this module.",
+        "visual": {
+          "t": "img",
+          "src": "mgc-products",
+          "cap": "One vendor, two very different answers: a walk-in booth for the full workup and a USB spirometer for the front line. Neither one is a compact device that does lung volumes and DLCO together."
+        }
+      },
+      {
+        "h": "ndd EasyOne",
+        "p": "ndd Medical is the family you will meet most often in primary care and smaller pulmonology offices, because their units are compact and spirometry is what they do best. Their own capability matrix is the honest map: five products across the top, capabilities down the side, yes or no in every cell. Read it once and you know exactly where an EasyOne stops.",
+        "visual": {
+          "t": "table",
+          "head": ["Capability", "Which EasyOne units have it"],
+          "rows": [
+            ["Spirometry (FVC, FVL)", "Across the family"],
+            ["MVV and SVC", "All of them except EasyOne Sky"],
+            ["DLCO", "Only EasyOne Pro and EasyOne Pro/LAB"],
+            ["MBW and LCI", "Only EasyOne Pro/LAB"],
+            ["Lung volumes by body plethysmography", "No unit in the family"]
+          ],
+          "note": "Source: ndd Medical EasyOne product family capability matrix (Easy on-PC, EasyOne Air, EasyOne Sky, EasyOne Pro, EasyOne Pro/LAB)."
+        },
+        "key": "No ndd unit does body box lung volumes. That gap is the entire conversation in an EasyOne account."
+      },
+      {
+        "h": "Versus the body box",
+        "p": "This is PulmOne's own one page sheet, and it is built to be handed across a desk. The top of the table is agreement, not attack: both devices do spirometry, lung volumes by plethysmography and DLCO, MiniBox+ lung volumes are equivalent to the Body Box, and they bill the same CPT codes. Once the clinical question is settled, every remaining row is about running the practice.",
+        "visual": {
+          "t": "table",
+          "head": ["", "MiniBox+", "Body Box"],
+          "rows": [
+            ["Tests", "Spirometry, lung volumes, DLCO", "Spirometry, lung volumes, DLCO"],
+            ["Lung volumes", "Plethysmography, equivalent to the Body Box, same CPT codes", "Plethysmography"],
+            ["Ease of use", "Easy, 6 buttons start to finish, fully automatic LVM and DLCO", "Requires extensive training, highly technician and effort dependent"],
+            ["Test time", "15 to 20 minutes", "30 to 45 minutes"],
+            ["Patient comfort", "Tidal breathing only", "Claustrophobic, panting maneuver or shutter occlusion"],
+            ["Size", "Compact and portable", "Large footprint, stationary"],
+            ["Cost", "About half the cost of a Body Box", "Baseline"],
+            ["Maintenance", "No maintenance fees", "Parts contract, annual or semi-annual preventive maintenance, monthly flow sensor cleaning"]
+          ],
+          "note": "Source: PulmOne comparison sheet, How does the MiniBox+ compare to the Body Box?"
+        },
+        "key": "Same tests, same CPT codes, equivalent lung volumes. Then half the time, half the cost and no maintenance fees."
+      },
+      {
+        "h": "Versus nitrogen washout",
+        "p": "The washout conversation is different because it is not just about workflow, it is about the number itself. Both approaches give you spirometry, lung volumes and DLCO, but MiniBox+ measures TLC by plethysmography while washout measures it by nitrogen washout, and nitrogen washout underestimates lung volumes in obstruction. That is the clinical row. The rest of the sheet is what the office lives with every day, and the gas and disposables lines are the ones a practice manager will actually feel.",
+        "visual": {
+          "t": "table",
+          "head": ["", "MiniBox+", "Nitrogen washout"],
+          "rows": [
+            ["Tests", "Spirometry, lung volumes, DLCO", "Spirometry, lung volumes, DLCO"],
+            ["How TLC is measured", "Plethysmography", "N2 washout, which underestimates lung volumes in obstruction"],
+            ["Reimbursement", "Higher for plethysmography", "Lower for N2 washout"],
+            ["Ease of use", "6 buttons start to finish, fully automatic LVM and DLCO", "Requires extensive training, technician dependent"],
+            ["Test time", "15 to 20 minutes", "30 to 60 minutes"],
+            ["Patient comfort", "Tidal breathing", "Dry mouth from lengthy oxygen flow, tests invalidated by leaks"],
+            ["Gas tanks", "1, for DLCO", "2, one 100 percent oxygen and one DLCO gas"],
+            ["Disposables", "1 filter per patient", "4 per patient"],
+            ["Maintenance", "No maintenance fees", "Parts contract, annual or semi-annual preventive maintenance"]
+          ],
+          "note": "Source: PulmOne comparison sheet, How does the MiniBox+ compare to Nitrogen Washout?"
+        },
+        "key": "One tank instead of two, one filter instead of four, and plethysmography that does not underestimate in obstruction."
+      },
+      {
+        "h": "How to run the conversation",
+        "p": "You do not win this by telling a pulmonologist the box they trained on is junk. The sheet does not do that either, and neither should you. Lead with what you agree on, that the plethysmography lung volumes are equivalent and bill the same CPT codes, and then let the practical rows do the work. Ask questions instead of making claims, and the prospect will read the right conclusion off their own answers. Then hand over the sheet and let them keep it.",
+        "list": [
+          "How long does a full PFT take in your office today, start to finish?",
+          "Who runs it, and what happens to the schedule the week that person is out?",
+          "How many of your patients struggle with the cabin or the panting maneuver?",
+          "What is on your service contract, and how often does preventive maintenance come around?",
+          "How many gas cylinders are you ordering, and how many disposables per patient?",
+          "Then stop talking and leave the one page sheet behind."
+        ],
+        "visual": {
+          "t": "img",
+          "src": "vs-body-box",
+          "cap": "The official one page sheet. Notice the design: the first rows agree with the competitor, and only then does it move to time, comfort, footprint, cost and maintenance. Run your conversation in that same order."
+        },
+        "key": "Agree first, then compare the practice, never attack the box."
+      }
+    ],
+    "angle": "This module gives the rep the two lines that close: against a body box, same tests and same CPT codes with equivalent lung volumes, in 15 to 20 minutes instead of 30 to 45, on tidal breathing instead of a panting maneuver, at about half the cost and with no maintenance fees. Against nitrogen washout, plethysmography that does not underestimate lung volumes in obstruction, higher reimbursement, one gas tank instead of two and one filter per patient instead of four. And against an ndd EasyOne account, the simplest line of all: no unit in that family does body box lung volumes."
+  }
+}

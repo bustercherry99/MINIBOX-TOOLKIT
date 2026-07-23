@@ -1,0 +1,485 @@
+<title>PulmOne · Outside The Box LinkedIn Program</title>
+<style>
+  :root{
+    --bg:#0A141C; --bg2:#0E1B26; --card:#122431; --card2:#162C3B;
+    --line:#20394A; --line2:#2C4C61;
+    --cyan:#00AEEF; --cyan-soft:#5CC8F5; --cyan-dim:#0d3a4f;
+    --amber:#F5B841; --amber-dim:#3a2f14;
+    --ink:#F3F8FB; --mut:#9DB4C4; --mut2:#6E8798;
+    --disp:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:'Cascadia Code','Consolas',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 28px}
+  .mono{font-family:var(--mono)}
+  .ey{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);font-weight:600}
+  h1,h2,h3{margin:0;text-wrap:balance;font-weight:800;letter-spacing:-0.02em;line-height:1.1}
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  .lead{color:var(--mut);font-size:18px;max-width:64ch}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 78% 8%, #123044 0%, var(--bg) 62%);border-top:none;padding:52px 0 70px}
+  .hero .top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:64px}
+  .hero .top img{height:42px;filter:drop-shadow(0 0 18px rgba(0,174,239,.25))}
+  .hero .tagpill{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan-soft);border:1px solid var(--line2);border-radius:999px;padding:7px 15px}
+  .hero h1{font-size:76px;line-height:.98}
+  .hero h1 .cy{color:var(--cyan);text-shadow:0 0 34px rgba(0,174,239,.45)}
+  .hero .sub{margin-top:26px;font-size:20px;color:var(--mut);max-width:60ch}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:34px;font-family:var(--mono);font-size:12.5px;color:var(--mut2);letter-spacing:.04em}
+  .hero .meta b{color:var(--cyan-soft);font-weight:400}
+  .loop{position:absolute;right:-40px;top:40px;width:440px;height:360px;opacity:.5;pointer-events:none}
+  @media(max-width:820px){.loop{display:none}.hero h1{font-size:52px}}
+
+  /* generic */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:760px){.grid3,.grid2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+  h2.big{font-size:34px;margin-bottom:10px}
+  .kicker{margin-bottom:26px}
+
+  /* competitor cards */
+  .comp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+  .comp .nm{font-weight:800;font-size:17px}
+  .comp .stat{font-family:var(--mono);font-size:12px;color:var(--cyan-soft);letter-spacing:.05em}
+  .comp p{margin:0;color:var(--mut);font-size:14.5px}
+  .verdict{margin-top:20px;background:linear-gradient(90deg,var(--cyan-dim),transparent);border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;padding:18px 22px;font-size:17px}
+  .verdict b{color:var(--cyan-soft)}
+
+  /* franchise cards */
+  .fr{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0;overflow:hidden;display:flex;flex-direction:column}
+  .fr .hd{padding:20px 22px 16px;border-bottom:1px solid var(--line)}
+  .fr .day{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);font-weight:600}
+  .fr .nm{font-size:26px;font-weight:800;margin-top:8px}
+  .fr .bd{padding:18px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+  .fr .row{display:flex;gap:10px;font-size:14px;color:var(--mut)}
+  .fr .row .lb{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);min-width:74px;padding-top:2px}
+  .fr .row .vl{color:var(--ink);flex:1}
+  .fr .cta{margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--cyan-soft);border-top:1px dashed var(--line2);padding-top:14px}
+
+  /* calendar */
+  .calwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg2)}
+  table.cal{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+  table.cal th,table.cal td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.cal thead th{position:sticky;top:0;background:var(--card2);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan-soft);font-weight:600;z-index:1}
+  table.cal thead th .aud{display:block;color:var(--mut2);font-size:10px;letter-spacing:.08em;margin-top:3px;text-transform:none}
+  table.cal td.wk{font-family:var(--mono);color:var(--mut2);font-size:11.5px;white-space:nowrap;background:var(--bg2)}
+  table.cal td.wk b{display:block;color:var(--ink);font-size:13px;font-weight:700}
+  table.cal td .t{color:var(--ink);font-weight:600}
+  table.cal td .t.pay{color:#7FE3C4}
+  table.cal tr:hover td{background:#16293700}
+  table.cal tbody tr:nth-child(even) td{background:rgba(255,255,255,.012)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--mut2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  /* workflow */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;counter-reset:s}
+  @media(max-width:820px){.flow{grid-template-columns:1fr 1fr}}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 18px 20px;position:relative}
+  .step .n{counter-increment:s;font-family:var(--mono);font-size:12px;color:var(--bg);background:var(--cyan);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:12px}
+  .step .n::before{content:counter(s)}
+  .step h4{margin:0 0 6px;font-size:15px;font-weight:800}
+  .step p{margin:0;font-size:13px;color:var(--mut)}
+  .gov{margin-top:18px;background:var(--amber-dim);border:1px solid #5a4a1f;border-radius:12px;padding:16px 20px;font-size:14.5px;color:#F0DDA8}
+  .gov b{color:var(--amber)}
+
+  /* mock slide */
+  .mock{aspect-ratio:4/5;border-radius:16px;border:1px solid var(--line2);overflow:hidden;position:relative;background:radial-gradient(120% 80% at 80% 0%, #12354b, #0a1620)}
+  .mock .in{position:absolute;inset:0;padding:30px;display:flex;flex-direction:column}
+  .mock .lg{height:26px;width:auto;align-self:flex-start;object-fit:contain}
+  .mock h3{font-size:40px;line-height:1.02;margin-top:auto;font-weight:800}
+  .mock h3 .cy{color:var(--cyan);text-shadow:0 0 26px rgba(0,174,239,.5)}
+  .mock .cap{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan-soft);margin-bottom:14px}
+  .mock .bar{position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--cyan)}
+  .comparenote{font-size:14.5px;color:var(--mut)}
+  .comparenote b{color:var(--ink)}
+  .comparenote .old{color:var(--mut2);text-decoration:line-through}
+
+  /* metrics */
+  .mets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:760px){.mets{grid-template-columns:1fr 1fr}}
+  .met{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .met .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2)}
+  .met .v{font-size:15px;margin-top:8px;color:var(--ink);font-weight:600}
+  .met .v .cy{color:var(--cyan-soft)}
+
+  ul.clean{list-style:none;padding:0;margin:14px 0 0}
+  ul.clean li{padding-left:26px;position:relative;margin-bottom:10px;color:var(--mut);font-size:15px}
+  ul.clean li::before{content:'';position:absolute;left:2px;top:9px;width:8px;height:8px;background:var(--cyan);border-radius:50%;box-shadow:0 0 10px rgba(0,174,239,.6)}
+  ul.clean li b{color:var(--ink);font-weight:600}
+
+  footer{padding:40px 0 70px;border-top:1px solid var(--line);color:var(--mut2);font-family:var(--mono);font-size:12px}
+</style>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="top">
+      <div style="background:#fff;border-radius:14px;padding:12px 18px;align-self:flex-start;box-shadow:0 0 26px rgba(0,174,239,.2)"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAwMAAAEUCAYAAAB3buopAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAhOUlEQVR4nO3deZSleV3fcYZNFhHBgEFQBAknGJRFcUQWx4RlIAx7yTAb3VV36x4aaBiQbZIG5BwTETASCIoB5xgIw1TPsDtsI0SUJKwSDIhLosgBTqaaYRMZh8qvZrqb3/N9njv11K3nuc9T975e53z+6VN173OfunXv8+5zquoGNwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJo0Hg+fmW84HL4gLv37i/KNRqMXt7V0+y8Je1F5g0PFjU+PSw/tlDCWQ+Hrnp4vz6tY4Tnf8fFCPxy96u7FbZxf3rGLi9v4dGnrxy4q7IrNm5U20/F9/Z6lrW/8cdjHSzt67FWFXXrVk0u7ePPmhQEsEzHAghEDMAsxIAaA5SQGWDBiAGYhBsQAsJzEAAtGDMAsxIAYAJaTGGDBiAGYhRgQA8ByGo9Hmwu6bxdXvijs+tzTvJWVlRvlq/Nc6fqYoXVHv36PwtaPHS3t6LHNVnbpxhmlzWJ94w9Ka+w4N75c3LGXlgawqHpw0S4GaIwYgApiQAwATNODi3YxQGPEAFQQA2IAYJoeXLSLARojBqCCGBADANOki6FrwkoXS6PR6JfyDQaDn48bj8f3b2Lp9k/Nl/7twXHp31fCfjOuZjCs5+v6a8HuHTly5Ib5pjyfv5qv62OGRh09dl5p68euKaytC/+qrR8blDbb4/poxeb3OOJ9r2/cuTSAvUgMiIFFIgZYemJADADshBgQA4tEDLD0xIAYANgJMSAGFokYYOmJATEAsBNiQAwsEjHA0hMDYgBgJ+pcNHd9jLNIF3m3zjceD/+kvHiROPytuK4fBzsjBlg6R7+6UtxcL5C331uufFhps1i/8qLSunxc68c2SvOXjIG9SAyIgUUiBlg6YkAMAOyGGBADi0QMsHTEgBgA2A0xIAYWiRhg6YgBMQCwG3Vi4PDhlZvn6/qYZxEvEreWLvaP5at67IPB4C75un4cXD8xwEJb/9adSuv6Yn+7vfPv71zaLI4ee1rFun98hW28pzCAvUAMiIFFIgZYaGJADAA0TQyIgUUiBlhoYkAMADRNDIiBRSIGWGhiQAwANE0MiIFFIgZYaGJADAA0bVlioEq6EHxuvurHP7wgX9fHzPUTAyy09WOvL63zC+CwS/7f3xTWlHdd/bDSjm5sFteDx1+MgweWBtA3YkAMLBIxwEITA2IAoGliQAwsEjHAQhMDYgCgaWJADCwSMcBCEwNiAKBpyxwDw+HwIfmmxMCb83V9zFw/McBCW9/4ammdX/CGvf3bryysKVds3qy0+BeAu37s5Rj4ndIA+kYMiIFFIgZYaGJADAA0TQyIgUUiBlhoYkAMADRNDIiBRSIGWGhiQAwANE0MiIFFIgZYaGJADAA0bZljYDwe37+4ygvHj+Tr+pi5fmKAhXL02L3CenCBu83eu3lWYRWee9a/vk2+w/vOnMTVOj9v+4fLCuv6scetb3y4NIC+EQNiYJGIARaKGLh+YgBg98SAGFgkYoCFIgaunxgA2D0xIAYWiRhgoYiB6ycGAHZvmWNgMhmclm/K439bvrbue2vpwvRIvrW1tbvFNXX/TRkMBj+TLz6GrQ2Hw3vna/N4FiEG0jEdiBuPhy/KV/N2zolLn/uWfOnf/qK84efypY97XVz6Oj4qX5vnI93+4/Kl+/+9uHScn6+xN+UbjwfnxaW7OyWsW0ePPT6s+wvc4sXud0v70OYdCqvw/LMeee98k+HqVXFHVlZumq/y/Fy+ebiwrs9H+fx8obTNzVMKm9HKysqN8qXvg38Tl76fn5Vvyk0VnvPj9CJZ3vCd+apeN9K/fzZf+rdXxaXvsUfmm/Wx9118z9tafA1Pr0GfKK90Xi+PS+ftUL79+/ffLq7rx88eJAbEwG6IgeaJgSIxIAbEQJkY6C8xwJ4jBsTAboiB5omBIjEgBsRAmRjoLzHAniMGxMBuiIHmiYEiMSAGxECZGOgvMcCeIwbEwG6IgeaJgSIxIAbEQJkY6C8xwJ6zzDGQviGHxVVeOL44X4P3XbrAivedXkDOjGvq/puSzsmF+aqfQ8ML8rV5PIsRA8PvxlU8N+4XV35z3v57O+2aitX5vHBOhx+OO3LktBvnq3qsq6urP5IvPT/+sryZHseOH8Pxx/F3+SaT1XvGzfXJ0PcYOPq1T5ZWw3POedzZ+caT8Wbc8886/eH5Km/ois27Fba+sVlatzHwldIu3rxRYTM6fPjwzfNNeT5/K1/V8zm9Vnwn35xfN94fd+jQoe/LN+v5mad03l6RbxevP/+Yb/bbKf4nUNfnhz2gzhNLDIiBacRA88SAGDhJDIiBKcRAf4gB9rw6TywxIAamEQPNEwNi4CQxIAamEAP9IQbY8+o8scSAGJhGDDRPDIiBk8SAGJhCDPSHGGDPq/PEWuAY+Gxxld9U983X1H2PRoNfjSvff/GHrfr4A1ej0g+6ls9hulBdzdfm8SxCDKTn4p/E1XyTuLq4wWPi0uO9Sb46x5O+ZnePS8fwu/mqj2d4Rb7JZO0+celz/z5f9e0Uf5jx0KGzfyCuzuOYTCZ3zFf1A5fbn9PR1TFgdvfV3salG2cU1vnFf9i7rnlxaTWcP9j3nnxVX/fnnPPY1+ardb4u+9rnS+s2Bv66tIbEi+b0/fO1il2Zb8rrxl8XN3hoXHxdrXN8VT9Em15zLs435XXj0/maOl9NSe/VL4+ruKgv/efIYDB4UL4693XuuefeMi6dt6fkqxcI48fHtX2e2GPEgBjYDTHQPDEgBk4SA2JgCjHQDTHAQhIDYmA3xEDzxIAYOEkMiIEpxEA3xAALSQyIgd0QA80TA2LgJDEgBqYQA90QAywkMSAGdkMMNE8MiIGTxIAYmEIMdEMMsJDqPJG6PsYmpG/G346r+AZ+b1x7xyMG2rAIMZCO6QNxFY/hm3HxTWPOx/zquHpvUqXnSik85vw4npFvysXKm/O1ekCXHjutsK4v/uNv6vng5j1KC46cccYt4lLVfSdf1XmeDFe/kK/W+XrP5q+VdnTrNwrlm+v5+p+lNaQcA6MvxlW8x30lrqnjmcU4/GXj61Z6H1yLm+cxpgv3n8835bXrg/nmeXzxPyeu+61s2/+mp/T8uEW+eR4zPSQGxMBuiIHmiQExcJIYEANTiIH5EAMsBTEgBnZDDDRPDIiBk8SAGJhCDMyHGGApiAExsBtioHliQAycJAbEwBRiYD7EAEuhzht0x38R8JS4yWTy4/lG4Qdqju9j+aq/GYafz7eysnLTuLYelBhox2LEQPmHz0oXSpPhL8d1ecxV3zt13pDSm/9L8nX5GKqkY9yoWOExHDhw4DZxjR3A+rfuVFjXMXDZNz5UWA3PPvvxT4qr874zmowLu/DMh54aV7qzD23eobT1rYvybHONgWNvL60hdX6AuOK1+BfimjqeWRw4sHrXuIrXiI/GzfMY03n8VL4p7yk7/sUMbUpf13G+Ka+9T8/X9THTMTEgBnZDDDRPDPSHGBADYqA9YqAdYoAdEwNiYDfEQPPEQH+IATEgBtojBtohBtgxMSAGdkMMNE8M9IcYEANioD1ioB1igB0TA2JgN8RA88RAf4gBMSAG2iMG2iEG2LHtXjwWZemxvSludXX1Vvnme97FQBsWJAY+td0b0P79+28X1/VxR+ncfiRf1ddibW3tbvm6PuYovUn+Rnml5/cj4lo7oKMbXy5vjhe3l2+eWVgNB4arb42b5TX88HlPemVcrXP2tm+/r7D5BtQbSmtIjIE657Cp+27TqMZfJW/r4nvKf2rEa4lPxDV1/02J52fKNdH/ytf1MdMxMSAGdkMMNE8M9IcYEANiYL7EwO6JAXZMDIiB3RADzRMD/SEGxIAYmC8xsHtigB0TA2JgN8RA88RAf4gBMSAG5ksM7J4YYMfSk+Ab+aZ84/1F2P+OSx/3502sfF/DP6vYJfnSm+/huPS5P5Wv6/MciYF2LEgMlJ7z8THEkJ13zNaRjvut+aq+FvGXAXR9zFH6njtUXnwMc/xh7qMbnyyvpQvZS678Rmk1/NuzH/ED+Ybj0XfjZvwPnSvL+5mb5Ks8oA9sPryw9Ss3S2vrHK5/9VdKa0idGBj16K8N15Vek/8035TXjdvna+q+x+Pxg8srvS93+heRZ5G+9l+K24uhSIvEQDfEQDvEQH+IgRaIATFwnBgQA3WJAbYlBrohBtohBvpDDLRADIiB48SAGKhLDLAtMdANMdAOMdAfYqAFYkAMHCcGxEBdYoBtiYFuiIF2iIH+EAMtEANi4DgxIAbqEgNsq86LcNfHuIjEQDsWIQbSMX6mYvEx3Dqu6+OO0hvO2/NN+Vr8RL6ujzkaj4fPLK/0ffrEuNYOaH3j1aU1dvG6Udw7rz5SWg1P3//kl+Sb5cK/8rkyHpf2vLMf/ZR8tc7hpd/8QmltxcBlV51aWkNqxsDf5mvqvtuUXgc+lq/qcQ0Ggx/O1+B9nxNXvv/ybxibTNYekC993gO7XMXxfDHOdR4FYqAbYqAdYqA/xEALxIAYOE4MiAExQGPEQDfEQDvEQH+IgRaIATFwnBgQA2KAxoiBboiBdoiB/hADLRADYuA4MSAGxACNqfMivLKycqN8XR/zIhAD7ViWGNi3b98PxnV93FE6t+/IV/W16PtfIE7H/ay4iuf3E+JaO6D1q04vrakL10uu/FphMxqOJ1/N11QMVG0yWvtMvloH+L7N00tr6geK16+8qrCPbt6ktIbUi4HiBWBT992mdHH9yeIqvu4t/QBxfK/aWpvP3z6tqXPIHlXnSSIGmicG2iEG+kMMtEAMiIHjxIAYaHJNnUP2qDpPEjHQPDHQDjHQH2KgBWJADBwnBsRAk2vqHLJH1XmSiIHmiYF2iIH+EAMtEANi4DgxIAaaXFPnkD2qzpNEDDRPDLRDDPSHGGiBGBADx4kBMdDkmjqH7FF1niSHD6/cPF/Xx7wIxEA7xEB/iIEWbG6eUtrRjS8WV+eidaO8d//jwcJqePr+J58TN88LmNFkXNhzn3T6/eJqndejV32quBlj4NJjLy6sRWKgqxgYvq688ePzpXO90qela4fHxKXH9oh8TZ1D9igx0A0x0A4x0B9ioAViQAwcJwbEgBigMWKgG2KgHWKgP8RAC8SAGDhODIgBMUBjxEA3xEA7xEB/iIEWiAExcJwYEANigMaIgW6kb76XxpXP/fj0uK6PO0rHPc4nBnZPDPRH72KgyqXHnlBYrRj46l+VNoP0Hf+luHnGQNzBweqfxdV6IFds3rOwS67cLK3Oeb1885aFtUgMNB8D6RydFVdxTksX203dP3RGDHRDDLRDDPSHGJgTMSAGxEAjxABLSwx0Qwy0Qwz0hxiYEzEgBsRAI8QAS0sMdEMMtEMM9IcYmBMxIAbEQCPEAEtLDHRDDLRDDPSHGJgTMSAGxEAjxABLSwx0o04MxJ/27+NP/KcX62FxYmC3xEB/7IkYiN76jZeV9+3LC/vw5k+UVsNT157y7/J1eeFf+VozmZR2wTlP3J+v1jl83+bTS7vsm5cX9var/1VpcyQGWomB+8aV73/4xrim7h86Iwa6IQbaIQb6Qwx0RAyIATEwEzHA0hID3RAD7RAD/SEGOiIGxIAYmIkYYGmJgW6IgXaIgf4QAx0RA2JADMxEDLC0xEA30gvI88qLL3jDs+O6Pu5oNBq8PN+UN6T9+do8njoxkLaRr83jmYUY6I89GQMNeeY5T7pX3HByYDNf1xf/tQLhwIHCLjj3YbeP6/pcz0IMNB8D1cdTOqffiWvz/mEuxEA3xEA7xEB/iIG9TQz0mxgQA9AYMdANMdAOMdAfYmBvEwP9JgbEADRGDHRDDLRDDPSHGNjbxEC/iQExAI0RA90QA+0QA/0hBvY2MdBvYkAMQGPEQDfG4/GDy4svOsM/jOv6uKN0TF/K13UMROn+r4lLx/kP+eZ5PHWIgf5Yphg4fN5ZP5dvbTK5Kq7rC/tG4mA8+b9xh896wl3zdf21qEMMzCcG0nvEJfkqn1PD4Zn52jyeWayurt4qrutjomfEQDfEwHyIge6Igb1FDIiBPhADzRMDbEsMdEMMzIcY6I4Y2FvEgBjoAzHQPDHAtsRAN8TAfIiB7oiBvUUMiIE+EAPNEwNsSwz0R3qh+dt81V+PwXn55nx8F8XVef50GQPpGD8eF4/vwIHVu8bN8xgjMdAfezEGjpx22o3jnnHeyhPzHRiuXhI3mkw283V90T7Pxcd+aP85b4w7fN4THpKv6jzP8+ssBuYTA+l16c756j2nxvePa/MYo/S1fmxxw+/GpdepF+Sb5/HRQ2KgP8RAK8csBjoiBrohBsSAGGiOGGApiIH+EAOtHLMY6IgY6IYYEANioDligKUgBvpDDLRyzGKgI2KgG2JADIiB5ogBloIY6A8x0Moxi4GOiIFuiAExIAaaIwZYCmKgP+KFUc0L7f8SFy9MBoPBT8elf79f2Gpcuv0/D6s4huEfFVcZMGv55nlO0/l4WFz5HBZ/u9B1K10E7o+bTNYekK+pY07n8bPl7b0YSMf57rCqN81/lq/rY47S1/nZcRXP7yfGdX3cUXyupsfxp3FdX5D3bB+Mm0xW75mv669pvRgYfiVf18dcR3q9+3Rx3cZA+fjK3+/1nlPD1+dL33MrcfH7NL1XPygu/odguu33VazG8XT3H4v0UJ0njRiYDzHQPDHQnbEY6A0xsOOJgY6IATFAB+o8acTAfIiB5omB7ozFQG+IgR1PDHREDIgBOlDnSSMG5kMMNE8MdGcsBnpDDOx4YqAjYkAM0IE6T5r0JL1Fvq6PeVmkF4P7xKXz/7F8bb4hxgvkFAi/EDcKP6g05fnztHxdn9d0DM/IN/v5KX4tmju+4bG4eN8pFm8b19T9NyUd9//IV3UO05vbPfJ1fcxR+rq+OC4+hvR9cG5c18c9ixRjZ+QbhR8AH133Q+BXh3V90V5nXy9u+Jbyin8NvuuvRR379u27Wb4656LrY64jHeeXw6pee++Qr/tjHjwyX3q9+1zcPJ/z6f7elS+9tt4lrutzRs/UvOgRAx0QA+0QA/MhBvYWMSAG+mAsBpp47xYD7EzNix4x0AEx0A4xMB9iYG8RA2KgD8ZioIn3bjHAztS86BEDHRAD7RAD8yEG9hYxIAb6YCwGmnjvFgPsTM2LHjHQATHQDjEwH2JgbxEDYqAPxmKgifduMcDOpDeuR223I0eO3DBf18fM96Q3rp8tbzgMe2Fc+roeDnt4XJ37P3hw/4/mSy+Ej4mLH9P2Odmp+NuytpYe/0PCHheX3oTum6+p40m3/Ytx8ULtyJHTbhzX1P03peI3Vj06ru//0VD116nLz+99/zSu6+Nuy2QyuWO+9Fx8Ulz6Ol4Ydml5ww8VN/pI3Dj8Np/0bxdX7Ln54m9S29r555/3Q/m6PodNie/LU96/C69jXR9zHTHM4mvf1lZWVm6ar+tjriM9P0/NV/E+PYzP5/Rvzyxv8OR86eN+LK7rx8oeJAb2NjGwe2KgHWJg8YiB/hADYkAM0BgxsLeJgd0TA+0QA4tHDPSHGBADYoDGiIG9TQzsnhhohxhYPGKgP8SAGBADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsMBGo9FN8q2trd25YrfN19R9r66u3iru4MH9P5ovHdOPxcXPSTd1Sly8nfPPP++H4lZWVm6UL37O1vbv33+7fE099joGg8Gd4tLj/+f55nk8yyQ9H26a78CBA7eJa+q+jhw5csN8Vc/VG5Sf47136NDZP5Cv6rXl8OGVm+c7dOjQ98XFzzl48OD3x8X7jt+3W4uvdV2ck75Ij//WcfE8x/O17OcMYGGJATFAmRjYPTHQX2IAgJPEgBigTAzsnhjoLzEAwEliQAxQJgZ2Twz0lxgAWFLD4fBRcePx6IP5RqPhb5U3ekNxw/9U3vZvGunfLyxu+Pa48Xj4ynxV95WO+yH5zj333FvGpdt/db50W79f3uh9+dLHvbZiz87X5tcnHdN/CHtjXMXXp3QOY9C0ecyzmEzWHhCXzu0d8nV9jOkYfipfOvfPi2vqvmIMVH3d2wqRNqXz9tiwV1XsHcUN31Ve8XPi9//Wyvc9fH9c+ri75+vinHQlPd6n5kvPqcviKl5bSl+L9HHDfF0/LgB2SAyIgT4QA0ViQAy0TQwAcC0xIAb6QAwUiQEx0DYxAMC1xIAY6AMxUCQGxEDbxAAA1xIDYqAPxECRGBADbRMDAFwrvXj/ennFC+IbVPxmnvibTdLn/feKbXuhlN7IPxB2YVy8MDpy5LQbx1UcY0n8nPQG+Itx5Qvp8m/PqBM5s0i39bTyhn+Xr85vTUkf9wcV+8N81eeneJ7jb3XZWp3HEX/zS9XH7Nu37wfzpefZH5c3/LV8o/Bbk0Y1f3NS+SJ+8NC4AwdW75qv6nbiuZhMJneMq3M8Fcf3wIqdVVz5axp/M0+d+6qKrsFg8KB8szyGuuJv67pBxWtLerwvK64c//Fzyq8RR24Y77sqBtLX/sn50uP/l3FNPfZ0W3fJVydg2pQe/0XFjc6Pi59T9dvV0sd9MV8MrLqRNR6Pf7K48vdpnduJry3pmG4RV+d20tfoh/PV+RyAPUkMiIHvnR8xIAbEgBgQA1vEALA0xIAY+N75EQNiQAyIATGwRQwAS0MMiIHvnR8xIAbEgBgQA1vEALA00kXWi+LSi+V/zlfvdgaHyhu+Od+U+z9a3OCJcc0+4u+JF4nXbfjb+dq67ynH84aK7c9X53biRcfW0rn9aL4p9x/Px6Vx8XNWV1d/JC7d/mvyTTnGn86XzvVflTf6SL50W8+Mi7db9THptt5U3OgVcenjfiXflPNzar70ca+Pq/P1SZ/7O2EXV+zVYf+tYttGaboQG+crXwAOL4qPoSrI6zyupqRjuCCs9Bo14+1eEVd+jg9/t2Lx+bPtfwikc/3ouPS5by1u8PLyiq+9VX99efdn+DoV3wfPiIvBWb5gH/9k+rj/mq/qNaHiazGsWPz6vCYunbdL8sUL/63FQE/H9LG4iv8Yelxcur/fy9fUeQfoHTEgBrL7FwNiQAyIATEgBoBlIgbEQHb/YkAMiAExIAbEALBMxIAYyO5fDIgBMSAGxIAYAJaJGBAD2f2LATEgBsSAGBADwDJJL4zPiksvfO8pbnyvuPgbN9LH/WV5xd/UUX3/xTfe+JuMjv8V4CNhz49bWVm5ab6aj/2+5RWPp9mzff3SOfuPcelN6dx8dW4n/mXarY3Cb0mq+rx0+/fOFy/GtxY/p+q3i6Tjfku++Btkjv8WmYJRxV+5Ts+Zx+Srdw5HV5c3fGG+OrdTfduDRxZX/EvdW4ufU/XbadJj+1y+OvcdL7i2Fi9o0r/9k7j0eD+ZL17cbS1drN0qX3oc18TN8tthZpWO+7nFDX41bsbbLQVVjNLqzyv+Fqf0+vfguO0+Z2vxYnPKfX2juNFz4mZ57NX3VTyn8bmytYrvy2PlFcO16r7iczXd9qfj6nwt0nPxbcUNnx5X/pxSXF5Qfo8rvmZtrc7xACwEMSAGThAD2922GBADYkAMACwYMSAGThAD2922GBADYkAMACwYMSAGThAD2922GBADYkAMACyYdFGzFpde4D+fbxz+Euz42r8GW/xB2zovytX3X/whrbTfj5tMhr+cL73hrMRV/EXibfUtBuJ9X7fiX6KtczuD8Jczt5bO4x/lq/q8yWTtPvnSm+2742re1+vy1YmBKSFU+AHMOo89fdzD40bhhzLTbb8xLl6AVt12vACMgVUVWem2DsSlY3ppvqr7qrioL31fVHxO1fP5/+RL93e4Yi/IN674wej4F8frfC1m1WIMXF6xwg/NT/m8wg98p6/9GXHxc8bhlycc30vCXlixwuth+no8Im6Wxz7lccUfIK74C+jFv9w7mUxuHxeDOH3cY+PiX4euOj91jnkcftA/fi9N+34q385oM19VbO/u7ALsIWJADJwgBsSAGKj8PDEgBgAWlxgQAyeIATEgBio/TwyIAYDFJQbEwAliQAyIgcrPEwNiAGBxiQExcIIYEANioPLzxIAYAFhc6UXvZeVt/5tnGrz/D+RLb6yjuBbv+9S4dHfr+dq67ynHE39rUtrw4/lq3s6ryht+Kl/V56U30n+RLz3+z8TFz5nyF4gLv6mj3m8TKv8V3nQMZ+bb+RmtFv9C6dbixUHVb91Jz8WfzZfO44fj4n2VfwPR4JHp4z6Rr+oY9+/ff7t8de4rPY4fj4tfv3Rebx3X1HltSry4S8f4m3Gz3G78Xtpait6fy1f1eePwV9KHFX+ttuK+3h+XnjOn55vlMTRpFP7aedV/DNW7neHf5Evn46lxFZ/zibjJZPWe+aruK53/y/JVxW38nKrjif85kvbO8oq/QW/nZxhgjxADYuAEMSAG+kAMzIcYEAMA1xIDYuAEMSAG+kAMzIcYEAMA1xIDYuAEMSAG+kAMzIcYEAMA1xpX/ODvKPzVyTbvfxT+euVkMtwX19Z9xzefraVj+Pf52rrvKvv27btZ3Dj8VcxR9Q8Zh4ul4YfKK/5gadX9V/xF2zeULxiGr9lu6f4uylfnsafb3h83Lv8l6tIP41bczlPi0jH9Rr5R+QcnXzEOPyBfFTAxBsYVP2hbPqfFH5ys+uHJdP+vrViMuUvi4u1OOa/hh3HL0RX/MyBdBE7i6nwNm5LOycF8o4q/kj7j7ZZ+cDwGcNXnxfOTPu4hcRWfc055w/fmS/f/63Hp4y7Md/Dgwe+Pm+WxTzkfhb/Km+7vHRWL/1F0UXnF52q9XxhQfo7F/4SqisD4vbO2tnbbuPgDzlUhXf6eLP618+tWfF1r6rwD9I4YEAMniAExIAbKxIAYEAPAQhMDYuAEMSAGxECZGBADYgBYaGJADJwgBsSAGCgTA2JADAALTQyIgRPEgBgQA2ViQAyIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFtH/ByipksHIQhd7AAAAAElFTkSuQmCC" alt="PulmOne" style="height:54px;width:auto;display:block"></div>
+      <span class="tagpill">Marketing proposal · Q3 2026</span>
+    </div>
+    <div class="ey">A 12-week LinkedIn content program</div>
+    <h1 style="margin-top:16px">Outside <span class="cy">The Box</span></h1>
+    <p class="sub">A named, themed, pre-approved posting program that turns the MiniBox story into a weekly habit. You approve it once, then it runs on autopilot for a full quarter.</p>
+    <div class="meta">
+      <span>3 posts / week &nbsp;·&nbsp; <b>36 posts</b> mapped</span>
+      <span>Tue &nbsp;<b>Payday</b></span>
+      <span>Wed &nbsp;<b>Grand Rounds</b></span>
+      <span>Fri &nbsp;<b>The Bottom Line</b></span>
+    </div>
+  </div>
+  <svg class="loop" viewBox="0 0 240 210" fill="none" aria-hidden="true"
+    style="filter:drop-shadow(0 0 12px rgba(0,174,239,.5))">
+    <g stroke="#00AEEF" fill="rgba(0,174,239,0.06)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <!-- trachea -->
+      <path d="M120 22 L120 62" fill="none" stroke-width="6"/>
+      <!-- tracheal rings -->
+      <path d="M114 34 L126 34 M114 44 L126 44 M114 54 L126 54" fill="none" stroke-width="1.4" opacity=".7"/>
+      <!-- bronchi -->
+      <path d="M120 62 C 112 70, 104 74, 96 82 M120 62 C 128 70, 136 74, 144 82" fill="none"/>
+      <!-- left lung -->
+      <path d="M96 82 C 76 78, 58 92, 52 116 C 47 138, 52 164, 68 178 C 82 190, 100 182, 103 164 C 106 146, 105 110, 103 94 C 102 86, 100 84, 96 82 Z"/>
+      <!-- right lung -->
+      <path d="M144 82 C 164 78, 182 92, 188 116 C 193 138, 188 164, 172 178 C 158 190, 140 182, 137 164 C 134 146, 135 110, 137 94 C 138 86, 140 84, 144 82 Z"/>
+    </g>
+  </svg>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The opening</div>
+      <h2 class="big" style="margin-top:12px">What the category is doing, and isn't</h2>
+      <p class="lead" style="margin-top:10px">I read the feeds of the biggest names in PFT before writing a word. The takeaway is encouraging: the bar is low, and the most valuable ground is unclaimed.</p>
+    </div>
+    <div class="grid3">
+      <div class="comp">
+        <div class="nm">ndd Medical</div>
+        <div class="stat">~6 to 11 reactions · 3 to 4 reposts</div>
+        <p>Educational "swipe-through" carousels on spirometry basics. Solid format, modest reach. Already fishing the same "are you using your data fully?" angle we own.</p>
+      </div>
+      <div class="comp">
+        <div class="nm">MGC Diagnostics</div>
+        <div class="stat">~20 reactions · 5 reposts</div>
+        <p>Polished dark webinar graphics with a speaker headshot, which is their best format. Professional, but one-off events, no recurring hook to bring people back.</p>
+      </div>
+      <div class="comp">
+        <div class="nm">The field, broadly</div>
+        <div class="stat">product news · trade shows · jobs</div>
+        <p>Announcements and booth photos. Almost no reimbursement help, no ROI math, no specialty-specific teaching, no reason to follow week to week.</p>
+      </div>
+    </div>
+    <div class="verdict">
+      Nobody is running a <b>named program that posts on the same days every week</b> to help a practice test more and get paid for it. That opportunity is wide open. It's our chance to bring real value to the customers we already have and to new ones, and providing value at any level builds rapport and builds confidence. That's exactly what we're looking to do.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The idea</div>
+      <h2 class="big" style="margin-top:12px">Three franchises. Three fixed days.</h2>
+      <p class="lead" style="margin-top:10px">Each weekday owns one job and one audience, so followers learn to expect it, and the MiniBox is the natural answer, never the sales pitch.</p>
+    </div>
+    <div class="grid3">
+      <div class="fr">
+        <div class="hd"><div class="day">Tuesday</div><div class="nm">PFT Payday</div></div>
+        <div class="bd">
+          <div class="row"><span class="lb">Job</span><span class="vl">Getting paid: codes, coverage, documentation.</span></div>
+          <div class="row"><span class="lb">Audience</span><span class="vl">Practice owners, office managers, billers.</span></div>
+          <div class="row"><span class="lb">Feeling</span><span class="vl">"I'm leaving money on the table."</span></div>
+          <div class="cta">CTA · comment a keyword → DM the billing guide</div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="hd"><div class="day">Wednesday</div><div class="nm">Grand Rounds</div></div>
+        <div class="bd">
+          <div class="row"><span class="lb">Job</span><span class="vl">Clinical teaching, one specialty at a time.</span></div>
+          <div class="row"><span class="lb">Audience</span><span class="vl">Rotating: allergists, cardiology, PCP, pulmonology.</span></div>
+          <div class="row"><span class="lb">Feeling</span><span class="vl">"I didn't know PFT did that for my patients."</span></div>
+          <div class="cta">CTA · save + tag a colleague in that specialty</div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="hd"><div class="day">Friday</div><div class="nm">The Bottom Line</div></div>
+        <div class="bd">
+          <div class="row"><span class="lb">Job</span><span class="vl">The business case: ROI, workflow, the device.</span></div>
+          <div class="row"><span class="lb">Audience</span><span class="vl">Decision-makers weighing in-house testing.</span></div>
+          <div class="row"><span class="lb">Feeling</span><span class="vl">"This could actually pay for itself."</span></div>
+          <div class="cta">CTA · comment DEMO → sales follow-up</div>
+        </div>
+      </div>
+    </div>
+    <p class="comparenote" style="margin-top:18px">Why rotate Wednesday's specialty instead of "allergists every week"? One audience every week runs dry fast and bores the rest of the feed. Rotating keeps every specialty seeing themselves roughly monthly, and quietly proves the MiniBox serves the whole building, not one department.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The plan · 12 weeks</div>
+      <h2 class="big" style="margin-top:12px">Every post, mapped for the quarter</h2>
+      <p class="lead" style="margin-top:10px">This is the whole runway: 36 topics, pre-titled and slotted. Approve the grid once; the decks get built and queued against it.</p>
+    </div>
+    <div class="calwrap">
+      <table class="cal">
+        <thead><tr>
+          <th style="min-width:96px">Week</th>
+          <th>Tue · PFT Payday<span class="aud">reimbursement</span></th>
+          <th>Wed · Grand Rounds<span class="aud">clinical, rotating</span></th>
+          <th>Fri · The Bottom Line<span class="aud">ROI / product</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="wk"><b>Week 1</b>Jul 14</td><td><span class="t pay">The CPT codes for a complete PFT, in plain English</span></td><td><span class="t">Allergists: why every asthma patient needs a baseline PFT</span></td><td><span class="t">Referred-out PFTs = revenue walking out your door</span></td></tr>
+          <tr><td class="wk"><b>Week 2</b>Jul 21</td><td><span class="t pay">3 documentation mistakes that get PFT claims denied</span></td><td><span class="t">Cardiology: the dyspnea that isn't the heart (DLCO)</span></td><td><span class="t">The room math: what a body-box room really costs</span></td></tr>
+          <tr><td class="wk"><b>Week 3</b>Jul 28</td><td><span class="t pay">Spirometry vs. full PFT: what each one pays</span></td><td><span class="t">Primary care: catching COPD before the first flare</span></td><td><span class="t">One desk vs. one lab: the MiniBox footprint</span></td></tr>
+          <tr><td class="wk"><b>Week 4</b>Aug 4</td><td><span class="t pay">DLCO reimbursement: the add-on practices skip</span></td><td><span class="t">Occupational medicine: baseline lung function for exposure-risk workers</span></td><td><span class="t">Comfort = data quality = fewer repeat tests</span></td></tr>
+          <tr><td class="wk"><b>Week 5</b>Aug 11</td><td><span class="t pay">The diagnosis codes that support medical necessity</span></td><td><span class="t">Allergists: spirometry + bronchodilator in-clinic</span></td><td><span class="t">The qualifying patients you already see each week</span></td></tr>
+          <tr><td class="wk"><b>Week 6</b>Aug 18</td><td><span class="t pay">Bronchodilator response (94060): when to bill it</span></td><td><span class="t">Pulmonology: when spirometry alone misses restriction</span></td><td><span class="t">Running PFTs without a dedicated lab tech</span></td></tr>
+          <tr><td class="wk"><b>Week 7</b>Aug 25</td><td><span class="t pay">In-office vs. hospital outpatient: the pay gap</span></td><td><span class="t">Cardiology: pulmonary risk before cardiac surgery</span></td><td><span class="t">Same-visit testing that keeps patients in-house</span></td></tr>
+          <tr><td class="wk"><b>Week 8</b>Sep 1</td><td><span class="t pay">Bundling rules: which components can't share a day</span></td><td><span class="t">Primary care: the chronic-cough workup</span></td><td><span class="t">What "complete PFT" includes, and why ROI needs it</span></td></tr>
+          <tr><td class="wk"><b>Week 9</b>Sep 8</td><td><span class="t pay">Medicare vs. commercial: what changes for PFT</span></td><td><span class="t">Allergists: tracking lung function on biologics</span></td><td><span class="t">The no-booth advantage: the patients booths lose</span></td></tr>
+          <tr><td class="wk"><b>Week 10</b>Sep 15</td><td><span class="t pay">The annual COPD follow-up test you're missing</span></td><td><span class="t">Oncology: baseline PFT before lung-toxic chemo</span></td><td><span class="t">Turnaround: in-house results vs. weeks of waiting</span></td></tr>
+          <tr><td class="wk"><b>Week 11</b>Sep 22</td><td><span class="t pay">"Incident-to" and PFTs: getting it right</span></td><td><span class="t">Sleep/overlap: lung function in the OSA patient</span></td><td><span class="t">A day in a MiniBox practice (customer story)</span></td></tr>
+          <tr><td class="wk"><b>Week 12</b>Sep 29</td><td><span class="t pay">Your year-end PFT billing checklist</span></td><td><span class="t">Hard cases: good effort from elderly & anxious patients</span></td><td><span class="t">Your in-house PFT business case, on one page</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:#7FE3C4"></span> Payday · billing &amp; coding</span>
+      <span><span class="dot" style="background:#F3F8FB"></span> Grand Rounds · clinical</span>
+      <span><span class="dot" style="background:#00AEEF"></span> Bottom Line · ROI &amp; product</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">How it ships</div>
+      <h2 class="big" style="margin-top:12px">Reviewed once. Nothing goes out by accident.</h2>
+      <p class="lead" style="margin-top:10px">The whole point: no more one-off posts written on the fly. Every graphic is drafted, approved, and queued ahead of time, so what publishes is always something we already signed off on.</p>
+    </div>
+    <div class="flow">
+      <div class="step"><div class="n"></div><h4>Draft the batch</h4><p>Decks built two weeks ahead against the approved grid, with copy and slides done together.</p></div>
+      <div class="step"><div class="n"></div><h4>Compliance review</h4><p>Regulatory checks codes &amp; clinical claims. No dollar amounts, ever. Approved language is reusable.</p></div>
+      <div class="step"><div class="n"></div><h4>You sign off</h4><p>You see every post as it will appear before it can be scheduled. Change or kill anything.</p></div>
+      <div class="step"><div class="n"></div><h4>Queue &amp; auto-post</h4><p>Approved posts loaded into the scheduler for their fixed day &amp; time. Publishes on its own.</p></div>
+      <div class="step"><div class="n"></div><h4>Measure &amp; feed back</h4><p>Weekly numbers logged; leads routed to sales. Winners inform the next batch.</p></div>
+    </div>
+    <div class="gov">
+      <b>The safeguard you asked for:</b> a post can only reach the scheduler after it's been reviewed and approved. There is no path from "idea" straight to "live." The quarter is pre-loaded, so a busy week never forces a rushed, unreviewed post.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The posting engine</div>
+      <h2 class="big" style="margin-top:12px">How it actually goes live, hands off, for the price of a coffee</h2>
+      <p class="lead" style="margin-top:10px">Approved posts don't publish themselves out of a folder. Something has to fire them. One LinkedIn-approved scheduler holds the whole quarter and posts each one on its fixed day. Nobody logged in at 9am; no busy week ever forces a rushed post.</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">The tool</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">Publer</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">A LinkedIn-approved scheduler. Load the quarter once, set Tue / Wed / Fri, and every carousel publishes on its own. Bulk-loads up to 500 posts at a time, the whole 36 in one sitting.</p>
+      </div>
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">Why not build our own</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">The tollbooth</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">Auto-posting to a company page requires LinkedIn's own approval, a multi-week review that can be denied, plus a server to run and maintain. Publer already cleared that gate and maintains it. We rent the approval instead of building the highway.</p>
+      </div>
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">Built-in safeguard</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">Approval workflow</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">The paid tier includes a sign-off step: nothing reaches the feed until it's approved inside the tool. The governance gate above lives in the software, not just on paper.</p>
+      </div>
+    </div>
+    <div class="verdict" style="margin-top:20px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px">
+      <b style="font-size:32px;color:var(--cyan-soft);text-shadow:0 0 26px rgba(0,174,239,.4)">$5<span style="font-size:15px;color:var(--mut);text-shadow:none">/mo</span></b>
+      <span style="font-size:15px;color:var(--ink);flex:1;min-width:240px">for one company page, billed monthly, or about <b>$4/mo</b> billed annually. Carousel &amp; document scheduling, bulk loading, and the approval workflow are all included at this tier.</span>
+    </div>
+    <div class="gov" style="margin-top:14px"><b>The one manual step, once a quarter:</b> a person loads the approved batch into the scheduler and walks away. After that, all 36 posts fire autonomously, with no daily touch, no developer, and no LinkedIn approval wait. <b>Total tooling cost for the full quarter: about $15.</b></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The giveaway engine</div>
+      <h2 class="big" style="margin-top:12px">They comment. We DM the tool. Sales gets a name.</h2>
+      <p class="lead" style="margin-top:10px">Every keyword CTA needs something real behind it. Instead of promising a paper handout, we hand out working tools we already built, starting with the one every billing desk actually needs.</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">The magnet</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">PFT Billing Helper</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">Our interactive coding tool: which PFT codes to bill, which ones bundle together, which combos get denied, Medicare rules and modifiers. It already carries a built-in coding disclaimer and contains <b style="color:var(--ink)">no dollar figures</b>. A biller will use it every week with PulmOne's name on it.</p>
+      </div>
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">The mechanic</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">Comment CODES &#8594; we DM the link</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">Comments are what LinkedIn's algorithm rewards most, so every comment pushes the post to more feeds. Keeping the link in the DM also dodges LinkedIn's penalty on posts with outside links. Ten seconds of work per reply, and every commenter is a <b style="color:var(--ink)">named lead</b> routed to sales.</p>
+      </div>
+      <div class="card">
+        <div class="ey" style="color:var(--cyan-soft)">The payoff</div>
+        <h3 style="font-size:20px;margin:10px 0 8px">The company people look to for answers</h3>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">The tool lives at a trackable link, so we can count exactly how many people grabbed it each week. Real usage, real numbers for the report, and PulmOne becomes the name on the tool the office opens every billing day.</p>
+      </div>
+    </div>
+    <div class="gov" style="margin-top:20px"><b>Pending sign-off:</b> nothing goes public until leadership and regulatory approve the tool for release. The Billing Helper is built and ready behind a private link; the giveaway switches on only after that approval. More giveaways can follow the same pattern, one per franchise.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The new look</div>
+      <h2 class="big" style="margin-top:12px">Dark, loud, and unmistakably PulmOne</h2>
+      <p class="lead" style="margin-top:10px">The LinkedIn feed is a wall of white. A white slide vanishes into it. These bookend-dark, cyan-lit slides stop the scroll, closer to MGC's best-performing graphic than to a plain cheat sheet.</p>
+    </div>
+    <div class="grid2" style="align-items:center">
+      <div class="mock">
+        <svg class="fvl-mark" viewBox="0 0 240 210" aria-hidden="true" style="position:absolute;right:-30px;bottom:-26px;width:200px;opacity:.5;pointer-events:none;filter:drop-shadow(0 0 14px rgba(0,174,239,.5))">
+          <path d="M30,100 Q34,56 49,28 C66,74 150,94 200,100 C175,168 55,168 30,100 Z" fill="rgba(0,174,239,0.05)" stroke="#00AEEF" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <div class="in">
+          <div style="background:#fff;border-radius:8px;padding:6px 10px;align-self:flex-start"><img src="data:image/png;base64,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" alt="" style="height:26px;width:auto;display:block"></div>
+          <div style="margin-top:auto">
+            <div class="cap">PFT Payday · Week 1</div>
+            <h3>Who's <span class="cy">missing</span> from your schedule?</h3>
+          </div>
+        </div>
+        <div class="bar"></div>
+      </div>
+      <div>
+        <p class="comparenote"><b>Why this slide works, in plain terms:</b></p>
+        <ul class="clean">
+          <li><b>It's dark in a white feed.</b> Almost every LinkedIn post is white. A dark navy slide with a cyan glow is the one thing that makes a thumb stop scrolling.</li>
+          <li><b>The first line is a headline, not a list.</b> "Who's missing from your schedule?" makes you curious; "CPT codes for PFT" doesn't. We lead with the question or the money, so people swipe to slide 2.</li>
+          <li><b>Every carousel is five short slides,</b> each with one job: grab attention, name the problem, show a proof point, show the payoff, ask for the reply. Short enough that people actually reach the ask.</li>
+          <li><b>That glowing curve in the corner is an obstructive flow-volume loop</b>, the scooped-out spirometry tracing of an airway that can't empty (COPD, asthma). It sits on every slide, so a physician recognizes both "these people work in pulmonary" and "this is the patient we help you catch" before reading a word. It's our signature, like a logo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">What success looks like</div>
+      <h2 class="big" style="margin-top:12px">The numbers that matter</h2>
+      <p class="lead" style="margin-top:10px">Reactions are vanity. This program is judged on leads and conversations, and the competitive bar to clear is single digits.</p>
+    </div>
+    <div class="mets">
+      <div class="met"><div class="k">Primary</div><div class="v"><span class="cy">Keyword comments</span> = named leads, routed to sales same day</div></div>
+      <div class="met"><div class="k">Reach signal</div><div class="v">Saves &amp; reposts on Grand Rounds teaching posts</div></div>
+      <div class="met"><div class="k">Audience</div><div class="v">Follower growth on the company page over the quarter</div></div>
+      <div class="met"><div class="k">The point</div><div class="v">Sales conversations started from the program</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The format ladder</div>
+      <h2 class="big" style="margin-top:12px">Start where the odds are best. Climb from there.</h2>
+      <p class="lead" style="margin-top:10px">Not every LinkedIn format performs the same. Here they are ranked by what the platform's own 2026 data says actually earns reach and engagement, so we spend our effort where it pays. We open with the format that wins today, and grow into the rest on a schedule, not all at once.</p>
+    </div>
+
+    <div class="grid2" style="gap:14px">
+
+      <div class="card" style="border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan-dim), 0 0 34px rgba(0,174,239,.14)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-family:var(--mono);font-size:12px;color:var(--bg);background:var(--cyan);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">1</div>
+          <div style="font-weight:800;font-size:18px;flex:1">Document / carousel</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--bg);background:var(--cyan-soft);padding:4px 9px;border-radius:999px;font-weight:700;letter-spacing:.06em">WE START HERE</div>
+        </div>
+        <div class="stat mono" style="font-size:12px;color:var(--cyan-soft);letter-spacing:.05em;margin:10px 0 6px">~7% engagement · highest on the platform</div>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">The swipeable slide deck. Wins because people swipe through it, and that dwell time is exactly what the algorithm rewards, roughly 3x the engagement of video and nearly 6x plain text. Zero cost to produce: we already build these. <b style="color:var(--ink)">This is the entire 36-post quarter.</b></p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-family:var(--mono);font-size:12px;color:var(--bg);background:var(--cyan);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">2</div>
+          <div style="font-weight:800;font-size:18px;flex:1">Short vertical video</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--amber);border:1px solid #5a4a1f;padding:4px 9px;border-radius:999px;font-weight:700;letter-spacing:.06em">WE GROW INTO</div>
+        </div>
+        <div class="stat mono" style="font-size:12px;color:var(--cyan-soft);letter-spacing:.05em;margin:10px 0 6px">~5.6% engagement · fastest-growing format</div>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">Under 60 seconds, captions on. Vertical video reach jumped ~80% and video views are up ~36% year over year. Builds trust a slide can't, a rep or a physician talking straight to camera. Filmed on a phone; the cost is reps and doctors, not a production budget.</p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--line2);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">3</div>
+          <div style="font-weight:800;font-size:18px;flex:1">Text post with a hook</div>
+        </div>
+        <div class="stat mono" style="font-size:12px;color:var(--cyan-soft);letter-spacing:.05em;margin:10px 0 6px">~2% engagement · biggest raw reach</div>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">Lowest engagement rate but can hit the largest impression numbers, and 51% of users say text is what they're most likely to engage with. Nearly free. A quick hot take or customer anecdote to break up the carousels.</p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--line2);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">4</div>
+          <div style="font-weight:800;font-size:18px;flex:1">Polls</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--mut2);border:1px solid var(--line2);padding:4px 9px;border-radius:999px;letter-spacing:.06em">USE SPARINGLY</div>
+        </div>
+        <div class="stat mono" style="font-size:12px;color:var(--cyan-soft);letter-spacing:.05em;margin:10px 0 6px">1.6x reach · but only 0.37x engagement</div>
+        <p style="color:var(--mut);font-size:14.5px;margin:0">LinkedIn calls this a "reach trap", lots of eyeballs, shallow interaction. Fine now and then to spark comments ("your biggest PFT billing headache?"), never the backbone of a week.</p>
+      </div>
+
+    </div>
+
+    <div class="verdict" style="margin-top:20px"><b>Why not just do video now?</b> Because carousels win today and cost us nothing, and accounts that <b>rotate</b> formats see ~37% more follower growth than accounts stuck on one. We bank the easy wins first, learn the filming, then layer video in, so the page keeps climbing instead of stalling.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">
+      <div class="ey">The road ahead</div>
+      <h2 class="big" style="margin-top:12px">A plan for the future, phase by phase</h2>
+      <p class="lead" style="margin-top:10px">This quarter is Phase 1. Here's where it goes, each phase building on a skill and a library we already own, none of it requiring a marketing budget.</p>
+    </div>
+    <div class="flow" style="grid-template-columns:repeat(3,1fr)">
+      <div class="step">
+        <div class="n" style="background:var(--cyan)"></div>
+        <div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--cyan-soft);margin-bottom:6px">NOW · Q3</div>
+        <h4>Carousels on autopilot</h4>
+        <p>The 36-post quarter runs Tue / Wed / Fri. We nail the habit, the look, and the lead capture, and read the numbers to see what lands.</p>
+      </div>
+      <div class="step">
+        <div class="n" style="background:var(--amber);color:var(--bg)"></div>
+        <div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--amber);margin-bottom:6px">NEXT · Q4</div>
+        <h4>Add short video</h4>
+        <p>Turn the best-performing carousels into 30-second phone videos. Start simple: a rep answering the one question every practice asks. Captions on, posted the same fixed days.</p>
+      </div>
+      <div class="step">
+        <div class="n" style="background:var(--line2);color:var(--ink)"></div>
+        <div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--mut2);margin-bottom:6px">LATER</div>
+        <h4>The interview library</h4>
+        <p>Sit our own guys and referring physicians down for short interviews. Build a shelf of real voices we can pull up on a phone the moment we walk into a facility.</p>
+      </div>
+    </div>
+    <div class="gov" style="margin-top:18px;background:var(--cyan-dim);border-color:var(--line2);color:var(--ink)">
+      <b style="color:var(--cyan-soft)">The walk-in play:</b> every video we post lives on forever. A year in, a rep standing in a waiting room can pull up a cardiologist explaining DLCO, or a customer describing their MiniBox day, right there on a phone. The content does double duty, marketing on the feed and a sales tool in the field.
+    </div>
+    <div class="verdict" style="margin-top:14px"><b>The whole point:</b> real marketing reach without a big budget. Carousels are free to make, video is a phone and a few minutes of someone's time, and the scheduler runs about $15 a quarter. We're buying attention with consistency and real voices, not ad spend.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    PulmOne · Outside The Box LinkedIn Program &nbsp;·&nbsp; Marketing proposal, Q3 2026 &nbsp;·&nbsp; v1.4
+    <div style="margin-top:10px;color:var(--mut2)">3 posts / week &nbsp;·&nbsp; 36 posts mapped &nbsp;·&nbsp; carousels now, video next, interviews ahead</div>
+  </div>
+</footer>
+
+</body>
+</html>

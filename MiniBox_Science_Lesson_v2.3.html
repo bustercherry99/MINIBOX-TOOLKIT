@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Minibox How It Works Lesson",
+  "schemaVersion": 1,
+  "description": "MiniBox \"How It Actually Works\" — 8-step self-paced teaching lesson. Builds the plethysmography intuition (trapped air, spirometry blind, known box, valve squeeze, interactive syringe squeeze, solve, Body Box vs MiniBox flip, live test). Rep-facing teaching tool for explaining the science to physicians.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MiniBox — How It Actually Works</title>
+<style>
+  :root{
+    --ink:#1b1e23; --muted:#6b7280; --faint:#9aa1ab;
+    --line:#e7e9ee; --bg:#ffffff; --panel:#f7f8fa;
+    --accent:#e8883a; --accent-2:#d9752a; --accent-soft:#f6c79c; --accent-tint:#fdf2e8;
+    --green:#2f9e64; --ink2:#2b2f36; --blue:#4a6b8a;
+    --shadow:0 1px 2px rgba(20,25,35,.05),0 10px 30px rgba(20,25,35,.08);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .app{max-width:560px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+    padding:16px 18px 22px;}
+
+  /* top bar */
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .brand{font-size:20px;font-weight:300;letter-spacing:.13em;}
+  .brand b{font-weight:700;}
+  .stepno{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;}
+  .dots{display:flex;gap:6px;margin:6px 0 4px;}
+  .dot{height:4px;flex:1;border-radius:3px;background:var(--line);transition:.3s;}
+  .dot.done{background:var(--accent-soft);}
+  .dot.on{background:var(--accent);}
+
+  /* stage */
+  .stage{flex:1;position:relative;min-height:520px;}
+  .step{position:absolute;inset:0;opacity:0;transform:translateY(10px);pointer-events:none;
+    transition:opacity .38s ease,transform .38s ease;display:flex;flex-direction:column;}
+  .step.active{opacity:1;transform:none;pointer-events:auto;}
+  .eyebrow{font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-top:6px;}
+  h2{font-size:23px;line-height:1.24;font-weight:700;letter-spacing:-.01em;margin:7px 0 8px;}
+  .lead{font-size:15.5px;line-height:1.55;color:#3d434c;margin:0;}
+  .lead b{color:var(--ink);}
+  .viz{margin:14px 0 6px;border:1px solid var(--line);border-radius:18px;background:var(--panel);
+    padding:14px;box-shadow:var(--shadow);flex:1;display:flex;align-items:center;justify-content:center;min-height:250px;}
+  .viz svg{width:100%;height:auto;display:block;}
+  .cap{font-size:12.5px;color:var(--muted);text-align:center;margin:8px 4px 0;line-height:1.45;min-height:34px;}
+  .cap b{color:var(--accent-2);}
+
+  /* nav */
+  .nav{display:flex;gap:10px;align-items:center;margin-top:12px;}
+  .btn{flex:1;border:none;border-radius:13px;padding:15px;font-size:15.5px;font-weight:700;
+    cursor:pointer;transition:.15s;letter-spacing:.01em;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(232,136,58,.28);}
+  .btn-ghost{flex:0 0 auto;background:transparent;color:var(--muted);border:1px solid var(--line);padding:15px 18px;}
+  .btn-ghost[disabled]{opacity:.35;cursor:default;}
+  .tap-hint{font-size:11px;color:var(--faint);text-align:center;margin-top:8px;letter-spacing:.03em;}
+
+  /* pieces */
+  .kbox{fill:#fff;stroke:var(--ink2);stroke-width:2.4;}
+  .lbox{fill:var(--accent-tint);stroke:var(--accent);stroke-width:2.4;}
+  .lbl{font-size:12.5px;font-weight:700;fill:var(--ink);}
+  .lbl-m{font-size:11px;fill:var(--muted);font-weight:600;}
+  .pipe{stroke:var(--ink2);stroke-width:6;stroke-linecap:round;}
+
+  /* interactive pushback (step 5) */
+  .slider-wrap{width:100%;max-width:380px;}
+  .slabel{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);
+    font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:2px 2px 8px;}
+  input[type=range]{-webkit-appearance:none;width:100%;height:8px;border-radius:6px;
+    background:linear-gradient(90deg,var(--accent) 0%,var(--accent-soft) 100%);outline:none;margin:0;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;
+    background:#fff;border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;
+    border:3px solid var(--accent);cursor:pointer;}
+  .verdict{text-align:center;font-size:15px;font-weight:700;margin-top:12px;color:var(--ink);}
+  .verdict span{color:var(--accent-2);}
+
+  /* flip (step 7) */
+  .flipbtns{display:flex;gap:8px;width:100%;max-width:380px;margin-bottom:10px;}
+  .flipbtn{flex:1;border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px;
+    font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;}
+  .flipbtn.on{border-color:var(--accent);background:var(--accent-tint);color:var(--accent-2);}
+
+  /* test (step 8) */
+  .chips{display:flex;gap:7px;width:100%;max-width:400px;margin-bottom:8px;}
+  .chip{flex:1;border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 6px;
+    text-align:center;cursor:pointer;transition:.15s;}
+  .chip .t{font-size:12.5px;font-weight:700;}
+  .chip .s{font-size:9.5px;color:var(--faint);margin-top:1px;}
+  .chip.on{border-color:var(--accent);background:var(--accent-tint);}
+  .chip.on .t{color:var(--accent-2);}
+  .tracesvg{width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;display:block;}
+  .readout{display:flex;gap:7px;width:100%;max-width:400px;margin-top:9px;}
+  .rc{flex:1;border:1px solid var(--line);border-radius:10px;padding:7px 6px;text-align:center;background:#fff;}
+  .rc .k{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);font-weight:700;}
+  .rc .v{font-size:15px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}
+  .rc.hl .v{color:var(--accent-2);}
+  .rbig{margin-top:10px;text-align:center;}
+  .rbig .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;}
+  .rbig .n{font-size:38px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);}
+  .rbig .n small{font-size:18px;color:var(--faint);font-weight:700;}
+  .runbtn{width:100%;max-width:400px;border:none;border-radius:12px;background:var(--accent);color:#fff;
+    font-size:15px;font-weight:800;padding:14px;margin-top:10px;cursor:pointer;box-shadow:0 6px 16px rgba(232,136,58,.28);}
+  .runbtn:disabled{background:var(--accent-soft);box-shadow:none;}
+  .breathbar{display:flex;align-items:center;gap:8px;width:100%;max-width:400px;margin:2px 0 8px;}
+  .breathbar .bl{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);font-weight:700;}
+  .pips{display:flex;gap:5px;flex:1;justify-content:center;}
+  .pip{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);background:#fff;transition:.2s;}
+  .pip.on{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 3px var(--accent-tint);}
+  .bcount{font-size:12.5px;font-weight:800;color:var(--accent-2);font-variant-numeric:tabular-nums;}
+
+  .final-punch{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;
+    background:var(--accent-tint);padding:13px 15px;margin-top:12px;font-size:14px;line-height:1.5;color:#5c4326;}
+  .final-punch b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">MINI<b>BOX</b></div>
+    <div class="stepno" id="stepno">01 / 08</div>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <div class="stage" id="stage">
+
+    <!-- STEP 1 : THE PROBLEM -->
+    <section class="step active" data-tap="1">
+      <div class="eyebrow">The problem</div>
+      <h2>Your lungs never fully empty.</h2>
+      <p class="lead">Even after you blow out as hard as you can, a large pocket of air stays <b>trapped</b> inside. That leftover air is where the answers hide: air trapping, hyperinflation, stiff restricted lungs. You just can't get at it.</p>
+      <div class="viz">
+        <svg viewBox="0 0 200 250" id="v1" style="max-width:184px">
+          <defs><clipPath id="clip1">
+            <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z"/>
+            <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z"/>
+          </clipPath></defs>
+          <path d="M92 14 h16 v28 a8 8 0 0 1 -8 8 a8 8 0 0 1 -8 -8 Z" fill="#fff" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <line x1="93" y1="23" x2="107" y2="23" stroke="#2b2f36" stroke-width="1.3"/><line x1="93" y1="32" x2="107" y2="32" stroke="#2b2f36" stroke-width="1.3"/>
+          <path d="M100 50 C95 56 91 60 86 66" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M100 50 C105 56 109 60 114 66" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="#fdf4f1" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="#fdf4f1" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <g clip-path="url(#clip1)"><rect x="20" y="152" width="160" height="70" fill="#f0a866"/></g>
+          <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M45 104 C58 116 68 134 73 156" fill="none" stroke="#2b2f36" stroke-width="1.1" opacity=".35"/>
+          <path d="M155 104 C142 116 132 134 127 156" fill="none" stroke="#2b2f36" stroke-width="1.1" opacity=".35"/>
+          <text x="100" y="230" text-anchor="middle" font-size="12.5" font-weight="800" fill="#c9702a">trapped air</text>
+          <text x="100" y="246" text-anchor="middle" font-size="10.5" fill="#8a9099">the air you can never blow out</text>
+        </svg>
+      </div>
+      <div class="cap">This hidden volume is exactly what a full lung test needs to measure.</div>
+    </section>
+
+    <!-- STEP 2 : SPIROMETRY BLIND -->
+    <section class="step" data-tap="1">
+      <div class="eyebrow">Why it's hard</div>
+      <h2>A spirometer can't see it.</h2>
+      <p class="lead">Spirometry only measures air that <b>moves in and out</b> of the mouth. The trapped air never moves, so to a spirometer it may as well not exist. That's the gap the MiniBox fills.</p>
+      <div class="viz">
+        <svg viewBox="0 0 300 244" id="v2" style="max-width:300px">
+          <defs>
+            <clipPath id="clip2">
+              <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z"/>
+              <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z"/>
+            </clipPath>
+            <marker id="gah" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#2f9e64"/></marker>
+          </defs>
+          <!-- lungs -->
+          <path d="M92 14 h16 v28 a8 8 0 0 1 -8 8 a8 8 0 0 1 -8 -8 Z" fill="#fff" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M100 50 C95 56 91 60 86 66" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M100 50 C105 56 109 60 114 66" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="#fdf4f1" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="#fdf4f1" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <g clip-path="url(#clip2)">
+            <rect x="20" y="60" width="160" height="80" fill="#cfe9da"/>
+            <rect x="20" y="140" width="160" height="76" fill="#e4e7ec"/>
+          </g>
+          <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="none" stroke="#2b2f36" stroke-width="2.4" stroke-linejoin="round"/>
+          <!-- spirometer, top right -->
+          <path d="M108 30 C150 24 180 40 208 56" fill="none" stroke="#2f9e64" stroke-width="2.6" marker-end="url(#gah)"/>
+          <path d="M208 70 C180 54 150 70 112 48" fill="none" stroke="#2f9e64" stroke-width="2.6" marker-end="url(#gah)" opacity=".5"/>
+          <rect x="210" y="44" width="78" height="52" rx="9" fill="#fff" stroke="#2b2f36" stroke-width="2"/>
+          <text x="249" y="66" text-anchor="middle" font-size="10.5" font-weight="800" fill="#1b1e23">spirometer</text>
+          <text x="249" y="82" text-anchor="middle" font-size="9.5" fill="#2f9e64" font-weight="700">moving air only</text>
+          <rect x="66" y="225" width="12" height="12" rx="2" fill="#cfe9da" stroke="#7bbf9c" stroke-width="1"/>
+          <text x="83" y="235" font-size="10.5" fill="#3b7d5d" font-weight="700">moving air (seen)</text>
+          <rect x="188" y="225" width="12" height="12" rx="2" fill="#e4e7ec" stroke="#c3c8cf" stroke-width="1"/>
+          <text x="205" y="235" font-size="10.5" fill="#8a9099" font-weight="700">trapped (unseen)</text>
+        </svg>
+      </div>
+      <div class="cap">So how do you measure air that refuses to move?</div>
+    </section>
+
+    <!-- STEP 3 : KNOWN BOX -->
+    <section class="step" data-tap="1">
+      <div class="eyebrow">The idea</div>
+      <h2>Connect it to a box you've already measured.</h2>
+      <p class="lead">Here's the move. Hook the lungs up to a rigid container whose size you know down to the milliliter: <b>16.3 liters</b>. Now the mystery air and a known amount of air share one sealed space.</p>
+      <div class="viz">
+        <svg viewBox="0 0 360 210" id="v3" style="max-width:320px">
+          <rect class="kbox" x="26" y="52" width="120" height="112" rx="10"/>
+          <text class="lbl" x="86" y="102" text-anchor="middle" font-size="16" font-weight="800">16.3 L</text>
+          <text class="lbl-m" x="86" y="122" text-anchor="middle">known box</text>
+          <!-- port on box + breathing hose up into the windpipe -->
+          <rect x="146" y="88" width="10" height="16" rx="3" fill="#2b2f36"/>
+          <path class="pipe" d="M154 96 C 194 96 200 48 236 42 C 252 39 262 40 269 46"/>
+          <g transform="translate(214,26) scale(0.6)">
+            <path d="M92 14 h16 v28 a8 8 0 0 1 -8 8 a8 8 0 0 1 -8 -8 Z" fill="#fff" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+            <path d="M100 50 C95 56 91 60 86 66" fill="none" stroke="#2b2f36" stroke-width="3.6" stroke-linecap="round"/>
+            <path d="M100 50 C105 56 109 60 114 66" fill="none" stroke="#2b2f36" stroke-width="3.6" stroke-linecap="round"/>
+            <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="#fdf2e8" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+            <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="#fdf2e8" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+          </g>
+          <text x="274" y="176" text-anchor="middle" font-size="20" font-weight="800" font-style="italic" fill="#c9702a">? L</text>
+          <text x="274" y="192" text-anchor="middle" font-size="10" fill="#9aa1ab" font-weight="700">unknown volume</text>
+        </svg>
+      </div>
+      <div class="cap">A patient just breathes into it. No booth. No gas.</div>
+    </section>
+
+    <!-- STEP 4 : THE SQUEEZE -->
+    <section class="step" data-tap="1">
+      <div class="eyebrow">The trick</div>
+      <h2>Snap a valve shut, for an instant.</h2>
+      <p class="lead">A valve closes for a few <b>thousandths of a second</b>. In that frozen moment the lung and the box are one sealed pocket of air, and the patient's breath gives it the tiniest squeeze.</p>
+      <div class="viz">
+        <svg viewBox="0 0 360 210" id="v4" style="max-width:320px">
+          <rect class="kbox" x="26" y="52" width="112" height="112" rx="10"/>
+          <text class="lbl" x="82" y="102" text-anchor="middle" font-size="15" font-weight="800">16.3 L</text>
+          <text class="lbl-m" x="82" y="120" text-anchor="middle">known box</text>
+          <!-- port on box + breathing hose with the valve on it, up into the windpipe -->
+          <rect x="138" y="88" width="10" height="16" rx="3" fill="#2b2f36"/>
+          <path class="pipe" d="M146 96 C 180 96 186 60 200 60 C 224 60 246 44 269 46"/>
+          <g id="valve4">
+            <circle cx="200" cy="60" r="14" fill="#e8883a"/>
+            <path d="M200 49 L200 71" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+          </g>
+          <text x="200" y="34" text-anchor="middle" font-size="11" font-weight="800" fill="#e8883a">CLOSED</text>
+          <g transform="translate(214,26) scale(0.6)">
+            <path d="M92 14 h16 v28 a8 8 0 0 1 -8 8 a8 8 0 0 1 -8 -8 Z" fill="#fff" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+            <path d="M100 50 C95 56 91 60 86 66" fill="none" stroke="#2b2f36" stroke-width="3.6" stroke-linecap="round"/>
+            <path d="M100 50 C105 56 109 60 114 66" fill="none" stroke="#2b2f36" stroke-width="3.6" stroke-linecap="round"/>
+            <path d="M86 62 C78 56 60 61 48 84 C33 110 27 148 31 180 C34 202 47 212 65 209 C79 206 87 194 88 172 L88 86 C88 72 92 66 86 62 Z" fill="#fdf2e8" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+            <path d="M114 62 C122 56 140 61 152 84 C167 110 173 148 169 180 C166 202 153 212 135 209 C127 207 122 202 121 194 C130 188 131 180 120 174 L112 130 L112 86 C112 72 108 66 114 62 Z" fill="#fdf2e8" stroke="#2b2f36" stroke-width="3.6" stroke-linejoin="round"/>
+          </g>
+          <text x="243" y="198" text-anchor="middle" font-size="11.5" fill="#6b7280">sealed together, then gently compressed</text>
+        </svg>
+      </div>
+      <div class="cap">Now the trapped air has to push back. And <b>that</b> is what we read.</div>
+    </section>
+
+    <!-- STEP 5 : THE PUSHBACK RULE (INTERACTIVE) -->
+    <section class="step" data-tap="0">
+      <div class="eyebrow">The whole secret</div>
+      <h2>Squeeze it. More air gives more.</h2>
+      <p class="lead">You have felt this with a sealed syringe. One packed with air <b>gives a lot</b> when you press it. One with barely any air <b>barely moves</b>. Same push, different give. Tap to press both.</p>
+      <div class="viz">
+        <div style="width:100%;max-width:400px;text-align:center;">
+          <svg viewBox="0 0 340 300" id="squeeze" style="max-width:330px">
+            <defs>
+              <marker id="pa" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="12" refX="6.5" refY="10" orient="auto"><path d="M1.5 0 L11.5 0 L6.5 10 z" fill="#c9702a"/></marker>
+              <marker id="tv" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#2f9e64"/></marker>
+            </defs>
+            <text x="170" y="15" text-anchor="middle" font-size="11.5" font-weight="800" letter-spacing=".04em" fill="#6b7280">SAME PUSH ON BOTH SYRINGES</text>
+            <g id="pushArrows" opacity="0">
+              <line x1="70" y1="26" x2="70" y2="48" stroke="#c9702a" stroke-width="3.2" marker-end="url(#pa)"/>
+              <line x1="270" y1="26" x2="270" y2="48" stroke="#c9702a" stroke-width="3.2" marker-end="url(#pa)"/>
+            </g>
+
+            <!-- ===== LEFT syringe : BIG air ===== -->
+            <rect id="thumbL" x="44" y="50" width="52" height="9" rx="3" fill="#2b2f36"/>
+            <rect id="rodL" x="66" y="59" width="8" height="37" fill="#2b2f36"/>
+            <rect x="46" y="70" width="48" height="150" rx="7" fill="#fff" stroke="#2b2f36" stroke-width="2.4"/>
+            <rect x="34" y="70" width="14" height="8" rx="2" fill="#2b2f36"/>
+            <rect x="92" y="70" width="14" height="8" rx="2" fill="#2b2f36"/>
+            <rect id="airL" x="48" y="106" width="44" height="114" fill="#fdf2e8"/>
+            <rect id="stopL" x="48" y="96" width="44" height="10" rx="2" fill="#e8a061"/>
+            <path d="M62 220 L78 220 L74 232 L66 232 Z" fill="#fff" stroke="#2b2f36" stroke-width="2"/>
+            <rect x="66" y="231" width="8" height="6" rx="2" fill="#2b2f36"/>
+            <line id="startLineL" x1="34" y1="96" x2="106" y2="96" stroke="#2f9e64" stroke-width="1.6" stroke-dasharray="4 4" opacity="0"/>
+            <text id="startLblL" x="120" y="99" font-size="9" fill="#9aa1ab" font-weight="700" opacity="0">start</text>
+            <text x="70" y="256" text-anchor="middle" font-size="12" font-weight="800" fill="#1b1e23">BIG lungs</text>
+            <text x="70" y="270" text-anchor="middle" font-size="9.5" fill="#9aa1ab">lots of trapped air</text>
+            <text id="verdL" x="70" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#2f9e64" opacity="0">gives a lot</text>
+
+            <!-- ===== RIGHT syringe : SMALL air ===== -->
+            <rect id="thumbR" x="244" y="125" width="52" height="9" rx="3" fill="#2b2f36"/>
+            <rect id="rodR" x="266" y="134" width="8" height="37" fill="#2b2f36"/>
+            <rect x="246" y="70" width="48" height="150" rx="7" fill="#fff" stroke="#2b2f36" stroke-width="2.4"/>
+            <rect x="234" y="70" width="14" height="8" rx="2" fill="#2b2f36"/>
+            <rect x="292" y="70" width="14" height="8" rx="2" fill="#2b2f36"/>
+            <rect id="airR" x="248" y="181" width="44" height="39" fill="#fdf2e8"/>
+            <rect id="stopR" x="248" y="171" width="44" height="10" rx="2" fill="#e8a061"/>
+            <path d="M262 220 L278 220 L274 232 L266 232 Z" fill="#fff" stroke="#2b2f36" stroke-width="2"/>
+            <rect x="266" y="231" width="8" height="6" rx="2" fill="#2b2f36"/>
+            <line id="startLineR" x1="234" y1="171" x2="306" y2="171" stroke="#2f9e64" stroke-width="1.6" stroke-dasharray="4 4" opacity="0"/>
+            <text id="startLblR" x="320" y="174" font-size="9" fill="#9aa1ab" font-weight="700" text-anchor="end" opacity="0">start</text>
+            <text x="270" y="256" text-anchor="middle" font-size="12" font-weight="800" fill="#1b1e23">SMALL lungs</text>
+            <text x="270" y="270" text-anchor="middle" font-size="9.5" fill="#9aa1ab">little trapped air</text>
+            <text id="verdR" x="270" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#d9752a" opacity="0">barely moves</text>
+          </svg>
+          <button class="runbtn" id="squeezeBtn" style="max-width:260px;margin-top:4px;">&#9660;&nbsp; Press both</button>
+        </div>
+      </div>
+      <div class="cap">The syringe with <b>more air</b> gives further. That "give" is the fingerprint of the hidden volume, and it is the whole measurement.</div>
+    </section>
+
+    <!-- STEP 6 : SOLVE -->
+    <section class="step" data-tap="1">
+      <div class="eyebrow">Solve it</div>
+      <h2>You know the box. You felt the pushback. Solve for the lung.</h2>
+      <p class="lead">A 200-year-old gas law ties pressure and volume together. The box's share is known, the pushback is measured, so the only unknown left is the trapped lung volume. The machine does the algebra in a blink.</p>
+      <div class="viz">
+        <svg viewBox="0 0 360 210" id="v6">
+          <rect class="kbox" x="34" y="70" width="150" height="70" rx="10"/>
+          <text x="109" y="100" text-anchor="middle" font-size="12" fill="#6b7280">what it feels</text>
+          <text x="109" y="122" text-anchor="middle" font-size="14" font-weight="800" fill="#1b1e23">flow before vs during</text>
+          <text x="109" y="60" text-anchor="middle" font-size="11" fill="#9aa1ab" font-weight="700">F&#8320; &rarr; F&#7580;</text>
+          <line x1="196" y1="105" x2="236" y2="105" stroke="#9aa1ab" stroke-width="3" marker-end="url(#ah3)"/>
+          <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#9aa1ab"/></marker></defs>
+          <rect x="244" y="66" width="86" height="78" rx="12" fill="#1b1e23"/>
+          <text x="287" y="96" text-anchor="middle" font-size="10" fill="#f6c79c" font-weight="700">LUNG VOLUME</text>
+          <text x="287" y="124" text-anchor="middle" font-size="22" fill="#fff" font-weight="800">3.0 L</text>
+          <text x="180" y="188" text-anchor="middle" font-size="11.5" fill="#6b7280">the trapped air, finally on the screen</text>
+        </svg>
+      </div>
+      <div class="cap">That flow change, <b>F&#8320; to F&#7580;</b>, is exactly the pushback on the classic MiniBox diagram.</div>
+    </section>
+
+    <!-- STEP 7 : THE FLIP -->
+    <section class="step" data-tap="0">
+      <div class="eyebrow">The positioning</div>
+      <h2>This is still plethysmography. Just un-caged.</h2>
+      <p class="lead">Plethysmography means measuring hidden volume against a known box. The old body box seals the whole <b>patient</b> inside the known box. The MiniBox keeps the box on the desk and runs only the <b>breath</b> into it. Same physics. Tap to compare.</p>
+      <div class="viz">
+        <div style="width:100%;max-width:400px;">
+          <div class="flipbtns">
+            <button class="flipbtn on" data-f="0">Body Box (old way)</button>
+            <button class="flipbtn" data-f="1">MiniBox</button>
+          </div>
+          <svg viewBox="0 0 360 196" id="flipsvg">
+            <!-- body box -->
+            <g id="fBody">
+              <rect x="66" y="30" width="228" height="142" rx="12" fill="#eef3f7" stroke="#4a6b8a" stroke-width="2.6"/>
+              <text x="180" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="#4a6b8a">SEALED CABIN = the known box</text>
+              <g fill="#fff" stroke="#2b2f36" stroke-width="2">
+                <circle cx="180" cy="78" r="14"/>
+                <path d="M156 138 C156 108 168 102 180 102 C192 102 204 108 204 138 Z"/>
+              </g>
+              <text x="180" y="162" text-anchor="middle" font-size="10.5" fill="#4a6b8a">the whole patient is sealed inside</text>
+            </g>
+            <!-- minibox -->
+            <g id="fMini" opacity="0">
+              <rect x="42" y="84" width="82" height="82" rx="9" fill="#fff" stroke="#2b2f36" stroke-width="2.6"/>
+              <text x="83" y="120" text-anchor="middle" font-size="13" font-weight="800">16.3 L</text>
+              <text x="83" y="138" text-anchor="middle" font-size="9.5" fill="#6b7280">on the desk</text>
+              <line class="pipe" x1="124" y1="118" x2="196" y2="118"/>
+              <g fill="#fff" stroke="#2b2f36" stroke-width="2">
+                <circle cx="244" cy="96" r="14"/>
+                <path d="M220 156 C220 126 232 120 244 120 C256 120 268 126 268 156 Z"/>
+              </g>
+              <text x="232" y="74" text-anchor="middle" font-size="10.5" font-weight="700" fill="#c9702a">only the breath goes in</text>
+              <text x="200" y="182" text-anchor="middle" font-size="10.5" fill="#6b7280">patient sits beside it, breathing normally</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="cap">Reads the <b>same</b> as the body box in head-to-head studies. No cabin, no gas, nobody sealed in.</div>
+    </section>
+
+    <!-- STEP 8 : RUN IT -->
+    <section class="step" data-tap="0">
+      <div class="eyebrow">See it work</div>
+      <h2>Now run the LVM yourself.</h2>
+      <p class="lead">The measurement is the <b>LVM</b>, the lung volume measurement, and it needs <b>six clean breaths</b>. Every breath is captured through a valve that closes for a few milliseconds, so brief the patient never feels it. Once six good breaths are in, the algorithm locks the number. Pick a patient and press run.</p>
+      <div class="viz" style="flex-direction:column;">
+        <div class="chips" id="chips">
+          <div class="chip on" data-i="0"><div class="t">Healthy</div><div class="s">normal</div></div>
+          <div class="chip" data-i="1"><div class="t">Air trapping</div><div class="s">COPD</div></div>
+          <div class="chip" data-i="2"><div class="t">Restriction</div><div class="s">ILD</div></div>
+        </div>
+        <div class="breathbar" id="breathbar">
+          <span class="bl">Successful breaths</span>
+          <span class="pips" id="pips"></span>
+          <span class="bcount" id="bcount">0 / 6</span>
+        </div>
+        <svg class="tracesvg" viewBox="0 0 400 118" id="trace" preserveAspectRatio="none">
+          <line x1="0" y1="34" x2="400" y2="34" stroke="#e7e9ee" stroke-width="1" stroke-dasharray="4 5"/>
+          <text x="6" y="30" font-size="9" fill="#9aa1ab">F&#8320;</text>
+          <line id="fcLine" x1="0" y1="80" x2="400" y2="80" stroke="#f6c79c" stroke-width="1" stroke-dasharray="4 5" opacity="0"/>
+          <polyline id="traceLine" points="" fill="none" stroke="#e8883a" stroke-width="2.4"/>
+          <g id="annots"></g>
+        </svg>
+        <div class="readout">
+          <div class="rc"><div class="k">Box</div><div class="v">16.3 L</div></div>
+          <div class="rc"><div class="k">F&#8320;</div><div class="v" id="mF0">&middot;</div></div>
+          <div class="rc hl"><div class="k">F&#7580;</div><div class="v" id="mFc">&middot;</div></div>
+        </div>
+        <div class="rbig"><div class="k">LVM &middot; lung volume</div><div class="n"><span id="resVal">0.0</span><small> L</small></div></div>
+        <button class="runbtn" id="run">&#9654;&nbsp; Run the LVM</button>
+      </div>
+      <div class="final-punch"><b>The takeaway:</b> the MiniBox measures the air a patient can't exhale by squeezing it against a box of known size and reading the pushback. Six good breaths confirm the LVM. Body-box answers, on a countertop, in a couple of minutes.</div>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button class="btn btn-ghost" id="back" disabled>&larr;</button>
+    <button class="btn btn-primary" id="next">Next</button>
+  </div>
+  <div class="tap-hint" id="tapHint">tap the picture or press Next</div>
+</div>
+
+<script>
+(function(){
+  var GAMMA=1.4, VBOX=16.3, F0=6.00;
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var N=steps.length, i=0;
+  var el=function(id){return document.getElementById(id);};
+
+  // dots
+  var dots=el('dots');
+  for(var k=0;k<N;k++){var d=document.createElement('div');d.className='dot';dots.appendChild(d);}
+  function render(){
+    steps.forEach(function(s,x){s.classList.toggle('active',x===i);});
+    Array.prototype.forEach.call(dots.children,function(d,x){
+      d.className='dot'+(x===i?' on':(x<i?' done':''));});
+    el('stepno').textContent=('0'+(i+1)).slice(-2)+' / 0'+N;
+    el('back').disabled=(i===0);
+    el('next').textContent=(i===N-1?'Start over':'Next');
+    el('tapHint').style.visibility = (i===N-1)?'hidden':'visible';
+    onEnter(i);
+  }
+  function go(n){ if(n<0)n=0; if(n>=N){n=0;} i=n; render(); }
+  el('next').addEventListener('click',function(){go(i+1);});
+  el('back').addEventListener('click',function(){go(i-1);});
+  // tap on stage advances (only steps flagged data-tap="1")
+  el('stage').addEventListener('click',function(e){
+    var s=steps[i]; if(s.getAttribute('data-tap')!=='1') return;
+    if(e.target.closest('button,input,a')) return;
+    go(i+1);
+  });
+
+  // step-specific activations
+  function onEnter(n){
+    if(n===3){ // squeeze pulse
+      var sq=el('sq4'); if(sq){ sq.style.opacity=0;
+        setTimeout(function(){ sq.style.transition='opacity .4s'; sq.style.opacity=1; },250); }
+    }
+    if(n===4){ resetSqueeze(); setTimeout(doSqueeze,520); }
+    if(n===7){ /* test resets when scenario chosen */ }
+  }
+
+  // ---- Step 5 squeeze (two sealed syringes) ----
+  var CB=220;            // barrel inner bottom (sealed tip)
+  var LT0=96, LS=45;     // left  stopper rest-top, sink (BIG air = gives a lot)
+  var RT0=171, RS=8;     // right stopper rest-top, sink (SMALL air = barely)
+  function setSyr(pfx,top){
+    el('stop'+pfx).setAttribute('y',top);
+    el('air'+pfx).setAttribute('y',top+10);
+    el('air'+pfx).setAttribute('height',Math.max(0,CB-(top+10)));
+    el('thumb'+pfx).setAttribute('y',top-46);
+    el('rod'+pfx).setAttribute('y',top-37);
+  }
+  function resetSqueeze(){
+    setSyr('L',LT0); setSyr('R',RT0);
+    ['verdL','verdR','pushArrows','startLineL','startLineR','startLblL','startLblR'].forEach(function(id){el(id).setAttribute('opacity','0');});
+  }
+  var squeezing=false;
+  function doSqueeze(){
+    if(squeezing)return; squeezing=true;
+    ['pushArrows','startLineL','startLineR','startLblL','startLblR'].forEach(function(id){el(id).setAttribute('opacity','1');});
+    var s=performance.now(), dur=780;
+    (function tick(now){
+      var p=Math.min(1,(now-s)/dur), e=1-Math.pow(1-p,3);
+      var lt=LT0+LS*e, rt=RT0+RS*e;
+      setSyr('L',lt); setSyr('R',rt);
+      if(p<1) requestAnimationFrame(tick);
+      else{ el('verdL').setAttribute('opacity','1'); el('verdR').setAttribute('opacity','1'); squeezing=false; }
+    })(s);
+  }
+  el('squeezeBtn').addEventListener('click',function(){ resetSqueeze(); setTimeout(doSqueeze,120); });
+
+  // ---- Step 7 flip ----
+  Array.prototype.forEach.call(document.querySelectorAll('.flipbtn'),function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.flipbtn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var f=b.getAttribute('data-f');
+      el('fBody').setAttribute('opacity', f==='0'?'1':'0');
+      el('fMini').setAttribute('opacity', f==='1'?'1':'0');
+    });
+  });
+
+  // ---- Step 8 test ----
+  var SCEN=[
+    {name:"Healthy",V:3.0,note:"Normal resting volume"},
+    {name:"Air trapping (COPD)",V:5.5,note:"Hyperinflated. Deeper flow drop"},
+    {name:"Restriction (ILD)",V:1.8,note:"Small stiff lungs. Shallow drop"}
+  ];
+  var cur=0, running=false, NB=6;
+  function fcFrac(V){return 1/(1+GAMMA*(V/VBOX));}
+  // build 6 breath pips
+  (function(){var p=el('pips');for(var k=0;k<NB;k++){var d=document.createElement('span');d.className='pip';p.appendChild(d);}})();
+  function setPips(n){Array.prototype.forEach.call(el('pips').children,function(d,x){d.classList.toggle('on',x<n);});
+    el('bcount').textContent=n+' / '+NB;}
+  function setChip(x){cur=x;document.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',+c.dataset.i===x);});
+    resetTest();}
+  function resetTest(){el('traceLine').setAttribute('points','');el('annots').innerHTML='';
+    el('fcLine').setAttribute('opacity','0');el('mF0').innerHTML='&middot;';el('mFc').innerHTML='&middot;';
+    el('resVal').textContent='0.0';setPips(0);}
+  document.getElementById('chips').addEventListener('click',function(e){
+    var c=e.target.closest('.chip'); if(!c||running)return; setChip(+c.dataset.i);});
+
+  function runTest(){
+    if(running)return; running=true; el('run').disabled=true; el('run').innerHTML='Breathing&hellip;';
+    resetTest();
+    var V=SCEN[cur].V, fr=fcFrac(V), Fc=F0*fr;
+    var W=400,yF0=34,scaleY=150;
+    var yFc=yF0+(1-fr)*scaleY; el('fcLine').setAttribute('y1',yFc);el('fcLine').setAttribute('y2',yFc);
+    var bd=760;                 // breath duration ms
+    var oStart=420,dDown=110,dHold=110,dUp=110; // occlusion shape within a breath
+    var done=NB*bd;
+    var start=performance.now(),pts=[],f0s=false,fcs=false,measured=0;
+    function base(t){return F0*(1+0.05*Math.sin(2*Math.PI*t/bd));}
+    function flowAt(t){
+      var i=Math.floor(t/bd); if(i>=NB) return base(t);
+      var lo=t-i*bd, b=base(t);
+      if(lo<oStart) return b;
+      if(lo<oStart+dDown) return b-(b-Fc)*((lo-oStart)/dDown);
+      if(lo<oStart+dDown+dHold) return Fc;
+      if(lo<oStart+dDown+dHold+dUp) return Fc+(b-Fc)*((lo-oStart-dDown-dHold)/dUp);
+      return b;
+    }
+    function yOf(f){return yF0+(F0-f)/F0*scaleY;}
+    function frame(now){
+      var t=now-start, tt=Math.min(t,done), x=(tt/done)*W;
+      pts.push(x.toFixed(1)+','+yOf(flowAt(tt)).toFixed(1));
+      el('traceLine').setAttribute('points',pts.join(' '));
+      if(!f0s&&t>=200){f0s=true;el('mF0').textContent=F0.toFixed(2);}
+      // first occlusion reaches bottom
+      if(!fcs&&t>=oStart+dDown){fcs=true;el('mFc').textContent=Fc.toFixed(2);el('fcLine').setAttribute('opacity','1');}
+      // count a breath each time an occlusion bottom passes
+      var expected=0;
+      for(var i=0;i<NB;i++){ if(t>=i*bd+oStart+dDown) expected=i+1; }
+      if(expected>measured){measured=expected;setPips(measured);}
+      if(t<done)requestAnimationFrame(frame); else finishTest(V,F0,Fc);
+    }
+    requestAnimationFrame(frame);
+  }
+  function finishTest(V,f0,fc){
+    el('run').innerHTML='Confirming&hellip;';
+    var Vsol=(1/GAMMA)*((f0-fc)/fc)*VBOX, dur=650;
+    setTimeout(function(){
+      var s=performance.now();
+      (function tick(now){var p=Math.min(1,((now||performance.now())-s)/dur),e=1-Math.pow(1-p,3);
+        el('resVal').textContent=(Vsol*e).toFixed(1);
+        if(p<1)requestAnimationFrame(tick);
+        else{el('resVal').textContent=Vsol.toFixed(1);running=false;el('run').disabled=false;el('run').innerHTML='&#8635;&nbsp; Run again';}
+      })(performance.now());
+    },260);
+  }
+  el('run').addEventListener('click',runTest);
+
+  // init
+  resetSqueeze(); render();
+})();
+</script>
+</body>
+</html>

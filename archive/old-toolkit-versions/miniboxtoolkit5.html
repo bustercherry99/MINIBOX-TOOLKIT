@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBox+ Master Reference Toolkit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark: #0a3d6b;
+    --blue-mid: #0c5299;
+    --blue-brand: #0e6abf;
+    --blue-light: #d6eaf8;
+    --teal: #0e9e8e;
+    --teal-light: #d4f5f1;
+    --amber: #e67e22;
+    --amber-light: #fef3e2;
+    --red: #c0392b;
+    --red-light: #fde8e6;
+    --green: #27ae60;
+    --green-light: #e8f8f0;
+    --gray-100: #f4f6f9;
+    --gray-200: #e8ecf0;
+    --gray-300: #c8d0d8;
+    --gray-600: #5a6a7a;
+    --gray-800: #1e2d3d;
+    --text: #1a2733;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #eef2f7;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--blue-dark);
+    padding: 0;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 32px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-brand { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 5px; }
+  .header-title { font-size: 28px; font-weight: 700; color: #fff; line-height: 1.15; }
+  .header-sub { font-size: 13px; color: #a8d0ee; margin-top: 5px; }
+  .header-badges { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 4px; }
+  .hbadge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 5px; padding: 4px 12px; font-size: 11px; font-weight: 500; color: #cce4f7; white-space: nowrap; }
+
+  /* TABS */
+  .tab-bar {
+    background: var(--blue-mid);
+    border-bottom: none;
+  }
+  .tab-bar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 14px 11px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: rgba(255,255,255,0.9); }
+  .tab-btn.active { color: #fff; border-bottom-color: #5bc8f5; }
+
+  /* CONTENT */
+  .content-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 32px 60px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-blue { background: var(--blue-light); }
+  .icon-teal { background: var(--teal-light); }
+  .icon-amber { background: var(--amber-light); }
+  .icon-green { background: var(--green-light); }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--blue-dark); }
+  .section-sub { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  /* CARD GRID */
+  .card-grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    padding: 20px 22px;
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--blue-dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card-body { font-size: 13.5px; color: #374151; line-height: 1.65; }
+  .card-body strong { font-weight: 600; color: var(--blue-dark); }
+
+  /* STAT CARDS */
+  .stat-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .stat-num { font-size: 32px; font-weight: 700; color: var(--blue-brand); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 12px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.4; }
+  .stat-sub { font-size: 11.5px; color: var(--gray-600); margin-top: 4px; }
+
+  /* COMPARISON TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid var(--gray-200); }
+  .comp-table th { padding: 14px 16px; font-size: 12px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 0.08em; }
+  .comp-table th.row-label { text-align: left; background: var(--gray-100); color: var(--gray-600); }
+  .comp-table th.col-mini { background: var(--blue-dark); color: #fff; }
+  .comp-table th.col-other { background: var(--gray-600); color: #fff; }
+  .comp-table td { padding: 12px 16px; font-size: 13px; border-top: 1px solid var(--gray-200); }
+  .comp-table td.row-label { font-weight: 600; color: var(--gray-800); background: var(--gray-100); font-size: 12.5px; }
+  .comp-table td.col-mini { text-align: center; color: #14532d; background: #f0fdf4; font-weight: 500; }
+  .comp-table td.col-other { text-align: center; color: #7f1d1d; background: #fff5f5; }
+  .check { color: var(--green); font-weight: 700; }
+  .cross { color: var(--red); }
+
+  /* CPT TABLE */
+  .cpt-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid var(--gray-200); }
+  .cpt-table th { background: var(--blue-dark); color: #fff; padding: 12px 16px; font-size: 12px; font-weight: 600; text-align: left; letter-spacing: 0.06em; text-transform: uppercase; }
+  .cpt-table td { padding: 13px 16px; font-size: 13.5px; border-top: 1px solid var(--gray-200); }
+  .cpt-table tr:nth-child(even) td { background: var(--gray-100); }
+  .cpt-code { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--blue-brand); background: var(--blue-light); padding: 3px 8px; border-radius: 4px; }
+  .cpt-rate { font-weight: 600; color: var(--green); }
+
+  /* COACHING CARDS */
+  .coaching-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .coaching-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .coaching-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .tag-fvc { background: #dbeafe; color: #1e40af; }
+  .tag-lvm { background: #fef3c7; color: #92400e; }
+  .tag-dlco { background: #ede9fe; color: #6d28d9; }
+  .coaching-name { font-size: 16px; font-weight: 700; color: var(--blue-dark); }
+  .coaching-desc { font-size: 12px; color: var(--gray-600); margin-top: 1px; }
+  .coaching-body { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .coaching-col-title { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 8px; }
+  .coaching-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .coaching-list li { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: #374151; line-height: 1.5; }
+  .cli-num { background: var(--blue-brand); color: #fff; font-size: 9px; font-weight: 700; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .cli-dot { color: var(--blue-brand); font-size: 18px; line-height: 1; flex-shrink: 0; }
+  .highlight { font-weight: 600; color: var(--blue-dark); }
+
+  /* STUDY CARDS */
+  .study-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    padding: 20px 22px;
+    border-left: 4px solid var(--blue-brand);
+  }
+  .study-journal { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-brand); margin-bottom: 6px; }
+  .study-title { font-size: 15px; font-weight: 700; color: var(--blue-dark); margin-bottom: 8px; line-height: 1.3; }
+  .study-authors { font-size: 12px; color: var(--gray-600); margin-bottom: 10px; }
+  .study-finding { font-size: 13.5px; color: #374151; line-height: 1.65; }
+  .study-finding strong { font-weight: 600; color: var(--green); }
+
+  /* NSD TABLE */
+  .nsd-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid var(--gray-200); margin-top: 16px; }
+  .nsd-table th { background: var(--blue-dark); color: #fff; padding: 11px 14px; font-size: 11.5px; font-weight: 600; text-align: center; }
+  .nsd-table td { padding: 11px 14px; font-size: 13px; border-top: 1px solid var(--gray-200); text-align: center; }
+  .nsd-best { background: #f0fdf4; font-weight: 700; color: var(--green); font-size: 15px; }
+  .nsd-other { color: var(--red); font-weight: 500; }
+
+  /* INTERP STEPS */
+  .interp-step {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .step-num-big {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--blue-dark);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .interp-text { font-size: 13.5px; color: #374151; line-height: 1.65; }
+  .interp-text strong { font-weight: 600; color: var(--blue-dark); }
+
+  /* REVENUE TABLE */
+  .rev-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .rev-card { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); padding: 16px; text-align: center; }
+  .rev-period { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-600); margin-bottom: 6px; }
+  .rev-num { font-size: 22px; font-weight: 700; color: var(--green); }
+
+  /* ALERT BOX */
+  .alert-box {
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .alert-blue { background: var(--blue-light); color: var(--blue-dark); border: 1px solid #a8d0ee; }
+  .alert-green { background: var(--green-light); color: #14532d; border: 1px solid #86efac; }
+  .alert-amber { background: var(--amber-light); color: #713f12; border: 1px solid #fcd34d; }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--gray-200); margin: 24px 0; }
+
+  /* FOOTER */
+  .toolkit-footer {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    padding: 0 32px;
+  }
+  .footer-bar {
+    background: var(--blue-dark);
+    border-radius: 10px;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .fl { }
+  .fl-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 3px; }
+  .fl-val { font-size: 13px; font-weight: 500; color: #fff; }
+  .fdiv { width: 1px; background: rgba(255,255,255,0.18); align-self: stretch; min-height: 32px; }
+
+  .pill { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .pill-green { background: var(--green-light); color: #14532d; }
+  .pill-blue { background: var(--blue-light); color: var(--blue-dark); }
+  .pill-amber { background: var(--amber-light); color: #92400e; }
+
+  @media (max-width: 700px) {
+    .header-inner { padding: 20px 18px 0; }
+    .tab-bar-inner { padding: 0 12px; }
+    .content-wrap { padding: 20px 16px 40px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .coaching-body { grid-template-columns: 1fr; }
+    .rev-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-bar { flex-direction: column; }
+    .fdiv { display: none; }
+  }
+
+  @media print {
+    body { background: white; }
+    .tab-panel { display: block !important; page-break-before: always; }
+    .tab-panel:first-of-type { page-break-before: auto; }
+    .tab-btn { display: none; }
+  }
+
+  /* ROI CALCULATOR */
+  .roi-calc-wrap { background: #fff; border-radius: 12px; border: 1px solid var(--gray-200); padding: 24px; margin-bottom: 0; }
+  .roi-ctrl-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-600); margin-bottom: 8px; }
+  .roi-stepper { display: flex; align-items: center; border: 1.5px solid var(--gray-300); border-radius: 8px; overflow: hidden; width: fit-content; }
+  .roi-stepper button { width: 40px; height: 48px; background: var(--gray-100); border: none; font-size: 22px; cursor: pointer; color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.15s; }
+  .roi-stepper button:hover { background: var(--gray-200); }
+  .roi-stepper-val { min-width: 56px; text-align: center; font-size: 26px; font-weight: 700; color: var(--blue-dark); padding: 0 4px; }
+  .roi-bar-col { flex: 1; border-radius: 5px 5px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 5px; transition: height 0.3s ease; }
+  .roi-bar-col span { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .roi-bar-label { flex: 1; text-align: center; font-size: 11px; color: var(--gray-600); font-weight: 500; }
+  .roi-breakeven-card { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); padding: 16px; text-align: center; }
+  .roi-cpt-card { background: var(--gray-100); border-radius: 8px; padding: 10px 14px; }
+
+  /* PRESENT BUTTON */
+  .roi-present-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue-dark); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 11px 20px;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(10,61,107,0.25);
+  }
+  .roi-present-btn:hover { background: var(--blue-mid); }
+  .roi-present-btn:active { transform: scale(0.98); }
+
+  /* FULLSCREEN OVERLAY */
+  #roi-fullscreen {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: #0a3d6b;
+    overflow-y: auto;
+  }
+  #roi-fullscreen.open { display: flex; flex-direction: column; }
+  .fs-header {
+    background: rgba(0,0,0,0.2);
+    padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .fs-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #7ab6e0; }
+  .fs-title { font-size: 15px; font-weight: 600; color: #fff; }
+  .fs-close {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; border-radius: 7px; padding: 8px 16px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .fs-close:hover { background: rgba(255,255,255,0.2); }
+  .fs-body { flex: 1; padding: 32px 48px 48px; max-width: 1000px; margin: 0 auto; width: 100%; }
+  .fs-hero { text-align: center; margin-bottom: 36px; }
+  .fs-hero-label { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 10px; }
+  .fs-hero-num { font-size: 72px; font-weight: 800; color: #fff; line-height: 1; letter-spacing: -0.02em; }
+  .fs-hero-sub { font-size: 16px; color: #a8d0ee; margin-top: 8px; }
+  .fs-cards { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 24px; }
+  .fs-card { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 16px; text-align: center; }
+  .fs-card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7ab6e0; margin-bottom: 6px; }
+  .fs-card-num { font-size: 20px; font-weight: 700; color: #fff; }
+  .fs-breakeven { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+  .fs-bcard { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 18px; text-align: center; }
+  .fs-bcard-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7ab6e0; margin-bottom: 6px; }
+  .fs-bcard-num { font-size: 26px; font-weight: 700; color: #fff; }
+  .fs-bcard-sub { font-size: 11px; color: #a8d0ee; margin-top: 4px; }
+  .fs-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; align-items: center; }
+  .fs-ctrl-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #7ab6e0; margin-bottom: 8px; }
+  .fs-stepper { display: flex; align-items: center; gap: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 9px; overflow: hidden; width: fit-content; }
+  .fs-stepper button { width: 48px; height: 54px; background: rgba(255,255,255,0.08); border: none; font-size: 24px; cursor: pointer; color: #fff; font-family: 'Inter',sans-serif; transition: background 0.15s; }
+  .fs-stepper button:hover { background: rgba(255,255,255,0.18); }
+  .fs-stepper-val { min-width: 72px; text-align: center; font-size: 30px; font-weight: 700; color: #fff; }
+  .fs-cost-input { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 9px; padding: 12px 16px; font-size: 26px; font-weight: 700; font-family: 'Inter',sans-serif; color: #fff; width: 100%; }
+  .fs-cost-input::placeholder { color: rgba(255,255,255,0.3); }
+  .fs-bars-wrap { margin-bottom: 16px; }
+  .fs-bar-col { flex:1; border-radius: 5px 5px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px; }
+  .fs-bar-col span { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .fs-bar-label { flex:1; text-align:center; font-size:12px; color:#7ab6e0; font-weight:500; }
+  .fs-disclaimer { font-size: 11px; color: rgba(168,208,238,0.6); text-align: center; margin-top: 16px; }
+  @media (max-width: 700px) {
+    .fs-body { padding: 20px 18px 32px; }
+    .fs-hero-num { font-size: 48px; }
+    .fs-cards { grid-template-columns: repeat(2,1fr); }
+    .fs-breakeven { grid-template-columns: 1fr; }
+    .fs-controls { grid-template-columns: 1fr; }
+    .roi-ctrl-row { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">PulmOne Advanced Medical Devices &mdash; Field Reference</div>
+      <div class="header-title">MiniBox+&#8482; Master Toolkit</div>
+      <div class="header-sub">Clinical proof, competitive positioning, CPT codes, coaching guides, and PFT interpretation &mdash; everything in one place.</div>
+    </div>
+    <div class="header-badges">
+      <div class="hbadge">Sales Team</div>
+      <div class="hbadge">Physician Reference</div>
+      <div class="hbadge">Rev. 1.0</div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-bar-inner">
+      <button class="tab-btn active" onclick="showTab('overview', this)">Product Overview</button>
+      <button class="tab-btn" onclick="showTab('clinical', this)">Clinical Proof</button>
+      <button class="tab-btn" onclick="showTab('competitive', this)">vs. Competition</button>
+      <button class="tab-btn" onclick="showTab('reimbursement', this)">CPT &amp; Revenue</button>
+      <button class="tab-btn" onclick="showTab('coaching', this)">Patient Coaching</button>
+      <button class="tab-btn" onclick="showTab('interpretation', this)">PFT Interpretation</button>
+      <button class="tab-btn" onclick="showTab('contacts', this)">Key Contacts</button>
+      <button class="tab-btn" onclick="showTab('it', this)">IT &amp; Connectivity</button>
+      <button class="tab-btn" onclick="showTab('troubleshooting', this)" style="color:#fcd34d; font-weight:700;">Troubleshooting</button>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#127774;</div>
+      <div>
+        <div class="section-title">Product Overview</div>
+        <div class="section-sub">What the MiniBox+ is, what it does, and why it matters</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#9432;</div>
+      <div><strong>One-line pitch:</strong> The MiniBox+ is the only portable, cabinless pulmonary function testing device that delivers complete Spirometry, Lung Volumes (plethysmography), and DLCO &mdash; equivalent to the body box &mdash; in 15 to 20 minutes, operable by any medical office staff member, with no maintenance fees.</div>
+    </div>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <div class="card-title">&#9889; Fast</div>
+        <div class="card-body">Complete PFT in as little as <strong>15 to 20 minutes</strong>. Lung volumes in as little as <strong>60 seconds</strong> of tidal breathing. Traditional body box takes 30 to 45 minutes.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9989; Easy</div>
+        <div class="card-body">Fully automatic LVM and DLCO. <strong>6 buttons from start to finish.</strong> Anyone on your medical office staff can operate it. No specialized RT required.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#128200; Accurate</div>
+        <div class="card-body">Clinically proven equivalent to body plethysmography in <strong>over 700 patients across 11 medical centers</strong>. Published in CHEST 2021. Same CPT codes as the body box.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#128100; Comfortable</div>
+        <div class="card-body">Cabinless &mdash; <strong>no claustrophobia, no anxiety.</strong> Tidal breathing only for LVM. Can test obese, wheelchair-bound, or bedridden patients. Ideal for pediatrics from age 5.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#128301; Portable</div>
+        <div class="card-body"><strong>Smallest footprint</strong> of any plethysmography device. Sits on a desktop. Moves between exam rooms. Can be wheeled on optional dedicated cart with DLCO gas cylinder.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#128176; No Maintenance</div>
+        <div class="card-body"><strong>Zero maintenance fees.</strong> No parts contract. No monthly sensor cleaning. No annual PM required. Self-calibrating before every test. 5-minute wipe-down between patients.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-teal">&#128203;</div>
+      <div>
+        <div class="section-title">What It Measures</div>
+        <div class="section-sub">Complete set of 30+ parameters, fully ATS/ERS compliant</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">&#129295; Spirometry (FVC)</div>
+        <div class="card-body">FEV1, FVC, FEV1/FVC, FEF 25-75, PEF, FEV6, MVV, SVC, and more. Pre and post bronchodilator. Methacholine challenge. Provocation testing. 6-Minute Walk Test.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#92400e;">&#127847; Lung Volumes (LVM)</div>
+        <div class="card-body">TLC, FRC, RV, VC, IC, ERV &mdash; same volumes as body plethysmography. Measures <strong>trapped air</strong> that gas dilution methods miss in obstructive disease. GLI reference values standard.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#6d28d9;">&#128165; Diffusing Capacity (DLCO)</div>
+        <div class="card-body">DLCO, VA, DLCO/VA (KCO). Single-breath method. Fully automatic. Differentiates damage from COVID vs. COPD vs. asthma. Identifies ILD, emphysema, pulmonary vascular disease.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-green">&#127968;</div>
+      <div>
+        <div class="section-title">Ideal Settings</div>
+      </div>
+    </div>
+    <div class="card-grid grid-3">
+      <div class="card">
+        <div class="card-title">Private Practice</div>
+        <div class="card-body">Pulmonology, Allergy, and Internal Medicine offices. Runs without a dedicated PFT room. Any staff member can operate it. Generates immediate revenue through fully reimbursable CPT codes.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hospital Outpatient Clinics</div>
+        <div class="card-body">Smallest plethysmography footprint available. HL7-compliant, integrates with all major EMR systems. Mobile between locations &mdash; ideal for multi-site health systems.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pediatrics</div>
+        <div class="card-body">Children can be tested from age 5. Cabinless design eliminates claustrophobia. Tidal breathing only &mdash; no exhausting panting maneuvers. Testing takes 15 to 20 minutes vs. 45 with a body box.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLINICAL PROOF -->
+  <div class="tab-panel" id="tab-clinical">
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#128196;</div>
+      <div>
+        <div class="section-title">Clinical Evidence</div>
+        <div class="section-sub">Published peer-reviewed studies validating MiniBox+ accuracy across populations and geographies</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-green">
+      <div class="alert-icon">&#9989;</div>
+      <div><strong>Bottom line:</strong> MiniBox+ lung volumes are statistically equivalent to body plethysmography across healthy participants and those with obstructive and restrictive disease &mdash; and perform better than Helium Dilution, Nitrogen Washout, and CT in head-to-head comparisons.</div>
+    </div>
+
+    <div class="card-grid grid-4" style="margin-bottom:16px;">
+      <div class="stat-card">
+        <div class="stat-num">700+</div>
+        <div class="stat-label">Patients studied</div>
+        <div class="stat-sub">Across 11 medical centers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">8.9%</div>
+        <div class="stat-label">MiniBox NSD vs. body box</div>
+        <div class="stat-sub">vs. 15.3% for Helium Dilution</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">0</div>
+        <div class="stat-label">LVM test failures</div>
+        <div class="stat-sub">vs. 19% failure rate for body box (Verona)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">7.2 min</div>
+        <div class="stat-label">Avg. test time</div>
+        <div class="stat-sub">vs. 13.9 min for body box</div>
+      </div>
+    </div>
+
+    <table class="nsd-table">
+      <thead>
+        <tr>
+          <th style="text-align:left; background:#0a3d6b; padding:12px 16px; font-size:12px; font-weight:600; color:#fff;">Method vs. Body Box Gold Standard</th>
+          <th>Helium Dilution</th>
+          <th>Nitrogen Washout</th>
+          <th>CT Scan</th>
+          <th style="background:#0e6abf;">MiniBox+</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:13px 16px; font-size:13px; font-weight:600; border-top:1px solid #e8ecf0; background:#f4f6f9;">NSD % (lower is better)</td>
+          <td class="nsd-other">15.3%</td>
+          <td class="nsd-other">14.2%</td>
+          <td class="nsd-other">13.1%</td>
+          <td class="nsd-best">8.9%</td>
+        </tr>
+        <tr>
+          <td style="padding:13px 16px; font-size:13px; font-weight:600; border-top:1px solid #e8ecf0; background:#f4f6f9;">Published comparative studies</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#5a6a7a;">6</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#5a6a7a;">1</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#5a6a7a;">4</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; font-weight:700; color:#0e6abf;">1</td>
+        </tr>
+        <tr>
+          <td style="padding:13px 16px; font-size:13px; font-weight:600; border-top:1px solid #e8ecf0; background:#f4f6f9;">Underestimates volumes in obstruction</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#c0392b; font-weight:700;">Yes</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#c0392b; font-weight:700;">Yes</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#5a6a7a;">N/A</td>
+          <td style="text-align:center; border-top:1px solid #e8ecf0; color:#27ae60; font-weight:700; background:#f0fdf4;">No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="study-card">
+        <div class="study-journal">CHEST Journal &mdash; February 2021</div>
+        <div class="study-title">Validation of a Novel Compact System for the Measurement of Lung Volumes</div>
+        <div class="study-authors">Kenneth I. Berger MD (NYU), Ori Adam PhD, David A. Kaminsky MD, Robert J. Shiner MD, Felip Burgos PhD, Frans H.C. de Jongh PhD, Inon Cohen PhD, Jeffrey J. Fredberg PhD (Harvard)</div>
+        <div class="study-finding"><strong>Key finding:</strong> TLC measured by the MiniBox+ is not significantly different from conventional body plethysmography across 266 participants at 5 global medical centers &mdash; including patients with obstructive and restrictive disease. MiniBox+ volumes correlated better with the body box than any other office-based alternative. In 10 of 14 cases where device results differed, the MiniBox+ diagnosis was more clinically accurate.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-journal">Clinicoecon Outcomes Research &mdash; July 2021 (Verona, Italy)</div>
+        <div class="study-title">Comparison of Consistency, Feasibility, and Convenience of a Novel Compact System vs. Whole Body Plethysmography</div>
+        <div class="study-authors">Roberto W. Dal Negro MD, Paola Turco, Massimiliano Povero &mdash; 134 patients, Specialist Medical Centre, Verona</div>
+        <div class="study-finding"><strong>Key findings:</strong> MiniBox+ had <strong>significantly lower failure risk</strong> (8.21% vs. 19.4% for body box). Average test time was <strong>7.2 min vs. 13.9 min</strong> for body box. Cost per test was lower with MiniBox+ (&#8364;75.11 vs. &#8364;87.58). TLC and DLco values were highly consistent between both methods with clinically negligible differences.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-journal">VA Medical Center Cincinnati &mdash; USA Study</div>
+        <div class="study-title">MiniBox TLC vs. Body Plethysmography (MGC Diagnostics) &mdash; 50 Subjects</div>
+        <div class="study-authors">Conducted at the VA Medical Center, Cincinnati, OH</div>
+        <div class="study-finding"><strong>Key finding:</strong> MiniBox TLC correlated well with body box TLC (adjusted r&#178; = 0.85). CV of 9.1% &mdash; lower than the multi-center study CV of 12.1% and significantly lower than Helium Dilution (18.9%) and CT (15.6%) compared to body plethysmography.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-journal">Massachusetts General Hospital &mdash; Boston, USA</div>
+        <div class="study-title">MiniBox TLC vs. Body Plethysmography (Morgan Scientific) &mdash; 27 Subjects</div>
+        <div class="study-authors">Conducted by Dr. David J. Kanarek, Pulmonologist, MGH Boston</div>
+        <div class="study-finding"><strong>Key finding:</strong> MiniBox TLC correlated well with body box TLC (adjusted r&#178; = 0.85). CV of 10.9%. Results consistent with the multi-center validation data.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMPETITIVE -->
+  <div class="tab-panel" id="tab-competitive">
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#9878;</div>
+      <div>
+        <div class="section-title">Competitive Positioning</div>
+        <div class="section-sub">MiniBox+ vs. Traditional Body Box and Nitrogen Washout</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-amber">
+      <div class="alert-icon">&#9888;</div>
+      <div><strong>Key objection handler:</strong> "We already have a body box." &mdash; The MiniBox+ is not a replacement, it's a complement. It allows practices to run complete PFTs in satellite offices, exam rooms, and outpatient settings where a body box cannot go. It's also half the cost, requires zero maintenance, and is operable by any staff member.</div>
+    </div>
+
+    <h3 style="font-size:16px; font-weight:700; color:var(--blue-dark); margin-bottom:14px;">MiniBox+ vs. Traditional Body Box (Plethysmography)</h3>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th class="row-label">Category</th>
+          <th class="col-mini">MiniBox+ Portable Plethysmography</th>
+          <th class="col-other">Traditional Body Box</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="row-label">Testing measurements</td><td class="col-mini">Spirometry, LVM Plethysmography, DLCO</td><td class="col-other">Spirometry, LVM Plethysmography, DLCO</td></tr>
+        <tr><td class="row-label">Accuracy</td><td class="col-mini">&#9989; Equivalent to Body Box (published CHEST 2021)</td><td class="col-other">Gold standard</td></tr>
+        <tr><td class="row-label">CPT codes</td><td class="col-mini">&#9989; Same as Body Box</td><td class="col-other">Standard</td></tr>
+        <tr><td class="row-label">Measurement technique</td><td class="col-mini">&#9989; Easy. 6 buttons. Fully automatic LVM &amp; DLCO</td><td class="col-other">&#10060; Requires extensive training. Highly technician-dependent</td></tr>
+        <tr><td class="row-label">Complete PFT time</td><td class="col-mini">&#9989; 15 to 20 minutes</td><td class="col-other">&#10060; 30 to 45 minutes</td></tr>
+        <tr><td class="row-label">Patient comfort</td><td class="col-mini">&#9989; Comfortable. Tidal breathing only</td><td class="col-other">&#10060; Claustrophobic. Panting maneuver required</td></tr>
+        <tr><td class="row-label">Size &amp; mobility</td><td class="col-mini">&#9989; Compact &amp; portable. Desktop device</td><td class="col-other">&#10060; Large footprint. Stationary</td></tr>
+        <tr><td class="row-label">Cost</td><td class="col-mini">&#9989; Approximately half the cost of body box</td><td class="col-other">&#10060; High capital cost</td></tr>
+        <tr><td class="row-label">Maintenance</td><td class="col-mini">&#9989; Zero maintenance fees. Self-calibrating</td><td class="col-other">&#10060; Annual/semi-annual PM required. Monthly sensor cleaning</td></tr>
+        <tr><td class="row-label">Test failure rate</td><td class="col-mini">&#9989; 8.21% (Verona study)</td><td class="col-other">&#10060; 19.4% (Verona study)</td></tr>
+        <tr><td class="row-label">Pediatric use</td><td class="col-mini">&#9989; From age 5. Cabinless &mdash; not scary</td><td class="col-other">&#10060; Difficult for children. Claustrophobic</td></tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <h3 style="font-size:16px; font-weight:700; color:var(--blue-dark); margin-bottom:14px;">MiniBox+ vs. Nitrogen Washout (NDD and similar)</h3>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th class="row-label">Category</th>
+          <th class="col-mini">MiniBox+ Portable Plethysmography</th>
+          <th class="col-other">Nitrogen Washout</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="row-label">Lung volume method</td><td class="col-mini">TLC plethysmography</td><td class="col-other">TLC via N&#8322; washout</td></tr>
+        <tr><td class="row-label">Accuracy in obstruction</td><td class="col-mini">&#9989; Accurate &mdash; measures trapped air</td><td class="col-other">&#10060; <strong>Underestimates</strong> lung volumes in obstructed patients &mdash; gas doesn't reach trapped areas</td></tr>
+        <tr><td class="row-label">CPT reimbursement</td><td class="col-mini">&#9989; Higher reimbursement for plethysmography (94726)</td><td class="col-other">&#10060; Lower reimbursement for N&#8322; Washout</td></tr>
+        <tr><td class="row-label">Gas tanks needed</td><td class="col-mini">1 (DLCO only)</td><td class="col-other">2 (100% Oxygen + DLCO)</td></tr>
+        <tr><td class="row-label">Disposables per patient</td><td class="col-mini">1 filter</td><td class="col-other">4 filters</td></tr>
+        <tr><td class="row-label">Patient comfort</td><td class="col-mini">&#9989; Comfortable. Tidal breathing only</td><td class="col-other">&#10060; Dry mouth from lengthy O&#8322; flow. Any leak invalidates test</td></tr>
+        <tr><td class="row-label">Complete PFT time</td><td class="col-mini">&#9989; 15 to 20 minutes</td><td class="col-other">&#10060; 30 to 60 minutes</td></tr>
+        <tr><td class="row-label">Maintenance</td><td class="col-mini">&#9989; No maintenance fees</td><td class="col-other">Annual/semi-annual PM required</td></tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#128161;</div>
+      <div><strong>Critical talking point for COPD/Asthma practices:</strong> Nitrogen Washout and Helium Dilution systematically underestimate lung volumes in patients with obstructive disease &mdash; because gas cannot reach air trapped behind collapsed or narrowed airways. The MiniBox+ uses plethysmography, which measures ALL gas in the thorax including trapped air. This gives a truer picture of disease severity and can change the clinical diagnosis.</div>
+    </div>
+  </div>
+
+  <!-- REIMBURSEMENT -->
+  <div class="tab-panel" id="tab-reimbursement">
+    <div class="section-head">
+      <div class="section-icon icon-green">&#128176;</div>
+      <div>
+        <div class="section-title">CPT Codes &amp; Revenue</div>
+        <div class="section-sub">All tests fully reimbursable with no prior authorizations (subject to specific health plan policy)</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-green">
+      <div class="alert-icon">&#9989;</div>
+      <div><strong>Maximum payout for complete PFT</strong> (FVC, DLCO, LVM Pleth) is <strong>$151.45</strong> based on National Billing Average (Medicare/Medicaid). No prior authorizations required.</div>
+    </div>
+
+    <table class="cpt-table">
+      <thead>
+        <tr>
+          <th>CPT Code</th>
+          <th>Test Description</th>
+          <th>National Avg. Reimbursement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cpt-code">94010</span></td>
+          <td>Spirometry</td>
+          <td><span class="cpt-rate">$27.34</span></td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94375</span></td>
+          <td>Spirometry Flow Volume Loop</td>
+          <td><span class="cpt-rate">$39.11</span></td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94060</span></td>
+          <td>Spirometry Pre &amp; Post Bronchodilator</td>
+          <td><span class="cpt-rate">$38.80</span></td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94200</span></td>
+          <td>Maximum Breathing Capacity (MVV)</td>
+          <td>&mdash;</td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94726</span></td>
+          <td>LVM Plethysmography (Total Lung Capacity)</td>
+          <td><span class="cpt-rate">$55.72</span></td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94729</span></td>
+          <td>DLCO (Diffusing Capacity)</td>
+          <td><span class="cpt-rate">$59.87</span></td>
+        </tr>
+        <tr>
+          <td><span class="cpt-code">94618</span></td>
+          <td>Pulmonary Stress Testing (6-Minute Walk Test)</td>
+          <td>&mdash;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="section-head" style="justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="section-icon icon-green">&#128200;</div>
+        <div>
+          <div class="section-title">ROI Calculator</div>
+          <div class="section-sub">Dial in weekly volume and device cost &mdash; all numbers update live.</div>
+        </div>
+      </div>
+      <button class="roi-present-btn" onclick="openROIFullscreen()">
+        &#9654; Present to Physician
+      </button>
+    </div>
+
+    <div class="roi-calc-wrap">
+      <!-- Controls -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;" class="roi-ctrl-row">
+        <div>
+          <div class="roi-ctrl-label">Complete PFTs per week</div>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="roi-stepper">
+              <button onclick="roiChangeTests(-1)">&#8722;</button>
+              <span class="roi-stepper-val" id="roi-tests-display">25</span>
+              <button onclick="roiChangeTests(1)">&#43;</button>
+            </div>
+            <span id="roi-per-day" style="font-size:12px; color:var(--gray-600);"></span>
+          </div>
+          <input type="range" id="roi-slider" min="1" max="100" value="25" oninput="roiUpdateFromSlider()" style="width:100%; margin-top:10px; accent-color:var(--blue-brand);">
+        </div>
+        <div>
+          <div class="roi-ctrl-label">Device cost</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:22px; font-weight:600; color:var(--gray-600);">$</span>
+            <input type="number" id="roi-device-cost" value="30000" min="1000" step="500" oninput="roiCalc()" style="flex:1; height:48px; font-size:22px; font-weight:600; font-family:'Inter',sans-serif; border:1.5px solid var(--gray-300); border-radius:8px; padding:0 12px; color:var(--blue-dark); background:#fff; outline:none;">
+          </div>
+          <div style="font-size:11.5px; color:var(--gray-600); margin-top:5px;">enter purchase price to see breakeven date</div>
+        </div>
+      </div>
+
+      <!-- Revenue cards -->
+      <div class="rev-grid" style="margin-bottom:14px;">
+        <div class="rev-card"><div class="rev-period">Per Week</div><div class="rev-num" id="roi-week"></div></div>
+        <div class="rev-card"><div class="rev-period">Per Month</div><div class="rev-num" id="roi-month"></div></div>
+        <div class="rev-card"><div class="rev-period">Year 1</div><div class="rev-num" id="roi-y1"></div></div>
+        <div class="rev-card"><div class="rev-period">Year 3</div><div class="rev-num" id="roi-y3"></div></div>
+        <div class="rev-card"><div class="rev-period">Year 5</div><div class="rev-num" id="roi-y5"></div></div>
+      </div>
+
+      <!-- Breakeven row -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;" class="roi-ctrl-row">
+        <div class="roi-breakeven-card" style="border-left:4px solid var(--blue-brand);">
+          <div class="rev-period">Breakeven in</div>
+          <div class="rev-num" id="roi-days" style="color:var(--blue-brand);"></div>
+          <div id="roi-days-sub" style="font-size:11px; color:var(--gray-600); margin-top:3px;"></div>
+        </div>
+        <div class="roi-breakeven-card" style="border-left:4px solid var(--blue-brand);">
+          <div class="rev-period">Breakeven date</div>
+          <div id="roi-date" style="font-size:18px; font-weight:700; color:var(--blue-dark); margin-top:4px;"></div>
+          <div id="roi-weeks" style="font-size:11px; color:var(--gray-600); margin-top:3px;"></div>
+        </div>
+        <div class="roi-breakeven-card" style="border-left:4px solid var(--green);">
+          <div class="rev-period">Pure profit, Year 1</div>
+          <div class="rev-num" id="roi-profit"></div>
+          <div style="font-size:11px; color:var(--gray-600); margin-top:3px;">after device pays off</div>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div style="margin-bottom:18px;">
+        <div class="roi-ctrl-label" style="margin-bottom:10px;">5-year cumulative revenue</div>
+        <div id="roi-bars" style="display:flex; align-items:flex-end; gap:8px; height:120px;"></div>
+        <div id="roi-bar-labels" style="display:flex; gap:8px; margin-top:6px;"></div>
+      </div>
+
+      <!-- CPT breakdown -->
+      <div>
+        <div class="roi-ctrl-label" style="margin-bottom:8px;">Weekly revenue by test type</div>
+        <div id="roi-cpt-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:8px;"></div>
+      </div>
+
+      <div style="margin-top:14px; font-size:11px; color:var(--gray-600);">National Billing Average (Medicare/Medicaid). 48 working weeks per year. Full PFT = CPT 94010 + 94726 + 94729.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title">Connectivity &amp; EMR</div>
+        <div class="card-body">HL7 compliant. Easily configurable. Integrates with all major EMR systems. Optional add-on &mdash; does not affect base testing workflow.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Payment Options</div>
+        <div class="card-body">Flexible payment schedules available including <strong>no-interest plans.</strong> Ask your PulmOne representative for current financing terms.</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-amber" style="margin-top:16px;">
+      <div class="alert-icon">&#9888;</div>
+      <div>CPT coding should be based on medical necessity and is not intended to maximize reimbursement. Reimbursement is subject to specific health plan policy. All figures based on National Billing Average (Medicare/Medicaid).</div>
+    </div>
+  </div>
+
+  <!-- COACHING -->
+  <div class="tab-panel" id="tab-coaching">
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#127915;</div>
+      <div>
+        <div class="section-title">Patient Coaching Quick Reference</div>
+        <div class="section-sub">Setup, technique, and what to watch for during each test</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#9432;</div>
+      <div><strong>Universal setup for LVM and DLCO:</strong> HHU attached to MiniBox+. Adjust device height for patient. Lips sealed tightly over mouthpiece, teeth over mouthpiece, nose clip applied.</div>
+    </div>
+
+    <div class="coaching-card">
+      <div class="coaching-header">
+        <span class="coaching-tag tag-fvc">FVC</span>
+        <div>
+          <div class="coaching-name">Forced Vital Capacity</div>
+          <div class="coaching-desc">HHU detached from MiniBox+ for zeroing &mdash; then handed to patient. ATS requires 3 to 8 efforts.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Setup</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Detach HHU from MiniBox+ and allow to calibrate (zeroing).</li>
+            <li><div class="cli-num">2</div> Hand HHU to patient. Seal lips around mouthpiece, teeth over it, apply nose clip.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">Coaching the Patient</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot">&#8226;</div> Start with 2 to 3 normal relaxed breaths.</li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Deep inhale, then immediate forced fast exhale.</span></li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Squeeze ALL air out until the wheel turns GREEN.</span></li>
+            <li><div class="cli-dot">&#8226;</div> Deep breath back in to close the flow volume loop.</li>
+            <li><div class="cli-dot">&#8226;</div> Coach them to "BLAST" not just "blow." Prompt the sharp start &mdash; no hesitation at top of inhale.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="coaching-card">
+      <div class="coaching-header">
+        <span class="coaching-tag tag-lvm">LVM</span>
+        <div>
+          <div class="coaching-name">Lung Volume Measurement</div>
+          <div class="coaching-desc">HHU attached to MiniBox+. Must be performed after FVC. Counter must reach SIX successful events.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Setup</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Attach HHU to MiniBox+. Adjust device height for patient.</li>
+            <li><div class="cli-num">2</div> Patient seals lips and applies nose clip.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">Coaching the Patient</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot">&#8226;</div> Relaxed normal breathing for about one minute. <span class="highlight">Keep breaths below 1 Liter.</span></li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Once counter turns GREEN and reads "6,"</span> on the NEXT breath take a slow deep inhale to full capacity.</li>
+            <li><div class="cli-dot">&#8226;</div> Breathe out slow, squeeze all air out until the line hits plateau (empty).</li>
+            <li><div class="cli-dot">&#8226;</div> Take a breath in and come off mouthpiece.</li>
+            <li><div class="cli-dot">&#8226;</div> Watch for downward or upward sloping graph &mdash; indicates air leak.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="coaching-card">
+      <div class="coaching-header">
+        <span class="coaching-tag tag-dlco">DLCO</span>
+        <div>
+          <div class="coaching-name">Diffusing Capacity</div>
+          <div class="coaching-desc">HHU attached. Minimum 2, maximum 5 tests. Allow 4 minutes between tests for gas clearance.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Setup</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Attach HHU to MiniBox+. Adjust height. Patient seals lips, applies nose clip.</li>
+            <li><div class="cli-num">2</div> Start on an inhale and complete <span class="highlight">FOUR normal tidal breaths.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">Coaching the Patient</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot">&#8226;</div> Patient exhales fully on the 4th breath.</li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Wait for device to click (valve closes),</span> then take a fast deep breath in to TLC.</li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Inhalation must reach above the GREEN dotted line.</span> Patient should inhale 85% of VC within 4 seconds.</li>
+            <li><div class="cli-dot">&#8226;</div> <span class="highlight">Hold breath for 8 to 10 seconds.</span></li>
+            <li><div class="cli-dot">&#8226;</div> Once wheel turns GREEN, exhale completely to empty. Then inhale and come off mouthpiece.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#9888;</div>
+      <div>
+        <div class="section-title">Common Failure Reasons &amp; Fixes</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">FVC &mdash; "Don't hesitate, exhale faster"</div>
+        <div class="card-body">Patient paused at the top of the inhalation (Evol exceeded 5% of FVC). Fix: coach them to <strong>immediately blast</strong> the air out the moment they reach peak inhalation &mdash; zero hesitation.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">FVC &mdash; End-of-test criteria not found</div>
+        <div class="card-body">Patient stopped exhaling before the plateau was reached. Fix: <strong>"Keep going, blow out every last bit of air."</strong> Common in COPD patients who have prolonged expiratory time.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">LVM &mdash; TGV line not established</div>
+        <div class="card-body">Tidal breathing was irregular before the maneuver. Fix: <strong>delete this test result</strong> (manual specifically recommends it). Allow patient to settle and breathe normally before restarting.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">DLCO &mdash; Couldn't find stable parameters</div>
+        <div class="card-body">The 4 required tidal breaths were skipped or unsteady. Fix: reinforce the sequence. <strong>Do NOT rush</strong> the patient into the maneuver. Wait the full 4 minutes before repeating.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERPRETATION -->
+  <div class="tab-panel" id="tab-interpretation">
+    <div class="section-head">
+      <div class="section-icon icon-teal">&#129504;</div>
+      <div>
+        <div class="section-title">Interpreting PFT Results</div>
+        <div class="section-sub">A stepwise clinical approach authored by Jeffrey Weiss, MD &mdash; Weiss Medical Allergy, Asthma &amp; Immunology</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#9432;</div>
+      <div>The MiniBox+ automatically generates an ATS/ERS-based interpretation and decision tree with every report. The following is the clinical logic behind it. <strong>Physician review is always required.</strong></div>
+    </div>
+
+    <div class="interp-step">
+      <div class="step-num-big">1</div>
+      <div class="interp-text"><strong>Look at spirometry first.</strong> Normal or abnormal FEV1. If abnormal, look for other signs of an obstructive ventilatory defect: low FEF 25-75 and low FEV1/FVC.</div>
+    </div>
+    <div class="interp-step">
+      <div class="step-num-big">2</div>
+      <div class="interp-text"><strong>If FVC is low,</strong> this could be a sign of a restrictive ventilatory defect. Check PEF to evaluate the effort of the maneuver.</div>
+    </div>
+    <div class="interp-step">
+      <div class="step-num-big">3</div>
+      <div class="interp-text"><strong>If clinical history suggests asthma,</strong> administer a bronchodilator and check for a bronchodilator response (12% improvement in FEV1 or 20% improvement in FEF25-75). You can also perform methacholine challenge &mdash; a 15 to 20% decrease in FEV1 from the provocative dose is significant.</div>
+    </div>
+    <div class="interp-step">
+      <div class="step-num-big">4</div>
+      <div class="interp-text"><strong>If FEV1 is normal but you're still concerned,</strong> check Lung Volumes next. If RV is elevated, this suggests air trapping &mdash; which could indicate an obstructive ventilatory defect (e.g. asthma).</div>
+    </div>
+    <div class="interp-step">
+      <div class="step-num-big">5</div>
+      <div class="interp-text"><strong>If lung volumes show a decrease in TLC,</strong> this is indicative of a restrictive ventilatory defect.</div>
+    </div>
+    <div class="interp-step">
+      <div class="step-num-big">6</div>
+      <div class="interp-text"><strong>If restriction is confirmed,</strong> check DLCO to determine the cause. Normal DLCO suggests extra-parenchymal processes (outside the lungs) such as a neuromuscular disorder. Low DLCO suggests an intra-parenchymal process (within the lungs) such as interstitial lung disease, idiopathic pulmonary fibrosis, sarcoidosis, or emphysema.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-teal">&#127775;</div>
+      <div>
+        <div class="section-title">DLCO Clinical Pearls</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">Low DLCO &mdash; Think</div>
+        <div class="card-body">Emphysema, Interstitial Lung Disease (ILD), Idiopathic Pulmonary Fibrosis, Sarcoidosis, Pulmonary Vascular disease, Anemia, Early emphysema, Early ILD. Also present in COVID-related lung damage and COPD.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#27ae60;">High DLCO &mdash; Think</div>
+        <div class="card-body">Asthma, Obesity, Polycythemia, Intrapulmonary Hemorrhage. A high DLCO in context of obstruction often points toward asthma rather than emphysema.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Normal Spirometry + Low DLCO</div>
+        <div class="card-body">May suggest Anemia, Pulmonary Vascular Disorders, Early ILD, or Early Emphysema. Lung volumes are normal but gas transfer is impaired &mdash; catch this early before spirometry changes.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Emphysema Pattern</div>
+        <div class="card-body">Can present with airflow obstruction on PFTs <strong>AND</strong> low DLCO simultaneously. This combination is a key differentiator from asthma, where DLCO is typically normal or elevated.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="alert-box alert-amber">
+      <div class="alert-icon">&#128161;</div>
+      <div><strong>Why LVM matters for allergists and pulmonologists:</strong> Spirometry can appear normal even when air trapping is occurring. An elevated RV (residual volume) on the LVM test is the earliest indicator of obstructive disease &mdash; especially in asthma where the FEV1 may still be within normal range. This is a compelling reason to add LVM to every spirometry encounter.</div>
+    </div>
+  </div>
+
+  <!-- CONTACTS -->
+  <div class="tab-panel" id="tab-contacts">
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#128222;</div>
+      <div>
+        <div class="section-title">Key Contacts &amp; Resources</div>
+        <div class="section-sub">PulmOne support, key clinical champions, and conference contacts</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">&#127482;&#127480; PulmOne USA Support</div>
+        <div class="card-body">
+          <div style="margin-bottom:8px;"><strong>Phone:</strong> 1-844-PulmOne (1-844-785-6663)</div>
+          <div style="margin-bottom:8px;"><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f0a0c363139301f2f2a33327230313a713c3032">[email&#160;protected]</a></div>
+          <div style="margin-bottom:8px;"><strong>Website:</strong> www.pulm-one.com</div>
+          <div><strong>Address:</strong> 444 Madison Ave, 6th Floor, New York, NY 10022</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#127758; PulmOne International</div>
+        <div class="card-body">
+          <div style="margin-bottom:8px;"><strong>Phone:</strong> +972 (77) 510 0938</div>
+          <div style="margin-bottom:8px;"><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a4cdcac2cbe4d4d1c8c989cbcac18ac7cbc9">[email&#160;protected]</a></div>
+          <div><strong>Address:</strong> 14 HaMelacha St., Ra'anana 4366107, Israel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-teal">&#127891;</div>
+      <div>
+        <div class="section-title">Clinical Champions &amp; Key Opinion Leaders</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card" style="border-left:4px solid var(--blue-brand);">
+        <div class="card-title">Dr. Kenneth I. Berger, MD</div>
+        <div class="card-body">
+          <div style="margin-bottom:6px;"><span class="pill pill-blue">NYU Grossman School of Medicine</span></div>
+          <div style="margin-bottom:6px;">Associate Professor, Division of Pulmonary Critical Care and Sleep Medicine. André Cournand Pulmonary Physiology Lab, Bellevue Hospital. <strong>Financial interest in PulmOne.</strong> Lead author on CHEST 2021 MiniBox+ validation study.</div>
+          <div style="margin-bottom:4px;"><strong>Phone:</strong> (212) 263-6118</div>
+          <div style="margin-bottom:4px;"><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="347f515a5a51405c1a565146535146745a4d4159571a5b4653">[email&#160;protected]</a></div>
+          <div><strong>Office:</strong> 400 E 34th St, New York, NY 10016</div>
+        </div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--teal);">
+        <div class="card-title">Prof. Jeffrey J. Fredberg, PhD</div>
+        <div class="card-body">
+          <div style="margin-bottom:6px;"><span class="pill pill-blue">Harvard T.H. Chan School of Public Health</span></div>
+          <div style="margin-bottom:6px;">Department of Environmental Health. World-leading Lung Mechanics expert. Financial interest in PulmOne. Co-author on CHEST 2021 study. Explained the MiniBox+ science in the PulmOne "Interview with the Experts" paper.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#127970;</div>
+      <div>
+        <div class="section-title">Conference &amp; Vendor Contacts</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title">NYDART Spring Symposium &mdash; April 10, 2026</div>
+        <div class="card-body">
+          <div style="margin-bottom:6px;">Kingsborough Community College, Marine &amp; Academic Center Lighthouse, 2001 Oriental Blvd, Brooklyn, NY 11235. 8.25 AARC CRCE credits.</div>
+          <div style="margin-bottom:6px;"><strong>Vendor Registration (Solutions X2):</strong><br>Phone: 215-353-2477 or 610-772-0661<br>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="43302c2f36372a2c2d303b7103202c2e202230376d2d2637">[email&#160;protected]</a></div>
+          <div><strong>Michael Karol (Exhibition Manager):</strong><br>Phone: 917-685-2835 &mdash; Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="54393f616214353b387a373b39">[email&#160;protected]</a></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">NYDART &amp; NYSSRC</div>
+        <div class="card-body">
+          <div style="margin-bottom:6px;"><strong>Felix Khusid</strong> &mdash; NYDART President &amp; Admin Director for Respiratory Therapy, NYP Brooklyn Methodist Hospital. Phone: 718-780-3000 (main).</div>
+          <div style="margin-bottom:6px;"><strong>NYSSRC Western Conference:</strong> April 23, 2026 at Batavia Downs (upstate NY).</div>
+          <div><strong>NYSSRC Annual Symposium:</strong> September 17 to 18, 2026 at Vernon Downs. Registration opens mid-May.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- IT & CONNECTIVITY -->
+  <div class="tab-panel" id="tab-it">
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#128279;</div>
+      <div>
+        <div class="section-title">IT &amp; Connectivity</div>
+        <div class="section-sub">HL7 integration, tablet specs, security architecture, and network requirements for IT departments</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#9432;</div>
+      <div><strong>Key message for IT:</strong> The MiniBox+ operates in standalone mode with zero IT infrastructure required. HL7 EMR integration is optional and adds no complexity to the base device. All HL7 software is built into the tablet &mdash; no external servers needed. Connection is TCP/IP over Wi-Fi to the practice's existing EMR server.</div>
+    </div>
+
+    <div class="section-head" style="margin-top:8px;">
+      <div class="section-icon icon-teal">&#128203;</div>
+      <div>
+        <div class="section-title">HL7 Integration Overview</div>
+        <div class="section-sub">PUO-DOC20130 Rev. 01 &mdash; September 2024</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <div class="card-title">HL7 Standard</div>
+        <div class="card-body">Supports <strong>HL7 v2.5.1</strong> natively. Also successfully integrated with HL7 v2.3 and v2.4. Compatible with higher versions &mdash; contact PulmOne for guidance.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Connection Type</div>
+        <div class="card-body"><strong>TCP/IP over Wi-Fi.</strong> MiniBox listening port: <strong>8080</strong> (configurable). Static IP assignment recommended via DHCP to prevent connectivity loss after power failure or network maintenance.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Operating Mode</div>
+        <div class="card-body">Works in <strong>standalone mode</strong> (no network required) or as an <strong>HL7 client</strong> connected to the practice EMR. All HL7 software is built into the MiniBox tablet &mdash; no external servers required.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-teal">&#8646;</div>
+      <div>
+        <div class="section-title">Data Flow: What Goes In and What Comes Out</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card" style="border-left:4px solid var(--blue-brand);">
+        <div class="card-title" style="color:var(--blue-brand);">&#8594; EMR to MiniBox (ORMO01 Order Message)</div>
+        <div class="card-body" style="margin-bottom:10px;">The EMR sends patient demographic and order information to the MiniBox before the test begins. This pre-populates the patient record automatically.</div>
+        <div class="card-body"><strong>Required fields:</strong> Patient ID, Patient Name, Date of Birth, Sex, Message Type (ORM^O01), Universal Service ID (e.g., PFT13^COMPLETE PULMONARY FUNCTION TEST).</div>
+        <div style="margin-top:10px; padding:10px; background:var(--gray-100); border-radius:6px; font-family:'DM Mono',monospace; font-size:11px; line-height:1.7; color:#374151;">
+          Valid test order codes:<br>
+          PFT13^COMPLETE PULMONARY FUNCTION TEST &rarr; FVC + LVM + DLCO<br>
+          PulmOneSPR^Pulm One Spirometry &rarr; FVC only<br>
+          PulmOneSVC^Pulm One Slow Vital &rarr; SVC only<br>
+          PulmOneMVV^Pulm One Voluntary &rarr; MVV only<br>
+          PFT Full &rarr; FVC + LVM + DLCO
+        </div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--teal);">
+        <div class="card-title" style="color:var(--teal);">&#8592; MiniBox to EMR (ORUR01 Results Message)</div>
+        <div class="card-body" style="margin-bottom:10px;">After testing, the MiniBox automatically sends results back to the EMR. No manual data entry required.</div>
+        <div class="card-body"><strong>What is transmitted per parameter:</strong> Best measured value, Predicted value, % Predicted, Lower Limit of Normal (LLN), Upper Limit of Normal (ULN), and Z-Score.</div>
+        <div style="margin-top:10px; padding:10px; background:var(--gray-100); border-radius:6px; font-size:13px; color:#374151;">
+          <strong>Also included:</strong> Full visit summary PDF report encoded in Base64 within the ORUR01 message &mdash; OR stored on a network drive with the filename embedded in the message. Pre and Post bronchodilator values sent as separate OBX segments.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#128274;</div>
+      <div>
+        <div class="section-title">Security Architecture</div>
+        <div class="section-sub">MDS2 Disclosure &mdash; SW Versions 3.2.0.0 to 3.3.0.0 &mdash; January 30, 2025</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <div class="card-title">Data Encryption</div>
+        <div class="card-body">Patient data stored in an encrypted SQLite database on the tablet's internal drive. Local encryption via <strong>Windows BitLocker.</strong> Data partitioned separately from the operating system.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">User Authentication</div>
+        <div class="card-body">Role-based access control (Admin and General roles). Password minimum 8 characters with uppercase, lowercase, digit, and special character required. <strong>Account locked after 5 failed attempts.</strong> Passwords expire after 90 days.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Auto Logoff</div>
+        <div class="card-body">Automatic logoff after <strong>15 minutes of inactivity</strong> (configurable). System returns to home screen. Configurable with assistance from PulmOne Customer Support.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Audit Logging</div>
+        <div class="card-body">Audit log records: successful and unsuccessful logins, user creation/modification/deletion, data import/export via USB, HL7 data transmission, and software updates. Log exportable via USB. Requires admin privileges to access.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Kiosk Mode</div>
+        <div class="card-body">Device operates in <strong>Windows Kiosk Mode by default.</strong> Operators can only access the MiniBox application. Windows admin password required to exit Kiosk mode and install any third-party software.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Network Security</div>
+        <div class="card-body">Windows Firewall enabled. Wi-Fi with WPA/WPA2 authentication. <strong>No internet connection required</strong> for PFT testing. Device does not communicate with external networks outside of HL7 to the local EMR server.</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-amber" style="margin-top:16px;">
+      <div class="alert-icon">&#9888;</div>
+      <div><strong>HL7 data in transit is not encrypted.</strong> PulmOne recommends HL7 communication occur within the practice's internal network. The device does not transmit ePHI over the internet. Full MDS2 disclosure document available on request from PulmOne (PUO-DOCXXXXX, Jan 30, 2025).</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-blue">&#128187;</div>
+      <div>
+        <div class="section-title">Tablet: Microsoft Surface Go 4</div>
+        <div class="section-sub">PulmOne-validated tablet running MiniBox+ software &mdash; performance tested June 2024</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title">Hardware Specifications</div>
+        <div class="card-body">
+          <table style="width:100%; font-size:13px; border-collapse:collapse;">
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600); width:45%;">CPU</td><td style="padding:5px 0; font-weight:500;">Intel N200, Quad Core, Max 3.7 GHz</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">RAM</td><td style="padding:5px 0; font-weight:500;">8GB LPDDR5</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">Storage</td><td style="padding:5px 0; font-weight:500;">128GB UFS Drive</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">Display</td><td style="padding:5px 0; font-weight:500;">10.5" PixelSense 1920x1280 touchscreen</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">OS</td><td style="padding:5px 0; font-weight:500;">Windows 11 Pro</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">Wi-Fi</td><td style="padding:5px 0; font-weight:500;">Wi-Fi 6 (802.11ax)</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:5px 0; color:var(--gray-600);">Security</td><td style="padding:5px 0; font-weight:500;">TPM 2.0, BitLocker, Windows Secured-core PC</td></tr>
+            <tr><td style="padding:5px 0; color:var(--gray-600);">Weight</td><td style="padding:5px 0; font-weight:500;">1.15 lbs (521g)</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Performance Test Results vs. Surface Go 3</div>
+        <div class="card-body" style="margin-bottom:10px;">PulmOne formally tested the Surface Go 4 against the Surface Go 3 (the previous MiniBox tablet) in June 2024. The Go 4 was approved as the replacement tablet for all MiniBox+ units.</div>
+        <table style="width:100%; font-size:12.5px; border-collapse:collapse;">
+          <thead><tr style="background:var(--blue-dark);">
+            <th style="padding:8px 10px; text-align:left; color:#fff; font-weight:600; font-size:11px;">Test</th>
+            <th style="padding:8px 10px; text-align:center; color:#fff; font-weight:600; font-size:11px;">Go 4</th>
+            <th style="padding:8px 10px; text-align:center; color:#fff; font-weight:600; font-size:11px;">Go 3</th>
+            <th style="padding:8px 10px; text-align:center; color:#5bc8f5; font-weight:600; font-size:11px;">Delta</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:7px 10px; color:var(--gray-600);">Overall</td><td style="text-align:center; padding:7px 10px; font-weight:500;">1308</td><td style="text-align:center; padding:7px 10px;">1118</td><td style="text-align:center; padding:7px 10px; color:var(--green); font-weight:600;">+16.9%</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200); background:var(--green-light);"><td style="padding:7px 10px; color:var(--gray-600);">CPU</td><td style="text-align:center; padding:7px 10px; font-weight:700; color:var(--green);">5300</td><td style="text-align:center; padding:7px 10px;">2973</td><td style="text-align:center; padding:7px 10px; color:var(--green); font-weight:700;">+78.2%</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:7px 10px; color:var(--gray-600);">2D Graphics</td><td style="text-align:center; padding:7px 10px; font-weight:500;">162</td><td style="text-align:center; padding:7px 10px;">109</td><td style="text-align:center; padding:7px 10px; color:var(--green); font-weight:600;">+48.6%</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:7px 10px; color:var(--gray-600);">Memory</td><td style="text-align:center; padding:7px 10px; font-weight:500;">1709</td><td style="text-align:center; padding:7px 10px;">1644</td><td style="text-align:center; padding:7px 10px; color:var(--green); font-weight:600;">+3.9%</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:10px; font-size:12px; color:var(--gray-600);">Conclusion from PulmOne test report: "The Surface Go 4 can run MiniBox+ software reliably with similar or better performance than the existing tablet."</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <div class="section-icon icon-green">&#9989;</div>
+      <div>
+        <div class="section-title">IT Checklist for HL7 Rollout</div>
+        <div class="section-sub">What the practice IT team needs to do to enable HL7 integration</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title">Network Requirements</div>
+        <div class="card-body">
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Assign static IP to MiniBox tablet via DHCP</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Open firewall: allow TCP from EMR server IP to MiniBox port 8080</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Open firewall: allow TCP from MiniBox IP to EMR results interface port</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Ensure Wi-Fi 6 access point in testing room</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> WPA/WPA2 authentication on wireless network</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">EMR Configuration</div>
+        <div class="card-body">
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Configure HL7 order interface to send ORMO01 messages to MiniBox IP:8080</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Configure HL7 results interface to receive ORUR01 from MiniBox</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Set Universal Service ID to PFT13^COMPLETE PULMONARY FUNCTION TEST for full panel</li>
+            <li style="display:flex; gap:10px; font-size:13px;"><span style="color:var(--green); font-weight:700; flex-shrink:0;">&#10003;</span> Contact PulmOne for configuration support &mdash; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c696f55525a537c4c49505111535259125f5351">[email&#160;protected]</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="tab-panel" id="tab-troubleshooting">
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#9888;</div>
+      <div>
+        <div class="section-title">Troubleshooting Guide</div>
+        <div class="section-sub">Error codes, hardware failures, and step-by-step fixes for common MiniBox+ issues</div>
+      </div>
+    </div>
+
+    <div class="alert-box alert-amber">
+      <div class="alert-icon">&#9888;</div>
+      <div><strong>If a device cannot be resolved remotely,</strong> it must be sent in for repair. Contact PulmOne at <strong>1-844-PulmOne (785-6663)</strong> or <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2a7f7943444c456a5a5f46470745444f04494547">[email&#160;protected]</a></strong> to initiate a service order.</div>
+    </div>
+
+    <!-- EC102G -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC102G</span>
+        <div>
+          <div class="coaching-name">HUB Board Error</div>
+          <div class="coaching-desc">Communication failure on the HUB board.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Ask customer to disconnect everything.</li>
+            <li><div class="cli-num">2</div> Reconnect all cables.</li>
+            <li><div class="cli-num">3</div> Restart the device completely.</li>
+            <li><div class="cli-num">4</div> Perform 2 successful DLCO tests to confirm resolution.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for HUB board repair.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EC117 -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC117</span>
+        <div>
+          <div class="coaching-name">Gas Analyzer Issue</div>
+          <div class="coaching-desc">Internal gas system error.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Have the customer restart the tablet.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span> Replace Gas Analyzer.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EC11H -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC11H</span>
+        <div>
+          <div class="coaching-name">HHU Connection Error</div>
+          <div class="coaching-desc">HHU not communicating with MiniBox+.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Disconnect the HHU.</li>
+            <li><div class="cli-num">2</div> Reconnect the HHU securely.</li>
+            <li><div class="cli-num">3</div> Restart the device and confirm error is gone.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> Send only the HHU in for repair, <strong>or</strong></li>
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> Ship a replacement HHU to the customer.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EC11M -->
+    <div class="coaching-card">
+      <div class="coaching-header" style="background:#fff5f5;">
+        <span class="coaching-tag" style="background:#fde8e6; color:#c0392b;">EC11M</span>
+        <div>
+          <div class="coaching-name">Communication Port Error</div>
+          <div class="coaching-desc">CU port or communication cable issue. Check for physical damage.</div>
+        </div>
+      </div>
+      <div class="coaching-body">
+        <div>
+          <div class="coaching-col-title">Remote Steps</div>
+          <ul class="coaching-list">
+            <li><div class="cli-num">1</div> Turn off the device.</li>
+            <li><div class="cli-num">2</div> Disconnect all communication cables.</li>
+            <li><div class="cli-num">3</div> Ask customer to send a photo of the back of the device &mdash; check if CU port is damaged.</li>
+            <li><div class="cli-num">4</div> Wait 10 seconds, then power the device back on.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="coaching-col-title">If Error Persists</div>
+          <ul class="coaching-list">
+            <li><div class="cli-dot" style="color:#c0392b;">&#8226;</div> <span class="highlight">Device must come in for repair.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CO CH4 Low -->
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#128197;</div>
+      <div>
+        <div class="section-title">CO and CH&#8324; Concentration Low</div>
+        <div class="section-sub">Work through each step in order before escalating to a repair</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title">Step 1 &mdash; Verify Gas Mixture</div>
+        <div class="card-body">Confirm the tank contains the correct mixture:<br><br>
+          &bull; <strong>0.3%</strong> Methane (CH&#8324;)<br>
+          &bull; <strong>0.3%</strong> Carbon Monoxide (CO)<br>
+          &bull; <strong>21%</strong> Oxygen (O&#8322;)<br>
+          &bull; Balanced Nitrogen (N&#8322;)<br>
+          &bull; <strong>2% Accuracy</strong> Medical Grade
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Step 2 &mdash; Check Tank Pressure &amp; Volume</div>
+        <div class="card-body">Verify both gauges on the regulator:<br><br>
+          &bull; <strong>Left gauge (Pressure):</strong> 70&ndash;75 PSI<br>
+          &bull; <strong>Right gauge (Volume):</strong> Above 500 PSI<br><br>
+          If either reading is out of range, replace or refill the tank before proceeding.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Step 3 &mdash; Purge / Bleed the Gas Line</div>
+        <div class="card-body">
+          1. Turn off the gas tank completely.<br>
+          2. Use the white knob to decrease pressure as far as it will go.<br>
+          3. Disconnect the gas tubing from the regulator: press up the tiny black O-ring, then pull the tubing downward.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Step 4 &mdash; Cubic App Recalibration (Pre-2023 Devices Only)</div>
+        <div class="card-body">If steps 1&ndash;3 don't resolve and device is <strong>older than 2023</strong>, use Cubic's app to recalibrate the gas analyzer. Watch the Cubic app training video first.<br><br>
+          If the app still shows low CO and CH&#8324;: <span class="highlight">device must come in for repair.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Hardware failures -->
+    <div class="section-head">
+      <div class="section-icon icon-amber" style="background:#fde8e6;">&#128268;</div>
+      <div>
+        <div class="section-title">Hardware Failures &mdash; No Remote Fix</div>
+        <div class="section-sub">These cannot be resolved remotely. Device must be sent in.</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card" style="border-left:4px solid var(--red);">
+        <div class="card-title" style="color:#c0392b;">Main Board Watchdog Error</div>
+        <div class="card-body">The main board has failed. <strong>Device must come in for repair.</strong> Action: replace the mainboard.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--red);">
+        <div class="card-title" style="color:#c0392b;">Sensor Board Watchdog Error</div>
+        <div class="card-body">The sensor has gone bad. <strong>HHU must be replaced.</strong> Ship a replacement HHU or have the unit returned for repair.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Common test failures -->
+    <div class="section-head">
+      <div class="section-icon icon-amber">&#9888;</div>
+      <div>
+        <div class="section-title">Common Test Failure Reasons &amp; Fixes</div>
+        <div class="section-sub">Patient coaching corrections for FVC, LVM, and DLCO failures</div>
+      </div>
+    </div>
+
+    <div class="card-grid grid-2">
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">FVC &mdash; Don't hesitate, exhale faster</div>
+        <div class="card-body">Patient paused at the top of inhalation (Evol exceeded 5% of FVC). Fix: coach them to <strong>immediately blast</strong> air out the moment they reach peak inhalation &mdash; zero hesitation.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">FVC &mdash; End-of-test criteria not found</div>
+        <div class="card-body">Patient stopped exhaling before plateau was reached. Fix: <strong>"Keep going, blow out every last bit of air."</strong> Common in COPD patients with prolonged expiratory time.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">LVM &mdash; TGV line not established</div>
+        <div class="card-body">Tidal breathing was irregular before the maneuver. Fix: <strong>delete this test result</strong> (manual specifically recommends it). Let patient settle, then restart.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#c0392b;">DLCO &mdash; Couldn't find stable parameters</div>
+        <div class="card-body">The 4 required tidal breaths were skipped or unsteady. Fix: reinforce the full sequence. <strong>Do NOT rush</strong> the patient. Wait the full 4 minutes before repeating.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toolkit-footer">
+  <div class="footer-bar">
+    <div class="fl">
+      <div class="fl-label">US Support</div>
+      <div class="fl-val">1-844-PulmOne (785-6663)</div>
+    </div>
+    <div class="fdiv"></div>
+    <div class="fl">
+      <div class="fl-label">Email</div>
+      <div class="fl-val">USinfo@pulm-one.com</div>
+    </div>
+    <div class="fdiv"></div>
+    <div class="fl">
+      <div class="fl-label">Website</div>
+      <div class="fl-val">www.pulm-one.com</div>
+    </div>
+    <div class="fdiv"></div>
+    <div class="fl">
+      <div class="fl-label">Document</div>
+      <div class="fl-val">MiniBox+ Master Toolkit v1.1</div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN PHYSICIAN PRESENTATION OVERLAY -->
+<div id="roi-fullscreen">
+  <div class="fs-header">
+    <div class="fs-logo">PulmOne Advanced Medical Devices</div>
+    <div class="fs-title">MiniBox+ Revenue Projection</div>
+    <button class="fs-close" onclick="closeROIFullscreen()">&#10005; Close</button>
+  </div>
+  <div class="fs-body">
+    <div class="fs-hero">
+      <div class="fs-hero-label">Year 1 revenue potential</div>
+      <div class="fs-hero-num" id="fs-hero-num">$181,740</div>
+      <div class="fs-hero-sub" id="fs-hero-sub">based on 25 complete PFTs per week</div>
+    </div>
+
+    <div class="fs-controls">
+      <div>
+        <div class="fs-ctrl-label">PFTs per week</div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div class="fs-stepper">
+            <button onclick="fsChangeTests(-1)">&#8722;</button>
+            <span class="fs-stepper-val" id="fs-tests-val">25</span>
+            <button onclick="fsChangeTests(1)">&#43;</button>
+          </div>
+          <span id="fs-per-day" style="font-size:14px; color:#a8d0ee;"></span>
+        </div>
+        <input type="range" id="fs-slider" min="1" max="100" value="25" oninput="fsUpdateFromSlider()" style="width:100%; margin-top:12px; accent-color:#5bc8f5;">
+      </div>
+      <div>
+        <div class="fs-ctrl-label">Device cost</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:26px; font-weight:700; color:#7ab6e0;">$</span>
+          <input type="number" id="fs-device-cost" value="30000" min="1000" step="500" oninput="fsCalc()" class="fs-cost-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="fs-cards" id="fs-cards"></div>
+
+    <div class="fs-breakeven" id="fs-breakeven"></div>
+
+    <div class="fs-bars-wrap">
+      <div style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#7ab6e0; margin-bottom:12px;">5-year cumulative revenue</div>
+      <div id="fs-bars" style="display:flex; align-items:flex-end; gap:10px; height:140px;"></div>
+      <div id="fs-bar-labels" style="display:flex; gap:10px; margin-top:8px;"></div>
+    </div>
+
+    <div class="fs-disclaimer">Based on National Billing Average (Medicare/Medicaid). 48 working weeks per year. Full PFT = CPT 94010 + 94726 + 94729. CPT coding should be based on medical necessity. Reimbursement subject to specific health plan policy.</div>
+  </div>
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ---- ROI CALCULATOR SHARED DATA ---- */
+var ROI_RATE = 151.45;
+var ROI_WEEKS = 48;
+var ROI_TESTS = 25;
+var ROI_DEVICE = 30000;
+var FS_TESTS = 25;
+var FS_DEVICE = 30000;
+var BAR_COLORS = ['#1a7fe0','#1569c0','#0f52a0','#0a3d80','#062960'];
+var FS_BAR_COLORS = ['#5bc8f5','#3ab0e0','#1d94ca','#0e78b0','#065e94'];
+var CPT_CODES = [
+  {code:'94010', desc:'Spirometry only', rate:27.34},
+  {code:'94060', desc:'Pre & post bronchodilator', rate:38.80},
+  {code:'94375', desc:'Flow volume loop', rate:39.11},
+  {code:'94726', desc:'Lung volumes (pleth)', rate:55.72},
+  {code:'94729', desc:'DLCO', rate:59.87}
+];
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function fmtShort(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+  if (n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function addBizDays(days) {
+  var d = new Date(2026, 3, 10); // April 10 2026
+  var added = 0;
+  while (added < days) {
+    d.setDate(d.getDate() + 1);
+    var dow = d.getDay();
+    if (dow !== 0 && dow !== 6) added++;
+  }
+  return d;
+}
+
+function getCalcValues(tests, device) {
+  var daily = (tests / 5) * ROI_RATE;
+  var week = tests * ROI_RATE;
+  var month = (tests * ROI_WEEKS / 12) * ROI_RATE;
+  var y1 = tests * ROI_WEEKS * ROI_RATE;
+  var bkDays = Math.ceil(device / daily);
+  var bkDate = addBizDays(bkDays);
+  var bkWeeks = Math.round(bkDays / 5 * 10) / 10;
+  var dateStr = MONTHS[bkDate.getMonth()] + ' ' + bkDate.getDate() + ', ' + bkDate.getFullYear();
+  return {
+    daily: daily, week: week, month: month, y1: y1,
+    y3: y1*3, y5: y1*5,
+    bkDays: bkDays, bkWeeks: bkWeeks, dateStr: dateStr,
+    profit: Math.max(0, y1 - device)
+  };
+}
+
+/* ---- MAIN CALCULATOR ---- */
+function roiCalc() {
+  var tests = parseInt(document.getElementById('roi-slider').value) || 1;
+  var device = parseFloat(document.getElementById('roi-device-cost').value) || 30000;
+  var v = getCalcValues(tests, device);
+
+  document.getElementById('roi-tests-display').textContent = tests;
+  document.getElementById('roi-per-day').textContent = (tests/5).toFixed(1) + ' per day';
+  document.getElementById('roi-week').textContent = fmtFull(v.week);
+  document.getElementById('roi-month').textContent = fmtFull(v.month);
+  document.getElementById('roi-y1').textContent = fmtShort(v.y1);
+  document.getElementById('roi-y3').textContent = fmtShort(v.y3);
+  document.getElementById('roi-y5').textContent = fmtShort(v.y5);
+  document.getElementById('roi-days').textContent = v.bkDays + ' days';
+  document.getElementById('roi-days-sub').textContent = (tests/5).toFixed(1) + ' tests/day';
+  document.getElementById('roi-date').textContent = v.dateStr;
+  document.getElementById('roi-weeks').textContent = v.bkWeeks + ' working weeks from today';
+  document.getElementById('roi-profit').textContent = fmtShort(v.profit);
+
+  var years = [
+    {label:'Yr 1', val:v.y1}, {label:'Yr 2', val:v.y1*2},
+    {label:'Yr 3', val:v.y3}, {label:'Yr 4', val:v.y1*4}, {label:'Yr 5', val:v.y5}
+  ];
+  var barsEl = document.getElementById('roi-bars');
+  var labelsEl = document.getElementById('roi-bar-labels');
+  barsEl.innerHTML = ''; labelsEl.innerHTML = '';
+  years.forEach(function(y, i) {
+    var pct = v.y5 > 0 ? Math.max(5, (y.val/v.y5)*100) : 5;
+    var bar = document.createElement('div');
+    bar.className = 'roi-bar-col';
+    bar.style.cssText = 'flex:1; background:' + BAR_COLORS[i] + '; border-radius:5px 5px 0 0; height:' + pct + '%; display:flex; align-items:flex-start; justify-content:center; padding-top:5px;';
+    bar.innerHTML = '<span style="font-size:10px; font-weight:600; color:rgba(255,255,255,0.9);">' + fmtShort(y.val) + '</span>';
+    barsEl.appendChild(bar);
+    var lbl = document.createElement('div');
+    lbl.className = 'roi-bar-label';
+    lbl.textContent = y.label;
+    labelsEl.appendChild(lbl);
+  });
+
+  var cptGrid = document.getElementById('roi-cpt-grid');
+  cptGrid.innerHTML = '';
+  CPT_CODES.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'roi-cpt-card';
+    div.innerHTML = '<div style="font-size:10.5px; color:var(--gray-600); margin-bottom:3px;"><span class="cpt-code">' + c.code + '</span> ' + c.desc + '</div><div style="font-size:14px; font-weight:700; color:var(--blue-dark);">' + fmtFull(tests * c.rate) + '<span style="font-weight:400; font-size:11.5px; color:var(--gray-600);">/wk</span></div>';
+    cptGrid.appendChild(div);
+  });
+}
+
+function roiChangeTests(delta) {
+  var s = document.getElementById('roi-slider');
+  var cur = parseInt(s.value) || 25;
+  var next = Math.min(100, Math.max(1, cur + delta));
+  s.value = next;
+  roiCalc();
+}
+function roiUpdateFromSlider() { roiCalc(); }
+
+/* ---- FULLSCREEN CALCULATOR ---- */
+function fsCalc() {
+  var tests = parseInt(document.getElementById('fs-slider').value) || 1;
+  var device = parseFloat(document.getElementById('fs-device-cost').value) || 30000;
+  var v = getCalcValues(tests, device);
+
+  document.getElementById('fs-tests-val').textContent = tests;
+  document.getElementById('fs-per-day').textContent = (tests/5).toFixed(1) + ' per day';
+  document.getElementById('fs-hero-num').textContent = fmtShort(v.y1);
+  document.getElementById('fs-hero-sub').textContent = 'based on ' + tests + ' complete PFTs per week';
+
+  var cardData = [
+    {label:'Per Week', val:fmtFull(v.week)},
+    {label:'Per Month', val:fmtFull(v.month)},
+    {label:'Year 1', val:fmtShort(v.y1)},
+    {label:'Year 3', val:fmtShort(v.y3)},
+    {label:'Year 5', val:fmtShort(v.y5)}
+  ];
+  var cardsEl = document.getElementById('fs-cards');
+  cardsEl.innerHTML = '';
+  cardData.forEach(function(c) {
+    cardsEl.innerHTML += '<div class="fs-card"><div class="fs-card-label">' + c.label + '</div><div class="fs-card-num">' + c.val + '</div></div>';
+  });
+
+  var bkData = [
+    {label:'Breakeven in', num:v.bkDays + ' days', sub:(tests/5).toFixed(1) + ' tests per day'},
+    {label:'Breakeven date', num:v.dateStr, sub:v.bkWeeks + ' working weeks from now'},
+    {label:'Pure profit, Year 1', num:fmtShort(v.profit), sub:'after device pays off'}
+  ];
+  var bkEl = document.getElementById('fs-breakeven');
+  bkEl.innerHTML = '';
+  bkData.forEach(function(b) {
+    bkEl.innerHTML += '<div class="fs-bcard"><div class="fs-bcard-label">' + b.label + '</div><div class="fs-bcard-num">' + b.num + '</div><div class="fs-bcard-sub">' + b.sub + '</div></div>';
+  });
+
+  var years = [
+    {label:'Yr 1', val:v.y1}, {label:'Yr 2', val:v.y1*2},
+    {label:'Yr 3', val:v.y3}, {label:'Yr 4', val:v.y1*4}, {label:'Yr 5', val:v.y5}
+  ];
+  var barsEl = document.getElementById('fs-bars');
+  var labelsEl = document.getElementById('fs-bar-labels');
+  barsEl.innerHTML = ''; labelsEl.innerHTML = '';
+  years.forEach(function(y, i) {
+    var pct = v.y5 > 0 ? Math.max(5, (y.val/v.y5)*100) : 5;
+    var bar = document.createElement('div');
+    bar.style.cssText = 'flex:1; background:' + FS_BAR_COLORS[i] + '; border-radius:5px 5px 0 0; height:' + pct + '%; display:flex; align-items:flex-start; justify-content:center; padding-top:6px;';
+    bar.innerHTML = '<span style="font-size:11px; font-weight:600; color:rgba(255,255,255,0.9);">' + fmtShort(y.val) + '</span>';
+    barsEl.appendChild(bar);
+    var lbl = document.createElement('div');
+    lbl.style.cssText = 'flex:1; text-align:center; font-size:12px; color:#7ab6e0; font-weight:500;';
+    lbl.textContent = y.label;
+    labelsEl.appendChild(lbl);
+  });
+}
+
+function fsChangeTests(delta) {
+  var s = document.getElementById('fs-slider');
+  var cur = parseInt(s.value) || 25;
+  var next = Math.min(100, Math.max(1, cur + delta));
+  s.value = next;
+  fsCalc();
+}
+function fsUpdateFromSlider() { fsCalc(); }
+
+function openROIFullscreen() {
+  var mainTests = parseInt(document.getElementById('roi-slider').value) || 25;
+  var mainDevice = parseFloat(document.getElementById('roi-device-cost').value) || 30000;
+  document.getElementById('fs-slider').value = mainTests;
+  document.getElementById('fs-device-cost').value = mainDevice;
+  document.getElementById('roi-fullscreen').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  fsCalc();
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(function(){});
+  }
+}
+
+function closeROIFullscreen() {
+  document.getElementById('roi-fullscreen').classList.remove('open');
+  document.body.style.overflow = '';
+  if (document.exitFullscreen && document.fullscreenElement) {
+    document.exitFullscreen().catch(function(){});
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeROIFullscreen();
+});
+
+/* ---- INIT ---- */
+roiCalc();
+</script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The PulmOne Operating System — The Film</title>
+<style>
+  :root{
+    --bg:#03070d;
+    --ink:#eaf6ff;
+    --dim:#7f97ad;
+    --cyan:#22d3ee;
+    --blue:#3b82f6;
+    --green:#34d399;
+    --red:#f87171;
+    --amber:#fbbf24;
+    --glow:0 0 40px rgba(34,211,238,.35);
+    --cond:'Arial Narrow','Helvetica Neue Condensed',Impact,'Helvetica Neue',Arial,sans-serif;
+    --body:'Helvetica Neue',Arial,system-ui,sans-serif;
+    --mono:'SF Mono','Roboto Mono',Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+  #rain{position:fixed;inset:0;z-index:0;opacity:.30}
+  #vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 45%,transparent 40%,rgba(0,0,0,.55) 78%,rgba(0,0,0,.9) 100%)}
+  #stage{position:fixed;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;padding:6vh 6vw}
+
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:8vh 8vw;opacity:0;visibility:hidden;transition:opacity .9s ease}
+  .scene.live{opacity:1;visibility:visible}
+
+  .kicker{font-family:var(--mono);letter-spacing:.5em;text-transform:uppercase;font-size:clamp(9px,1.1vw,13px);
+    color:var(--cyan);margin-bottom:2.2vh;opacity:0;transform:translateY(14px)}
+  .headline{font-family:var(--cond);text-transform:uppercase;font-weight:700;line-height:.95;
+    letter-spacing:.01em;font-size:clamp(38px,8.2vw,120px);
+    text-shadow:0 0 60px rgba(34,211,238,.25)}
+  .headline .lg{font-size:1.28em}
+  .sub{font-size:clamp(15px,2.1vw,26px);color:var(--dim);max-width:22ch;line-height:1.4;margin-top:3vh;font-weight:300}
+  .sub strong{color:var(--ink);font-weight:600}
+  .cyan{color:var(--cyan)} .blue{color:var(--blue)} .green{color:var(--green)}
+  .amber{color:var(--amber)} .red{color:var(--red)}
+
+  /* generic reveal helper */
+  .r{opacity:0;transform:translateY(26px)}
+  .scene.live .r{animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .scene.live .kicker{animation:rise .9s ease forwards}
+  .scene.live .d1{animation-delay:.15s}.scene.live .d2{animation-delay:.5s}
+  .scene.live .d3{animation-delay:.95s}.scene.live .d4{animation-delay:1.45s}
+  .scene.live .d5{animation-delay:2.0s}.scene.live .d6{animation-delay:2.6s}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  @keyframes glowpulse{0%,100%{text-shadow:0 0 30px rgba(34,211,238,.25)}50%{text-shadow:0 0 70px rgba(34,211,238,.7)}}
+
+  /* big counting number */
+  .bignum{font-family:var(--mono);font-weight:700;font-size:clamp(60px,14vw,220px);color:var(--cyan);
+    letter-spacing:-.02em;text-shadow:var(--glow);line-height:1}
+
+  /* rows / chips */
+  .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4vh}
+  .chip{font-family:var(--mono);font-size:clamp(11px,1.3vw,15px);padding:10px 16px;border:1px solid rgba(127,151,173,.35);
+    border-radius:999px;color:var(--dim);background:rgba(255,255,255,.02)}
+  .chip.on{color:var(--ink);border-color:var(--cyan);box-shadow:0 0 24px rgba(34,211,238,.25)}
+  .strike{position:relative;color:#5b6b7a}
+  .strike::after{content:'';position:absolute;left:8%;right:8%;top:50%;height:2px;background:var(--red);
+    transform:scaleX(0);transform-origin:left;animation:sx .5s .2s forwards}
+  @keyframes sx{to{transform:scaleX(1)}}
+
+  /* phase stack */
+  .phases{display:flex;flex-direction:column;gap:12px;margin-top:3vh;width:min(760px,90vw)}
+  .phase{display:flex;align-items:center;gap:16px;text-align:left;padding:14px 18px;border-radius:12px;
+    border:1px solid rgba(127,151,173,.22);background:linear-gradient(90deg,rgba(34,211,238,.06),rgba(59,130,246,.02))}
+  .phase b{font-family:var(--mono);color:var(--cyan);font-size:13px;letter-spacing:.15em;min-width:74px}
+  .phase .pt{font-family:var(--cond);text-transform:uppercase;font-size:clamp(18px,2.6vw,30px);letter-spacing:.02em}
+  .phase .pd{color:var(--dim);font-size:clamp(12px,1.4vw,15px);font-weight:300}
+  .phase .txt{display:flex;flex-direction:column;gap:2px}
+
+  /* arrival card */
+  .card{width:min(560px,92vw);border-radius:18px;padding:22px 24px;text-align:left;margin-top:2vh;
+    background:linear-gradient(160deg,rgba(11,20,32,.92),rgba(6,12,20,.92));
+    border:1px solid rgba(34,211,238,.3);box-shadow:0 30px 90px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
+  .card .top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(127,151,173,.2);
+    padding-bottom:12px;margin-bottom:12px}
+  .card .acct{font-family:var(--cond);text-transform:uppercase;font-size:26px;letter-spacing:.03em}
+  .card .pin{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.15em}
+  .kv{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px;padding:6px 0;color:var(--dim)}
+  .kv b{color:var(--ink);font-weight:600}
+  .alert{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px solid var(--amber);
+    background:rgba(251,191,36,.08);color:var(--amber);font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+    animation:glowpulse 1.6s infinite}
+
+  /* territory map dots */
+  .map{position:relative;width:min(620px,92vw);height:min(300px,44vh);margin-top:3vh;border-radius:16px;
+    border:1px solid rgba(127,151,173,.2);background:
+      linear-gradient(rgba(34,211,238,.05) 1px,transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg,rgba(34,211,238,.05) 1px,transparent 1px) 0 0/40px 40px,
+      radial-gradient(120% 120% at 50% 50%,rgba(59,130,246,.06),transparent)}
+  .dot{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--dim);transform:translate(-50%,-50%)}
+  .dot.hot{background:var(--amber);box-shadow:0 0 0 0 rgba(251,191,36,.6);animation:ping 1.8s infinite}
+  .dot.money{background:var(--green);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:ping 1.4s infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}70%{box-shadow:0 0 0 22px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
+
+  /* signature / close */
+  .sig{font-family:var(--cond);text-transform:uppercase;letter-spacing:.35em;font-size:clamp(13px,1.6vw,18px);
+    color:var(--dim);margin-top:5vh}
+  .sig b{color:var(--ink);letter-spacing:.35em}
+
+  /* wordmark */
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:3vh}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--blue));
+    display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-size:22px;color:#02121c;box-shadow:var(--glow)}
+  .brand .wm{font-family:var(--cond);text-transform:uppercase;letter-spacing:.28em;font-size:clamp(13px,1.5vw,17px);color:var(--ink)}
+  .brand .wm span{color:var(--cyan)}
+
+  /* controls */
+  #hud{position:fixed;z-index:5;left:0;right:0;bottom:0;padding:16px 22px;display:flex;align-items:center;gap:16px;
+    background:linear-gradient(0deg,rgba(0,0,0,.6),transparent);transition:opacity .4s}
+  #hud.hide{opacity:0;pointer-events:none}
+  #bar{flex:1;height:4px;border-radius:4px;background:rgba(127,151,173,.25);position:relative;overflow:hidden;cursor:pointer}
+  #fill{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:4px}
+  .btn{cursor:pointer;user-select:none;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--dim);border:1px solid rgba(127,151,173,.3);padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.02);
+    transition:.2s}
+  .btn:hover{color:var(--ink);border-color:var(--cyan)}
+  #dots{display:flex;gap:7px}
+  #dots i{width:8px;height:8px;border-radius:50%;background:rgba(127,151,173,.35);cursor:pointer;transition:.2s}
+  #dots i.on{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+  #clock{font-family:var(--mono);font-size:12px;color:var(--dim);min-width:74px;text-align:right}
+
+  /* start overlay */
+  #start{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:radial-gradient(120% 90% at 50% 40%,rgba(6,14,24,.7),rgba(0,0,0,.92));text-align:center;padding:8vw;transition:opacity .6s}
+  #start.gone{opacity:0;pointer-events:none}
+  #start h1{font-family:var(--cond);text-transform:uppercase;font-size:clamp(40px,9vw,120px);line-height:.92;letter-spacing:.01em}
+  #start p{color:var(--dim);margin-top:2.5vh;font-weight:300;font-size:clamp(14px,1.8vw,20px);max-width:30ch}
+  #play{margin-top:5vh;cursor:pointer;font-family:var(--mono);letter-spacing:.25em;text-transform:uppercase;font-size:14px;
+    color:#02121c;background:linear-gradient(135deg,var(--cyan),var(--blue));padding:16px 34px;border-radius:999px;
+    box-shadow:var(--glow);transition:.2s}
+  #play:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(34,211,238,.6)}
+  .hint{margin-top:3vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:#4a5b6b}
+  @media(max-width:640px){.sub{max-width:26ch}.headline{letter-spacing:0}}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div id="vignette"></div>
+
+<div id="stage">
+  <!-- 0 -->
+  <section class="scene" data-dur="6500">
+    <div class="brand r d1"><div class="mark">M</div><div class="wm">Pulm<span>One</span> · MiniBox</div></div>
+    <div class="headline r d2">THE WORLD<br>RUNS ON <span class="cyan">NUMBERS</span>.</div>
+    <div class="sub r d4">Everything you can see, and everything you can't, is really just data moving.</div>
+  </section>
+
+  <!-- 1 -->
+  <section class="scene" data-dur="7000">
+    <div class="kicker">01 — the truth nobody says out loud</div>
+    <div class="headline r d1">A PHOTO. A VOICE.<br>A <span class="cyan">VIDEO.</span></div>
+    <div class="sub r d3">It leaves your phone, flies through the air, and lands on mine. No wire. <strong>It travels as numbers.</strong></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="scene" data-dur="6000">
+    <div class="kicker">02 — so here's the opportunity</div>
+    <div class="headline r d1">EVERYTHING IS<br><span class="cyan">DIGITAL.</span> EVERYTHING<br>IS <span class="blue">DATA.</span></div>
+    <div class="sub r d3">The only question left is who can turn that data into something useful, fast enough to matter.</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="scene" data-dur="6500">
+    <div class="kicker">03 — enter the engine</div>
+    <div class="bignum r d1" id="spinNum">000</div>
+    <div class="headline r d2" style="margin-top:2vh">AI IS THE FASTEST<br><span class="cyan">NUMBER-SPINNER</span><br>EVER BUILT.</div>
+    <div class="sub r d4">Millions of calculations a second. That's the tool. Now point it at a real business.</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="scene" data-dur="8000">
+    <div class="kicker">04 — the problem at pulmone</div>
+    <div class="headline r d1">SO WHY ARE <span class="red">OUR</span><br>NUMBERS JUST <span class="red">NOISE?</span></div>
+    <div class="row">
+      <div class="chip r d2 strike">Duplicate accounts</div>
+      <div class="chip r d3 strike">Scattered spreadsheets</div>
+      <div class="chip r d4 strike">Notes in nobody's head</div>
+    </div>
+    <div class="sub r d5">We pay for Salesforce. Nobody uses it, because finding the one thing you need takes longer than winging it.</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="scene" data-dur="7000">
+    <div class="headline r d1"><span class="cyan">DATA YOU CAN'T FIND</span><br>ISN'T DATA.</div>
+    <div class="sub r d3">It's just noise you paid for. And every hour a rep spends digging is an hour they aren't selling, and an hour they aren't home.</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="scene" data-dur="8000">
+    <div class="kicker">05 — the front door</div>
+    <div class="brand r d1"><div class="mark">M</div><div class="wm">MiniBox <span>Toolkit</span></div></div>
+    <div class="headline r d1"><span class="lg">THE FRONT<br>DOOR.</span></div>
+    <div class="row">
+      <div class="chip on r d2">Quote Builder</div>
+      <div class="chip on r d2">ROI</div>
+      <div class="chip on r d3">Financing</div>
+      <div class="chip on r d3">Billing</div>
+      <div class="chip on r d4">Forms · ACH · RMA</div>
+      <div class="chip on r d4">Training</div>
+      <div class="chip on r d5">Account Map</div>
+    </div>
+    <div class="sub r d6">Live. In every rep's hand. They use it and not Salesforce for one reason: <strong>it's easy.</strong></div>
+  </section>
+
+  <!-- 7 -->
+  <section class="scene" data-dur="7000">
+    <div class="kicker">06 — the turn</div>
+    <div class="headline r d1">NOW BUILD A TOOL<br>THAT <span class="cyan">REMEMBERS.</span></div>
+    <div class="sub r d3">One system. One brain. Every account and every rep feeds in, and it puts the right thing in front of you <strong>before you ask.</strong></div>
+  </section>
+
+  <!-- 8 - THE ARRIVAL -->
+  <section class="scene" data-dur="9500">
+    <div class="kicker">07 — the arrival</div>
+    <div class="headline r d1" style="font-size:clamp(30px,5.5vw,64px)">THE REP PULLS UP.<br>THE ACCOUNT IS <span class="green">ALREADY THERE.</span></div>
+    <div class="card r d3">
+      <div class="top"><div class="acct">Northshore Pulmonary</div><div class="pin">◉ ON SITE</div></div>
+      <div class="kv"><span>Last order</span><b>MiniBox PFT ×2 · 14 mo ago</b></div>
+      <div class="kv"><span>Open service</span><b class="green">Resolved</b></div>
+      <div class="kv"><span>Devices on file</span><b>SN 4471 · SN 4472 · SN 5108</b></div>
+      <div class="kv"><span>SN 4471 warranty</span><b class="amber">expires in 182 days</b></div>
+      <div class="alert r d5">⚠ WARRANTY ALERT · device off warranty in 6 months · walk in with a reason</div>
+    </div>
+  </section>
+
+  <!-- 9 - THE HUNT -->
+  <section class="scene" data-dur="9000">
+    <div class="kicker">08 — the hunt</div>
+    <div class="headline r d1">IT FINDS THE <span class="green">MONEY.</span></div>
+    <div class="sub r d2">Every serial has a date. The system does the warranty math across the whole territory, all the time, and points the rep straight at the low-hanging fruit.</div>
+    <div class="map r d3" id="map"></div>
+  </section>
+
+  <!-- 10 - EVERYTHING FLOWS -->
+  <section class="scene" data-dur="8500">
+    <div class="kicker">09 — everything flows</div>
+    <div class="headline r d1">ONE TOOL IN.<br>ONE TOOL <span class="cyan">OUT.</span></div>
+    <div class="sub r d2">Snap a receipt, it flows to finance. Mileage, tolls, assets, all through one place. The rep stops juggling five apps.</div>
+    <div class="row">
+      <div class="chip r d3 strike">Expense app</div>
+      <div class="chip r d3 strike">Mileage app</div>
+      <div class="chip r d4 strike">Extra CRM seats</div>
+      <div class="chip r d4 strike">Standalone billing</div>
+    </div>
+    <div class="sub r d5" style="max-width:26ch"><strong class="green">And the company stops paying five bills.</strong></div>
+  </section>
+
+  <!-- 11 - ONE PICTURE -->
+  <section class="scene" data-dur="7500">
+    <div class="kicker">10 — one clear picture</div>
+    <div class="headline r d1">RUN THE BUSINESS.<br>DON'T <span class="red">REACT</span> TO IT.</div>
+    <div class="sub r d3">When the data is finally usable, you see every territory in real time, what's moving, what's dying, and you turn the wheel before the market forces you to.</div>
+  </section>
+
+  <!-- 12 - PHASES -->
+  <section class="scene" data-dur="10000">
+    <div class="kicker">11 — how it rolls out · each phase stands on its own</div>
+    <div class="phases">
+      <div class="phase r d1"><b>PHASE 1</b><div class="txt"><span class="pt">The Toolkit, live</span><span class="pd">It already exists. Reps already use it. Done.</span></div></div>
+      <div class="phase r d2"><b>PHASE 2</b><div class="txt"><span class="pt">The Memory</span><span class="pd">Accounts, orders, serials, warranty dates. The arrival experience.</span></div></div>
+      <div class="phase r d3"><b>PHASE 3</b><div class="txt"><span class="pt">The Hunt</span><span class="pd">Warranty alerts fire on their own. The tool finds money.</span></div></div>
+      <div class="phase r d4"><b>PHASE 4</b><div class="txt"><span class="pt">Everything Flows</span><span class="pd">Retire the redundant subscriptions. One picture to steer by.</span></div></div>
+    </div>
+  </section>
+
+  <!-- 13 - CLOSE -->
+  <section class="scene" data-dur="10000">
+    <div class="kicker">the close</div>
+    <div class="headline r d1"><span class="lg">THE END OF<br><span class="cyan">SEARCHING.</span></span></div>
+    <div class="sub r d3">The toolkit is proof I can build this. What I'm really offering is the system that runs PulmOne, and it saves you on day one by replacing what you already pay for.</div>
+    <div class="sig r d5"><b>THE PULMONE OPERATING SYSTEM</b></div>
+    <div class="sig r d6" style="margin-top:2vh">Built by <b>Erik Bernard</b></div>
+  </section>
+
+  <!-- 14 - TAG -->
+  <section class="scene" data-dur="8000">
+    <div class="headline r d1">DATA WE <span class="cyan">NEED.</span><br>DATA WE <span class="blue">DESERVE.</span></div>
+    <div class="sub r d3">The world already runs on numbers. We're just the ones who finally made ours count.</div>
+    <div class="btn r d5" id="replayEnd" style="margin-top:5vh">↻ Replay the film</div>
+  </section>
+</div>
+
+<div id="hud" class="hide">
+  <div class="btn" id="pp">❚❚ Pause</div>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="dots"></div>
+  <div id="clock">0:00 / 0:00</div>
+  <div class="btn" id="restart">↻</div>
+</div>
+
+<div id="start">
+  <h1>THE PULMONE<br>OPERATING SYSTEM</h1>
+  <p>A two-minute film on where the MiniBox Toolkit is going, and why numbers change everything.</p>
+  <div id="play">▶ &nbsp; Play the film</div>
+  <div class="hint">space = play / pause &nbsp;·&nbsp; ← → = skip &nbsp;·&nbsp; click = next</div>
+</div>
+
+<script>
+(function(){
+  /* ---------- number rain ---------- */
+  var cv=document.getElementById('rain'),ctx=cv.getContext('2d');
+  var cols,drops,fs=16;
+  function sz(){cv.width=innerWidth;cv.height=innerHeight;cols=Math.floor(cv.width/fs);drops=[];for(var i=0;i<cols;i++)drops[i]=Math.random()*-cv.height;}
+  sz();addEventListener('resize',sz);
+  function rain(){
+    ctx.fillStyle='rgba(3,7,13,.10)';ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.font=fs+'px monospace';
+    for(var i=0;i<cols;i++){
+      var ch=Math.random()<.5?'0':'1';
+      if(Math.random()<.15)ch=String(Math.floor(Math.random()*10));
+      var x=i*fs,y=drops[i];
+      ctx.fillStyle=Math.random()<.03?'rgba(34,211,238,.9)':'rgba(34,211,238,.28)';
+      ctx.fillText(ch,x,y);
+      drops[i]=y>cv.height&&Math.random()>.975?0:y+fs*(0.5+Math.random()*0.6);
+    }
+    requestAnimationFrame(rain);
+  }
+  rain();
+
+  /* ---------- scene engine ---------- */
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var durs=scenes.map(function(s){return +s.dataset.dur||7000;});
+  var total=durs.reduce(function(a,b){return a+b;},0);
+  var idx=-1,playing=false,rafId,segStart=0,elapsedBefore=0,segT0=0;
+
+  var hud=document.getElementById('hud'),fill=document.getElementById('fill'),
+      clock=document.getElementById('clock'),dotsWrap=document.getElementById('dots'),
+      startEl=document.getElementById('start');
+  scenes.forEach(function(s,i){var d=document.createElement('i');d.onclick=function(){go(i);};dotsWrap.appendChild(d);});
+  var dotEls=[].slice.call(dotsWrap.children);
+
+  function offsetOf(i){var o=0;for(var k=0;k<i;k++)o+=durs[k];return o;}
+  function fmt(ms){var s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+
+  function paint(now){
+    if(!playing)return;
+    var seg=now-segT0;
+    if(seg>=durs[idx]){go(idx+1);return;}
+    var elapsed=elapsedBefore+seg;
+    fill.style.width=(elapsed/total*100)+'%';
+    clock.textContent=fmt(elapsed)+' / '+fmt(total);
+    rafId=requestAnimationFrame(paint);
+  }
+
+  function show(i){
+    scenes.forEach(function(s,k){s.classList.toggle('live',k===i);});
+    dotEls.forEach(function(d,k){d.classList.toggle('on',k===i);});
+    if(scenes[i]&&scenes[i].querySelector('#spinNum'))spin();
+    if(scenes[i]&&scenes[i].querySelector('#map'))seedMap();
+  }
+
+  function go(i){
+    if(i>=scenes.length){finish();return;}
+    if(i<0)i=0;
+    idx=i;elapsedBefore=offsetOf(i);segT0=performance.now();
+    show(i);
+    if(playing){cancelAnimationFrame(rafId);rafId=requestAnimationFrame(paint);}
+  }
+
+  function play(){
+    startEl.classList.add('gone');hud.classList.remove('hide');
+    if(idx<0)idx=0;
+    playing=true;segT0=performance.now();
+    document.getElementById('pp').textContent='❚❚ Pause';
+    show(idx);cancelAnimationFrame(rafId);rafId=requestAnimationFrame(paint);
+    armIdle();
+  }
+  function pause(){playing=false;cancelAnimationFrame(rafId);document.getElementById('pp').textContent='▶ Play';hud.classList.remove('hide');}
+  function toggle(){if(!playing&&idx>=scenes.length-1){go(0);play();return;}playing?pause():play();}
+  function finish(){playing=false;cancelAnimationFrame(rafId);idx=scenes.length-1;show(idx);fill.style.width='100%';
+    clock.textContent=fmt(total)+' / '+fmt(total);document.getElementById('pp').textContent='↻ Replay';hud.classList.remove('hide');}
+
+  /* controls */
+  document.getElementById('play').onclick=play;
+  document.getElementById('pp').onclick=toggle;
+  document.getElementById('restart').onclick=function(){go(0);play();};
+  document.getElementById('replayEnd').onclick=function(){go(0);play();};
+  document.getElementById('bar').onclick=function(e){
+    var r=this.getBoundingClientRect(),p=(e.clientX-r.left)/r.width,target=p*total,acc=0;
+    for(var k=0;k<durs.length;k++){if(acc+durs[k]>target){go(k);break;}acc+=durs[k];}
+    if(!playing){play();}
+  };
+  document.addEventListener('keydown',function(e){
+    if(e.code==='Space'){e.preventDefault();if(startEl.classList.contains('gone'))toggle();else play();}
+    else if(e.code==='ArrowRight')go(idx+1);
+    else if(e.code==='ArrowLeft')go(Math.max(0,idx-1));
+  });
+  document.getElementById('stage').addEventListener('click',function(){if(startEl.classList.contains('gone'))go(idx+1);});
+
+  /* idle-hide HUD */
+  var idleTimer;
+  function armIdle(){clearTimeout(idleTimer);hud.classList.remove('hide');idleTimer=setTimeout(function(){if(playing)hud.classList.add('hide');},3200);}
+  ['mousemove','keydown','click','touchstart'].forEach(function(ev){document.addEventListener(ev,armIdle);});
+
+  /* scene 3 spinner */
+  function spin(){
+    var el=document.getElementById('spinNum');if(!el)return;
+    var t0=performance.now(),dur=1600;
+    function step(now){
+      var p=Math.min(1,(now-t0)/dur);
+      var v=Math.floor((1-Math.pow(1-p,3))*8420317);
+      el.textContent=('0000000'+v).slice(-7).replace(/(\d{3})(\d{4})/,'$1,$2');
+      if(p<1)requestAnimationFrame(step);else el.textContent='8,420,317';
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* scene 9 territory map */
+  var mapSeeded=false;
+  function seedMap(){
+    var m=document.getElementById('map');if(!m||mapSeeded)return;mapSeeded=true;
+    var pts=[[15,25,''],[32,60,''],[48,30,'hot'],[62,72,''],[70,40,'money'],[22,78,''],[85,55,'hot'],
+             [40,45,''],[55,58,'money'],[78,22,''],[30,38,''],[90,80,''],[12,55,'hot'],[66,18,'']];
+    pts.forEach(function(p){var d=document.createElement('div');d.className='dot '+p[2];
+      d.style.left=p[0]+'%';d.style.top=p[1]+'%';m.appendChild(d);});
+  }
+})();
+</script>
+</body>
+</html>

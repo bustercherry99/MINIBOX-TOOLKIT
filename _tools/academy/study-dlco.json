@@ -1,0 +1,197 @@
+{
+  "dlco": {
+    "minutes": 10,
+    "intro": "Spirometry is the test everybody knows. DLCO is the test that separates a serious PFT lab from a box in a closet, and it is where offices get nervous, because the maneuver is fussy, the gas cylinder is sitting right there, and one coaching mistake sinks the result. If you can walk a physician through what DLCO actually measures, and walk a medical assistant through the four moves without reading off a card, you are the rep they call. This module gives you both.",
+    "sections": [
+      {
+        "h": "Air in is not enough",
+        "p": "The main job of the respiratory system is gas exchange between the body tissues and the surrounding air. Spirometry only tells you how well air moves in and out of the pipes. It says nothing about whether the oxygen in that air ever reaches the blood. That crossing happens at the alveolar capillary membrane, the paper thin wall between the air sac and the blood vessel wrapped around it. Oxygen moves from the higher pressure side in the alveolus to the lower pressure side in the capillary, and carbon dioxide moves the other way. <b>DLCO is the diffusing capacity of the lungs for carbon monoxide</b>, and it is the test that measures how well that crossing works.",
+        "list": [
+          "Helps diagnose various lung diseases",
+          "Helps manage a lung disease that is already diagnosed",
+          "Tracks whether the disease is progressing",
+          "Shows whether a whole body disease has reached the lungs"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "gas-exchange",
+          "cap": "Follow the arrows. Oxygen crosses into the red blood cell and carbon dioxide comes back out, and it has to pass the alveolar epithelium, the surfactant layer, the air space and the capillary wall to do it. Every one of those layers is somewhere diffusion can fail."
+        },
+        "key": "Spirometry measures moving air. DLCO measures whether that air actually gets into the blood."
+      },
+      {
+        "h": "Why carbon monoxide",
+        "p": "You cannot easily measure oxygen crossing, so the test borrows a gas that behaves in a way the machine can track. The patient inhales a known mix: <b>0.3 percent carbon monoxide</b>, an inert tracer gas, <b>0.3 percent methane</b>, <b>21 percent oxygen</b> and a balance of nitrogen. Carbon monoxide crosses the membrane and binds to the haemoglobin in the red blood cells, so however much of it goes missing from the breath is the amount that made the trip. Methane does not cross. Whatever happens to the methane is pure dilution, which tells the machine how much lung the gas actually reached. Two gases, two different questions, one breath.",
+        "visual": {
+          "t": "img",
+          "src": "co-diffusion",
+          "cap": "The CO path in three dimensions: out of the alveolar air space, through the thin membrane, and onto the haemoglobin in the red cells streaming past underneath. Notice how short the trip is. Anything that thickens that wall or thins out those red cells changes the answer."
+        },
+        "key": "CO measures the crossing. Methane never crosses, so it measures the lung the gas reached."
+      },
+      {
+        "h": "The names on the report",
+        "p": "A physician will not say DLCO to you. They will say KCO, or ask what the VA looked like. Learn these six and you can stay in the conversation. One extra piece worth knowing: because VA is the alveolar volume at full inspiration, it is treated as a close approximation of total lung capacity in people with normal airway function. That shortcut is called the <b>Punjabi method</b>, and it is fast and cheap because it comes from a single breath instead of a full multi breath lung volume study. Its limit is honest and worth saying out loud: with significant airway obstruction, one breath may not reach the whole lung, so it is not reliable in every patient.",
+        "visual": {
+          "t": "table",
+          "head": [
+            "Parameter",
+            "What it is"
+          ],
+          "rows": [
+            [
+              "DLCO_sb",
+              "Diffusing capacity of the lungs for carbon monoxide, measured during a single breath maneuver. This is the headline number."
+            ],
+            [
+              "DLCO_c",
+              "The corrected DLCO. It accounts for the person's alveolar volume, so gas exchange can be compared fairly between patients with different lung sizes."
+            ],
+            [
+              "VA",
+              "Alveolar volume. The air inside the alveoli that is available for gas exchange, in other words the lung tissue actually taking part. Compare it to TLC from a lung volume test."
+            ],
+            [
+              "BHT",
+              "Breath hold time, in seconds."
+            ],
+            [
+              "DL/VA",
+              "Diffusing capacity for carbon monoxide per unit of alveolar volume. Same thing as KCO."
+            ],
+            [
+              "KCO_sb",
+              "Transfer coefficient. DLCO divided by VA, so the rate of transfer per unit of alveolar volume. The fairer comparison when two patients have very different sized lungs."
+            ]
+          ],
+          "note": "VA comes from tracer gas dilution during the single breath hold."
+        },
+        "key": "DLCO is the total. KCO is the rate per unit of lung. Small lungs can look bad on one and fine on the other."
+      },
+      {
+        "h": "Set the patient up",
+        "p": "Most bad DLCO results are decided before the mouthpiece goes in. Physiology gets disturbed by things patients do on the way to the appointment, so the front desk and the medical assistant matter as much as the machine. Coach the office to hand these instructions out at scheduling, not in the waiting room. The equipment side is the same idea. The ERS and ATS 2017 standard sets a calibration schedule for the system, and the DLCO check is done by pushing a known <b>3 litre syringe</b> volume through it like a patient breath and confirming the result falls inside the accepted limit. If the morning check fails, nobody tests patients on that machine until it is sorted.",
+        "list": [
+          "No smoking on the day of testing",
+          "No alcohol on the day of testing",
+          "No exercise immediately before testing",
+          "The patient sits for 5 minutes before the DLCO test",
+          "A patient on supplemental oxygen is on room air for 10 minutes first"
+        ],
+        "visual": {
+          "t": "img",
+          "src": "dlco-room",
+          "cap": "A real room, and everything in it earns its spot: the MiniBox+ on a cart, the tablet running the test, a laminated coaching card on the wall so any staff member can run it, and the green DLCO test gas cylinder with its dual regulator gauges. Check the gauges when you walk in. An office that lets the cylinder run low loses testing days."
+        },
+        "key": "A patient who smoked in the parking lot has already changed the number you are about to print."
+      },
+      {
+        "h": "One breath, four moves",
+        "p": "The single breath DLCO is one continuous maneuver with four distinct moves, and it takes well under a minute. Blow all the way out, fill all the way up fast, hold for ten seconds, then let it out smoothly. The whole test lives or dies on the patient doing all four in one uninterrupted go, which is why coaching beats instructions. Watch the trace below run through it once, then take the moves one at a time.",
+        "list": [
+          "Move one: a relaxed, complete exhale until the lungs are empty",
+          "Move two: a fast inhale all the way up to total lung capacity",
+          "Move three: hold that breath for 10 seconds",
+          "Move four: a smooth, unforced exhale that gives the machine a discard volume and then a sample volume"
+        ],
+        "visual": {
+          "t": "svg",
+          "id": "dlcotimeline"
+        },
+        "key": "Four moves, one breath, no pauses. Stop the trace anywhere and the test is gone."
+      },
+      {
+        "h": "Move one, blow it out",
+        "p": "The patient breathes out in a relaxed way until there is nothing left to give, all the way down to ERV, the extra air you can still push out after a normal quiet breath out. It is not a hard blast. It is complete, not forceful. This is the move that new techs get wrong, because judging when a patient is truly empty by eye takes practice. On the MiniBox this setting is <b>fully automatic</b>. The machine watches the volume and stops the patient once they are empty, so the tech is coaching rather than guessing.",
+        "visual": {
+          "t": "img",
+          "src": "dlco-step1",
+          "cap": "Step one on a volume versus time trace. The green line walks down to ERV and flattens out, and that flat part is the machine deciding the patient is empty. Nothing about this line is forced or sharp."
+        },
+        "key": "Empty, not explosive. On the MiniBox the machine calls it, not the tech."
+      },
+      {
+        "h": "Move two, fill up fast",
+        "p": "Straight off the bottom, the patient pulls the test gas all the way in to total lung capacity, and does it quickly. Quick matters because the breath hold clock is already running and a slow fill smears the timing. Full matters even more. The rule is that <b>VIN, the volume inhaled, has to be greater than 90 percent of the largest vital capacity</b> on record for that patient. Miss that and you have not just got a smaller breath, you have got a wrong answer, because <b>a submaximal inhalation lowers both DLCO and VA</b>. This is the single most common reason a DLCO gets repeated. Coach it as one word: gulp.",
+        "visual": {
+          "t": "img",
+          "src": "dlco-step2",
+          "cap": "Step two, a near vertical climb up to total lung capacity. Steep and tall are both quality criteria here. A lazy diagonal means a slow fill and a shallow top means a failed VIN."
+        },
+        "key": "VIN must be over 90 percent of the largest VC. A short breath does not just shrink DLCO, it falsifies it."
+      },
+      {
+        "h": "Move three, hold for ten",
+        "p": "Now the patient holds that full breath for <b>10 seconds</b> while the chemistry happens. Carbon monoxide is crossing out of the air space and into the blood, so it disappears. Methane stays in the air space and just spreads out into the lung, so it dilutes. The gap between those two behaviours is your result. The timing is not measured with a stopwatch by feel. It is the Jones and Meade method: breath hold time is counted <b>from 30 percent of the inspired time to the halfway point of the sample volume</b>, so the number is consistent from patient to patient and lab to lab. What you coach is simple. Relaxed hold, no straining, no pushing against a closed throat.",
+        "visual": {
+          "t": "img",
+          "src": "dlco-step3",
+          "cap": "Two things in one picture. The alveolus cartoon shows the split, CO diffusing away while CH4 only dilutes. The timing graph shows why BHT is not just the flat part of the trace: the count runs from 30 percent of the inspired time to half the sample volume."
+        },
+        "key": "Ten seconds of hold: CO leaves the air space, methane only spreads out. That difference is the test."
+      },
+      {
+        "h": "Move four, exhale smooth",
+        "p": "The last move is the one nobody rehearses, and it is where good tests get thrown away. The exhale has to be <b>smooth, unforced and uninterrupted</b>. No blasting, no stopping, no coughing halfway. The machine throws away the first chunk of that exhale, called the discard volume, and then analyses the next chunk, the sample volume. Those settings shift for small patients, because you cannot ask for a litre of clean sample from a patient who does not have it to give. Knowing this table is a genuine rep move: if an office keeps failing DLCOs on smaller or sicker patients, the settings are usually the reason.",
+        "visual": {
+          "t": "table",
+          "head": [
+            "Setting",
+            "Standard",
+            "Small vital capacity"
+          ],
+          "rows": [
+            [
+              "Discard volume (DV)",
+              "750 to 1000 mL",
+              "500 mL if VC is under 2 L"
+            ],
+            [
+              "Sample volume (SV)",
+              "500 to 1000 mL",
+              "Under 500 mL if VC is under 1 L"
+            ]
+          ],
+          "note": "Discard first, then sample. Both come out of one continuous, unforced exhale."
+        },
+        "key": "Smooth and uninterrupted. A cough in the exhale costs you the whole maneuver."
+      },
+      {
+        "h": "Did the test count",
+        "p": "ATS and ERS do not just say pass or fail, they grade the effort. The grading system runs as a cascade: the software walks down from <b>grade A</b>, the cleanest result, through <b>B, C and D</b> as more of the criteria slip, and there is a separate red <b>grade F</b> for conditions that disqualify the maneuver outright. That letter travels with the result, so a physician reading a low DLCO can tell the difference between a sick patient and a bad test. Teach the office to look at the letter before they argue with the number, and teach them that a repeated bad grade is almost always coaching, not the machine.",
+        "visual": {
+          "t": "table",
+          "head": [
+            "What gets checked",
+            "What good looks like"
+          ],
+          "rows": [
+            [
+              "VIN, the volume inhaled",
+              "Greater than 90 percent of the largest vital capacity recorded for that patient"
+            ],
+            [
+              "Inhalation time",
+              "Fast. The patient goes from empty to full without hesitating, because the breath hold clock is already running"
+            ],
+            [
+              "Breath hold window",
+              "10 seconds, timed the Jones and Meade way, from 30 percent of the inspired time to half the sample volume"
+            ],
+            [
+              "Sample exhalation",
+              "Smooth, unforced and uninterrupted, delivering the set discard volume and then the sample volume"
+            ],
+            [
+              "Repeatability",
+              "More than one acceptable maneuver, and the results have to agree with each other"
+            ]
+          ],
+          "note": "ATS and ERS measurement criteria for DLCO. The MiniBox checks these automatically and hands back a grade from A through D, or F if the maneuver is disqualified."
+        },
+        "key": "Read the grade first, then the number. The letter tells you whether the number deserves belief."
+      }
+    ],
+    "angle": "DLCO is where offices are most afraid of getting it wrong, and fear is what keeps a device sitting in a closet. Your line to a physician is that the MiniBox does not just run the maneuver, it polices it: the exhale to empty is fully automatic so the machine stops the patient rather than the tech guessing, and every result comes back with an ATS and ERS grade, so a low number can be trusted as physiology instead of technique. Add that a single breath also gives VA, which approximates total lung capacity in patients with normal airway function, and you are selling one quick maneuver that answers two questions the practice would otherwise send out of the building."
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MiniBox PFT Teaching Suite</title>
+<style>
+  :root{
+    --ink:#1a2230; --mut:#5b6774; --line:#d7dde5; --bg:#eef1f5;
+    --brand:#0e7c54; --brandsoft:#e5f4ec; --accent:#c62828; --warn:#b26a00; --warnsoft:#fdf3e3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.45;padding:0 14px 60px}
+
+  .hero{background:linear-gradient(135deg,#0f1622,#0a5f41);color:#fff;margin:0 -14px 22px;
+    padding:30px 22px 26px;box-shadow:0 6px 22px rgba(8,14,24,.25)}
+  .hero .wrap{max-width:1000px;margin:0 auto}
+  .hero .kick{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:4px 11px;border-radius:999px}
+  .hero h1{margin:12px 0 6px;font-size:27px;letter-spacing:.01em}
+  .hero h1 span{color:#5fd6a0}
+  .hero p{margin:0;font-size:14.5px;opacity:.92;max-width:64ch}
+
+  .wrap{max-width:1000px;margin:0 auto}
+  .lead{font-size:13px;color:var(--mut);margin:0 0 16px}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;
+    box-shadow:0 8px 24px rgba(20,30,50,.06);display:flex;flex-direction:column}
+  .card .num{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+  .card h2{margin:6px 0 2px;font-size:19px}
+  .card .who{font-size:12px;color:var(--mut);margin:0 0 10px}
+  .card p{font-size:13.5px;margin:0 0 12px}
+  .card ul{margin:0 0 14px;padding-left:18px;font-size:13px;color:#33414f}
+  .card li{margin:3px 0}
+  .status{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
+    padding:3px 10px;border-radius:999px;margin-bottom:12px;width:fit-content}
+  .status.live{background:var(--brandsoft);color:var(--brand)}
+  .status.part{background:var(--warnsoft);color:var(--warn)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+  .spacer{flex:1}
+  .open{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--brand);color:#fff;text-decoration:none;font-weight:800;font-size:14px;
+    padding:11px 18px;border-radius:11px;transition:.15s;box-shadow:0 4px 14px rgba(14,124,84,.28)}
+  .open:hover{background:#0a6244;transform:translateY(-1px)}
+
+  /* pattern-library roadmap chips */
+  .patgrid{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 14px}
+  .pat{font-size:12px;font-weight:700;padding:6px 11px;border-radius:9px;border:1px solid var(--line);
+    text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+  .pat.done{background:var(--brandsoft);border-color:#bfe3d1;color:var(--brand)}
+  .pat.done:hover{background:#d4ecdf}
+  .pat.soon{background:#f4f6f9;color:#9aa6b4;cursor:default}
+  .pat .tick{font-weight:900}
+
+  .note{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:18px}
+  .note h3{margin:0 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--brand)}
+  .note ol{margin:6px 0 0;padding-left:20px;font-size:13.5px}
+  .note li{margin:5px 0}
+  .disc{background:#fff8e6;border:1px solid #f0dca0;color:#7a5b00;border-radius:12px;
+    padding:12px 15px;font-size:12px;margin-top:16px}
+  .foot{text-align:center;font-size:11.5px;color:var(--mut);margin-top:22px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>MiniBox <span>PFT Teaching Suite</span></h1>
+    <p>Everything for teaching a PFT report in one place — a live, touch-it trainer and a pattern library.
+       Built so a rep can learn it alone, and so a rep can show a physician how easy these are to read.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="lead">Open either tool below. Both run straight from a browser — no install, works on a laptop or a tablet.</p>
+
+  <div class="cards">
+
+    <!-- CARD 1: THE TRAINER -->
+    <div class="card">
+      <span class="num">01 · The Trainer</span>
+      <h2>PFT Report Studio</h2>
+      <p class="who">Live &amp; interactive · for a rep to learn on, and to demo in front of a physician</p>
+      <span class="status live"><span class="dot"></span> Live</span>
+      <p>A real-looking PulmOne report that <b>redraws the instant you change a number.</b> Tap a pattern or
+         type values and the tables, both graphs, and the ATS/ERS read-out all update together.</p>
+      <ul>
+        <li>Four patterns on a button — Normal, Asthma, COPD, ILD</li>
+        <li>Predicted values calculate live from the patient's age, height, sex &amp; ethnicity</li>
+        <li>Tap any underlined word for a plain-English definition</li>
+        <li>"How to read this in 10 seconds" guide, on/off</li>
+      </ul>
+      <div class="spacer"></div>
+      <a class="open" href="MiniBox_PFT_Report_Studio_v1.0.html">Open the Trainer →</a>
+    </div>
+
+    <!-- CARD 2: THE PATTERN LIBRARY -->
+    <div class="card">
+      <span class="num">02 · The Pattern Library</span>
+      <h2>What Each Pattern Looks Like</h2>
+      <p class="who">Study pages · for a rep to learn the six classic pictures one at a time</p>
+      <span class="status live"><span class="dot"></span> All 6 built</span>
+      <p>Fixed, walk-through pages — each one is a single classic report with the plain-English
+         "here's why" written under every section. The teaching backbone of the suite. Best read in order.</p>
+      <div class="patgrid">
+        <a class="pat done" href="MiniBox_PFT_Training_Normal_v1.0.html"><span class="tick">✓</span> Normal</a>
+        <a class="pat done" href="MiniBox_PFT_Training_Asthma_v1.0.html"><span class="tick">✓</span> Asthma</a>
+        <a class="pat done" href="MiniBox_PFT_Training_COPD_v1.0.html"><span class="tick">✓</span> COPD / Emphysema</a>
+        <a class="pat done" href="MiniBox_PFT_Training_ILD_v1.0.html"><span class="tick">✓</span> ILD / Pneumonitis</a>
+        <a class="pat done" href="MiniBox_PFT_Training_ChestWall-Neuromuscular_v1.0.html"><span class="tick">✓</span> Chest-wall / Neuromuscular</a>
+        <a class="pat done" href="MiniBox_PFT_Training_Mixed_v1.0.html"><span class="tick">✓</span> Mixed</a>
+      </div>
+      <div class="spacer"></div>
+      <a class="open" href="MiniBox_PFT_Training_Normal_v1.0.html">Start with Normal →</a>
+    </div>
+
+  </div>
+
+  <div class="disc">
+    <b>Teaching tool — not for clinical use.</b> The sample numbers are illustrative of each classic pattern and are
+    pending a clinical once-over. They are not diagnostic reference ranges and must not be used to interpret a real test.
+  </div>
+
+  <div class="foot">PulmOne · PFT Outside The Box · MiniBox PFT Teaching Suite · Built for the rep.</div>
+</div>
+
+</body>
+</html>

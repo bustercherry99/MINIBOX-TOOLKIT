@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rheumatology PFT Estimator &mdash; MiniBox+</title>
+  <style>
+    /* ---- Page shell (standalone) ---- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #f4f6f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      color: #1a1a1a;
+      padding: 24px 16px 48px;
+    }
+    .page-wrap { max-width: 1100px; margin: 0 auto; }
+
+    /* ---- Intro alert box ---- */
+    .alert-box {
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .alert-blue { background: #d6eaf8; color: #0a3d6b; border: 1px solid #a8d0ee; }
+    .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ============================================================
+       Rheumatology PFT Estimator (extracted verbatim from toolkit)
+       SCOPED: only applies inside #tab-rheum
+       ============================================================ */
+    #tab-rheum .rheum-est { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    #tab-rheum .rheum-est * { box-sizing: border-box; }
+    #tab-rheum .rheum-card { background: #fff; border: 1px solid #d0cfc8; border-radius: 10px; overflow: hidden; max-width: 100%; box-shadow: 0 2px 16px rgba(0,0,0,0.06); margin-top: 16px; }
+    #tab-rheum .rheum-top { background: #0C447C; padding: 18px 24px 14px; display: flex; justify-content: space-between; align-items: center; }
+    #tab-rheum .rheum-title-h { font-size: 20px; font-weight: 500; color: #E6F1FB; }
+    #tab-rheum .rheum-subtitle { font-size: 11px; color: #85B7EB; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 3px; }
+    #tab-rheum .rh-section-bar { display: flex; align-items: center; gap: 10px; padding: 9px 20px 8px; border-top: 2px solid; border-bottom: 0.5px solid; }
+    #tab-rheum .rh-section-bar.blue  { background: #E6F1FB; border-top-color: #0C447C; border-bottom-color: #B5D4F4; }
+    #tab-rheum .rh-section-bar.teal  { background: #E1F5EE; border-top-color: #0F6E56; border-bottom-color: #9FE1CB; }
+    #tab-rheum .rh-section-bar.amber { background: #FAEEDA; border-top-color: #854F0B; border-bottom-color: #FAC775; }
+    #tab-rheum .rh-section-num { font-size: 10px; font-weight: 700; color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    #tab-rheum .rh-section-num.blue  { background: #0C447C; }
+    #tab-rheum .rh-section-num.teal  { background: #0F6E56; }
+    #tab-rheum .rh-section-num.amber { background: #854F0B; }
+    #tab-rheum .rh-section-title { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    #tab-rheum .rh-section-title.blue  { color: #0C447C; }
+    #tab-rheum .rh-section-title.teal  { color: #0F6E56; }
+    #tab-rheum .rh-section-title.amber { color: #633806; }
+    #tab-rheum .rh-section-desc { font-size: 11px; color: #777; margin-left: 2px; }
+    #tab-rheum .rh-table-wrap { overflow-x: auto; }
+    #tab-rheum .rh-table-wrap table { width: 100%; border-collapse: collapse; }
+    #tab-rheum .rh-table-wrap thead tr { background: #f7f6f3; }
+    #tab-rheum .rh-table-wrap th { font-size: 10px; color: #777; font-weight: 600; padding: 7px 16px 6px; border-bottom: 1px solid #e0dfd8; text-align: left; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    #tab-rheum .rh-table-wrap th.c-center { text-align: center; }
+    #tab-rheum .rh-table-wrap td { font-size: 13px; color: #1a1a1a; border-bottom: 0.5px solid #eeede8; vertical-align: top; }
+    #tab-rheum .rh-table-wrap td .cell { padding: 9px 16px; }
+    #tab-rheum .rh-table-wrap tr:last-child td { border-bottom: none; }
+    #tab-rheum .rh-table-wrap tr:hover td { background: #fafaf8; }
+    #tab-rheum .rh-diag-name { font-size: 13px; color: #1a1a1a; line-height: 1.35; }
+    #tab-rheum .rh-diag-drug { font-size: 11px; color: #185FA5; margin-top: 4px; line-height: 1.4; }
+    #tab-rheum .rh-code-pill { display: inline-block; font-size: 11px; font-weight: 500; background: #E6F1FB; color: #0C447C; border-radius: 4px; padding: 2px 7px; margin: 2px 2px 0 0; font-family: 'SF Mono','Consolas',monospace; }
+    #tab-rheum .rh-icd-pill  { display: inline-block; font-size: 11px; font-weight: 500; background: #f7f6f3; color: #444; border-radius: 4px; padding: 2px 7px; margin: 2px 2px 0 0; font-family: 'SF Mono','Consolas',monospace; border: 0.5px solid #d0cfc8; }
+    #tab-rheum .rh-code-pill.teal  { background: #E1F5EE; color: #0F6E56; }
+    #tab-rheum .rh-code-pill.red   { background: #FCEBEB; color: #791F1F; }
+    #tab-rheum .rh-freq-main { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+    #tab-rheum .rh-freq-sub  { font-size: 11px; color: #999; margin-top: 2px; }
+    #tab-rheum .rh-risk { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; vertical-align: middle; margin-left: 4px; }
+    #tab-rheum .rh-risk-h { background: #F5C4B3; color: #712B13; }
+    #tab-rheum .rh-risk-m { background: #FAC775; color: #633806; }
+    #tab-rheum .rh-tally { width: 44px; height: 32px; border: 1px solid #c0bfb8; border-radius: 5px; background: #f7f6f3; font-size: 16px; font-weight: 500; color: #1a1a1a; text-align: center; display: inline-flex; align-items: center; justify-content: center; cursor: text; transition: border-color 0.15s, background 0.15s; }
+    #tab-rheum .rh-tally:focus { outline: none; border-color: #378ADD; background: #fff; box-shadow: 0 0 0 3px rgba(55,138,221,0.15); }
+    #tab-rheum .rh-tally.teal:focus  { border-color: #0F6E56; box-shadow: 0 0 0 3px rgba(15,110,86,0.12); }
+    #tab-rheum .rh-tally.amber:focus { border-color: #854F0B; box-shadow: 0 0 0 3px rgba(133,79,11,0.12); }
+    #tab-rheum .rh-symptom-body { padding: 16px 20px; }
+    #tab-rheum .rh-symptom-intro { font-size: 13px; color: #1a1a1a; margin-bottom: 12px; line-height: 1.5; }
+    #tab-rheum .rh-trigger-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    #tab-rheum .rh-trigger-chip { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 20px; padding: 5px 14px; font-size: 12px; color: #085041; font-weight: 500; }
+    #tab-rheum .rh-symptom-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: start; margin-bottom: 16px; }
+    #tab-rheum .rh-sym-block label { font-size: 10px; font-weight: 600; color: #777; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
+    #tab-rheum .rh-weekly-box { background: #f0faf6; border: 1px solid #9FE1CB; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    #tab-rheum .rh-weekly-left { display: flex; align-items: center; gap: 12px; }
+    #tab-rheum .rh-weekly-label { font-size: 13px; font-weight: 600; color: #085041; }
+    #tab-rheum .rh-weekly-sub { font-size: 11px; color: #3B6D11; margin-top: 2px; }
+    #tab-rheum .rh-weekly-divider { width: 1px; height: 40px; background: #9FE1CB; }
+    #tab-rheum .rh-weekly-result-label { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; }
+    #tab-rheum .rh-weekly-result-number { font-size: 28px; font-weight: 500; color: #0F6E56; line-height: 1.1; }
+    #tab-rheum .rh-weekly-result-sub { font-size: 11px; color: #aaa; }
+    #tab-rheum .rh-convert-note { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 6px; padding: 9px 14px; font-size: 11px; color: #085041; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    #tab-rheum .rh-drug-body { padding: 16px 20px; }
+    #tab-rheum .rh-drug-intro { font-size: 13px; color: #1a1a1a; margin-bottom: 6px; line-height: 1.5; }
+    #tab-rheum .rh-emr-tip { font-size: 11px; color: #854F0B; background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 6px; padding: 7px 12px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; }
+    #tab-rheum .rh-scenario-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    #tab-rheum .rh-scenario-card { border: 0.5px solid #e0dfd8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    #tab-rheum .rh-scenario-head { padding: 8px 12px; border-bottom: 0.5px solid #e0dfd8; }
+    #tab-rheum .rh-scenario-num  { font-size: 9px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; }
+    #tab-rheum .rh-scenario-name { font-size: 12px; font-weight: 600; color: #1a1a1a; margin-top: 2px; }
+    #tab-rheum .rh-scenario-body { padding: 10px 12px; flex: 1; }
+    #tab-rheum .rh-scenario-trigger { font-size: 11px; color: #555; margin-bottom: 8px; line-height: 1.4; }
+    #tab-rheum .rh-scenario-codes { display: flex; flex-wrap: wrap; gap: 4px; }
+    #tab-rheum .rh-scenario-note  { font-size: 10px; color: #999; margin-top: 6px; line-height: 1.4; font-style: italic; }
+    #tab-rheum .rh-scenario-tally { border-top: 0.5px solid #e0dfd8; padding: 9px 12px; background: #fafaf8; display: flex; align-items: center; gap: 10px; }
+    #tab-rheum .rh-scenario-tally-label { font-size: 11px; color: #555; flex: 1; line-height: 1.3; }
+    #tab-rheum .rh-scenario-card.s1 .rh-scenario-head { background: #f7f6f3; }
+    #tab-rheum .rh-scenario-card.s2 .rh-scenario-head { background: #FAEEDA; }
+    #tab-rheum .rh-scenario-card.s3 .rh-scenario-head { background: #FCEBEB; }
+    #tab-rheum .rh-scenario-card.s2 .rh-scenario-name { color: #633806; }
+    #tab-rheum .rh-scenario-card.s3 .rh-scenario-name { color: #791F1F; }
+    #tab-rheum .rh-revenue-bar { border-top: 2px solid #0C447C; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    #tab-rheum .rh-rev-block { padding: 14px 20px; border-right: 0.5px solid #e0dfd8; }
+    #tab-rheum .rh-rev-block:last-child { border-right: none; }
+    #tab-rheum .rh-rev-label { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+    #tab-rheum .rh-rev-number { font-size: 40px; font-weight: 500; color: #0C447C; line-height: 1; }
+    #tab-rheum .rh-rev-number.green { color: #0B6E56; }
+    #tab-rheum .rh-rev-sub { font-size: 11px; color: #bbb; margin-top: 3px; }
+    #tab-rheum .rh-rev-rate-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    #tab-rheum .rh-rev-rate-row label { font-size: 11px; color: #888; }
+    #tab-rheum .rh-rev-rate-input { width: 70px; height: 28px; border: 1px solid #c0bfb8; border-radius: 5px; background: #f7f6f3; font-size: 13px; font-weight: 500; color: #1a1a1a; text-align: center; padding: 0 6px; }
+    #tab-rheum .rh-rev-rate-input:focus { outline: none; border-color: #378ADD; }
+    #tab-rheum .rh-card-footer { background: #f7f6f3; border-top: 0.5px solid #e0dfd8; padding: 10px 20px; }
+    #tab-rheum .rh-footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    #tab-rheum .rh-footer-block label { font-size: 9px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-bottom: 3px; }
+    #tab-rheum .rh-footer-block p { font-size: 10px; color: #999; line-height: 1.6; }
+    #tab-rheum .rh-footer-legal { font-size: 9px; color: #bbb; margin-top: 8px; line-height: 1.5; border-top: 0.5px solid #e0dfd8; padding-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+  <div id="tab-rheum">
+
+    <div class="alert-box alert-blue">
+      <div class="alert-icon">&#9432;</div>
+      <div><strong>How to use this:</strong> Walk through Section 1 (your confirmed ILD-risk patients), Section 2 (weekly symptom flow), and Section 3 (drug monitoring). The bottom bar shows your annual PFT volume and revenue at $150 per panel &mdash; adjust for your payer mix.</div>
+    </div>
+
+    <div class="rheum-est">
+      <div class="rheum-card">
+
+        <div class="rheum-top">
+          <div>
+            <div class="rheum-title-h">Rheumatology PFT Estimator</div>
+            <div class="rheum-subtitle">Qualifying Diagnoses &nbsp;&middot;&nbsp; Symptom Pathways &nbsp;&middot;&nbsp; Drug Monitoring Codes</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;color:#85B7EB;letter-spacing:0.12em;text-transform:uppercase;font-family:'SF Mono','Consolas',monospace;">PFT Revenue Tool</div>
+            <div style="font-size:10px;color:#5d8fc5;letter-spacing:0.05em;margin-top:4px;font-family:'SF Mono','Consolas',monospace;">94010 &middot; 94726 &middot; 94729</div>
+          </div>
+        </div>
+
+        <div class="rh-section-bar blue">
+          <div class="rh-section-num blue">1</div>
+          <div class="rh-section-title blue">Confirmed Diagnoses</div>
+          <div class="rh-section-desc">&mdash; Recurring annual or semi-annual billing. Enter how many patients you have with each diagnosis.</div>
+        </div>
+
+        <div style="padding: 9px 20px 0; font-size: 11px; color: #777; background: #fafaf8; border-bottom: 0.5px solid #eeede8;">
+          <strong style="color:#555;">Risk pills</strong> indicate likelihood of ILD development based on disease prevalence &mdash; they guide screening urgency, not billing frequency.
+          Frequency reflects clinically supported billing cadence; Medicare reimburses when medical necessity is documented (no hard cap).
+        </div>
+
+        <div class="rh-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:30%;">Qualifying Diagnosis</th>
+                <th>ICD-10 Code(s)</th>
+                <th>Bill With (CPT)</th>
+                <th class="c-center">Typical<br>frequency</th>
+                <th class="c-center">My pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="cell">
+                  <div class="rh-diag-name">Systemic sclerosis (SSc) <span class="rh-risk rh-risk-h">high</span></div>
+                  <div class="rh-diag-drug">&#8595; On cyclophosphamide or MMF &rarr; up to 4x/yr</div>
+                </div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M34.0</span><span class="rh-icd-pill">M34.1</span><span class="rh-icd-pill">M34.81</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1&ndash;2x</div><div class="rh-freq-sub">annual / semi-annual</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r1" data-freq="1.5" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell">
+                  <div class="rh-diag-name">Inflammatory myopathy &mdash; PM/DM <span class="rh-risk rh-risk-h">high</span></div>
+                  <div class="rh-diag-drug">&#8595; On cyclophosphamide &rarr; up to 4x/yr</div>
+                </div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M33.11</span><span class="rh-icd-pill">M33.21</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1&ndash;2x</div><div class="rh-freq-sub">annual / semi-annual</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r2" data-freq="1.5" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell">
+                  <div class="rh-diag-name">Antisynthetase syndrome <span class="rh-risk rh-risk-h">high</span></div>
+                  <div class="rh-diag-drug">&#8595; ILD often present at diagnosis &mdash; baseline then every 6 months</div>
+                  <div style="font-size:10px;color:#999;margin-top:4px;font-style:italic;line-height:1.4;">No dedicated ICD-10 &mdash; combine the myositis code (M33.91) with an ILD code (J84.89).</div>
+                </div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M33.91</span><span class="rh-icd-pill">J84.89</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">2x</div><div class="rh-freq-sub">semi-annual</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r3" data-freq="2" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell">
+                  <div class="rh-diag-name">RA with pulmonary involvement <span class="rh-risk rh-risk-m">mod</span></div>
+                  <div class="rh-diag-drug">&#8595; On methotrexate or leflunomide &rarr; baseline PFT required; retest if symptoms arise</div>
+                </div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M05.10</span><span class="rh-icd-pill">J84.89</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1&ndash;2x</div><div class="rh-freq-sub">annual / as indicated</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r4" data-freq="1.5" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell"><div class="rh-diag-name">Mixed connective tissue disease <span class="rh-risk rh-risk-m">mod</span></div></div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M35.1</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1x</div><div class="rh-freq-sub">annual</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r5" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell"><div class="rh-diag-name">Sj&ouml;gren's with pulmonary involvement <span class="rh-risk rh-risk-m">mod</span></div></div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M35.02</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1x</div><div class="rh-freq-sub">annual</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r6" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell"><div class="rh-diag-name">SLE with respiratory involvement</div></div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M32.13</span><span class="rh-icd-pill">M32.19</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1x</div><div class="rh-freq-sub">as indicated</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r7" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell"><div class="rh-diag-name">ANCA-associated vasculitis (GPA / MPA)</div></div></td>
+                <td><div class="cell"><span class="rh-icd-pill">M31.30</span><span class="rh-icd-pill">M31.7</span></div></td>
+                <td><div class="cell"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-freq-main">1x</div><div class="rh-freq-sub">annual / as indicated</div></div></td>
+                <td><div class="cell" style="text-align:center;"><div class="rh-tally" contenteditable="true" data-rid="r8" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)">0</div></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="rh-section-bar teal">
+          <div class="rh-section-num teal">2</div>
+          <div class="rh-section-title teal">Suspected ILD &mdash; Symptom Pathway</div>
+          <div class="rh-section-desc">&mdash; No confirmed diagnosis needed. Any patient presenting with these symptoms qualifies for a diagnostic PFT today.</div>
+        </div>
+
+        <div class="rh-symptom-body">
+          <p class="rh-symptom-intro">If a patient walks in with any of the following and you have clinical suspicion for interstitial lung disease, you can order, perform, and bill for a PFT right now &mdash; before a diagnosis is confirmed.</p>
+
+          <div class="rh-trigger-grid">
+            <div class="rh-trigger-chip">Shortness of breath / dyspnea</div>
+            <div class="rh-trigger-chip">Chronic or unexplained cough</div>
+            <div class="rh-trigger-chip">Reduced exercise tolerance</div>
+            <div class="rh-trigger-chip">Unexplained oxygen desaturation</div>
+            <div class="rh-trigger-chip">Bibasilar crackles on exam</div>
+            <div class="rh-trigger-chip">New respiratory symptoms on any immunosuppressant</div>
+          </div>
+
+          <div class="rh-symptom-row">
+            <div class="rh-sym-block">
+              <label>Primary symptom code(s)</label>
+              <span class="rh-icd-pill">R06.00</span> <span style="font-size:11px;color:#888;">Dyspnea</span><br>
+              <span class="rh-icd-pill" style="margin-top:5px;display:inline-block;">R05.3</span> <span style="font-size:11px;color:#888;">Chronic cough</span><br>
+              <span class="rh-icd-pill" style="margin-top:5px;display:inline-block;">R05.9</span> <span style="font-size:11px;color:#888;">Cough, unspecified</span>
+            </div>
+            <div class="rh-sym-block">
+              <label>Supporting diagnosis</label>
+              <span style="font-size:12px;color:#555;line-height:1.5;display:block;">Add their known rheumatologic condition as a secondary ICD-10 &mdash; it establishes why you're concerned about ILD specifically.</span>
+            </div>
+            <div class="rh-sym-block">
+              <label>Bill with (CPT)</label>
+              <span class="rh-code-pill teal">94010</span>
+              <span class="rh-code-pill teal">94726</span>
+              <span class="rh-code-pill teal">94729</span>
+              <p style="font-size:11px;color:#888;margin-top:6px;">Full diagnostic panel &mdash; billed once per episode</p>
+            </div>
+          </div>
+
+          <div class="rh-weekly-box">
+            <div class="rh-weekly-left">
+              <div class="rh-tally teal" contenteditable="true" data-rid="s1" data-freq="1" oninput="rheumCalcWeekly()" onblur="rheumClean(this)" onfocus="rheumSel(this)" aria-label="Symptomatic patients per week">0</div>
+              <div>
+                <div class="rh-weekly-label">Patients per week presenting with breathing symptoms</div>
+                <div class="rh-weekly-sub">Think about a typical week in your clinic &mdash; how many mention shortness of breath or a new cough?</div>
+              </div>
+            </div>
+            <div class="rh-weekly-divider"></div>
+            <div>
+              <div class="rh-weekly-result-label">Annual PFTs from this group</div>
+              <div class="rh-weekly-result-number" id="rheum-weekly-annual">0</div>
+              <div class="rh-weekly-result-sub">patients/wk &times; 52 weeks</div>
+            </div>
+          </div>
+
+          <div class="rh-convert-note">
+            <span style="font-size:16px;flex-shrink:0;margin-top:-1px;">&rarr;</span>
+            <div><strong>If ILD is confirmed</strong> &mdash; that patient moves to Section 1 and becomes a recurring annual or semi-annual billing patient. One diagnostic visit today creates a long-term revenue relationship.</div>
+          </div>
+        </div>
+
+        <div class="rh-section-bar amber">
+          <div class="rh-section-num amber">3</div>
+          <div class="rh-section-title amber">Drug Monitoring &mdash; How to Code It</div>
+          <div class="rh-section-desc">&mdash; Patient is on a high-risk drug and you're concerned. Find your scenario, use those codes, add your count.</div>
+        </div>
+
+        <div class="rh-drug-body">
+          <p class="rh-drug-intro">The drug alone doesn't generate the billing code &mdash; but the combination of their diagnosis, the drug they're on, and your documented clinical concern does. Match the scenario below to the situation.</p>
+
+          <div class="rh-emr-tip">
+            <span style="flex-shrink:0;">&#9432;</span>
+            <div><strong>Finding your count:</strong> Run a medication report in your EMR &mdash; search by drug name (methotrexate, cyclophosphamide, leflunomide, etc.) to pull every active patient on that drug. Most systems can do this in under two minutes. That number goes in the tally box below each scenario.</div>
+          </div>
+
+          <div class="rh-scenario-grid">
+
+            <div class="rh-scenario-card s1">
+              <div class="rh-scenario-head">
+                <div class="rh-scenario-num">Scenario 1</div>
+                <div class="rh-scenario-name">Routine monitoring &mdash; no symptoms</div>
+              </div>
+              <div class="rh-scenario-body">
+                <p class="rh-scenario-trigger">Patient is on a high-risk drug (MTX, CYC, leflunomide, JAK inhibitor). No complaints. You want a baseline or periodic check.</p>
+                <div class="rh-scenario-codes">
+                  <span class="rh-icd-pill">Underlying Dx</span>
+                  <span class="rh-icd-pill">Z79.899</span>
+                </div>
+                <p class="rh-scenario-note">Z79.899 = long-term medication use. This pair documents medical necessity for the monitoring visit.</p>
+                <div style="margin-top:8px;"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94729</span></div>
+              </div>
+              <div class="rh-scenario-tally">
+                <div class="rh-tally amber" contenteditable="true" data-rid="d1" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)" aria-label="Scenario 1 patients">0</div>
+                <div class="rh-scenario-tally-label">Patients on high-risk drugs, no symptoms yet &mdash; run your EMR medication report</div>
+              </div>
+            </div>
+
+            <div class="rh-scenario-card s2">
+              <div class="rh-scenario-head">
+                <div class="rh-scenario-num">Scenario 2</div>
+                <div class="rh-scenario-name">Patient has symptoms on the drug</div>
+              </div>
+              <div class="rh-scenario-body">
+                <p class="rh-scenario-trigger">Patient reports shortness of breath, new cough, or reduced tolerance since starting the drug. Stronger billing case &mdash; document the symptoms.</p>
+                <div class="rh-scenario-codes">
+                  <span class="rh-icd-pill">Underlying Dx</span>
+                  <span class="rh-icd-pill">Z79.899</span>
+                  <span class="rh-icd-pill">R06.00</span>
+                  <span class="rh-icd-pill">R05.3</span>
+                </div>
+                <p class="rh-scenario-note">Stack the symptom code on top of the monitoring code. Significantly strengthens medical necessity.</p>
+                <div style="margin-top:8px;"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div>
+              </div>
+              <div class="rh-scenario-tally">
+                <div class="rh-tally amber" contenteditable="true" data-rid="d2" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)" aria-label="Scenario 2 patients">0</div>
+                <div class="rh-scenario-tally-label">Patients on a drug who are currently reporting breathing symptoms</div>
+              </div>
+            </div>
+
+            <div class="rh-scenario-card s3">
+              <div class="rh-scenario-head">
+                <div class="rh-scenario-num">Scenario 3</div>
+                <div class="rh-scenario-name">Drug toxicity suspected</div>
+              </div>
+              <div class="rh-scenario-body">
+                <p class="rh-scenario-trigger">You believe the drug may be causing lung damage &mdash; drug-induced pneumonitis or interstitial changes on imaging. Act now.</p>
+                <div class="rh-scenario-codes">
+                  <span class="rh-icd-pill">Underlying Dx</span>
+                  <span class="rh-code-pill red">T45.1X5A</span>
+                  <span class="rh-code-pill red">J70.2</span>
+                  <span class="rh-code-pill red">J70.3</span>
+                </div>
+                <p class="rh-scenario-note">T45.1X5A = adverse effect of immunosuppressants. J70.2 acute / J70.3 chronic drug-induced pneumonitis.</p>
+                <div style="margin-top:8px;"><span class="rh-code-pill">94010</span><span class="rh-code-pill">94726</span><span class="rh-code-pill">94729</span></div>
+              </div>
+              <div class="rh-scenario-tally">
+                <div class="rh-tally amber" contenteditable="true" data-rid="d3" data-freq="1" oninput="rheumCalc()" onblur="rheumClean(this)" onfocus="rheumSel(this)" aria-label="Scenario 3 patients">0</div>
+                <div class="rh-scenario-tally-label">Patients where you currently suspect drug-induced lung injury</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="rh-revenue-bar">
+          <div class="rh-rev-block">
+            <div class="rh-rev-label">Total PFTs this year</div>
+            <div class="rh-rev-number" id="rheum-total-pfts">0</div>
+            <div class="rh-rev-sub" id="rheum-total-sub">Enter counts above to calculate</div>
+            <div id="rheum-total-breakdown" style="font-size:10px;color:#aaa;margin-top:6px;line-height:1.5;font-family:'SF Mono','Consolas',monospace;letter-spacing:0.02em;">Confirmed: 0 &nbsp;&middot;&nbsp; Symptomatic: 0 &nbsp;&middot;&nbsp; Drug: 0</div>
+          </div>
+          <div class="rh-rev-block">
+            <div class="rh-rev-label">Estimated annual revenue</div>
+            <div class="rh-rev-number green" id="rheum-rev-estimate">$0</div>
+            <div class="rh-rev-sub">Sections 1 + 2 + 3 combined</div>
+          </div>
+          <div class="rh-rev-block">
+            <div class="rh-rev-label">Rate per PFT panel</div>
+            <div class="rh-rev-rate-row">
+              <label>$</label>
+              <input class="rh-rev-rate-input" type="number" id="rheum-rate-input" value="150" min="1" oninput="rheumCalc()" aria-label="Dollars per PFT panel" />
+              <span style="font-size:10px;color:#bbb;">adjust for your payer mix</span>
+            </div>
+            <div style="font-size:10px;color:#bbb;margin-top:8px;line-height:1.6;">94010 + 94726 + 94729<br>&asymp; $140&ndash;165 recent Medicare national average</div>
+          </div>
+        </div>
+
+        <div class="rh-card-footer">
+          <div class="rh-footer-grid">
+            <div class="rh-footer-block">
+              <label>CPT Code Key</label>
+              <p>94010 Spirometry (FVC, FEV1) &nbsp;&middot;&nbsp; 94726 Plethysmography / lung volumes <em>(or 94727 if your lab uses gas dilution / washout)</em> &nbsp;&middot;&nbsp; 94729 DLCO / diffusing capacity &mdash; <strong>add-on only</strong>, must accompany 94010 or 94726/94727</p>
+            </div>
+            <div class="rh-footer-block">
+              <label>Section 3 ICD-10 Key</label>
+              <p>Z79.899 Long-term medication use &nbsp;&middot;&nbsp; R06.00 Dyspnea &nbsp;&middot;&nbsp; R05.9 Cough &nbsp;&middot;&nbsp; T45.1X5A Adverse effect of antineoplastic / immunosuppressive drugs &nbsp;&middot;&nbsp; J70.2 Acute / J70.3 Chronic drug-induced interstitial pneumonitis</p>
+            </div>
+          </div>
+          <div class="rh-footer-legal">Reimbursement estimates based on Medicare national averages. Rates vary by geography, MAC, payer, and year &mdash; verify current rates before billing. Medicare reimburses based on documented medical necessity; there is no fixed annual frequency cap on PFTs. This tool is for planning and educational purposes only.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end #tab-rheum -->
+  </div><!-- end page-wrap -->
+
+  <script>
+    var rheumDiagRows = [
+      {id:'r1',freq:1.5},{id:'r2',freq:1.5},{id:'r3',freq:2},
+      {id:'r4',freq:1.5},{id:'r5',freq:1},{id:'r6',freq:1},
+      {id:'r7',freq:1},{id:'r8',freq:1}
+    ];
+    var rheumDrugRows = [{id:'d1',freq:1},{id:'d2',freq:1},{id:'d3',freq:1}];
+
+    function rheumGetN(id) {
+      var el = document.querySelector('#tab-rheum [data-rid="' + id + '"]');
+      if (!el) return 0;
+      var v = parseInt(el.textContent.trim());
+      return isNaN(v) || v < 0 ? 0 : v;
+    }
+
+    function rheumCalcWeekly() {
+      var wk = rheumGetN('s1');
+      var annual = wk * 52;
+      var el = document.getElementById('rheum-weekly-annual');
+      if (el) el.textContent = annual;
+      rheumCalc();
+    }
+
+    function rheumCalc() {
+      var s1Total = 0, s2Total = 0, s3Total = 0;
+      for (var i = 0; i < rheumDiagRows.length; i++) {
+        s1Total += rheumGetN(rheumDiagRows[i].id) * rheumDiagRows[i].freq;
+      }
+      s2Total = rheumGetN('s1') * 52;
+      for (var j = 0; j < rheumDrugRows.length; j++) {
+        s3Total += rheumGetN(rheumDrugRows[j].id) * rheumDrugRows[j].freq;
+      }
+      var total = Math.round(s1Total + s2Total + s3Total);
+      var rateEl = document.getElementById('rheum-rate-input');
+      var rate = rateEl ? (parseFloat(rateEl.value) || 150) : 150;
+      var rev = total * rate;
+
+      var totalEl = document.getElementById('rheum-total-pfts');
+      var subEl = document.getElementById('rheum-total-sub');
+      var brkEl = document.getElementById('rheum-total-breakdown');
+      var revEl = document.getElementById('rheum-rev-estimate');
+      if (totalEl) totalEl.textContent = total;
+      if (subEl) subEl.textContent = total === 0 ? 'Enter counts above to calculate' : 'visits / year across all three sections';
+      if (brkEl) brkEl.textContent = 'Confirmed: ' + Math.round(s1Total) + '  ·  Symptomatic: ' + Math.round(s2Total) + '  ·  Drug: ' + Math.round(s3Total);
+      if (revEl) revEl.textContent = '$' + Math.round(rev).toLocaleString();
+    }
+
+    function rheumSel(el) {
+      if (el.textContent.trim() === '0') el.textContent = '';
+      setTimeout(function() {
+        var r = document.createRange();
+        r.selectNodeContents(el);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+      }, 0);
+    }
+
+    function rheumClean(el) {
+      var v = parseInt(el.textContent.trim());
+      el.textContent = isNaN(v) || v < 0 ? '0' : String(v);
+      if (el.dataset.rid === 's1') { rheumCalcWeekly(); } else { rheumCalc(); }
+    }
+
+    document.querySelectorAll('#tab-rheum .rh-tally').forEach(function(el) {
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); this.blur(); }
+        if (!/^[0-9]$|Backspace|Delete|Tab|ArrowLeft|ArrowRight/.test(e.key)) e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>

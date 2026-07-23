@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulmOne Installation Completion Form — DHR008 Rev 4.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root{
+    --blue-dark:#0a3d6b; --blue-mid:#0c5299; --blue-brand:#0e6abf; --blue-light:#d6eaf8;
+    --green:#27ae60; --green-bg:#e7f7ee; --red:#c0392b; --red-bg:#fdecea;
+    --gray-100:#f4f6f9; --gray-200:#e8ecf0; --gray-300:#c8d0d8; --gray-500:#8a96a3;
+    --gray-600:#5a6a7a; --gray-800:#1e2d3d; --text:#1a2733;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif; background:#eef2f7; color:var(--text); -webkit-text-size-adjust:100%;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 14px 80px;}
+
+  /* Header */
+  .topbar{background:var(--blue-dark); color:#fff; padding:18px 20px;}
+  .topbar-inner{max-width:920px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .brand-logo{font-size:26px; font-weight:800; letter-spacing:-0.5px;}
+  .brand-logo .dot{color:#39b0c9;}
+  .head-right{text-align:right;}
+  .head-title{font-size:20px; font-weight:700; line-height:1.15;}
+  .head-sub{font-size:12px; color:#a8d0ee; margin-top:3px; letter-spacing:0.04em;}
+
+  /* Action bar */
+  .actions{position:sticky; top:0; z-index:20; background:#eef2f7; padding:12px 0 10px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); margin-bottom:6px;}
+  .btn{font-family:inherit; font-size:14px; font-weight:600; padding:11px 18px; border-radius:9px; border:1.5px solid; cursor:pointer; min-height:44px;}
+  .btn-primary{background:var(--blue-brand); color:#fff; border-color:var(--blue-brand);}
+  .btn-primary:hover{background:var(--blue-mid);}
+  .btn-ghost{background:#fff; color:var(--gray-600); border-color:var(--gray-300);}
+  .btn-ghost:hover{background:var(--gray-100);}
+  .save-note{font-size:12px; color:var(--gray-500); align-self:center; margin-right:auto;}
+
+  /* Cards */
+  .card{background:#fff; border:1px solid var(--gray-200); border-radius:12px; margin:14px 0; overflow:hidden; box-shadow:0 1px 2px rgba(16,42,67,0.04);}
+  .card-head{background:var(--blue-dark); color:#fff; padding:11px 16px; font-size:15px; font-weight:700;}
+  .card-head .sub{display:block; font-size:11px; font-weight:500; color:#a8d0ee; margin-top:2px;}
+  .card-body{padding:14px 16px;}
+
+  /* Fields */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+  @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:11px; font-weight:700; color:var(--blue-mid); text-transform:uppercase; letter-spacing:0.04em;}
+  .inp{font-family:inherit; font-size:15px; padding:11px 12px; border:1.5px solid var(--gray-300); border-radius:9px; background:#fff; width:100%; min-height:44px;}
+  .inp:focus{outline:none; border-color:var(--blue-brand); box-shadow:0 0 0 3px rgba(14,106,191,0.14);}
+  textarea.inp{min-height:90px; resize:vertical;}
+
+  /* Checklist */
+  .clist-head{display:grid; grid-template-columns:30px 1fr 150px 190px; gap:10px; padding:6px 4px; font-size:10px; font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--gray-200);}
+  .clist-head .c-yn{text-align:center;}
+  .item{display:grid; grid-template-columns:30px 1fr 150px 190px; gap:10px; align-items:center; padding:9px 4px; border-bottom:1px solid var(--gray-200);}
+  .item:last-child{border-bottom:none;}
+  .item .num{font-weight:700; color:var(--blue-dark); font-size:13px;}
+  .item .lbl{font-size:14px; line-height:1.3;}
+  .item.sub .lbl{color:var(--gray-600); padding-left:10px; font-size:13px;}
+  .item .cmt{font-family:inherit; font-size:13px; padding:8px 10px; border:1.5px solid var(--gray-300); border-radius:8px; min-height:38px;}
+  .item .cmt:focus{outline:none; border-color:var(--blue-brand);}
+  @media(max-width:640px){
+    .clist-head{display:none;}
+    .item{grid-template-columns:24px 1fr; grid-template-areas:"num lbl" ". yn" ". cmt"; gap:8px;}
+    .item .num{grid-area:num;} .item .lbl{grid-area:lbl;}
+    .item .yn{grid-area:yn; justify-self:start;} .item .cmt{grid-area:cmt;}
+  }
+
+  /* Yes/No toggle */
+  .yn{display:inline-flex; gap:6px; justify-content:center;}
+  .yn-btn{font-family:inherit; font-size:14px; font-weight:700; padding:9px 0; width:62px; border-radius:9px; border:1.5px solid var(--gray-300); background:#fff; color:var(--gray-600); cursor:pointer; min-height:42px;}
+  .yn-btn.yes.active{background:var(--green); border-color:var(--green); color:#fff;}
+  .yn-btn.no.active{background:var(--red); border-color:var(--red); color:#fff;}
+  .yn-btn:active{transform:scale(0.97);}
+
+  /* Staff contact table */
+  .staff-row{display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr; gap:8px; padding:7px 0; align-items:center; border-bottom:1px solid var(--gray-200);}
+  .staff-row .role{font-size:13px; font-weight:600; color:var(--gray-800);}
+  .staff-row .inp{font-size:13px; padding:8px 10px; min-height:38px;}
+  .staff-head{display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr; gap:8px; font-size:10px; font-weight:700; color:var(--gray-500); text-transform:uppercase; padding-bottom:5px; border-bottom:2px solid var(--gray-200);}
+  @media(max-width:640px){
+    .staff-head{display:none;}
+    .staff-row{grid-template-columns:1fr; gap:5px; padding:10px 0;}
+    .staff-row .role{font-weight:700; color:var(--blue-dark);}
+  }
+
+  /* VII grid */
+  .gwrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table.grid{border-collapse:collapse; width:100%; min-width:640px; font-size:12px;}
+  table.grid th, table.grid td{border:1px solid var(--gray-200); padding:4px; text-align:center;}
+  table.grid th.item-h, table.grid td.item-c{text-align:left; min-width:170px; font-weight:600;}
+  table.grid thead th{background:var(--blue-dark); color:#fff; font-weight:600; font-size:11px;}
+  table.grid thead th input{width:74px; font-size:11px; padding:5px 4px; border:1px solid #2c6094; border-radius:5px; background:#0f4d83; color:#fff;}
+  table.grid thead th input::placeholder{color:#9fc4e6;}
+  table.grid tbody tr:nth-child(even){background:var(--gray-100);}
+  .cyc{font-family:inherit; font-weight:800; font-size:14px; width:40px; height:36px; border-radius:7px; border:1.5px solid var(--gray-300); background:#fff; color:var(--gray-400); cursor:pointer;}
+  .cyc[data-v="Y"]{background:var(--green-bg); border-color:var(--green); color:var(--green);}
+  .cyc[data-v="N"]{background:var(--red-bg); border-color:var(--red); color:var(--red);}
+  .grid-init{width:78px; font-size:11px; padding:5px; border:1.5px solid var(--gray-300); border-radius:6px;}
+  .hint{font-size:12px; color:var(--gray-500); margin:0 0 8px;}
+
+  /* attestation */
+  .attest{background:var(--blue-light); border:1px solid #bcdcf3; border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.55; color:var(--gray-800);}
+  .attest b{color:var(--blue-dark);}
+  .attest p{margin:0 0 9px;}
+  .attest p:last-child{margin-bottom:0;}
+
+  .sigrow{display:grid; grid-template-columns:2fr 1fr; gap:12px;}
+  @media(max-width:640px){.sigrow{grid-template-columns:1fr;}}
+
+  /* PRINT */
+  @media print{
+    @page{margin:12mm;}
+    body{background:#fff;}
+    .actions,.save-note,.hint{display:none !important;}
+    .wrap{max-width:none; padding:0;}
+    .topbar{background:#fff !important; color:#000 !important; padding:0 0 8px; border-bottom:2px solid var(--blue-dark);}
+    .brand-logo{color:var(--blue-dark) !important;} .head-title{color:#000;} .head-sub{color:#555 !important;}
+    .card{border:1px solid #bbb; box-shadow:none; margin:8px 0; page-break-inside:avoid;}
+    .card-head{background:var(--blue-dark) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .inp,.cmt,.grid-init{border:none; border-bottom:1px solid #999; border-radius:0; box-shadow:none !important; padding-left:2px;}
+    .inp::placeholder,.cmt::placeholder,.grid-init::placeholder{color:transparent !important;}
+    input[type=date]::-webkit-calendar-picker-indicator{display:none;}
+    .yn-btn{width:auto; padding:2px 10px; min-height:0; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .yn-btn:not(.active){opacity:0.30; color:#888;}
+    .cyc{-webkit-print-color-adjust:exact; print-color-adjust:exact; width:auto; height:auto; padding:2px 6px;}
+    table.grid thead th input{background:#0f4d83 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-logo">Pulm<span class="dot">◊</span>One</div>
+    <div class="head-right">
+      <div class="head-title">Installation Completion Form</div>
+      <div class="head-sub">Document no. DHR008 &nbsp;•&nbsp; Revision 4.0</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="actions">
+    <span class="save-note" id="saveNote">Auto-saving your progress on this device</span>
+    <button class="btn btn-ghost" onclick="clearForm()">&#8635; Clear Form</button>
+    <button class="btn btn-primary" onclick="window.print()">&#128190; Save as PDF / Print</button>
+  </div>
+
+  <!-- Install report meta -->
+  <div class="card">
+    <div class="card-head">PulmOne Installation Report<span class="sub">To be filled by a certified PulmOne Service Specialist</span></div>
+    <div class="card-body">
+      <div class="grid3">
+        <div class="field"><label>PO Number</label><input class="inp" id="po_number" placeholder="PO #"></div>
+        <div class="field"><label>Installation Date</label><input type="date" class="inp" id="install_date"></div>
+        <div class="field"><label>Installer Name</label><input class="inp" id="installer_name" placeholder="Your name"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- I Product Details -->
+  <div class="card">
+    <div class="card-head">I. &nbsp;Product Details</div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="field"><label>Product Name</label><input class="inp" id="product_name" placeholder="e.g. MiniBox Plus"></div>
+        <div class="field"><label>Device S/N</label><input class="inp" id="device_sn" placeholder="Device serial number"></div>
+        <div class="field"><label>Tablet S/N</label><input class="inp" id="tablet_sn" placeholder="Tablet serial number"></div>
+        <div class="field"><label>HHU S/N</label><input class="inp" id="hhu_sn" placeholder="Handheld unit serial number"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- II Customer Details -->
+  <div class="card">
+    <div class="card-head">II. &nbsp;Customer Details</div>
+    <div class="card-body">
+      <div class="grid2" style="margin-bottom:12px;">
+        <div class="field"><label>Name</label><input class="inp" id="cust_name" placeholder="Practice / facility name"></div>
+        <div class="field"><label>Address</label><input class="inp" id="cust_address" placeholder="Street address"></div>
+        <div class="field"><label>City / State / ZIP</label><input class="inp" id="cust_city" placeholder="City, ST ZIP"></div>
+        <div class="field"><label>Phone</label><input class="inp" id="cust_phone" placeholder="Phone"></div>
+        <div class="field"><label>Email</label><input class="inp" id="cust_email" placeholder="Email"></div>
+      </div>
+
+      <div class="staff-head"><div>Customer's Staff</div><div>Name + Credentials</div><div>Phone / Cell</div><div>Email</div></div>
+      <div id="staffRows"></div>
+    </div>
+  </div>
+
+  <!-- III Received Items -->
+  <div class="card">
+    <div class="card-head">III. &nbsp;Received Items</div>
+    <div class="card-body">
+      <div class="clist-head"><div>#</div><div>Item</div><div class="c-yn">Yes / No</div><div>Comments</div></div>
+      <div id="recvList"></div>
+    </div>
+  </div>
+
+  <!-- IV Acceptance Tests -->
+  <div class="card">
+    <div class="card-head">IV. &nbsp;Acceptance Tests<span class="sub">To be demonstrated and performed by PulmOne's Service Specialist</span></div>
+    <div class="card-body">
+      <div class="clist-head"><div>#</div><div>Test</div><div class="c-yn">Yes / No</div><div>Comments</div></div>
+      <div id="accList"></div>
+    </div>
+  </div>
+
+  <!-- V Training -->
+  <div class="card">
+    <div class="card-head">V. &nbsp;Training<span class="sub">To be performed and confirmed by customer's staff</span></div>
+    <div class="card-body">
+      <div class="clist-head"><div>#</div><div>Item</div><div class="c-yn">Yes / No</div><div>Comments</div></div>
+      <div id="trnList"></div>
+    </div>
+  </div>
+
+  <!-- VI Post-Installation -->
+  <div class="card">
+    <div class="card-head">VI. &nbsp;Post-Installation Activities</div>
+    <div class="card-body">
+      <div class="clist-head"><div>#</div><div>Item</div><div class="c-yn">Yes / No</div><div>Comments</div></div>
+      <div id="postList"></div>
+      <div class="sigrow" style="margin-top:14px;">
+        <div class="field"><label>Customer Signature (type full name)</label><input class="inp" id="vi_sig" placeholder="Customer name"></div>
+        <div class="field"><label>Date</label><input type="date" class="inp" id="vi_date"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VII Staff Checkup -->
+  <div class="card">
+    <div class="card-head">VII. &nbsp;Staff Checkup and Acceptance</div>
+    <div class="card-body">
+      <p class="hint">Type each staff member's name across the top. Tap a cell to cycle blank → <b style="color:var(--green)">Y</b> → <b style="color:var(--red)">N</b>.</p>
+      <div class="gwrap"><table class="grid" id="vGrid"></table></div>
+    </div>
+  </div>
+
+  <!-- VIII Comments -->
+  <div class="card">
+    <div class="card-head">VIII. &nbsp;Comments / Outstanding Issues</div>
+    <div class="card-body">
+      <textarea class="inp" id="comments" placeholder="Note any outstanding issues, follow-ups, or remarks..."></textarea>
+      <div class="sigrow" style="margin-top:12px;">
+        <div class="field"><label>PulmOne Service Specialist — Signature (type name)</label><input class="inp" id="spec_sig" placeholder="Specialist name"></div>
+        <div class="field"><label>Date</label><input type="date" class="inp" id="spec_date"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IX Main customer -->
+  <div class="card">
+    <div class="card-head">IX. &nbsp;Main Customer Person at Installation</div>
+    <div class="card-body">
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field"><label>Payment Arrangements</label><input class="inp" id="payment_arr" placeholder="e.g. PO / financing / paid"></div>
+        <div class="field"><label>P.O.</label><input class="inp" id="ix_po" placeholder="PO #"></div>
+      </div>
+      <div class="attest">
+        <p><b>I confirm that I have been trained on the MiniBox(+).</b></p>
+        <p>I understand and am comfortable performing the following functions: general settings, clinical settings, report configuration, report printing / saving, calibration check, patient data entry, session start, and all patient test maneuvers; filter credits and updating sessions when a new box of filters is ordered.</p>
+        <p>I understand that the MiniBox+ has been validated to not require internal sanitization <b>only</b> when the PulmOne viral-bacterial filter is used in conjunction with the MiniBox+. I also understand that the clinical accuracy of the MiniBox+ requires that a PulmOne viral-bacterial filter is used in conjunction with the MiniBox+. Use of the MiniBox+ without a PulmOne viral-bacterial filter may void your warranty.</p>
+        <p>I was also guided on how to access the customer portal and order mouthpieces and other supplies.</p>
+      </div>
+      <div class="sigrow" style="margin-top:14px;">
+        <div class="field"><label>Customer Signature (type full name)</label><input class="inp" id="ix_sig" placeholder="Customer name"></div>
+        <div class="field"><label>Date</label><input type="date" class="inp" id="ix_date"></div>
+      </div>
+      <div class="field" style="margin-top:12px;"><label>Print Name</label><input class="inp" id="ix_print" placeholder="Printed name"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ---------- data ----------
+var STAFF = ["Primary contact person","Physician","Practice Manager","Professional #1","Professional #2","Professional #3","Professional #4","Professional #5"];
+var RECV = [["1","MiniBox shipping box is sealed",0],["2","Shipping contents intact:",0],
+ ["","MiniBox device",1],["","Handheld unit (Spirometer)",1],["","Tablet",1],["","Calibration filter",1],
+ ["","Documentation USB",1],["","Power and comm. cables",1],["","Mobile cart",1],["","Syringe",1],
+ ["","DLCO regulator",1],["","Filter pack (note Qty in comments)",1],["3","Items supplied by customer",0]];
+var ACC = [["1","MiniBox system is fully assembled and power is ON",0],
+ ["","Touch screen turns ON and is responsive to touch",1],
+ ["2","DLCO regulators and tank are connected to the MiniBox",0],
+ ["","Regulator type (note in comments)",1],["","Pressure on gauges (note in comments)",1],
+ ["","Pressure targets are marked",1],["3","Cart is fully assembled",0],
+ ["4","Supplied accessories assembled",0],["5","Successful FVC calibration check (note error % in comments)",0],
+ ["6","Successful DLCO calibration check",0],["7","Successful FVC (by Service Specialist)",0],
+ ["8","Successful SVC (by Service Specialist)",0],["9","Successful LVM (by Service Specialist)",0],
+ ["10","Successful DLCO (by Service Specialist)",0],["11","Reports printed to a local printer",0],
+ ["12","Printer brand & model (note in comments)",0],["13","All reports saved to a USB flash drive",0],
+ ["14","Additional setup information",0],["15","Network drive connected successfully",0],
+ ["16","Remote connection via TeamViewer successful",0]];
+var TRN = [["1","Training conducted by PulmOne representative",0],["2","Setup and configuration",0],
+ ["3","Clinical settings",0],["4","System settings",0],["5","Calibration checks",0],
+ ["6","Patient maneuvers demonstrated by PulmOne",0],["7","Tests performed by staff on their patients:",0],
+ ["","FVC",1],["","SVC",1],["","MVV",1],["","LVM",1],["","DLCO",1],["","Provocation",1],
+ ["8","Staff comfortable with all functions; enough training time given",0]];
+var POST = [["1","Review service contact details",0],
+ ["","PulmOne website: www.pulm-one.com",1],["","PulmOne toll-free service line: 1-844-PulmOne",1],
+ ["2","Create customer portal account for filter ordering (lead time 1-2 wks)",0],
+ ["3","Review database backup option (customer's responsibility)",0],["4","MiniBox Academy log-in",0]];
+var VITEMS = ["Volume calibration check","DLCO calibration check","FVC test","SVC test","MVV test","LVM test","DLCO test","Provocation test","Customer portal login access","Filter ordering procedure","MiniBox Academy signup","Contacting Customer Service","Setting up Settings","Reports printing","DLCO tanks replacement"];
+
+// ---------- builders ----------
+function esc(s){return s.replace(/[^a-z0-9]/gi,'_');}
+function ynHTML(key){
+  return '<div class="yn" data-key="'+key+'">'+
+    '<button type="button" class="yn-btn yes" onclick="setYN(this)">Yes</button>'+
+    '<button type="button" class="yn-btn no" onclick="setYN(this)">No</button></div>';
+}
+function buildList(arr, containerId, prefix){
+  var h='';
+  for(var i=0;i<arr.length;i++){
+    var no=arr[i][0], txt=arr[i][1], sub=arr[i][2];
+    var key=prefix+'_'+i;
+    h+='<div class="item'+(sub?' sub':'')+'">'+
+       '<div class="num">'+no+'</div>'+
+       '<div class="lbl">'+txt+'</div>'+
+       ynHTML(key)+
+       '<input class="cmt" id="cmt_'+key+'" placeholder="Comments">'+
+       '</div>';
+  }
+  document.getElementById(containerId).innerHTML=h;
+}
+function buildStaff(){
+  var h='';
+  for(var i=0;i<STAFF.length;i++){
+    h+='<div class="staff-row">'+
+       '<div class="role">'+STAFF[i]+'</div>'+
+       '<input class="inp" id="staff'+i+'_name" placeholder="Name + credentials">'+
+       '<input class="inp" id="staff'+i+'_phone" placeholder="Phone / cell">'+
+       '<input class="inp" id="staff'+i+'_email" placeholder="Email">'+
+       '</div>';
+  }
+  document.getElementById('staffRows').innerHTML=h;
+}
+function buildGrid(){
+  var h='<thead><tr><th class="item-h">Item \\ Staff</th>';
+  for(var s=0;s<7;s++){ h+='<th><input id="gname_'+s+'" placeholder="Name '+(s+1)+'"></th>'; }
+  h+='</tr></thead><tbody>';
+  for(var r=0;r<VITEMS.length;r++){
+    h+='<tr><td class="item-c">'+VITEMS[r]+'</td>';
+    for(var s=0;s<7;s++){ h+='<td><button type="button" class="cyc" data-key="g_'+r+'_'+s+'" data-v="" onclick="cycle(this)"></button></td>'; }
+    h+='</tr>';
+  }
+  h+='<tr><td class="item-c">Signatures (initials)</td>';
+  for(var s=0;s<7;s++){ h+='<td><input class="grid-init" id="ginit_'+s+'" placeholder="—"></td>'; }
+  h+='</tr></tbody>';
+  document.getElementById('vGrid').innerHTML=h;
+}
+
+// ---------- interactions ----------
+function setYN(btn){
+  var group=btn.parentNode;
+  var was=btn.classList.contains('active');
+  var b=group.querySelectorAll('.yn-btn');
+  b[0].classList.remove('active'); b[1].classList.remove('active');
+  if(!was) btn.classList.add('active');
+  save();
+}
+function cycle(btn){
+  var v=btn.getAttribute('data-v');
+  var nv = v===''?'Y':(v==='Y'?'N':'');
+  btn.setAttribute('data-v',nv); btn.textContent=nv;
+  save();
+}
+
+// ---------- persistence ----------
+var KEY='pulmone_icf_v1';
+function collect(){
+  var d={inputs:{},yn:{},grid:{}};
+  document.querySelectorAll('input,textarea').forEach(function(el){ if(el.id) d.inputs[el.id]=el.value; });
+  document.querySelectorAll('.yn').forEach(function(g){
+    var k=g.getAttribute('data-key'); var y=g.querySelector('.yes').classList.contains('active'); var n=g.querySelector('.no').classList.contains('active');
+    d.yn[k]= y?'yes':(n?'no':'');
+  });
+  document.querySelectorAll('.cyc').forEach(function(c){ d.grid[c.getAttribute('data-key')]=c.getAttribute('data-v'); });
+  return d;
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(collect())); }catch(e){} }
+function restore(){
+  var raw; try{ raw=localStorage.getItem(KEY); }catch(e){ return; }
+  if(!raw) return;
+  var d; try{ d=JSON.parse(raw); }catch(e){ return; }
+  if(d.inputs) for(var id in d.inputs){ var el=document.getElementById(id); if(el) el.value=d.inputs[id]; }
+  if(d.yn) document.querySelectorAll('.yn').forEach(function(g){
+    var v=d.yn[g.getAttribute('data-key')]; if(!v) return;
+    g.querySelector(v==='yes'?'.yes':'.no').classList.add('active');
+  });
+  if(d.grid) document.querySelectorAll('.cyc').forEach(function(c){
+    var v=d.grid[c.getAttribute('data-key')]; if(v){ c.setAttribute('data-v',v); c.textContent=v; }
+  });
+}
+function clearForm(){
+  if(!confirm('Clear all entries on this form?')) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  document.querySelectorAll('input,textarea').forEach(function(el){ el.value=''; });
+  document.querySelectorAll('.yn-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.cyc').forEach(function(c){ c.setAttribute('data-v',''); c.textContent=''; });
+}
+
+// ---------- init ----------
+buildStaff();
+buildList(RECV,'recvList','recv');
+buildList(ACC,'accList','acc');
+buildList(TRN,'trnList','trn');
+buildList(POST,'postList','post');
+buildGrid();
+restore();
+document.addEventListener('input', function(e){ if(e.target.matches('input,textarea')) save(); });
+</script>
+</body>
+</html>

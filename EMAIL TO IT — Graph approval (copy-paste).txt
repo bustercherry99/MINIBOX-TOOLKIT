@@ -1,0 +1,72 @@
+COPY-PASTE EMAIL FOR PULMONE IT
+Send to: whoever manages PulmOne's Microsoft 365 / email accounts
+(Everything below the line is the email body — copy it all.)
+
+------------------------------------------------------------------
+
+Subject: Approval request — sales toolkit pilot, Outlook draft integration (step-by-step included)
+
+Hi,
+
+I've been developing an internal web toolkit for the sales team — it organizes our product materials (PDFs) and drafts the emails we send to physicians from our PulmOne Microsoft 365 accounts. It's still in testing; right now I'm the main user, and the plan is to roll it out to the rest of the team once it's polished.
+
+The one piece I can't finish without your help: today the tester has to manually drag the PDF attachments into every email. With a one-time Microsoft 365 approval on your side (a standard "app registration"), one click would create a ready-to-review draft in the rep's own Outlook with the PDFs already attached — the rep still reviews it and presses Send themselves.
+
+This is a low-risk approval. Key safety points:
+
+- It only ever acts as the signed-in rep, on that rep's own mailbox. Each person signs in with their normal PulmOne account through Microsoft's own login page.
+- The app never sees or stores passwords, and there are no secret keys to protect — nothing is stored on a server.
+- It cannot read anyone else's mailbox, and you can limit it to specific people (e.g., just me while it's in testing).
+- You can revoke it at any time from the admin center.
+
+I'm not technical, so I've included exact steps below rather than trying to explain it on a call. If anything is unclear, please just reply to this email and I'll get answers.
+
+STEP-BY-STEP (takes about 10 minutes):
+
+1. Go to the Microsoft Entra admin center (entra.microsoft.com), signed in as a Microsoft 365 admin.
+
+2. Go to: Identity > Applications > App registrations > "+ New registration".
+
+3. Fill in:
+   - Name: MiniBox Sales Toolkit
+   - Supported account types: "Accounts in this organizational directory only" (single tenant)
+   - Redirect URI: choose platform "Single-page application (SPA)" and enter:
+     https://deploytoolkit.vercel.app
+   Then click Register.
+   (That address is the password-protected site where the toolkit is being tested.)
+
+4. In the new app, go to "API permissions" > "+ Add a permission" > Microsoft Graph > "Delegated permissions", and add these three:
+   - Mail.ReadWrite   (lets the toolkit create a draft, with attachments, in the signed-in rep's own mailbox)
+   - Mail.Read        (lets the toolkit show the rep their own unread count on the home screen)
+   - Calendars.Read   (lets the toolkit show the rep their own meetings for today, read only)
+   Those are the only permissions needed. Please do NOT add any "Application" permissions — delegated only.
+
+   Note on the last two: the toolkit has a home screen that shows each rep their own
+   day at a glance, so they are not switching between four apps in a parking lot. It
+   only ever displays what that one signed-in person already sees in their own Outlook,
+   it is read only, and nothing is stored anywhere.
+
+5. On the same API permissions page, click "Grant admin consent for [PulmOne]" so testers don't each get a consent pop-up.
+
+6. Optional, and sensible while it's in testing: under Identity > Applications > Enterprise applications > MiniBox Sales Toolkit > Properties, set "Assignment required?" to Yes, then under "Users and groups" assign just me (Erik.Bernard@pulm-one.com). You can add the rest of the sales team later if the pilot goes well.
+
+7. Reply to me with these two values from the app's Overview page (they're identifiers, not secrets — safe to email):
+   - Application (client) ID
+   - Directory (tenant) ID
+
+That's everything. Once I have those two IDs, the toolkit gets updated on our side and no further IT work is needed.
+
+Thank you!
+
+Erik Bernard
+PulmOne Territory Specialist, NYC Metro-Area
+erik.bernard@pulm-one.com
+mobile: 518-307-2731
+
+------------------------------------------------------------------
+
+WHAT HAPPENS AFTER IT REPLIES:
+Give the two IDs to Claude and say "wire up Graph in the MiniBox toolkit."
+The toolkit will then get a real one-click send: button press -> draft appears
+in the rep's Outlook with the PDFs already attached and the text in place ->
+rep reviews and hits Send. One signature, no dragging, no Ctrl+V.
