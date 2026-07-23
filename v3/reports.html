@@ -125,6 +125,23 @@
     100%{box-shadow:0 0 0 0 rgba(79,157,106,0)}
   }
   #livestamp{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);}
+
+  /* ── who can get in (the front door) ── */
+  .doorbar input{background:var(--panel);border:1px solid var(--line);color:var(--ink);
+    border-radius:8px;padding:9px 12px;font:inherit;font-size:13.5px;min-width:0;}
+  .doorbar input.em{flex:2 1 230px;}
+  .doorbar input.nm{flex:1 1 140px;}
+  .add{background:var(--ink);color:#0c0f13;border:0;border-radius:8px;padding:9px 16px;
+    font:700 12.5px/1 inherit;cursor:pointer;}
+  .add[disabled]{opacity:.5;cursor:default;}
+  .notice{border:1px solid #4a3d23;background:#1b1811;border-radius:11px;padding:13px 15px;
+    font-size:13.5px;line-height:1.55;color:#dbc08a;margin-bottom:12px;}
+  .notice b{color:#f0dcb0;}
+  .ask{border:1px solid #2c3a46;background:var(--panel-2);border-radius:11px;padding:12px 14px;
+    margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13.5px;}
+  .ask .spacer{flex:1}
+  .doornote{color:var(--ink-dim);font-size:12.5px;margin-top:10px;}
+  td.act-col{text-align:right;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -143,11 +160,13 @@
 
 <div class="wrap" id="app" style="display:none">
   <div class="kicker">MiniBox+ Toolkit</div>
-  <h1>Command Center</h1>
+  <div class="bar">
+    <h1 style="margin:0;flex:1;">Command Center</h1>
+    <a class="ghost" href="./index.html" style="display:inline-block;text-decoration:none;">&larr; Back to the toolkit</a>
+    <a class="ghost" href="#" onclick="lockAgain();return false;" style="display:inline-block;text-decoration:none;">&#128274; Lock &amp; sign out</a>
+  </div>
   <p class="lede">Everything the team is telling you, in one place. Problem reports come in from
-    <b>Report a problem</b> — in Team Chat or from the Boxy button on any screen.
-    <a href="./index.html">Back to the toolkit</a> ·
-    <a href="#" onclick="lockAgain();return false;">Lock this</a></p>
+    <b>Report a problem</b> — in Team Chat or from the Boxy button on any screen.</p>
 
   <h2 style="margin-top:22px;">Who's on right now</h2>
   <div class="bar" style="padding-top:0;">
@@ -156,6 +175,20 @@
     <button class="ghost" id="livebtn" onclick="refreshLive()">Refresh</button>
   </div>
   <div id="live"><div class="empty">Loading&hellip;</div></div>
+
+  <h2>Who can get in</h2>
+  <p class="lede" style="margin-bottom:6px;">The toolkit's front door. Only the emails on this list can sign in &mdash;
+    everyone else gets turned away, work email or not. Take someone off and they are locked out on their
+    next page load, even if they were already signed in.</p>
+  <div class="bar doorbar">
+    <input class="em" id="acc-email" type="email" placeholder="name@pulm-one.com"
+           autocapitalize="none" autocorrect="off" spellcheck="false">
+    <input class="nm" id="acc-name" type="text" placeholder="Their name (optional)">
+    <button class="add" id="acc-add" onclick="accessAdd()">Add to the list</button>
+    <span class="spacer"></span>
+    <button class="ghost" onclick="loadAccess()">Refresh</button>
+  </div>
+  <div id="access"><div class="empty">Loading&hellip;</div></div>
 
   <div class="stats" id="stats" style="margin-top:26px;"></div>
 
@@ -262,6 +295,7 @@ function unlock(){
       document.getElementById('app').style.display = 'block';
       apply(d);
       loadUsage();
+      loadAccess();
       setInterval(load, 60000);
       // The live panel keeps its own faster clock, and pauses while this tab
       // is in the background so it isn't polling all night on a sleeping laptop.
@@ -282,6 +316,99 @@ function unlock(){
 function lockAgain(){
   keyClear();
   location.reload();
+}
+
+/* ── who can get in ──
+   The list this panel edits IS the front door: api/access.js checks it before it
+   will email anyone a code, and the middleware re-checks it on every page load.
+   Nothing here is cosmetic — Remove really does lock somebody out. */
+var access = null;
+
+function loadAccess(extra){
+  return call(Object.assign({ action:'access' }, extra || {}))
+    .then(function(d){
+      if (!d || !d.ok) throw new Error('x');
+      access = d.access || {};
+      renderAccess();
+    })
+    .catch(function(){
+      document.getElementById('access').innerHTML =
+        '<div class="empty">Could not load the access list. Hit Refresh.</div>';
+    });
+}
+
+function accessAdd(){
+  var em = (document.getElementById('acc-email').value || '').trim().toLowerCase();
+  var nm = (document.getElementById('acc-name').value || '').trim();
+  if (!em) { document.getElementById('acc-email').focus(); return; }
+  var btn = document.getElementById('acc-add');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  loadAccess({ action:'accessAdd', email: em, name: nm }).then(function(){
+    btn.disabled = false; btn.textContent = 'Add to the list';
+    document.getElementById('acc-email').value = '';
+    document.getElementById('acc-name').value = '';
+  });
+}
+
+function accessRemove(em){
+  if (!confirm('Take ' + em + ' off the list?\n\nThey lose access the next time they open the toolkit.')) return;
+  loadAccess({ action:'accessRemove', email: em });
+}
+function accessApprove(em, nm){ loadAccess({ action:'accessAdd', email: em, name: nm || '' }); }
+function accessDeny(em){ loadAccess({ action:'accessDeny', email: em }); }
+
+function doorEvent(x){
+  var m = { in:'signed in', sent:'code sent', denied:'turned away', asked:'asked for access',
+            added:'added to the list', removed:'removed', badcode:'wrong code too many times',
+            mailfail:'code would not send' };
+  return m[x] || x;
+}
+
+function renderAccess(){
+  var box = document.getElementById('access');
+  var a = access || {}, people = a.people || [], asks = a.asks || [];
+  var html = '';
+
+  if (!a.codesOn){
+    html += '<div class="notice"><b>The emailed-code step is off.</b> The list above is being enforced &mdash; '
+      + 'anyone not on it is turned away &mdash; but people are not being asked to prove the inbox is theirs. '
+      + 'Add a <b>RESEND_API_KEY</b> in Vercel and codes start sending on their own, no other change needed.</div>';
+  }
+
+  if (asks.length){
+    html += asks.map(function(r){
+      return '<div class="ask"><span><b>' + esc(r.email) + '</b>'
+        + (r.name ? ' &middot; ' + esc(r.name) : '')
+        + ' <span style="color:var(--ink-dim)">asked ' + esc(when(r.ts)) + '</span></span>'
+        + '<span class="spacer"></span>'
+        + '<button class="act" onclick="accessApprove(\'' + esc(r.email) + '\',\'' + esc(r.name || '') + '\')">Let them in</button>'
+        + '<button class="act" onclick="accessDeny(\'' + esc(r.email) + '\')">Not now</button></div>';
+    }).join('');
+  }
+
+  if (!people.length){
+    html += '<div class="empty">Nobody on the list yet. Add the first email above.</div>';
+  } else {
+    html += '<table class="reps"><thead><tr><th>Email</th><th>Name</th><th>Last signed in</th><th></th></tr></thead><tbody>'
+      + people.map(function(p){
+          var owner = p.email === a.owner;
+          return '<tr><td class="nm">' + esc(p.email) + (owner ? ' <span class="pill fixed">you</span>' : '') + '</td>'
+            + '<td>' + (p.name ? esc(p.name) : '<span class="anon">not set</span>') + '</td>'
+            + '<td class="n">' + (p.lastIn ? esc(when(p.lastIn)) : 'never') + '</td>'
+            + '<td class="act-col">' + (owner ? ''
+                : '<button class="act" onclick="accessRemove(\'' + esc(p.email) + '\')">Remove</button>') + '</td></tr>';
+        }).join('')
+      + '</tbody></table>';
+  }
+
+  var log = (a.log || []).slice(0, 8);
+  if (log.length){
+    html += '<div class="doornote"><b>At the door lately:</b> ' + log.map(function(x){
+      return esc(x.email) + ' &mdash; ' + esc(doorEvent(x.ev)) + ' ' + esc(when(x.ts));
+    }).join(' &middot; ') + '</div>';
+  }
+
+  box.innerHTML = html;
 }
 
 /* ── render ── */
@@ -793,6 +920,13 @@ document.addEventListener('click', function(e){
 
 document.getElementById('lockpw').addEventListener('keydown', function(e){
   if (e.key === 'Enter') { e.preventDefault(); unlock(); }
+});
+
+/* Enter in either access box adds the person — no reaching for the button. */
+['acc-email','acc-name'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); accessAdd(); }
+  });
 });
 
 /* Unlocked recently on this machine? Go straight in — any tab, until it expires. */

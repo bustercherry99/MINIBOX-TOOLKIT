@@ -1368,19 +1368,23 @@
        screen to maintain, and it is the same view Erik gets on his phone.) -->
   <div class="tab-panel" id="tab-command">
     <div style="max-width:960px;margin:0 auto;">
-      <div class="section-head">
-        <div class="section-icon icon-blue">&#128274;</div>
-        <div>
-          <div class="section-title">Command Center</div>
-          <div class="section-sub">Owner only &mdash; problem reports, what the team is asking, who's using the toolkit</div>
+      <div class="section-head" style="justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="section-icon icon-blue">&#128274;</div>
+          <div>
+            <div class="section-title">Command Center</div>
+            <div class="section-sub">Owner only &mdash; problem reports, what the team is asking, who's using the toolkit</div>
+          </div>
         </div>
+        <button class="roi-present-btn" onclick="commandCenterFullscreen()">
+          &#9974; Open Full Screen
+        </button>
       </div>
       <div style="border:1px solid var(--gray-200);border-radius:14px;overflow:hidden;background:#0c0f13;">
         <iframe id="mbx-cc-frame" title="Command Center" style="width:100%;height:min(78vh,900px);border:0;display:block;"></iframe>
       </div>
       <div style="font-size:11.5px;color:var(--gray-600);margin-top:10px;text-align:center;">
         This asks for a <b>second password</b> &mdash; not the team one.
-        <a href="./reports.html" target="_blank" style="color:var(--blue-brand);font-weight:700;">Open it full screen</a>
       </div>
     </div>
   </div>
@@ -12104,6 +12108,15 @@ function rmaFullscreen() {
   var f=document.getElementById('rma-iframe'); if(!f) return;
   var r=f.requestFullscreen||f.webkitRequestFullscreen||f.mozRequestFullScreen||f.msRequestFullscreen;
   if(r) r.call(f);
+}
+/* Command Center's iframe goes truly fullscreen in place; if the browser blocks
+   iframe fullscreen, fall back to the same standalone page in a new tab. */
+function commandCenterFullscreen() {
+  var iframe = document.getElementById('mbx-cc-frame');
+  if (!iframe) { window.open('./reports.html', '_blank'); return; }
+  var req = iframe.requestFullscreen || iframe.webkitRequestFullscreen || iframe.mozRequestFullScreen || iframe.msRequestFullscreen;
+  if (req) { try { req.call(iframe); return; } catch(e) {} }
+  window.open('./reports.html', '_blank');
 }
 /* Collapsible embedded forms: tap the card header to open/close the fillable form so it
    doesn't sit open eating the whole Forms page. Body starts display:none. */
