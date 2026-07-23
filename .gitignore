@@ -16,3 +16,6 @@ Patchogue_Submission_v1.0/07_PulmOne_W9_Vendor_Setup.pdf
 Patchogue_Submission_v1.1/08_PulmOne_W9_Vendor_Setup.pdf
 v3/materials/PulmOne-Bank-Information.pdf
 v3/materials/PulmOne-W9.pdf
+
+# pdf tooling deps (regenerable: npm install pdf-lib in _tools/pdf)
+_tools/pdf/node_modules/

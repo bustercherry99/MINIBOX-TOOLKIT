@@ -8,6 +8,7 @@
 <!-- Financing tab (customer-facing): real NewLane Finance program info + all financing options. 2026-07-20 per Erik: the NewLane payment-factor calculator is out; the Financing "calc" sub-tab now embeds the ROI Proposal Builder v2.5 (materials/MiniBox-ROI-Proposal-Builder.html) - cash/finance/lease, Section 179, 5-year projection, printable proposal. Same builder is also a card in Forms & Materials. One file, two embeds - edit materials/MiniBox-ROI-Proposal-Builder.html to change both. -->
 <!-- v3.9: Repositioned/padded PulmOne logo in Installation Completion Form header so it is no longer clipped by the header border -->
 <!-- v3.8: Added Installation Completion Form (DHR008 Rev 4.0) embedded in Forms tab — tap Yes/No, cursive signatures, auto-resize iframe, Save as PDF -->
+<!-- v3.12 (2026-07-23): The attachable ACH-Payment-Authorization.pdf was a FLAT print of a filled deal (a customer name and dollar figures were baked into it) and nothing could be typed into it. Rebuilt as a BLANK, TRULY FILLABLE AcroForm PDF - 41 real form fields, zero names, zero prices. Regenerate with `node _tools/pdf/build-ach-form-pdf.mjs` then `powershell -File v3/build-materials-data.ps1`. The ACH card in Forms now also carries "Blank Fillable PDF" + "Email Blank Form" buttons so the practice can complete it on their own screen. -->
 <!-- v3.10: Removed all placeholder hint text (e.g. "Dr. Jane Smith", "30000.00", schedule dates) from the scheduled-payment ACH Authorization Form so printed/DocuSign copy carries zero on-line text — matches the blank Full-Payment ACH form -->
 <!-- v3.9: ACH Authorization Form opens fully BLANK for clean DocuSign overlays — removed Date auto-fill (today), # of Payments default (6), and Balance "$0.00"; all placeholders already hidden in print -->
 <!-- v3.11: RMA form upgraded to v1.5 — signature now uses Pointer Events (mouse + finger + stylus/pen all work), added Draw/Type cursive signature toggle, and photo attach that embeds downscaled photos as pages inside the sent PDF; iframe height raised to 2050px -->
@@ -5447,10 +5448,15 @@ setInterval(ph,1200);})();
           <span id="ach-toggle-label" style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.04em; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.35); border-radius:6px; padding:6px 11px;">&#9656; OPEN FORM</span>
           <button class="clear-btn" onclick="event.stopPropagation(); achClear()">&#8635; Clear Form</button>
           <button class="print-btn" onclick="event.stopPropagation(); achPrint()">&#128438; Print / Save PDF</button>
+          <button class="print-btn" onclick="event.stopPropagation(); m3Download('achpdf')">&#11015; Blank Fillable PDF</button>
+          <button class="print-btn" onclick="event.stopPropagation(); m3EmailThis('achpdf')">&#9993; Email Blank Form</button>
         </div>
       </div>
 
       <div class="form-body" id="ach-body" style="display:none;">
+        <div style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; font-size:12.5px; color:#475569; line-height:1.55; margin-bottom:16px;">
+          &#9432; Two ways to use this. Fill it in <strong>here</strong> and Print / Save PDF when you are doing the work yourself &mdash; or hit <strong>Blank Fillable PDF</strong> / <strong>Email Blank Form</strong> to send the practice an empty form they can type into on their own screen, sign, and send back.
+        </div>
         <!-- Date & Customer -->
         <div class="form-row form-row-2">
           <div class="form-field">
@@ -13741,6 +13747,12 @@ function highlightInPanel(panelId, q) {
     }
   }
   if (target) {
+    /* A hit inside a folded Materials Library section must open it first,
+       or we scroll to something with no layout box and the page looks dead. */
+    try {
+      var fold = target.closest && target.closest('.m3-lc-body:not(.open)');
+      if (fold && fold.id) m3LibSetCat(fold.id.replace('m3-lib-body-', ''), true);
+    } catch (e) {}
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(clearHighlights, 4500);
   }
@@ -13774,6 +13786,28 @@ document.addEventListener('keydown', function(e) {
 <style>
   .m3-cat-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-600); margin:14px 0 6px; }
   .m3-cat-label:first-child { margin-top:0; }
+  /* ---- Materials Library: big, separated, collapsible category blocks ---- */
+  .m3-lib-tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 14px; }
+  .m3-lib-tools .m3-lib-tools-lbl { font-size:11.5px; font-weight:700; color:var(--gray-600); margin-right:2px; }
+  .m3-lib-tools button { height:30px; padding:0 12px; border-radius:999px; border:1.5px solid var(--gray-300,#d1d5db); background:#fff; color:var(--gray-600,#4b5563); font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; cursor:pointer; }
+  .m3-lib-tools button:hover { border-color:var(--blue-brand); color:var(--blue-brand); }
+  .m3-lib-sec { --lc:#0e6abf; border:1px solid var(--gray-200,#e5e7eb); border-left:5px solid var(--lc); border-radius:12px; background:#fff; overflow:hidden; margin:0 0 16px; box-shadow:0 1px 2px rgba(15,23,42,.05); }
+  .m3-lib-sec:last-child { margin-bottom:0; }
+  .m3-lc-head { display:flex; align-items:center; gap:12px; width:100%; padding:15px 16px; background:linear-gradient(180deg,#fbfcfe,#f4f6f9); border:0; cursor:pointer; font-family:inherit; text-align:left; }
+  .m3-lc-head:hover { background:linear-gradient(180deg,#f6f9fd,#eef2f7); }
+  .m3-lc-chev { font-size:15px; line-height:1; color:var(--lc); transition:transform .18s ease; flex-shrink:0; }
+  .m3-lc-head.open .m3-lc-chev { transform:rotate(90deg); }
+  .m3-lc-txt { flex:1; min-width:0; display:block; }
+  .m3-lc-name { display:block; font-size:17.5px; font-weight:800; letter-spacing:-.01em; color:var(--blue-dark,#0f2a44); line-height:1.25; }
+  .m3-lc-desc { display:block; font-size:12px; font-weight:500; color:var(--gray-600,#4b5563); line-height:1.4; margin-top:3px; }
+  .m3-lc-count { flex-shrink:0; font-size:11px; font-weight:800; color:#fff; background:var(--lc); border-radius:999px; padding:4px 11px; white-space:nowrap; }
+  .m3-lc-body { display:none; padding:14px 16px 16px; border-top:1px solid var(--gray-200,#e5e7eb); background:#fafbfc; }
+  .m3-lc-body.open { display:block; }
+  @media (max-width:640px){
+    .m3-lc-name { font-size:15.5px; }
+    .m3-lc-head { padding:13px 13px; gap:10px; }
+    .m3-lc-body { padding:12px 12px 14px; }
+  }
   /* collapsible category headers (Email Assembly Station) */
   .m3-cat-head { display:flex; align-items:center; gap:9px; width:100%; margin:12px 0 6px; padding:10px 12px; background:var(--gray-100,#f3f4f6); border:1px solid var(--gray-200,#e5e7eb); border-radius:10px; cursor:pointer; font-family:inherit; text-align:left; }
   .m3-cat-head:first-child { margin-top:0; }
@@ -13855,7 +13889,7 @@ var MATERIALS = [
   {id:'newlane-app', file:'NewLane-Financing-Application-2026.pdf', title:'NewLane Financing Application (2026)', sub:'NewLane healthcare application — email back to Carlos Cappuccio', cat:'closing', kb:98, blurb:'NewLane Finance Application for Financing (Healthcare) — one page, complete on screen, sign, and email back to Carlos Cappuccio (ccappuccio@newlanefinance.com).'},
   {id:'w9',          file:'PulmOne-W9.pdf',                       title:'PulmOne W-9',                         sub:'For vendor setup',                                        cat:'closing',  kb:609,  blurb:'PulmOne W-9 — for your vendor setup.'},
   {id:'bank',        file:'PulmOne-Bank-Information.pdf',         title:'PulmOne Bank Information',            sub:'For payment setup',                                       cat:'closing',  kb:148,  care:true, blurb:'PulmOne Bank Information — for payment setup.'},
-  {id:'achpdf',      file:'ACH-Payment-Authorization.pdf',        title:'ACH Payment Authorization Form',      sub:'For practices ready to move forward',                     cat:'closing',  kb:286,  care:true, blurb:'ACH Payment Authorization Form — the payment authorization to get your account set up.'},
+  {id:'achpdf',      file:'ACH-Payment-Authorization.pdf',        title:'ACH Payment Authorization Form',      sub:'Blank fillable PDF — the customer types right into it',   cat:'closing',  kb:41,   care:true, blurb:'ACH Payment Authorization Form — blank fillable PDF the practice can complete on screen, sign, and send back.'},
   // ---- Rheumatology Playbook (from Rheum Playbook.zip) ----
   {id:'rh-slick',     file:'01_Rheumatology_Play_Segment_Slick.pdf',     title:'The Rheumatology Play — Segment Slick',    sub:'2-page field guide — read before every rheum call',        cat:'rheum', kb:113,  blurb:'The Rheumatology Play (Segment Slick) — the two-page field guide: why rheumatology, the four discovery questions, the objections, the CPT bundle, and financing.'},
   {id:'rh-fieldref',  file:'02_MiniBox_Rheumatology_Field_Reference.docx',title:'MiniBox+ Rheumatology Field Reference',   sub:'Deep clinical detail — DMARDs, biologics, financing',       cat:'rheum', kb:18,   blurb:'MiniBox+ Rheumatology Field Reference — the deep version: the clinical argument, DMARDs & biologics explained, objections, and the full financing menu.'},
@@ -13883,6 +13917,21 @@ var MATERIALS = [
 ];
 var M3_CATS = { send:'📤 Core send-pack', calc:'🧮 Calculators & Tools', training:'🎓 Training & Coaching', video:'🎬 Training Videos', clinical:'🔬 Clinical evidence', tech:'🖥 IT & technical', closing:'🤝 Closing & payment', rheum:'🦴 Rheumatology Playbook', cardio:'❤️ Cardiology', allergy:'🌿 Allergy & Asthma' };
 var M3_CAT_ORDER = ['send','calc','training','video','clinical','tech','closing','rheum','cardio','allergy'];
+/* Materials Library only: an accent colour + one-line "what's in here" per category,
+   so the rep can tell the blocks apart at a glance instead of reading tiny grey caps. */
+var M3_CAT_COLOR = { send:'#15803d', calc:'#0e6abf', training:'#7c3aed', video:'#db2777', clinical:'#0891b2', tech:'#475569', closing:'#d97706', rheum:'#be123c', cardio:'#dc2626', allergy:'#65a30d' };
+var M3_CAT_DESC = {
+  send:'The files that go out with almost every intro email',
+  calc:'Live tools you or the office can open and use on the spot',
+  training:'Coaching material for you — not for the customer',
+  video:'Short clips to watch yourself or send along',
+  clinical:'Studies and evidence that back up the pitch',
+  tech:'Install, IT and network answers',
+  closing:'Paperwork for when the deal is landing',
+  rheum:'Rheumatology-specific material',
+  cardio:'Cardiology-specific material',
+  allergy:'Allergy &amp; asthma material'
+};
 
 /* ============ ATTACHMENT / MATERIALS SEARCH ============
    Lets the global search bar FIND the actual files (W-9, ACH, brochure, studies…).
@@ -14636,11 +14685,22 @@ function m3EmailThis(id){
 function m3RenderLibrary(){
   var host = document.getElementById('m3-library');
   if (!host) return;
-  var html = '';
+  var html = '<div class="m3-lib-tools"><span class="m3-lib-tools-lbl">Sections:</span>'
+           + '<button type="button" onclick="m3LibAll(true)">Expand all</button>'
+           + '<button type="button" onclick="m3LibAll(false)">Collapse all</button></div>';
   M3_CAT_ORDER.forEach(function(cat){
     var items = MATERIALS.filter(function(m){ return m.cat===cat; });
     if (!items.length) return;
-    html += '<div class="m3-cat-label">' + M3_CATS[cat] + '</div><div class="m3-lib-grid">';
+    var open = m3LibCatOpen(cat);
+    html += '<div class="m3-lib-sec" style="--lc:' + (M3_CAT_COLOR[cat] || '#0e6abf') + ';">'
+          + '<button type="button" class="m3-lc-head' + (open?' open':'') + '" id="m3-lib-head-' + cat + '"'
+          + ' aria-expanded="' + (open?'true':'false') + '" onclick="m3LibCatToggle(\'' + cat + '\')">'
+          + '<span class="m3-lc-chev">&#9656;</span>'
+          + '<span class="m3-lc-txt"><span class="m3-lc-name">' + M3_CATS[cat] + '</span>'
+          + (M3_CAT_DESC[cat] ? '<span class="m3-lc-desc">' + M3_CAT_DESC[cat] + '</span>' : '') + '</span>'
+          + '<span class="m3-lc-count">' + items.length + ' file' + (items.length>1?'s':'') + '</span>'
+          + '</button>'
+          + '<div class="m3-lc-body' + (open?' open':'') + '" id="m3-lib-body-' + cat + '"><div class="m3-lib-grid">';
     items.forEach(function(m){
       html += '<div class="m3-lib-card">'
         + '<div class="m3-lib-title">' + m.title + ' <span class="m3-kb">' + m3SizeLabel(m.kb) + '</span></div>'
@@ -14653,12 +14713,50 @@ function m3RenderLibrary(){
         + (m.noembed ? '' : '<button class="m3-mail" onclick="m3EmailThis(\'' + m.id + '\')">&#9993; Email it</button>')
         + '</div></div>';
     });
-    html += '</div>';
+    html += '</div></div></div>';
   });
   if (!m3EmlAvailable()) {
     html = '<div class="m3-send-help" style="margin-bottom:12px; border-color:#fcd34d; background:#fff7e6;"><strong>&#9888; materials-data.js not found.</strong> Keep that file (and the materials folder) in the same folder as this page — without it, View/Download still work but emails can’t carry attachments automatically.</div>' + html;
   }
   host.innerHTML = html;
+}
+
+/* --- Materials Library: collapsible sections -------------------------
+   Open/closed is remembered on the device only. First visit shows the
+   two sections a rep opens every day and folds the rest away. */
+var M3_LIB_CATS_KEY = 'mbx_lib_cats_v1';
+function m3LibCatState(){
+  try { return JSON.parse(localStorage.getItem(M3_LIB_CATS_KEY) || '{}') || {}; } catch(e){ return {}; }
+}
+function m3LibCatOpen(cat){
+  var st = m3LibCatState();
+  if (Object.prototype.hasOwnProperty.call(st, cat)) return !!st[cat];
+  return cat === 'send' || cat === 'calc';
+}
+function m3LibSetCat(cat, open){
+  var head = document.getElementById('m3-lib-head-' + cat);
+  var body = document.getElementById('m3-lib-body-' + cat);
+  if (!head || !body) return;
+  head.classList.toggle('open', open);
+  body.classList.toggle('open', open);
+  head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  var st = m3LibCatState(); st[cat] = open;
+  try { localStorage.setItem(M3_LIB_CATS_KEY, JSON.stringify(st)); } catch(e){}
+}
+function m3LibCatToggle(cat){
+  var head = document.getElementById('m3-lib-head-' + cat);
+  if (!head) return;
+  m3LibSetCat(cat, !head.classList.contains('open'));
+}
+function m3LibAll(open){
+  M3_CAT_ORDER.forEach(function(cat){ m3LibSetCat(cat, open); });
+}
+/* Anything that jumps a rep to a material must un-fold its section first,
+   or the card is hidden and the page looks broken. */
+function m3LibReveal(id){
+  var mat = MATERIALS.filter(function(m){ return m.id === id; })[0];
+  if (!mat) return;
+  m3LibSetCat(mat.cat, true);
 }
 
 /* ============ CARDIOLOGY TAB — sub-view switch + playbook iframe height ============ */
