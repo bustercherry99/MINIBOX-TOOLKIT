@@ -9,11 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --rht:#1c6fb3; --rht-deep:#123f66; --rht-wash:#eef4fb; --rht-line:#d5e3f0;
-  --rhink:#14283a; --rhsoft:#465f76; --rhg:#bd8730;
-  --paper:#eaeef3; --card:#ffffff; --line:#dde4ec; --mute:#67809a;
-  --pulm:#1c6fb3; --pulm-w:#e9f2fb; --allergy:#6d4bb0; --allergy-w:#f0ebfa;
-  --univ:#1f9468; --univ-w:#e5f5ee; --cap:#bd8730; --cap-w:#fbf2df;
+  --rht:#0d8aa6; --rht-deep:#0a6075; --rht-wash:#eaf5f8; --rht-line:#cfe6ec;
+  --rhink:#0e2a3a; --rhsoft:#3a5567; --rhg:#c98a2b;
+  --paper:#eef3f5; --card:#ffffff; --line:#dbe6ea; --mute:#6c8494;
+  --pulm:#1668b0; --pulm-w:#e8f2fb; --allergy:#7d4fbf; --allergy-w:#f2ecfb;
+  --univ:#2f9e6b; --univ-w:#e6f6ee; --cap:#c98a2b; --cap-w:#fbf3e0;
   --green:#1d7a46; --red:#c0392b;
   --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"IBM Plex Mono",monospace;
 }
@@ -24,12 +24,11 @@ h1,h2,h3,.disp{font-family:var(--display)}
 button{font-family:inherit}
 
 /* ---------------------------------------------------------------- header */
-.hdr{position:sticky;top:0;z-index:20;background:linear-gradient(158deg,#122b40 0%,#184e7c 100%);color:#fff;padding:16px 20px 14px;
+.hdr{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#0e2a3a,#0a6075);color:#fff;padding:16px 20px 14px;
   box-shadow:0 6px 24px rgba(14,42,58,.28)}
 .hdr-top{display:flex;align-items:center;gap:12px}
-.hdr-logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(140deg,#2a7fc4,#39aecf);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.28)}
-.hdr-logo svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.hdr-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--rht),#12b3c4);
+  display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .hdr-t{font-size:19px;font-weight:700;letter-spacing:-.3px;font-family:var(--display)}
 .hdr-s{font-size:10px;color:#a9d6e2;font-weight:600;letter-spacing:.22em;text-transform:uppercase;margin-top:2px;font-family:var(--mono)}
 .hdr-badge{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.1em;color:#0e2a3a;
@@ -39,7 +38,7 @@ button{font-family:inherit}
 .hdr-rail{margin-top:13px}
 .hdr-rail-top{display:flex;justify-content:space-between;font-size:11px;color:#a9d6e2;font-family:var(--mono);letter-spacing:.06em;margin-bottom:5px}
 .hdr-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
-.hdr-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#39aecf,#7fe0c8);transition:width .5s}
+.hdr-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#12b3c4,#7fe0c8);transition:width .5s}
 
 /* ---------------------------------------------------------------- home */
 .wrap{padding:20px 16px 0}
@@ -54,8 +53,8 @@ button{font-family:inherit}
   cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:.16s;position:relative;overflow:hidden}
 .card:hover{border-color:var(--rht);box-shadow:0 6px 20px rgba(13,138,166,.12);transform:translateY(-1px)}
 .card-top{display:flex;align-items:flex-start;gap:11px}
-.card-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
-.card-ico svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card-ico{width:38px;height:38px;border-radius:10px;background:var(--rht-wash);display:flex;align-items:center;
+  justify-content:center;font-size:19px;flex:none}
 .card-t{font-family:var(--display);font-weight:700;font-size:15.5px;line-height:1.28;letter-spacing:-.2px}
 .card-m{font-size:11.5px;color:var(--mute);margin-top:3px;font-family:var(--mono)}
 .card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
@@ -73,18 +72,18 @@ button{font-family:inherit}
 /* ---------------------------------------------------------------- overlay */
 .ov{position:fixed;inset:0;z-index:50;background:var(--paper);display:none;flex-direction:column}
 .ov.on{display:flex}
-.ov-hd{background:linear-gradient(158deg,#122b40,#184e7c);color:#fff;padding:13px 16px 0;flex:none;
+.ov-hd{background:linear-gradient(180deg,#0e2a3a,#0a6075);color:#fff;padding:13px 16px 0;flex:none;
   box-shadow:0 4px 18px rgba(14,42,58,.22)}
 .ov-hd-top{display:flex;align-items:center;gap:12px}
 .ov-x{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);color:#fff;width:34px;height:34px;
   border-radius:9px;font-size:17px;cursor:pointer;flex:none;line-height:1}
 .ov-title{font-family:var(--display);font-weight:700;font-size:16.5px;letter-spacing:-.2px}
 .ov-sub{font-size:10.5px;color:#a9d6e2;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
-.ov-tabs{display:flex;gap:4px;margin:14px 0 13px;background:rgba(255,255,255,.09);border-radius:12px;padding:4px}
-.ov-tabs button{flex:1;background:transparent;border:0;border-radius:9px;color:#c4dced;
-  font-size:13px;font-weight:600;padding:9px 4px;cursor:pointer;font-family:var(--display);letter-spacing:.01em;transition:.15s}
-.ov-tabs button.on{color:var(--rhink);background:#fff;box-shadow:0 2px 9px rgba(0,0,0,.22)}
-.ov-tabs button:disabled{opacity:.3;cursor:not-allowed}
+.ov-tabs{display:flex;gap:4px;margin-top:12px}
+.ov-tabs button{flex:1;background:transparent;border:0;border-bottom:3px solid transparent;color:#a9d6e2;
+  font-size:13px;font-weight:700;padding:9px 4px 8px;cursor:pointer;font-family:var(--display);letter-spacing:.02em}
+.ov-tabs button.on{color:#fff;border-bottom-color:#12b3c4}
+.ov-tabs button:disabled{opacity:.35;cursor:not-allowed}
 .ov-body{flex:1;overflow-y:auto;padding:18px 16px 40px;-webkit-overflow-scrolling:touch}
 
 /* ---------------------------------------------------------------- study */
@@ -103,22 +102,14 @@ button{font-family:inherit}
   padding:10px 13px;font-size:13.5px;line-height:1.55;color:#6b4a12;font-weight:500}
 .st-key::before{content:"Remember";display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
   text-transform:uppercase;color:var(--cap);margin-bottom:3px;font-weight:700}
-.st-angle{margin-top:26px;background:linear-gradient(135deg,#122b40,#184e7c);color:#fff;border-radius:15px;padding:17px 18px}
+.st-angle{margin-top:26px;background:linear-gradient(135deg,#0e2a3a,#0a6075);color:#fff;border-radius:15px;padding:17px 18px}
 .st-angle::before{content:"The MiniBox angle";display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
   text-transform:uppercase;color:#7fe0c8;margin-bottom:7px;font-weight:700}
 .st-angle p{margin:0;font-size:14.5px;line-height:1.66;color:#dbeef4}
 
 /* figures */
 .fig{margin:14px 0 0}
-/* an image is never painted wider than its own pixels - upscaling a 275px slide
-   diagram to the full 940px column is what made v3.0 look soft. Small art sits
-   centred on its own card instead of being stretched into a blurry billboard. */
-.fig-img{max-width:100%;width:auto;height:auto;border:1px solid var(--line);border-radius:12px;
-  background:#fff;display:block;margin:0 auto;cursor:zoom-in}
-.fig-small{background:#f6f9fa;border:1px solid var(--line);border-radius:14px;padding:16px;
-  display:flex;justify-content:center}
-.fig-small .fig-img{border:0;border-radius:8px;box-shadow:0 1px 3px rgba(8,24,33,.12)}
-.fig-zoom.is-off{display:none}
+.fig-img{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;display:block;cursor:zoom-in}
 .fig-cap{font-size:12.5px;line-height:1.5;color:var(--mute);margin-top:7px;padding-left:2px}
 .fig-cap b{color:var(--rhsoft)}
 .fig-zoom{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rht);
@@ -288,103 +279,18 @@ button{font-family:inherit}
 /* ---------------------------------------------------------------- lightbox */
 .lb{position:fixed;inset:0;z-index:90;background:rgba(8,24,33,.94);display:none;align-items:center;justify-content:center;padding:16px}
 .lb.on{display:flex}
-.lb img{max-width:100%;max-height:82vh;width:auto;height:auto;border-radius:10px;background:#fff}
+.lb img{max-width:100%;max-height:82vh;border-radius:10px;background:#fff}
 .lb-cap{position:absolute;left:0;right:0;bottom:14px;text-align:center;color:#cfe6ec;font-size:13px;padding:0 24px;line-height:1.5}
 .lb-x{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
   color:#fff;width:38px;height:38px;border-radius:10px;font-size:19px;cursor:pointer}
 .empty{padding:30px 16px;text-align:center;color:var(--mute);font-size:14px;line-height:1.6}
-
-/* ---------------------------------------------------------------- mode pills
-   The old three-tab bar became a scrollable row of study MODES. Learning
-   science is clear that HOW you engage the same material (recall it, explain
-   it, hear it) matters more than any "learning style"; these are the ways in. */
-.ov-modes{display:flex;gap:6px;margin:14px -16px 13px;padding:2px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.ov-modes::-webkit-scrollbar{display:none}
-.ov-modes button{flex:none;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:10px;
-  color:#c4dced;font-size:13px;font-weight:600;padding:8px 13px;cursor:pointer;font-family:var(--display);
-  letter-spacing:.01em;transition:.15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.ov-modes button .mi{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.ov-modes button.on{color:var(--rhink);background:#fff;box-shadow:0 2px 9px rgba(0,0,0,.22)}
-.ov-modes button:disabled{opacity:.32;cursor:not-allowed}
-
-/* the "why this works" strip that heads each active-study mode */
-.md-why{display:flex;gap:10px;align-items:flex-start;background:var(--rht-wash);border:1px solid var(--rht-line);
-  border-radius:12px;padding:11px 13px;margin-bottom:18px;font-size:13px;line-height:1.55;color:var(--rht-deep)}
-.md-why svg{width:19px;height:19px;fill:none;stroke:var(--rht);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;margin-top:1px}
-.md-why b{color:var(--rhink)}
-
-/* ---------------------------------------------------------------- listen mode */
-.ls-hero{background:linear-gradient(150deg,#122b40,#184e7c);border-radius:16px;padding:18px;color:#fff;margin-bottom:16px}
-.ls-now{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#7fe0c8}
-.ls-line{font-family:var(--display);font-size:17px;font-weight:700;line-height:1.35;margin-top:6px;min-height:46px}
-.ls-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin-top:14px}
-.ls-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#39aecf,#7fe0c8);transition:width .3s}
-.ls-ctrls{display:flex;align-items:center;gap:10px;margin-top:14px}
-.ls-play{width:52px;height:52px;border-radius:50%;border:0;background:#fff;color:var(--rht-deep);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.28)}
-.ls-play svg{width:22px;height:22px;fill:currentColor}
-.ls-mini{width:40px;height:40px;border-radius:11px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);
-  color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none}
-.ls-mini svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ls-rate{margin-left:auto;display:flex;gap:4px}
-.ls-rate button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#cfe6ec;border-radius:8px;
-  font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 9px;cursor:pointer}
-.ls-rate button.on{background:#fff;color:var(--rht-deep);border-color:#fff}
-.ls-list{display:flex;flex-direction:column;gap:6px}
-.ls-item{display:flex;gap:11px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:11px;
-  padding:11px 13px;cursor:pointer;transition:.14s}
-.ls-item.on{border-color:var(--rht);background:var(--rht-wash)}
-.ls-item.done{opacity:.62}
-.ls-item-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--rht);width:20px;flex:none}
-.ls-item-t{font-size:13.5px;font-weight:600;font-family:var(--display);line-height:1.3}
-.ls-note{margin-top:14px;font-size:12px;color:var(--mute);line-height:1.55;text-align:center}
-
-/* ---------------------------------------------------------------- teach back */
-.tb-count{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-.tb-prompt{background:#fff;border:1px solid var(--line);border-top:3px solid var(--allergy);border-radius:15px;padding:18px 17px;margin-bottom:14px}
-.tb-prompt-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--allergy);font-weight:700;margin-bottom:7px}
-.tb-prompt-q{font-family:var(--display);font-size:17px;font-weight:700;line-height:1.4;letter-spacing:-.2px}
-.tb-ta{width:100%;min-height:120px;border:1px solid var(--line);border-radius:13px;padding:13px 14px;font-family:var(--body);
-  font-size:14.5px;line-height:1.6;color:var(--rhink);resize:vertical;background:#fff}
-.tb-ta:focus{outline:none;border-color:var(--rht);box-shadow:0 0 0 3px var(--rht-wash)}
-.tb-model{margin-top:14px;background:var(--univ-w);border:1px solid #bfe6d3;border-radius:13px;padding:15px 16px}
-.tb-model-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:7px}
-.tb-model-p{font-size:14.5px;line-height:1.64;color:#1a4a30}
-.tb-model-mine{margin-top:12px;padding-top:12px;border-top:1px dashed #bfe6d3;font-size:13.5px;line-height:1.6;color:var(--rhsoft)}
-.tb-model-mine b{color:var(--rhink);font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:5px;color:var(--mute)}
-
-/* ---------------------------------------------------------------- recall / brain dump */
-.rc-prompt{background:linear-gradient(135deg,#122b40,#184e7c);color:#fff;border-radius:15px;padding:17px 18px;margin-bottom:14px}
-.rc-prompt-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#7fe0c8;font-weight:700;margin-bottom:6px}
-.rc-prompt-t{font-family:var(--display);font-size:18px;font-weight:700;line-height:1.35}
-.rc-prompt-s{font-size:13px;color:#cfe6ec;margin-top:6px;line-height:1.5}
-.rc-key{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;
-  padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.14s}
-.rc-key.got{background:var(--univ-w);border-color:#bfe6d3}
-.rc-box{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;
-  justify-content:center;margin-top:1px;color:transparent;font-size:14px;font-weight:800}
-.rc-key.got .rc-box{background:var(--green);border-color:var(--green);color:#fff}
-.rc-key-h{font-family:var(--display);font-weight:700;font-size:14px}
-.rc-key-p{font-size:13px;line-height:1.55;color:var(--rhsoft);margin-top:2px}
-.rc-score{text-align:center;font-family:var(--mono);font-size:12px;color:var(--mute);margin:16px 0 4px;letter-spacing:.06em}
-
-/* ---------------------------------------------------------------- sharpen (home) */
-.sharpen{background:linear-gradient(135deg,#122b40,#184e7c);border-radius:17px;padding:17px 18px;color:#fff;cursor:pointer;
-  display:flex;align-items:center;gap:15px;margin-bottom:6px;border:0;width:100%;text-align:left;position:relative;overflow:hidden}
-.sharpen::after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(127,224,200,.13)}
-.sharpen-ico{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;flex:none}
-.sharpen-ico svg{width:26px;height:26px;fill:none;stroke:#7fe0c8;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.sharpen-t{font-family:var(--display);font-weight:700;font-size:16.5px;letter-spacing:-.2px}
-.sharpen-s{font-size:12.5px;color:#cfe6ec;margin-top:3px;line-height:1.45}
-.sharpen-n{margin-left:auto;font-family:var(--mono);font-size:11px;color:#0e2a3a;background:linear-gradient(135deg,#f4d78a,#e8b84e);
-  border-radius:999px;padding:5px 11px;font-weight:700;flex:none;position:relative;z-index:1}
 </style>
 </head>
 <body>
 
 <div class="hdr">
   <div class="hdr-top">
-    <div class="hdr-logo"><svg viewBox="0 0 24 24"><path d="M12 4L2.5 8.5 12 13l9.5-4.5z"/><path d="M6.5 10.6v4.4c0 1.6 2.7 2.9 5.5 2.9s5.5-1.3 5.5-2.9v-4.4"/><path d="M21.5 8.5v5.2"/></svg></div>
+    <div class="hdr-logo">🎓</div>
     <div>
       <div class="hdr-t">MiniBox Academy</div>
       <div class="hdr-s">PulmOne Rep Certification</div>
@@ -408,13 +314,10 @@ button{font-family:inherit}
         <div class="ov-sub" id="ov-sub"></div>
       </div>
     </div>
-    <div class="ov-modes" id="ov-modes">
-      <button id="tab-study"  onclick="acTab('study')"><svg class="mi" viewBox="0 0 24 24"><path d="M4 5.5A2 2 0 0 1 6 4h5v15H6a2 2 0 0 0-2 1.5zM20 5.5A2 2 0 0 0 18 4h-5v15h5a2 2 0 0 1 2 1.5z"/></svg>Read</button>
-      <button id="tab-listen" onclick="acTab('listen')"><svg class="mi" viewBox="0 0 24 24"><path d="M3 10v4h3l5 4V6L6 10z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>Listen</button>
-      <button id="tab-learn"  onclick="acTab('learn')"><svg class="mi" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>Flashcards</button>
-      <button id="tab-teach"  onclick="acTab('teach')"><svg class="mi" viewBox="0 0 24 24"><path d="M4 5h16v10H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>Teach&nbsp;back</button>
-      <button id="tab-recall" onclick="acTab('recall')"><svg class="mi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Recall</button>
-      <button id="tab-test"   onclick="acTab('test')"><svg class="mi" viewBox="0 0 24 24"><path d="M9 11l2 2 4-4"/><path d="M5 4h14v16l-7-3-7 3z"/></svg>Test</button>
+    <div class="ov-tabs">
+      <button id="tab-study" onclick="acTab('study')">Study</button>
+      <button id="tab-learn" onclick="acTab('learn')">Flashcards</button>
+      <button id="tab-test"  onclick="acTab('test')">Test</button>
     </div>
   </div>
   <div class="ov-body" id="ov-body"></div>
@@ -477,25 +380,22 @@ function hasTest(k)   { return !!(A[k] && A[k].test && A[k].test.length) && !isP
 /* ------------------------------------------------------------ home */
 function acHome() {
   var groups = [
-    { t: 'Start here',            color: '#1c6fb3', keys: ['intro_mbp', 'clinical_overview', 'system_orientation'] },
-    { t: 'The three measurements', color: '#0e8aa0', keys: ['spirometry', 'lung_volumes_pleth', 'lung_volume', 'dlco'] },
-    { t: 'In the field',          color: '#5a6f93', keys: ['minibox_setup', 'additional_testing', 'respiratory_disease', 'competitive', 'pft_overview'] },
-    { t: 'Certification',         color: '#bd8730', keys: ['final_exam'] }
+    { t: 'Start here',            keys: ['intro_mbp', 'clinical_overview', 'system_orientation'] },
+    { t: 'The three measurements', keys: ['spirometry', 'lung_volumes_pleth', 'lung_volume', 'dlco'] },
+    { t: 'In the field',          keys: ['minibox_setup', 'additional_testing', 'respiratory_disease', 'competitive', 'pft_overview'] },
+    { t: 'Certification',         keys: ['final_exam'] }
   ];
 
   var seen = {}, html = '';
-  html += '<p class="lede">Open any module and you get <b>six ways in</b>: read it, hear it, flip flashcards, ' +
-          'teach it back, recall it cold, or take the test. Nobody has a single "learning style" — what actually ' +
-          'sticks is hitting the same idea from a few different angles. Pick whichever fits the moment. ' +
-          'Progress saves on this device.</p>';
-
-  html += sharpenCardHtml();
+  html += '<p class="lede">Every module opens with <b>Study</b>, the part that actually teaches: real diagrams from ' +
+          'PulmOne\'s training decks plus interactive graphics you can pull apart. Then <b>Flashcards</b> to make it stick, ' +
+          'then the <b>Test</b>. Your progress saves on this device.</p>';
 
   groups.forEach(function (g) {
     var keys = g.keys.filter(function (k) { return A[k] || STUDY[k]; });
     if (!keys.length) return;
     html += '<div class="sec-h">' + esc(g.t) + '</div><div class="cards">';
-    keys.forEach(function (k) { seen[k] = 1; html += cardHtml(k, g.color); });
+    keys.forEach(function (k) { seen[k] = 1; html += cardHtml(k); });
     html += '</div>';
   });
 
@@ -503,7 +403,7 @@ function acHome() {
   var rest = KEYS.filter(function (k) { return !seen[k]; });
   if (rest.length) {
     html += '<div class="sec-h">More</div><div class="cards">';
-    rest.forEach(function (k) { html += cardHtml(k, '#5a6f93'); });
+    rest.forEach(function (k) { html += cardHtml(k); });
     html += '</div>';
   }
 
@@ -511,33 +411,10 @@ function acHome() {
   acRail();
 }
 
-/* one clean line icon per module - replaces the emoji set Erik flagged.
-   24x24, stroke inherits the card tile's group colour. */
-var ICONS = {
-  intro_mbp:'<rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/><path d="M12 8v5M9.5 10.5h5"/>',
-  clinical_overview:'<path d="M5.5 3v4.5a3.8 3.8 0 0 0 7.6 0V3"/><path d="M9.3 11.3v2.4a5.2 5.2 0 0 0 9 3.5"/><circle cx="18.8" cy="8.8" r="2.1"/><path d="M18.8 10.9v2.3"/>',
-  system_orientation:'<circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2 5.2-5.2 2 2-5.2z"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>',
-  minibox_setup:'<path d="M4 7h8.8M17.2 7h3M4 12h2.8M11.2 12h9M4 17h10.8M19.2 17h1"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="17" r="2.2"/>',
-  pft_overview:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><path d="M8 14h2l1.4-3.2 2.2 5 1.2-1.8H16"/>',
-  spirometry:'<path d="M4 4v16h16" opacity=".4"/><path d="M4.6 19.4c3.2 0 3.8-11.4 7.4-11.4 3 0 3.2 6 7.4 6"/>',
-  dlco:'<circle cx="8.5" cy="12" r="5"/><circle cx="8.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><path d="M13.6 12h6"/><path d="M17 8.9l3.1 3.1-3.1 3.1"/>',
-  lung_volume:'<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M6 13c2-1.2 4-1.2 6 0s4 1.2 6 0"/><path d="M18 8h-2M18 17h-2" opacity=".55"/>',
-  lung_volumes_pleth:'<rect x="3.5" y="6" width="17" height="14" rx="2"/><path d="M9 6V4h6v2"/><circle cx="12" cy="11.3" r="2.3"/><path d="M8.5 18c.6-2.2 6.4-2.2 7 0"/>',
-  additional_testing:'<path d="M9 3h6M10 3.2v5.3l-4.6 8.1A2 2 0 0 0 7.2 20h9.6a2 2 0 0 0 1.8-3.4L14 8.5V3.2"/><path d="M7.7 15h8.6" opacity=".75"/>',
-  respiratory_disease:'<circle cx="12" cy="12" r="9"/><path d="M8 12.2l2.6 2.8L16 9"/>',
-  competitive:'<path d="M3 21h18" opacity=".55"/><rect x="5" y="11" width="3.6" height="8" rx="1"/><rect x="10.2" y="6" width="3.6" height="13" rx="1"/><rect x="15.4" y="14" width="3.6" height="5" rx="1"/>',
-  final_exam:'<circle cx="12" cy="9" r="5.5"/><path d="M9.3 13.6L7.5 21l4.5-2.6L16.5 21l-1.8-7.4"/><path d="M9.6 9l1.7 1.7L14.6 7.4"/>'
-};
-function moduleIcon(k) {
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
-         'stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || ICONS.pft_overview) + '</svg>';
-}
-
-function cardHtml(k, accent) {
+function cardHtml(k) {
   var m = A[k] || {}, s = STUDY[k] || {};
   var title = m.title || (s.title) || k;
-  accent = accent || 'var(--rht)';
-  var ico = moduleIcon(k);
+  var ico = (CFG.icons && CFG.icons[k]) || '📘';
   var mins = s.minutes ? s.minutes + ' min read' : '';
   var nCards = (m.learn || []).length, nTest = (m.test || []).length;
 
@@ -560,7 +437,7 @@ function cardHtml(k, accent) {
     '</div>';
 
   return '<div class="card" onclick="acOpen(\'' + k + '\')">' +
-           '<div class="card-top"><div class="card-ico" style="color:' + accent + ';background:' + accent + '14;box-shadow:inset 0 0 0 1px ' + accent + '26">' + ico + '</div>' +
+           '<div class="card-top"><div class="card-ico">' + ico + '</div>' +
            '<div><div class="card-t">' + esc(title) + '</div>' +
            '<div class="card-m">' + esc(bits.join(' · ')) + '</div>' +
            (tags ? '<div class="card-tags">' + tags + '</div>' : '') + '</div></div>' + trio + '</div>';
@@ -594,16 +471,11 @@ function acOpen(k) {
   document.getElementById('ov-title').textContent = m.title || s.title || k;
   document.getElementById('ov-sub').textContent =
     (hasStudy(k) ? (s.minutes || 0) + ' min read' : 'Module');
-  document.getElementById('tab-study').disabled  = !hasStudy(k);
-  document.getElementById('tab-listen').disabled = !hasStudy(k);
-  document.getElementById('tab-learn').disabled  = !hasCards(k);
-  document.getElementById('tab-teach').disabled  = !hasCards(k);
-  document.getElementById('tab-recall').disabled = !hasStudy(k);
-  document.getElementById('tab-test').disabled   = !hasTest(k);
+  document.getElementById('tab-study').disabled = !hasStudy(k);
+  document.getElementById('tab-learn').disabled = !hasCards(k);
+  document.getElementById('tab-test').disabled  = !hasTest(k);
   document.getElementById('ov').classList.add('on');
   document.body.style.overflow = 'hidden';
-  document.getElementById('ov-modes').style.display = '';   // Sharpen hides it; restore for real modules
-  document.getElementById('ov-modes').scrollLeft = 0;
   acTab(hasStudy(k) ? 'study' : (hasCards(k) ? 'learn' : 'test'));
 }
 
@@ -614,21 +486,15 @@ function acClose() {
   acHome();
 }
 
-var MODES = ['study', 'listen', 'learn', 'teach', 'recall', 'test'];
 function acTab(t) {
-  if (window.speechSynthesis) speechSynthesis.cancel();   // leaving Listen? stop the voice
   curTab = t;
-  MODES.forEach(function (x) {
-    var el = document.getElementById('tab-' + x);
-    if (el) el.classList.toggle('on', x === t);
+  ['study', 'learn', 'test'].forEach(function (x) {
+    document.getElementById('tab-' + x).classList.toggle('on', x === t);
   });
   var body = document.getElementById('ov-body');
   body.scrollTop = 0;
-  if (t === 'study')       renderStudy(body);
-  else if (t === 'listen') renderListen(body);
-  else if (t === 'teach')  renderTeach(body);
-  else if (t === 'recall') renderRecall(body);
-  else                     startQuiz(t);   // 'learn' or 'test'
+  if (t === 'study') renderStudy(body);
+  else startQuiz(t);
 }
 
 /* ------------------------------------------------------------ study renderer */
@@ -677,18 +543,6 @@ function renderStudy(body) {
   };
 }
 
-/* Called as each figure loads. Art that is narrower than the column gets framed
-   rather than stretched, and "tap to enlarge" is hidden when the image is already
-   showing every pixel it has - offering a zoom that cannot sharpen anything is a lie. */
-function acFigFit(img) {
-  var fig = img.parentNode;
-  if (!fig || !img.naturalWidth) return;
-  var col = fig.clientWidth || 900;
-  if (img.naturalWidth < col - 24) fig.classList.add('fig-small');
-  var hint = fig.querySelector('.fig-zoom');
-  if (hint && img.naturalWidth <= img.clientWidth + 2) hint.classList.add('is-off');
-}
-
 function visualHtml(v, i) {
   if (!v) return '';
 
@@ -696,7 +550,7 @@ function visualHtml(v, i) {
     var src = 'academy-assets/' + v.src + '.jpg';
     return '<div class="fig">' +
              '<img class="fig-img" src="' + src + '" alt="' + esc(v.cap || '') + '" loading="lazy" ' +
-             'onload="acFigFit(this)" onclick="acLb(this.src, this.alt)">' +
+             'onclick="acLb(this.src, this.alt)">' +
              (v.cap ? '<div class="fig-cap">' + v.cap + '</div>' : '') +
              '<span class="fig-zoom">Tap to enlarge</span>' +
            '</div>';
@@ -764,8 +618,8 @@ var qList = [], qi = 0, qFlipped = false, qPicked = null, qRight = 0, qSeen = 0,
 
 function startQuiz(mode) {
   var m = A[curKey] || {};
-  if (mode === 'learn') qList = shuffle((m.learn || []).map(function (c) { return { q: c.q, a: c.a, _key: curKey }; }));
-  else qList = shuffle((m.test || []).map(function (c) { return { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note, _key: curKey }; }));
+  if (mode === 'learn') qList = shuffle((m.learn || []).map(function (c) { return { q: c.q, a: c.a }; }));
+  else qList = shuffle((m.test || []).map(function (c) { return { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note }; }));
   qi = 0; qFlipped = false; qPicked = null; qRight = 0; qSeen = 0; qMissed = [];
   renderQuiz();
 }
@@ -776,16 +630,12 @@ function renderQuiz() {
 
   var c = qList[qi];
   var h = '<div class="q-prog"><i style="width:' + Math.round((qi / qList.length) * 100) + '%"></i></div>' +
-          '<div class="q-meta"><span>' + (curTab === 'test' ? 'Question' : 'Card') + ' ' + (qi + 1) + ' of ' + qList.length + '</span>' +
+          '<div class="q-meta"><span>' + (curTab === 'learn' ? 'Card' : 'Question') + ' ' + (qi + 1) + ' of ' + qList.length + '</span>' +
           '<span>' + qRight + ' right</span></div>';
-
-  if (curTab === 'sharpen' && c._key && (A[c._key] || STUDY[c._key])) {
-    h += '<div class="tb-count">From ' + esc((A[c._key] || STUDY[c._key]).title || c._key) + '</div>';
-  }
 
   h += '<div class="q-card"><div class="q-q">' + c.q + '</div>';
 
-  if (curTab !== 'test') {
+  if (curTab === 'learn') {
     if (qFlipped) h += '<div class="q-a">' + c.a + '</div>';
     h += '</div>';
     if (!qFlipped) h += '<div class="q-btns"><button class="b-main" onclick="qFlip()">Show the answer</button></div>';
@@ -814,11 +664,7 @@ function qFlip() { qFlipped = true; renderQuiz(); }
 
 function qNextLearn(got) {
   var c = qList[qi];
-  if (!c._scored) {
-    c._scored = true; qSeen++;
-    if (got) { qRight++; acClearMiss(c._key, c.q); }
-    else { qMissed.push(c); acLogMiss(c._key, { q: c.q, a: c.a }); }
-  }
+  if (!c._scored) { c._scored = true; qSeen++; if (got) qRight++; else qMissed.push(c); }
   qi++; qFlipped = false; renderQuiz();
 }
 
@@ -826,13 +672,7 @@ function qAnswer(i) {
   if (qPicked !== null) return;
   var c = qList[qi];
   qPicked = i; qSeen++;
-  if (i === c.correct) { qRight++; acClearMiss(c._key, c.q); }
-  else {
-    qMissed.push(c);
-    var ans = c.choices[c.correct];
-    if (c.note) ans += ' — ' + acPlain(c.note);
-    acLogMiss(c._key, { q: c.q, a: ans });
-  }
+  if (i === c.correct) qRight++; else qMissed.push(c);
   renderQuiz();
 }
 
@@ -850,18 +690,14 @@ function finishQuiz() {
   var pass = pct >= (CFG.certPct || 80);
 
   if (curTab === 'test') acSaveScore(curKey, pct);
-  else if (curTab === 'learn') acMarkCards(curKey);
-  // 'sharpen' saves nothing to a module — the misses it clears are its own record.
+  else acMarkCards(curKey);
   acRail();
 
-  var title = curTab === 'test' ? (pass ? 'Passed' : 'Not there yet')
-            : curTab === 'sharpen' ? 'Review done' : 'Deck complete';
   var h = '<div class="done-wrap">' +
           '<div class="done-pct">' + pct + '%</div>' +
-          '<div class="done-t">' + title + '</div>' +
+          '<div class="done-t">' + (curTab === 'learn' ? 'Deck complete' : (pass ? 'Passed' : 'Not there yet')) + '</div>' +
           '<div class="done-s">' + qRight + ' of ' + qSeen + ' right' +
           (curTab === 'test' && !pass ? '<br>You need ' + (CFG.certPct || 80) + '% to clear this module.' : '') +
-          (curTab === 'sharpen' ? '<br>The ones you got clear off your review pile.' : '') +
           '</div><div class="done-btns">';
 
   if (qMissed.length) h += '<button class="b-no" style="flex:1;padding:13px;border-radius:12px;font-weight:700;cursor:pointer" onclick="qRetry()">Redo the ' + qMissed.length + ' missed</button>';
@@ -873,302 +709,9 @@ function finishQuiz() {
 
 function qRetry() {
   qList = qMissed.map(function (c) {
-    return curTab === 'test' ? { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note, _key: c._key }
-                             : { q: c.q, a: c.a, _key: c._key };
+    return curTab === 'learn' ? { q: c.q, a: c.a } : { q: c.q, choices: c.choices.slice(), correct: c.correct, note: c.note };
   });
   qi = 0; qFlipped = false; qPicked = null; qRight = 0; qSeen = 0; qMissed = [];
-  renderQuiz();
-}
-
-/* =====================================================================
-   MORE WAYS TO STUDY
-   The research is blunt: matching a lesson to someone's supposed "learning
-   style" (visual / auditory) does nothing. What actually moves retention is
-   engaging the SAME material through effortful, varied paths - hearing it,
-   recalling it cold, explaining it, and spacing the review. Every mode below
-   is built straight from the existing Study text and flashcards, so it works
-   on every module automatically, DLCO included.
-   ===================================================================== */
-
-/* strip HTML down to speakable / plain text */
-function acPlain(html) {
-  var d = document.createElement('div');
-  d.innerHTML = String(html == null ? '' : html);
-  return (d.textContent || d.innerText || '').replace(/\s+/g, ' ').trim();
-}
-
-/* small header that names the strategy and why it works */
-function whyStrip(txt) {
-  return '<div class="md-why"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/>' +
-         '<path d="M12 3a6 6 0 0 0-4 10.5c.7.6 1 1 1 2v.5h6V15c0-1 .3-1.4 1-2A6 6 0 0 0 12 3z"/></svg>' +
-         '<div>' + txt + '</div></div>';
-}
-
-/* --------------------------------------------------------- LISTEN (hear it) */
-var lsChunks = [], lsIdx = 0, lsPlaying = false, lsRate = 1;
-
-function acBuildChunks(s) {
-  var out = [];
-  if (s.intro) out.push({ label: 'Introduction', text: acPlain(s.intro) });
-  (s.sections || []).forEach(function (sec) {
-    var t = sec.h + '. ' + acPlain(sec.p || '');
-    (sec.list || []).forEach(function (li) { t += ' ' + acPlain(li) + '.'; });
-    if (sec.key) t += ' Remember: ' + acPlain(sec.key);
-    out.push({ label: sec.h, text: t });
-  });
-  if (s.angle) out.push({ label: 'The MiniBox angle', text: acPlain(s.angle) });
-  return out;
-}
-
-function renderListen(body) {
-  var s = STUDY[curKey];
-  if (!s) { body.innerHTML = '<div class="empty">Nothing to play for this module yet.</div>'; return; }
-  if (!('speechSynthesis' in window)) {
-    body.innerHTML = whyStrip('<b>Listen</b> reads the module aloud so you can study hands-free — in the car, between calls.') +
-      '<div class="empty">This browser can\'t read text aloud. Open <b>Read</b> instead, or try Listen on your phone.</div>';
-    return;
-  }
-  lsChunks = acBuildChunks(s);
-  if (lsIdx >= lsChunks.length) lsIdx = 0;
-  lsPaint();
-}
-
-function lsPaint() {
-  var body = document.getElementById('ov-body');
-  var cur = lsChunks[lsIdx] || { label: '', text: '' };
-  var pct = lsChunks.length ? Math.round((lsIdx / lsChunks.length) * 100) : 0;
-
-  var h = whyStrip('<b>Listen.</b> Hearing the material is a second route into memory (what researchers call dual coding). Perfect for the car or between calls.');
-  h += '<div class="ls-hero">' +
-         '<div class="ls-now">Now playing · ' + (lsIdx + 1) + ' of ' + lsChunks.length + '</div>' +
-         '<div class="ls-line">' + esc(cur.label) + '</div>' +
-         '<div class="ls-bar"><i style="width:' + pct + '%"></i></div>' +
-         '<div class="ls-ctrls">' +
-           '<button class="ls-play" onclick="lsToggle()" aria-label="Play or pause">' +
-             (lsPlaying
-               ? '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
-               : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>') +
-           '</button>' +
-           '<button class="ls-mini" onclick="lsStep(-1)" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M18 6L9 12l9 6zM7 6v12"/></svg></button>' +
-           '<button class="ls-mini" onclick="lsStep(1)" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M6 6l9 6-9 6zM17 6v12"/></svg></button>' +
-           '<div class="ls-rate">' +
-             [0.9, 1, 1.25, 1.5].map(function (r) {
-               return '<button class="' + (lsRate === r ? 'on' : '') + '" onclick="lsSetRate(' + r + ')">' + r + '×</button>';
-             }).join('') +
-           '</div>' +
-         '</div>' +
-       '</div>';
-
-  h += '<div class="ls-list">';
-  lsChunks.forEach(function (c, i) {
-    h += '<div class="ls-item' + (i === lsIdx ? ' on' : '') + (i < lsIdx ? ' done' : '') + '" onclick="lsJump(' + i + ')">' +
-           '<div class="ls-item-n">' + String(i + 1).padStart(2, '0') + '</div>' +
-           '<div class="ls-item-t">' + esc(c.label) + '</div>' +
-         '</div>';
-  });
-  h += '</div>';
-  h += '<div class="ls-note">Tap any part to jump there. Audio uses your device\'s built-in voice.</div>';
-
-  body.innerHTML = h;
-}
-
-function lsSpeak() {
-  if (!('speechSynthesis' in window)) return;
-  speechSynthesis.cancel();
-  var c = lsChunks[lsIdx];
-  if (!c) { lsPlaying = false; lsPaint(); return; }
-  var u = new SpeechSynthesisUtterance(c.text);
-  u.rate = lsRate;
-  u.onend = function () {
-    if (!lsPlaying) return;
-    if (lsIdx < lsChunks.length - 1) { lsIdx++; lsSpeak(); lsPaint(); }
-    else { lsPlaying = false; lsIdx = 0; lsPaint(); }
-  };
-  speechSynthesis.speak(u);
-}
-function lsToggle() {
-  lsPlaying = !lsPlaying;
-  if (lsPlaying) lsSpeak(); else speechSynthesis.cancel();
-  lsPaint();
-}
-function lsStep(d) {
-  lsIdx = Math.max(0, Math.min(lsChunks.length - 1, lsIdx + d));
-  if (lsPlaying) lsSpeak();
-  lsPaint();
-}
-function lsJump(i) {
-  lsIdx = i;
-  if (lsPlaying) lsSpeak();
-  lsPaint();
-}
-function lsSetRate(r) {
-  lsRate = r;
-  if (lsPlaying) lsSpeak();
-  lsPaint();
-}
-
-/* --------------------------------------------------------- TEACH BACK (explain it) */
-var tbList = [], tbIdx = 0, tbRevealed = false, tbText = '';
-
-function renderTeach(body) {
-  var m = A[curKey] || {};
-  if (!(m.learn && m.learn.length)) { body.innerHTML = '<div class="empty">No prompts to teach back yet.</div>'; return; }
-  tbList = shuffle(m.learn.map(function (c) { return { q: c.q, a: c.a }; }));
-  tbIdx = 0; tbRevealed = false; tbText = '';
-  tbPaint();
-}
-
-function tbCapture() {
-  var ta = document.getElementById('tb-ta');
-  if (ta) tbText = ta.value;
-}
-
-function tbPaint() {
-  var body = document.getElementById('ov-body');
-  if (tbIdx >= tbList.length) return tbDone();
-  var c = tbList[tbIdx];
-
-  var h = whyStrip('<b>Teach it back.</b> Explaining an idea in your own plain words (the Feynman technique) exposes the gaps that just re-reading hides. Say it out loud or type it — then check yourself.');
-  h += '<div class="tb-count">Prompt ' + (tbIdx + 1) + ' of ' + tbList.length + '</div>';
-  h += '<div class="tb-prompt"><div class="tb-prompt-l">Explain this like the buyer is in front of you</div>' +
-       '<div class="tb-prompt-q">' + c.q + '</div></div>';
-  h += '<textarea class="tb-ta" id="tb-ta" placeholder="In your own words…">' + esc(tbText) + '</textarea>';
-
-  if (!tbRevealed) {
-    h += '<div class="q-btns" style="margin-top:12px"><button class="b-main" onclick="tbReveal()">Reveal the model answer</button></div>';
-  } else {
-    h += '<div class="tb-model"><div class="tb-model-l">Model answer</div><div class="tb-model-p">' + c.a + '</div>';
-    if (tbText.trim()) h += '<div class="tb-model-mine"><b>What you said</b>' + esc(tbText) + '</div>';
-    h += '</div>';
-    h += '<div class="q-btns" style="margin-top:14px">' +
-           '<button class="b-no" onclick="tbNext(0)">Missed something</button>' +
-           '<button class="b-ok" onclick="tbNext(1)">Nailed it</button>' +
-         '</div>';
-  }
-  body.innerHTML = h;
-}
-
-function tbReveal() { tbCapture(); tbRevealed = true; tbPaint(); }
-function tbNext(got) {
-  var c = tbList[tbIdx];
-  if (!got) acLogMiss(curKey, { q: c.q, a: c.a });
-  else acClearMiss(curKey, c.q);
-  tbIdx++; tbRevealed = false; tbText = '';
-  tbPaint();
-}
-function tbDone() {
-  document.getElementById('ov-body').innerHTML =
-    '<div class="done-wrap"><div class="done-pct">✓</div>' +
-    '<div class="done-t">You taught the whole module</div>' +
-    '<div class="done-s">Anything you flagged as shaky is waiting for you in Sharpen.</div>' +
-    '<div class="done-btns"><button class="b-main" style="flex:1;padding:13px;border-radius:12px;border:0;font-weight:700;cursor:pointer" onclick="acClose()">Back to modules</button></div></div>';
-}
-
-/* --------------------------------------------------------- RECALL (dump it cold) */
-var rcKeys = [], rcRevealed = false, rcGot = {}, rcText = '';
-
-function renderRecall(body) {
-  var s = STUDY[curKey];
-  if (!s || !(s.sections && s.sections.length)) { body.innerHTML = '<div class="empty">No material to recall yet.</div>'; return; }
-  rcKeys = s.sections.map(function (sec) {
-    return { h: sec.h, p: acPlain(sec.key || sec.p || '') };
-  });
-  rcRevealed = false; rcGot = {}; rcText = '';
-  rcPaint();
-}
-
-function rcPaint() {
-  var body = document.getElementById('ov-body');
-  var title = (A[curKey] && A[curKey].title) || (STUDY[curKey] && STUDY[curKey].title) || 'this module';
-
-  var h = whyStrip('<b>Recall.</b> Pulling it out of your head cold — retrieval practice — builds far stronger memory than reading it again. Struggling a little is the point.');
-  h += '<div class="rc-prompt"><div class="rc-prompt-l">Brain dump</div>' +
-       '<div class="rc-prompt-t">Everything you remember about ' + esc(title) + '</div>' +
-       '<div class="rc-prompt-s">Write it, or just say it out loud. Don\'t peek. When you\'re out, check yourself against the key points.</div></div>';
-  h += '<textarea class="tb-ta" id="rc-ta" placeholder="Dump everything you\'ve got…">' + esc(rcText) + '</textarea>';
-
-  if (!rcRevealed) {
-    h += '<div class="q-btns" style="margin-top:12px"><button class="b-main" onclick="rcReveal()">Show the key points</button></div>';
-  } else {
-    var got = 0;
-    rcKeys.forEach(function (k) { if (rcGot[k.h]) got++; });
-    h += '<div class="rc-score">' + got + ' of ' + rcKeys.length + ' recalled — tap the ones you had</div>';
-    rcKeys.forEach(function (k, i) {
-      h += '<div class="rc-key' + (rcGot[k.h] ? ' got' : '') + '" onclick="rcTick(' + i + ')">' +
-             '<div class="rc-box">✓</div>' +
-             '<div><div class="rc-key-h">' + esc(k.h) + '</div>' +
-             (k.p ? '<div class="rc-key-p">' + esc(k.p) + '</div>' : '') + '</div></div>';
-    });
-    h += '<div class="q-btns" style="margin-top:14px"><button class="b-main" style="flex:1;padding:13px;border-radius:12px;border:0;font-weight:700;cursor:pointer" onclick="acClose()">Back to modules</button></div>';
-  }
-  body.innerHTML = h;
-}
-function rcReveal() {
-  var ta = document.getElementById('rc-ta'); if (ta) rcText = ta.value;
-  rcRevealed = true; rcPaint();
-}
-function rcTick(i) {
-  var k = rcKeys[i]; if (!k) return;
-  rcGot[k.h] = !rcGot[k.h];
-  rcPaint();
-}
-
-/* --------------------------------------------------------- SHARPEN (spaced + interleaved) */
-function acMissAll()   { return acRead('academy-miss3', {}); }
-function acMissWrite(o){ acWrite('academy-miss3', o); }
-function acMissId(k, q){ var s = (k || '?') + '|' + acPlain(q), h = 5381, i; for (i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'm' + (h >>> 0); }
-function acLogMiss(k, card) {
-  if (!card || !card.q) return;
-  var o = acMissAll(), id = acMissId(k, card.q);
-  var prev = o[id] || {};
-  o[id] = { k: k || '', q: card.q, a: card.a || '', n: (prev.n || 0) + 1, ts: Date.now() };
-  acMissWrite(o);
-}
-function acClearMiss(k, q) {
-  var o = acMissAll(), id = acMissId(k, q);
-  if (o[id]) { delete o[id]; acMissWrite(o); }
-}
-function acMissCount() { return Object.keys(acMissAll()).length; }
-
-function acMissDeck() {
-  var o = acMissAll(), arr = [];
-  Object.keys(o).forEach(function (id) { var r = o[id]; if (r && r.q) arr.push({ q: r.q, a: r.a, _key: r.k, _missId: id }); });
-  return shuffle(arr);   // shuffle across modules = interleaving
-}
-function acSeedMix() {
-  var out = [];
-  Object.keys(A).forEach(function (k) {
-    var cards = (A[k] && A[k].learn) || [];
-    if (!cards.length) return;
-    shuffle(cards.slice()).slice(0, 2).forEach(function (c) { out.push({ q: c.q, a: c.a, _key: k }); });
-  });
-  return shuffle(out).slice(0, 12);
-}
-
-function sharpenCardHtml() {
-  var n = acMissCount();
-  var sub = n
-    ? n + ' card' + (n === 1 ? '' : 's') + ' from things you\'ve missed, mixed across every module.'
-    : 'A quick mixed set pulled from every module. Spacing + mixing is what makes it stick.';
-  return '<button class="sharpen" onclick="acOpenSharpen()">' +
-           '<div class="sharpen-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>' +
-           '<div><div class="sharpen-t">Sharpen</div><div class="sharpen-s">' + sub + '</div></div>' +
-           '<div class="sharpen-n">' + (n ? n + ' due' : 'Warm up') + '</div>' +
-         '</button>';
-}
-
-function acOpenSharpen() {
-  var deck = acMissDeck(), seeded = false;
-  if (!deck.length) { deck = acSeedMix(); seeded = true; }
-  if (!deck.length) return;
-  curKey = '__review'; curTab = 'sharpen';
-  document.getElementById('ov-title').textContent = 'Sharpen';
-  document.getElementById('ov-sub').textContent = seeded ? 'Mixed review across modules' : deck.length + ' to review';
-  document.getElementById('ov-modes').style.display = 'none';
-  document.getElementById('ov').classList.add('on');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('ov-body').scrollTop = 0;
-  qList = deck; qi = 0; qFlipped = false; qPicked = null; qRight = 0; qSeen = 0; qMissed = [];
   renderQuiz();
 }
 

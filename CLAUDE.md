@@ -136,11 +136,27 @@ over unchanged underneath it.
   now asks for all three scopes, so one approval covers HQ and attachments together.
 - **The Hub layout is the rep's, not ours** (`<script id="mbx-arrange">`, v2). Every thing on the
   Daily Hub is ONE item with two shapes: a round **tile** in the launcher box, or a **fat panel**
-  down the page. Arrange mode (pill in the hero) lets the rep drag any item between the two — it
-  changes shape on drop — reorder inside either zone, and hide anything with the red × into a tray
+  down the page. Edit-layout mode (pill in the hero) lets the rep drag any item between the two — it
+  changes shape on drop — and hide anything with the red × into a tray
   at the bottom. A panel riding in the launcher box opens **full size in a sheet** when tapped, so
   nothing is ever in two places at once (that was Erik's complaint about Shipping). Layout is
   per-device (`mbx_hub_layout_v2` = `{pad,col,off}`) and reported nowhere.
+  - **DIRECT DRAG IS THE DEFAULT — no mode button first (2026-07-23).** Erik's rule: "you should be
+    able to drag everything and move anything around," and having to arm an Arrange mode to move one
+    tile was the complaint. So dragging works with the mode OFF: **press-and-hold (finger, 320ms) or
+    press-and-move ~6px (mouse)** picks a thing up; a **quick tap still opens it**. That
+    tap-vs-drag call is the whole trick — `pend` holds the undecided press and only `startDrag()`
+    commits it, `drag.moved` means a pick-up that never actually moved is handed back as a tap, and
+    `justDragged` swallows the click for 60ms after a real drag so a drop doesn't also fire
+    "Open the day". On touch, moving BEFORE the hold fires cancels the pick-up so the page still
+    scrolls normally — never put `touch-action:none` on hub items outside the mode or scrolling dies.
+  - **Only real handles start a direct drag** (`directHandle()`): a launcher tile grabs anywhere;
+    a fat panel and the HQ board grab by their **header only** (`.hub-acc-head` / `.hq-bar`) because
+    their bodies hold fields the rep types into; the launcher box grabs by its own chrome, never a
+    tile inside it; and a press on an `#mbx-hq .hq-card` is refused outright so HQ's own card
+    reorderer gets it. Buttons/inputs inside a header never start a drag. Direct drag is also
+    **zone-locked** (`drag.lock`) so a casual reorder can't accidentally convert a tile into a fat
+    panel — that conversion stays a deliberate Edit-layout-mode act.
   - **The launcher tiles are painted from a registry, not from markup.** The shipped `<a
     class="launcher-btn">` tags are read once at boot and then removed from the DOM. Editing those
     tags still works (they seed the registry); adding a tile by hand anywhere else does nothing.
@@ -150,6 +166,31 @@ over unchanged underneath it.
   - **Don't blanket `pointer-events:none` on children of a draggable.** It is inherited, so the
     tiles inside the launcher box went dead and the whole box moved as one lump. The fix that has
     to stay is the paired rule `body.mbxa-on [data-arr] [data-arr] { pointer-events:auto }`.
+- **HQ's own cards reorder independently of the outer Hub arrange** (`<script id="mbx-hq-arrange">`,
+  2026-07-23). `mbx-arrange` above only ever moves the whole HQ board as one panel — it never reaches
+  the cards inside it (Today/Inbox/Calendar/Accounts/My notes/The team/Daily Cut). **Grab a card
+  anywhere** — same press-hold / press-move rule as direct drag above, no mode button and no tiny
+  handle (a first pass shipped a grip handle in the card header; Erik wanted the whole card, so it
+  was removed — don't reintroduce `.hqa-handle`). A quick tap still works the card's own buttons.
+  It **stands down while the outer Edit-layout mode is on** (`modeOn()`), so the two systems never
+  fight over one press: mode = move the whole board, no mode = reorder the cards inside it.
+  Order is `mbx_hq_card_order_v1` in localStorage, per-device, reported
+  nowhere. Because `render()` in `mbx-hq` rewrites the whole grid from scratch on every tab switch/
+  refresh/visibilitychange, this block watches `div#mbx-hq` with a MutationObserver (+ a cheap 2.5s
+  poll as a safety net) and reapplies the saved order immediately after — same "watch it and put it
+  back" trick Daily Cut and the version-stamp block already use for the same reason. A card this block
+  has never heard of (a future new panel, or Daily Cut before its own async placement lands) slots in
+  right after its nearest already-placed neighbour in `DEFAULT_ORDER`, same idea as `mbx-arrange`'s
+  own `reconcile()`. New HQ cards are draggable automatically (any `.hq-card` in `.hq-grid` counts)
+  — but add the id to `DEFAULT_ORDER` too so a stale saved layout on an old device knows where the
+  new card belongs.
+- **Testing drag on the live page: make sure the Daily Hub is actually the visible tab.** Half a
+  debugging session went into a "broken" panel drag that was nothing of the sort — an earlier test
+  had clicked an HQ card's "Open the map", which switched to the Accounts tab, so `#tab-hub` was
+  `display:none` and every `getBoundingClientRect()` came back all-zeros. `place()` skips zero-size
+  items (`if (!r.width && !r.height) return`), so no drop target is ever found and the slot never
+  moves. If a synthetic drag "starts but never reorders," check the tab is on screen before
+  suspecting the drag code, and space dispatched taps out past the 60ms `justDragged` window.
 - **Anchors for Node splices must be unique — check first.** Nearly every `mbx-*` block ends
   with the same four lines (`if (document.readyState === 'loading') ... else boot(); })();
   </script>`), so a replace on that tail lands in the FIRST block in the file, not yours.

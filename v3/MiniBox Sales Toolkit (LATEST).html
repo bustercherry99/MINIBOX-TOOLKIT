@@ -2240,6 +2240,18 @@
        intmedShowView() so the Videos pill auto-wires (see SPECS).
        ============================================================ -->
   <div class="tab-panel" id="tab-intmed">
+  <style data-cardio-restyle="1">
+/* Cardiology-look restyle: font + color + layout, content untouched */
+      #tab-intmed#tab-intmed .im { --imink:#0b2545; --imsoft:#5f5e5a; --imline:#e3e0d8; }
+      #tab-intmed#tab-intmed .im-sec-num { display:none; }
+      #tab-intmed#tab-intmed .im-sec-head { border-bottom:none; padding-bottom:0; }
+      #tab-intmed#tab-intmed .im-stat { border-top:1px solid var(--imline); border-left:4px solid var(--imacc); }
+      #tab-intmed#tab-intmed .im-n,
+      #tab-intmed#tab-intmed .im-trigger span.k,
+      #tab-intmed#tab-intmed .im-guard .k,
+      #tab-intmed#tab-intmed .im-dlco .k,
+      #tab-intmed#tab-intmed table.im-bill td.code { font-family:'Inter',sans-serif; }
+  </style>
     <style>
       #tab-intmed .im { --imink:#101a24; --imsteel:#44586b; --imsoft:#5f5e5a; --imline:#e3e0d8; --imacc:#1d6fa5; --imwash:#eef4f8; --imwarn:#8a5a0b; }
       #tab-intmed .im-lede { font-size:14.5px; color:var(--imsoft); max-width:760px; line-height:1.62; margin:2px 0 6px; }
@@ -7421,6 +7433,16 @@ init();
   <!-- v2.19: RHEUMATOLOGY PFT ESTIMATOR     -->
   <!-- ══════════════════════════════════════ -->
   <div class="tab-panel" id="tab-rheum">
+  <style data-cardio-restyle="1">
+/* Cardiology-look restyle: font + color + layout, content untouched */
+      #tab-rheum#tab-rheum, #tab-rheum#tab-rheum .rhp { --rhink:#0b2545; --rhsoft:#5f5e5a; --rht-line:#e3e0d8; }
+      #tab-rheum#tab-rheum .rhp-sec-num { display:none; }
+      #tab-rheum#tab-rheum .rhp-step .rhp-n,
+      #tab-rheum#tab-rheum .rhp-stat .rhp-big,
+      #tab-rheum#tab-rheum .rhp-cpt-code,
+      #tab-rheum#tab-rheum .rhp-qitem::before { font-family:'Inter',sans-serif; }
+      #tab-rheum#tab-rheum .rhp-stat .rhp-big { font-size:27px; letter-spacing:-.01em; }
+  </style>
     <style>
       #tab-rheum, #tab-rheum .rhp { --rht:#0d8aa6; --rht-deep:#0a6075; --rht-wash:#eaf5f8; --rht-line:#cfe6ec; --rhg:#c98a2b; --rhink:#0e2a3a; --rhsoft:#3a5567; }
       #tab-rheum .rhp-lede { font-size:14.5px; color:var(--rhsoft); max-width:680px; line-height:1.6; margin:2px 0 4px; }
@@ -8013,16 +8035,6 @@ init();
 
     <!-- ============ VIEW: PLAYBOOK ============ -->
     <div id="rheum-view-playbook" class="rhp">
-      <div class="rhp-files-cta">
-        <div>
-          <div class="rhp-files-cta-h"> The rheum pack &mdash; 7 files + 3 interactive tools</div>
-          <div class="rhp-files-cta-s">Segment slick, field reference, training deck, ACR/CHEST guideline, patient fact sheet &amp; email templates &mdash; plus the Estimator, Billing Helper and Interp Composer as working copies.</div>
-        </div>
-        <div class="rhp-files-cta-btns">
-          <button type="button" onclick="rheumShowView('files', document.getElementById('rhsub-files'))">Open the files</button>
-          <button type="button" class="ghost" onclick="rheumEmailAll()"> Email the pack</button>
-        </div>
-      </div>
       <div class="rhp-lede">Everything for the rheumatology call in one place &mdash; the play, the numbers, the answers, and every file. Field-tested. Built for the team.</div>
 
       <!-- Training lives in its own view now. This is the quiet pointer to it. -->
@@ -9120,6 +9132,16 @@ init();
 
   <!-- ============================ PULMONOLOGY ============================ -->
   <div class="tab-panel" id="tab-pulmo">
+  <style data-cardio-restyle="1">
+/* Cardiology-look restyle: font + color + layout, content untouched */
+      #tab-pulmo#tab-pulmo, #tab-pulmo#tab-pulmo .plp { --plink:#0b2545; --plsoft:#5f5e5a; --plt-line:#e3e0d8; }
+      #tab-pulmo#tab-pulmo .plp-sec-num { display:none; }
+      #tab-pulmo#tab-pulmo .plp-step .plp-n,
+      #tab-pulmo#tab-pulmo .plp-stat .plp-big,
+      #tab-pulmo#tab-pulmo .plp-cpt-code,
+      #tab-pulmo#tab-pulmo .plp-qitem::before { font-family:'Inter',sans-serif; }
+      #tab-pulmo#tab-pulmo .plp-stat .plp-big { font-size:27px; letter-spacing:-.01em; }
+  </style>
     <style>
       #tab-pulmo .plp { --plt:#185fa5; --plt-deep:#0f4a85; --plt-wash:#eff6ff; --plt-line:#d5e4f5; --plink:#0e2438; --plsoft:#3e556b; --plg:#c98a2b; }
       #tab-pulmo .plp-lede { font-size:14.5px; color:var(--plsoft); max-width:680px; line-height:1.6; margin:2px 0 4px; }
@@ -9185,16 +9207,6 @@ init();
     </div>
 
     <div id="pulmo-view-playbook" class="plp">
-      <div class="plp-files-cta">
-        <div>
-          <div class="plp-files-cta-h">&#128193; Everything for the pulmonology call &mdash; ready to email</div>
-          <div class="plp-files-cta-s">The brochure, the CHEST 2021 validation, the sample report, the ROI &amp; billing calculators &mdash; every file and tool in one place.</div>
-        </div>
-        <div class="plp-files-cta-btns">
-          <button type="button" onclick="pulmoShowView('files', document.getElementById('plsub-files'))">Open the files</button>
-          <button type="button" class="ghost" onclick="pulmoEmailAll()">&#9993; Email the core pack</button>
-        </div>
-      </div>
       <div class="plp-lede">Pulmonologists already believe in full PFTs &mdash; the sell isn&rsquo;t the science, it&rsquo;s the <strong>capacity</strong>. The body box is room-sized, tech-dependent, and booked out for weeks. MiniBox+ puts spirometry, lung volumes, and DLCO in the exam room and in the satellite office.</div>
 
       <div class="plp-sec">
@@ -9275,6 +9287,18 @@ init();
 
   <!-- ============================ ALLERGY / IMMUNOLOGY ============================ -->
   <div class="tab-panel" id="tab-allergy">
+  <style data-cardio-restyle="1">
+/* Cardiology-look restyle: font + color + layout, content untouched */
+      #tab-allergy#tab-allergy, #tab-allergy#tab-allergy .alp { --alink:#0b2545; --alsoft:#5f5e5a; --alt-line:#e3e0d8; }
+      #tab-allergy#tab-allergy .alp-sec-num { display:none; }
+      #tab-allergy#tab-allergy .alp-step .alp-n,
+      #tab-allergy#tab-allergy .alp-stat .alp-big,
+      #tab-allergy#tab-allergy .alp-cpt-code,
+      #tab-allergy#tab-allergy .alp-qitem::before,
+      #tab-allergy#tab-allergy .alp-tbl .alp-icd,
+      #tab-allergy#tab-allergy .alp-tbl .alp-cpt-in { font-family:'Inter',sans-serif; }
+      #tab-allergy#tab-allergy .alp-stat .alp-big { font-size:27px; letter-spacing:-.01em; }
+  </style>
     <style>
       #tab-allergy .alp { --alt:#0f9d6b; --alt-deep:#0b6e4d; --alt-wash:#ecfdf5; --alt-line:#c9ecd9; --alink:#0d2b1f; --alsoft:#3d5a4c; --alg:#c98a2b; }
       #tab-allergy .alp-lede { font-size:14.5px; color:var(--alsoft); max-width:680px; line-height:1.6; margin:2px 0 4px; }
@@ -9364,16 +9388,6 @@ init();
     </div>
 
     <div id="allergy-view-playbook" class="alp">
-      <div class="alp-files-cta">
-        <div>
-          <div class="alp-files-cta-h">&#128193; Everything for the allergy call &mdash; ready to email</div>
-          <div class="alp-files-cta-s">The &ldquo;Will You Get Paid?&rdquo; coverage &amp; coding guide, the brochure, the CHEST 2021 validation, the sample report, plus the ROI, financing &amp; PFT-coding calculators &mdash; every file and tool in one place.</div>
-        </div>
-        <div class="alp-files-cta-btns">
-          <button type="button" onclick="allergyShowView('files', document.getElementById('alsub-files'))">Open the files</button>
-          <button type="button" class="ghost" onclick="allergyEmailAll()">&#9993; Email the allergy pack</button>
-        </div>
-      </div>
       <div class="alp-lede">Most allergy practices run <strong>spirometry only</strong>. Everything past that &mdash; lung volumes, DLCO &mdash; goes out the door as a referral, and with it the patient, the follow-through, and the billing. MiniBox+ closes that gap in the same exam room they already use.</div>
 
       <div class="alp-sec">
@@ -17142,6 +17156,183 @@ document.addEventListener('DOMContentLoaded', function () {
   else init();
 })();
 </script>
+<script id="mbx-pftsuite-everywhere">
+/* PFT SUITE IN EVERY SPECIALTY — Rheumatology owns the embedded PFT Suite; this block
+   drops the SAME "PFT Suite" pill + embedded suite into Pulmonology, Allergy, Cardiology
+   and Internal Medicine. Self-contained + append-only (same collision-safe pattern as
+   mbx-videos-hub), so it never fights edits to the specialty tabs. It reuses the folded-in
+   window.PFTSUITE_FILES — nothing is fetched, so it works with wifi off and in the offline
+   zip. Rheum is left alone (it already has its own #rhps-* copy). To add another specialty,
+   just push its short name onto SPECS. */
+(function(){
+  var SPECS = ['pulmo','allergy','cardio','intmed'];   // rheum already has the Suite
+  var TITLES = {
+    'index.html': 'The Trainer and all six pattern pages, built into this toolkit.',
+    'MiniBox_PFT_Report_Studio_v1.0.html': 'PFT Report Studio &mdash; the live trainer.',
+    'MiniBox_PFT_Training_Normal_v1.0.html': 'Pattern library &mdash; Normal.',
+    'MiniBox_PFT_Training_Asthma_v1.0.html': 'Pattern library &mdash; Asthma.',
+    'MiniBox_PFT_Training_COPD_v1.0.html': 'Pattern library &mdash; COPD / Emphysema.',
+    'MiniBox_PFT_Training_ILD_v1.0.html': 'Pattern library &mdash; ILD / Pneumonitis.',
+    'MiniBox_PFT_Training_ChestWall-Neuromuscular_v1.0.html': 'Pattern library &mdash; Chest-wall / Neuromuscular.',
+    'MiniBox_PFT_Training_Mixed_v1.0.html': 'Pattern library &mdash; Mixed.'
+  };
+  /* Same click-catcher shim rheum uses, but its OWN message key (__mbxps) so it drives
+     only our frames, never the rheum frame. */
+  var SHIM = '<' + 'script>(function(){document.addEventListener("click",function(e){'
+    + 'var n=e.target; while(n&&n.nodeName!=="A") n=n.parentNode;'
+    + 'if(!n) return; var h=n.getAttribute("href")||"";'
+    + 'if(!/\\.html$/i.test(h)||/^(https?:|\\/\\/)/i.test(h)) return;'
+    + 'e.preventDefault(); parent.postMessage({__mbxps:1,file:h},"*");'
+    + '},true);})();<' + '/script>';
+  var cache = {};
+  function html(file){
+    if (cache[file]) return cache[file];
+    var b64 = (window.PFTSUITE_FILES || {})[file];
+    if (!b64) return '';
+    var bin = atob(b64), u8 = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    var out = new TextDecoder('utf-8').decode(u8);
+    out = out.replace(/<\/body>/i, SHIM + '</body>');
+    cache[file] = out;
+    return out;
+  }
+  var STATE = {};   // spec -> current file
+  function open(spec, file){
+    var f = document.getElementById(spec + '-pftsuite-iframe');
+    if (!f) return;
+    var h = html(file); if (!h) return;
+    STATE[spec] = file;
+    f.srcdoc = h;
+    var crumb = document.getElementById(spec + '-pftsuite-crumb');
+    if (crumb) crumb.innerHTML = TITLES[file] || file;
+    var back = document.getElementById(spec + '-pftsuite-back');
+    if (back) back.style.display = (file === 'index.html') ? 'none' : '';
+  }
+  function popOut(spec){
+    var h = html(STATE[spec] || 'index.html'); if (!h) return;
+    var w = window.open('', '_blank'); if (!w) return;
+    w.document.open(); w.document.write(h); w.document.close();
+  }
+  /* Route an in-suite link click back to the exact frame that sent it. */
+  window.addEventListener('message', function(e){
+    if (!e.data || !e.data.__mbxps || !e.data.file) return;
+    var file = String(e.data.file).replace(/^.*\//, '');
+    for (var i = 0; i < SPECS.length; i++){
+      var fr = document.getElementById(SPECS[i] + '-pftsuite-iframe');
+      if (fr && fr.contentWindow === e.source){ open(SPECS[i], file); return; }
+    }
+  });
+
+  function wireSpec(spec){
+    var panel = document.getElementById('tab-' + spec);
+    if (!panel || document.getElementById(spec + '-pftsuite-pill')) return;
+
+    var samplePill = panel.querySelector('button[onclick*="ShowView("]');
+    if (!samplePill || !samplePill.parentNode) return;
+    var nav = samplePill.parentNode;
+    var m = /([A-Za-z]+ShowView)\(/.exec(samplePill.getAttribute('onclick') || '');
+    if (!m) return;
+    var fn = m[1];
+
+    var anyView = document.getElementById(spec + '-view-playbook');
+    if (!anyView || !anyView.parentNode) return;
+
+    /* the PFT Suite view (hidden until its pill is clicked) */
+    if (!document.getElementById(spec + '-view-pftsuite')){
+      var vv = document.createElement('div');
+      vv.id = spec + '-view-pftsuite';
+      vv.className = anyView.className;
+      vv.style.display = 'none';
+      vv.innerHTML =
+          '<div class="mbxps-wrap">'
+        +   '<div class="mbxps-bar">'
+        +     '<div>'
+        +       '<div class="mbxps-t">PFT Suite <span class="mbxps-off">works offline</span></div>'
+        +       '<div class="mbxps-s" id="' + spec + '-pftsuite-crumb">The Trainer and all six pattern pages, built into this toolkit.</div>'
+        +     '</div>'
+        +     '<div class="mbxps-btns">'
+        +       '<button type="button" class="mbxps-b ghost" id="' + spec + '-pftsuite-back" style="display:none;">&#8592; Suite menu</button>'
+        +       '<button type="button" class="mbxps-b" id="' + spec + '-pftsuite-pop">Open full screen <span style="font-size:11px;opacity:.85;">&#8599;</span></button>'
+        +     '</div>'
+        +   '</div>'
+        +   '<div class="mbxps-frame"><iframe id="' + spec + '-pftsuite-iframe" title="MiniBox PFT Suite" allow="fullscreen"></iframe></div>'
+        + '</div>';
+      anyView.parentNode.appendChild(vv);
+      var b1 = vv.querySelector('#' + spec + '-pftsuite-back');
+      if (b1) b1.addEventListener('click', function(){ open(spec, 'index.html'); });
+      var b2 = vv.querySelector('#' + spec + '-pftsuite-pop');
+      if (b2) b2.addEventListener('click', function(){ popOut(spec); });
+    }
+
+    /* the pill — clones the specialty's own pill styling, so the centralized
+       sub-nav active-state (mbx-subnav) lights it up like every other pill. */
+    var pill = document.createElement('button');
+    pill.type = 'button';
+    pill.id = spec + '-pftsuite-pill';
+    pill.className = (samplePill.className || '').replace(/\bon\b/g, '').trim();
+    pill.setAttribute('onclick', fn + "('pftsuite', this)");
+    pill.innerHTML = 'PFT Suite';
+    var vidPill = document.getElementById(spec + '-videos-pill');  // keep Videos last
+    if (vidPill && vidPill.parentNode === nav) nav.insertBefore(pill, vidPill);
+    else nav.appendChild(pill);
+
+    /* wrap the specialty's show fn: 'pftsuite' reveals our view; any other hides it */
+    var orig = window[fn];
+    if (typeof orig === 'function' && !orig.__mbxPs){
+      var wrapped = function(view, btn){
+        if (view === 'pftsuite'){
+          try { orig('__mbxnone__', btn); } catch(e){}
+          var vv2 = document.getElementById(spec + '-view-videos'); if (vv2) vv2.style.display = 'none';
+          var vp = document.getElementById(spec + '-videos-pill'); if (vp) vp.classList.remove('on');
+          var v2 = document.getElementById(spec + '-view-pftsuite'); if (v2) v2.style.display = '';
+          var p2 = document.getElementById(spec + '-pftsuite-pill'); if (p2) p2.classList.add('on');
+          if (!STATE[spec]) open(spec, 'index.html');
+          return;
+        }
+        var r = orig.apply(this, arguments);
+        var v3 = document.getElementById(spec + '-view-pftsuite'); if (v3) v3.style.display = 'none';
+        var p3 = document.getElementById(spec + '-pftsuite-pill'); if (p3) p3.classList.remove('on');
+        return r;
+      };
+      wrapped.__mbxPs = true;
+      window[fn] = wrapped;
+    }
+  }
+
+  function ensureCss(){
+    if (document.getElementById('mbx-pftsuite-css')) return;
+    var s = document.createElement('style');
+    s.id = 'mbx-pftsuite-css';
+    s.textContent =
+      '.mbxps-wrap{border:1.5px solid #e2e4e8;border-radius:14px;overflow:hidden;background:#fff;}'
+    + '.mbxps-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:13px 18px;background:linear-gradient(180deg,#f7f8fa,#eef0f3);border-bottom:1px solid #e2e4e8;}'
+    + '.mbxps-t{font-size:15px;font-weight:800;color:#1f2937;}'
+    + '.mbxps-off{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;color:#0a6075;background:#eaf5f8;border:1px solid #cfe6ec;border-radius:999px;padding:3px 9px;margin-left:7px;vertical-align:middle;}'
+    + '.mbxps-s{font-size:12.5px;color:#6b7280;margin-top:3px;line-height:1.5;}'
+    + '.mbxps-btns{display:flex;gap:8px;flex-wrap:wrap;}'
+    + '.mbxps-b{font-size:13px;font-weight:700;border:none;border-radius:999px;padding:9px 17px;cursor:pointer;background:#0a6075;color:#fff;}'
+    + '.mbxps-b:hover{filter:brightness(1.06);}'
+    + '.mbxps-b.ghost{background:#fff;color:#0a6075;border:1.5px solid #0a6075;}'
+    + '.mbxps-frame{position:relative;background:#fafaf8;}'
+    + '.mbxps-frame iframe{display:block;width:100%;height:calc(100vh - 300px);min-height:620px;border:0;}'
+    + '@media(max-width:720px){.mbxps-bar{flex-direction:column;align-items:stretch;}.mbxps-btns button{flex:1 1 auto;}.mbxps-frame iframe{height:calc(100vh - 240px);min-height:520px;}}';
+    document.head.appendChild(s);
+  }
+
+  function init(){
+    try { ensureCss(); } catch(e){}
+    SPECS.forEach(function(s){ try { wireSpec(s); } catch(e){} });
+    /* specialty tabs can be built lazily on first open — re-wire then, like videos-hub */
+    if (typeof window.showTab === 'function' && !window.showTab.__mbxPsTab){
+      var orig = window.showTab;
+      window.showTab = function(id, btn){ var r = orig.apply(this, arguments); try { if (SPECS.indexOf(id) > -1) wireSpec(id); } catch(e){} return r; };
+      window.showTab.__mbxPsTab = true;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 <script id="mbx-command-center">
 /* COMMAND CENTER TAB — owner view, loaded only when Erik opens it.
    The real screen is reports.html (same folder), behind its own admin password
@@ -24252,6 +24443,29 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     background: rgba(30,64,175,.06); box-sizing: border-box;
   }
 
+  /* =========================================================================
+     DIRECT DRAG (no mode) - the rep grabs and moves things straight away, no
+     "Arrange" button first. A quick tap still opens a tile / toggles a panel;
+     press-and-hold (finger) or press-and-move (mouse) picks the thing up.
+     Only the launcher tiles and each panel's HEADER are handles, so the text
+     and fields inside a panel stay fully usable. Everything scopes to
+     :not(.mbxa-on) so it never fights the full Arrange-mode styles above.
+     ========================================================================= */
+  #mbxa-hint { margin: 9px 0 0; font-size: 12px; line-height: 1.5; color: var(--gray-600, #6b7280); max-width: 640px; }
+  #mbxa-hint b { color: var(--blue-brand, #1e40af); font-weight: 700; }
+  body:not(.mbxa-on) #tab-hub .launcher-btn,
+  body:not(.mbxa-on) #tab-hub .hub-big,
+  body:not(.mbxa-on) #tab-hub .hub-acc-head {
+    cursor: grab; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+  }
+  body:not(.mbxa-on) #tab-hub .launcher-btn:hover,
+  body:not(.mbxa-on) #tab-hub .hub-big:hover {
+    box-shadow: 0 0 0 2px rgba(30,64,175,.42); border-color: rgba(30,64,175,.5);
+  }
+  body:not(.mbxa-on) #tab-hub .hub-acc-head:hover {
+    background: rgba(30,64,175,.05); box-shadow: inset 3px 0 0 rgba(30,64,175,.55);
+  }
+
   /* a panel living in the launcher box: same round tile, violet edge */
   .launcher-btn.lb-panel { border-color: #8b5cf6; font: inherit; }
   .launcher-btn.lb-panel:hover { border-color: #8b5cf6; background: #f5f3ff; }
@@ -24350,6 +24564,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   ];
   var REG = {}, DEF = { pad: [], col: [] }, ST = null;
   var ready = false, on = false, drag = null, sheetId = null, raf = 0, edge = 0;
+  var pend = null, justDragged = false;   /* direct drag (no mode): the pending press + a beat to swallow the click after a real move */
 
   function $(id) { return document.getElementById(id); }
   function col() { return $('tab-hub'); }
@@ -24677,13 +24892,30 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     }
   }
 
-  function down(e) {
-    if (!on || drag || (e.button != null && e.button > 0)) return;
-    var t = e.target;
-    if (t && t.closest && t.closest('.mbxa-x, #mbxa-tray, #mbxa-bar')) return;
-    var item = t && t.closest ? t.closest('#tab-hub [data-arr]') : null;
+  /* target is not an actual control (so pressing a button/field never starts a drag) */
+  function notCtl(t) { return !(t && t.closest && t.closest('button, input, textarea, select')); }
+
+  /* Out of Arrange mode, which press should begin a drag? Only a real handle,
+     so a normal tap still opens a tile or toggles a panel:
+       - launcher tile      -> grab anywhere on the tile
+       - a fat panel        -> its header bar only (the body has fields to type in)
+       - the HQ board        -> its header bar only (its cards reorder themselves)
+       - the launcher box   -> its own chrome, never a tile sitting inside it */
+  function directHandle(item, t) {
+    if (t && t.closest && t.closest('#mbx-hq .hq-card')) return false;  // HQ's own reorderer owns cards
+    var kind = item.getAttribute('data-arr');
+    if (kind === 'pad') return true;
+    if (item.id === 'mbx-hq') return !!(t.closest && t.closest('.hq-bar')) && notCtl(t);
+    if (item.classList.contains('hub-acc')) return !!(t.closest && t.closest('.hub-acc-head')) && notCtl(t);
+    if (item.id === PAD_ID) return !(t.closest && t.closest('[data-arr="pad"]')) && notCtl(t);
+    return true;
+  }
+
+  /* pick an item up - used by Arrange mode (immediately) and direct drag (after
+     the press clears the tap/scroll threshold) */
+  function startDrag(item, id, x, y) {
+    if (pend) { clearTimeout(pend.timer); pend = null; }
     if (!item || !item.parentNode) return;
-    var id = idOf(item); if (!id) return;
     var kind = item.getAttribute('data-arr');
     var r = item.getBoundingClientRect();
     var slot = document.createElement('div');
@@ -24693,15 +24925,39 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
     item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
     drag = { item: item, id: id, kind: kind, zone: kind, slot: slot, h: r.height,
-             dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
+             dx: x - r.left, dy: y - r.top, x: x, y: y, x0: x, y0: y, moved: false, lock: !on };
     sizeSlot(kind);
     document.body.classList.add('mbxa-dragging');
-    if (e.preventDefault) e.preventDefault();
+  }
+
+  function down(e) {
+    if (drag || pend || (e.button != null && e.button > 0)) return;
+    var t = e.target;
+    if (t && t.closest && t.closest('.mbxa-x, #mbxa-tray, #mbxa-bar, #mbxa-sheet')) return;
+    var item = t && t.closest ? t.closest('#tab-hub [data-arr]') : null;
+    if (!item || !item.parentNode) return;
+    var id = idOf(item); if (!id) return;
+
+    if (on) {                          // Arrange mode: pick up right away, anything goes
+      startDrag(item, id, e.clientX, e.clientY);
+      if (e.preventDefault) e.preventDefault();
+      return;
+    }
+    /* No mode: only from a handle, and only once the press turns into a drag -
+       a hold on a finger, a few px on a mouse - so a plain tap still opens it. */
+    if (!directHandle(item, t)) return;
+    pend = { item: item, id: id, x0: e.clientX, y0: e.clientY,
+             touch: (e.pointerType === 'touch'), timer: 0 };
+    if (pend.touch) pend.timer = setTimeout(function () {
+      if (pend) startDrag(pend.item, pend.id, pend.x0, pend.y0);
+    }, 320);
   }
 
   function place() {
     if (!drag) return;
-    var z = zoneAt(drag.x, drag.y, drag.id);
+    /* direct drag stays in its own zone (a casual reorder never turns a tile
+       into a fat panel); Arrange mode is free to move between the two */
+    var z = drag.lock ? drag.kind : zoneAt(drag.x, drag.y, drag.id);
     var host = zoneHost(z); if (!host) return;
     if (z !== drag.zone) { drag.zone = z; sizeSlot(z); }
     /* still hovering the gap we already opened: leave it alone. without this the
@@ -24735,9 +24991,21 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   }
 
   function move(e) {
-    if (!drag) return;
+    if (!drag) {
+      /* still deciding whether this press is a tap/scroll or a drag */
+      if (!pend) return;
+      var pdx = e.clientX - pend.x0, pdy = e.clientY - pend.y0;
+      if (pend.touch) {
+        /* moved before the hold fired -> it's a scroll, let the page move */
+        if (pdx * pdx + pdy * pdy > 100) { clearTimeout(pend.timer); pend = null; }
+        return;
+      }
+      if (pdx * pdx + pdy * pdy > 36) startDrag(pend.item, pend.id, e.clientX, e.clientY);  // mouse: crossed the threshold
+      if (!drag) return;
+    }
     if (e.preventDefault) e.preventDefault();
     drag.x = e.clientX; drag.y = e.clientY;
+    if (!drag.moved && (Math.abs(drag.x - drag.x0) > 4 || Math.abs(drag.y - drag.y0) > 4)) drag.moved = true;
     drag.item.style.left = (e.clientX - drag.dx) + 'px';
     drag.item.style.top = (e.clientY - drag.dy) + 'px';
     place();
@@ -24757,8 +25025,18 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   }
 
   function up() {
+    if (pend) { clearTimeout(pend.timer); pend = null; }
     if (!drag) return;
     var d = drag; drag = null; edge = 0;
+    /* picked up but never actually moved = a tap, not a drag: put it back
+       exactly and let the click through so the tile opens / the panel toggles */
+    if (!d.moved) {
+      if (d.slot.parentNode) d.slot.parentNode.removeChild(d.slot);
+      d.item.classList.remove('mbxa-ghost');
+      d.item.style.left = ''; d.item.style.top = ''; d.item.style.width = ''; d.item.style.height = '';
+      document.body.classList.remove('mbxa-dragging');
+      return;
+    }
     var z = d.zone, host = zoneHost(z), idx = 0;
     if (host) {
       var kids = Array.prototype.slice.call(host.children);
@@ -24775,6 +25053,8 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     put(d.id, z, idx);
     save();
     paint();
+    justDragged = true;                                  // swallow the click this drag would otherwise fire
+    setTimeout(function () { justDragged = false; }, 60);
   }
 
   /* ================= arrange on / off ================= */
@@ -24782,7 +25062,7 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     on = !!v;
     document.body.classList.toggle('mbxa-on', on);
     var b = $('mbxa-toggle');
-    if (b) { b.classList.toggle('mbxa-live', on); b.textContent = on ? '\u2713 Done' : '\u21C5 Arrange'; }
+    if (b) { b.classList.toggle('mbxa-live', on); b.textContent = on ? '\u2713 Done' : '\u21C5 Edit layout'; }
     var r = $('mbxa-reset'); if (r) r.style.display = on ? '' : 'none';
     chrome(on);
     var note = $('mbxa-note'), hub = col();
@@ -24805,18 +25085,31 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     var wrap = document.createElement('div');
     wrap.id = 'mbxa-bar';
     wrap.innerHTML =
-      '<button type="button" class="mbxa-btn" id="mbxa-toggle">\u21C5 Arrange</button>' +
+      '<button type="button" class="mbxa-btn" id="mbxa-toggle">\u21C5 Edit layout</button>' +
       '<button type="button" class="mbxa-btn" id="mbxa-reset" style="display:none">Reset</button>';
     hero.appendChild(wrap);
 
     var note = document.createElement('div');
     note.id = 'mbxa-note';
-    note.innerHTML = '<strong>Arrange mode.</strong> Drag anything anywhere. Pull a tile out of the ' +
+    note.innerHTML = '<strong>Edit-layout mode.</strong> This is the deeper editor: pull a tile out of the ' +
       'launcher box and it turns into a full-size panel; drag a panel up into the box and it shrinks ' +
       'to a tile you can tap open. The red <strong>\u00D7</strong> tucks something into the hidden tray ' +
-      'at the bottom, and one tap there brings it back. Saved on this device only \u2014 tap ' +
+      'at the bottom, and one tap there brings it back. (Everyday reordering doesn\u2019t need this \u2014 just ' +
+      'drag any tile or card straight away.) Saved on this device only \u2014 tap ' +
       '<strong>Done</strong> when it looks right, or <strong>Reset</strong> for the original layout.';
     if (hero.nextSibling) hub.insertBefore(note, hero.nextSibling); else hub.appendChild(note);
+
+    /* an always-visible one-liner so a rep knows the whole page is draggable
+       without hunting for a button (the hover grab-cursor is the other tell) */
+    if (!$('mbxa-hint')) {
+      var col0 = hero.querySelector(':scope > div');
+      var hint = document.createElement('div');
+      hint.id = 'mbxa-hint';
+      hint.innerHTML = 'Everything here is yours to arrange \u2014 <b>press and hold any tile or card, then drag</b> to move it. A quick tap still opens it.';
+      if (col0) col0.appendChild(hint);
+      else if (hero.nextSibling) hub.insertBefore(hint, hero.nextSibling);
+      else hub.appendChild(hint);
+    }
 
     $('mbxa-toggle').addEventListener('click', function () { setOn(!on); });
     $('mbxa-reset').addEventListener('click', reset);
@@ -24874,9 +25167,14 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
         save(); paint();
         return;
       }
-      /* while arranging, a tap moves things - it never opens them */
-      if (on && t.closest('#tab-hub [data-arr]')) { e.preventDefault(); e.stopPropagation(); }
+      /* in Arrange mode a tap only moves things; and right after any real drag
+         (mode or not) swallow the click the pointer-up would otherwise fire */
+      if ((on || justDragged) && t.closest('#tab-hub [data-arr]')) { e.preventDefault(); e.stopPropagation(); }
     }, true);
+
+    /* a long-press on a finger can pop the browser's context menu / text
+       callout mid-drag - not while we're carrying something */
+    document.addEventListener('contextmenu', function (e) { if (drag || pend) e.preventDefault(); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
@@ -25030,30 +25328,15 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
 </script>
 
 <style id="mbx-hq-arrange-css">
-  /* ---- HQ's OWN cards: drag to reorder, no mode button to hit first.
-     This is separate from mbx-arrange, which only ever moves the whole HQ
-     board as one block - it never reaches the cards inside it. ---- */
-  .hqa-handle {
-    margin-left: auto; flex: 0 0 auto; width: 22px; height: 20px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 5px; cursor: grab; touch-action: none;
-    -webkit-user-select: none; user-select: none;
-  }
-  .hqa-handle::before {
-    content: ''; width: 2px; height: 2px; border-radius: 50%;
-    background: var(--gray-400, #9ca3af);
-    box-shadow:
-      0 -4px 0 var(--gray-400,#9ca3af), 0 4px 0 var(--gray-400,#9ca3af),
-      5px -4px 0 var(--gray-400,#9ca3af), 5px 0 0 var(--gray-400,#9ca3af), 5px 4px 0 var(--gray-400,#9ca3af);
-  }
-  .hqa-handle:hover { background: var(--blue-light, #e8f2fb); }
-  .hqa-handle:hover::before {
-    background: var(--blue-brand, #1e40af);
-    box-shadow:
-      0 -4px 0 var(--blue-brand,#1e40af), 0 4px 0 var(--blue-brand,#1e40af),
-      5px -4px 0 var(--blue-brand,#1e40af), 5px 0 0 var(--blue-brand,#1e40af), 5px 4px 0 var(--blue-brand,#1e40af);
-  }
-  body.hqa-dragging, body.hqa-dragging * { cursor: grabbing !important; }
+  /* ---- HQ's OWN cards reorder by a direct grab - no mode button, no tiny
+     handle. Press and hold anywhere on a card (or press-and-move with a
+     mouse) and drag it; a quick tap still works its buttons. Separate from
+     mbx-arrange, which moves the whole HQ board as one block, and it stands
+     down while that outer Edit-layout mode is on so the two never fight over
+     the same press. ---- */
+  body:not(.mbxa-on) #mbx-hq .hq-card { cursor: grab; -webkit-touch-callout: none; }
+  body:not(.mbxa-on) #mbx-hq .hq-card:hover { box-shadow: 0 0 0 1.5px rgba(30,64,175,.34); }
+  body.hqa-dragging, body.hqa-dragging * { cursor: grabbing !important; -webkit-user-select: none; user-select: none; }
   .hqa-ghost {
     position: fixed !important; z-index: 9999 !important; margin: 0 !important;
     pointer-events: none !important; opacity: .97; overflow: hidden;
@@ -25087,8 +25370,9 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   'use strict';
   var KEY = 'mbx_hq_card_order_v1';
   var DEFAULT_ORDER = ['hq-today', 'hq-inbox', 'hq-cal', 'hq-acct', 'hq-notes', 'hq-team', 'mbxd-card'];
-  var order = null, drag = null, edge = 0, raf = 0, mo = null;
+  var order = null, drag = null, pend = null, justDragged = false, edge = 0, raf = 0, mo = null;
 
+  function modeOn() { return document.body.classList.contains('mbxa-on'); }  /* outer Edit-layout mode owns the whole board then */
   function grid() { return document.querySelector('#mbx-hq .hq-grid'); }
   function cards() { var g = grid(); return g ? Array.prototype.slice.call(g.children) : []; }
 
@@ -25118,7 +25402,6 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   function apply() {
     var g = grid(); if (!g || drag) return;
     var have = cards();
-    handles(have);
     if (have.length < 2) return;
     var haveIds = {}, byId = {};
     have.forEach(function (el) { haveIds[el.id] = true; byId[el.id] = el; });
@@ -25130,37 +25413,36 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     if (want.join('|') !== order.join('|')) { order = want; save(); }
   }
 
-  function handles(els) {
-    els.forEach(function (card) {
-      if (!card || card.querySelector(':scope > .hq-k > .hqa-handle')) return;
-      var k = card.querySelector(':scope > .hq-k'); if (!k) return;
-      var h = document.createElement('span');
-      h.className = 'hqa-handle';
-      h.title = 'Drag to reorder';
-      h.setAttribute('aria-hidden', 'true');
-      k.appendChild(h);
-    });
+  /* ================= dragging (one list, HQ's own cards only) ================= */
+  function startDrag(item, x, y) {
+    if (pend) { clearTimeout(pend.timer); pend = null; }
+    var g = grid(); if (!g || !item || item.parentNode !== g) return;
+    var r = item.getBoundingClientRect();
+    var slot = document.createElement('div');
+    slot.className = 'hqa-slot';
+    slot.style.height = r.height + 'px';
+    g.insertBefore(slot, item);
+    item.classList.add('hqa-ghost');
+    item.style.position = 'fixed';
+    item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
+    item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
+    drag = { item: item, slot: slot, dx: x - r.left, dy: y - r.top, x: x, y: y, x0: x, y0: y, moved: false };
+    document.body.classList.add('hqa-dragging');
   }
 
-  /* ================= dragging (one list, HQ's own cards only) ================= */
   function down(e) {
     try {
-      if (drag || (e.button != null && e.button > 0)) return;
-      var handle = e.target && e.target.closest ? e.target.closest('.hqa-handle') : null;
-      if (!handle) return;
-      var item = handle.closest('.hq-card'); var g = grid();
+      if (drag || pend || modeOn() || (e.button != null && e.button > 0)) return;
+      var t = e.target;
+      var item = t && t.closest ? t.closest('#mbx-hq .hq-card') : null;
+      var g = grid();
       if (!item || !g || item.parentNode !== g) return;
-      var r = item.getBoundingClientRect();
-      var slot = document.createElement('div');
-      slot.className = 'hqa-slot';
-      g.insertBefore(slot, item);
-      item.classList.add('hqa-ghost');
-      item.style.position = 'fixed';
-      item.style.left = r.left + 'px'; item.style.top = r.top + 'px';
-      item.style.width = r.width + 'px'; item.style.height = r.height + 'px';
-      drag = { item: item, slot: slot, dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
-      document.body.classList.add('hqa-dragging');
-      if (e.preventDefault) e.preventDefault();
+      /* pick it up after a hold (finger) or a few px (mouse); a plain tap
+         falls through so the card's own buttons still work */
+      pend = { item: item, x0: e.clientX, y0: e.clientY, touch: (e.pointerType === 'touch'), timer: 0 };
+      if (pend.touch) pend.timer = setTimeout(function () {
+        if (pend) startDrag(pend.item, pend.x0, pend.y0);
+      }, 320);
     } catch (err) {}
   }
 
@@ -25186,9 +25468,19 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   }
 
   function move(e) {
-    if (!drag) return;
+    if (!drag) {
+      if (!pend) return;
+      var pdx = e.clientX - pend.x0, pdy = e.clientY - pend.y0;
+      if (pend.touch) {
+        if (pdx * pdx + pdy * pdy > 100) { clearTimeout(pend.timer); pend = null; }  // moved first = scroll
+        return;
+      }
+      if (pdx * pdx + pdy * pdy > 36) startDrag(pend.item, e.clientX, e.clientY);
+      if (!drag) return;
+    }
     if (e.preventDefault) e.preventDefault();
     drag.x = e.clientX; drag.y = e.clientY;
+    if (!drag.moved && (Math.abs(drag.x - drag.x0) > 4 || Math.abs(drag.y - drag.y0) > 4)) drag.moved = true;
     drag.item.style.left = (e.clientX - drag.dx) + 'px';
     drag.item.style.top = (e.clientY - drag.dy) + 'px';
     place();
@@ -25208,18 +25500,23 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
   }
 
   function up() {
+    if (pend) { clearTimeout(pend.timer); pend = null; }
     if (!drag) return;
     try {
       var d = drag; drag = null; edge = 0;
+      var moved = d.moved;
       var g = grid();
-      if (g && d.slot.parentNode === g) g.insertBefore(d.item, d.slot);
+      if (moved && g && d.slot.parentNode === g) g.insertBefore(d.item, d.slot);
       if (d.slot.parentNode) d.slot.parentNode.removeChild(d.slot);
       d.item.classList.remove('hqa-ghost');
       d.item.style.position = ''; d.item.style.left = ''; d.item.style.top = '';
       d.item.style.width = ''; d.item.style.height = '';
       document.body.classList.remove('hqa-dragging');
+      if (!moved) return;                       // a tap in place: leave order alone, let the click open the card's button
       order = cards().map(function (el) { return el.id; });
       save();
+      justDragged = true;                        // swallow the click this drag would otherwise fire
+      setTimeout(function () { justDragged = false; }, 60);
     } catch (err) { drag = null; document.body.classList.remove('hqa-dragging'); }
   }
 
@@ -25242,6 +25539,14 @@ html[data-mbx-theme="night"] #tab-accounts .ac-map img{ filter:none; }
     document.addEventListener('pointermove', move, { passive: false });
     document.addEventListener('pointerup', up);
     document.addEventListener('pointercancel', up);
+    document.addEventListener('contextmenu', function (e) { if (drag || pend) e.preventDefault(); });
+    /* right after a real card drag, swallow the click so the pointer-up doesn't
+       also fire "Open the day" / "Play today's word" on whatever it landed on */
+    document.addEventListener('click', function (e) {
+      if (justDragged && e.target && e.target.closest && e.target.closest('#mbx-hq .hq-card')) {
+        e.preventDefault(); e.stopPropagation();
+      }
+    }, true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
